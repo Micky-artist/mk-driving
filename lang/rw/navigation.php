@@ -1,0 +1,26 @@
+<?php
+
+return [
+    'home' => 'Ahabanza',
+    'homepage' => 'Ahabanza',
+    'quizzes' => 'Ibibazo',
+    'news' => 'Amakuru',
+    'about' => 'Uko tuli',
+    'contact' => 'Twandikire',
+    'login' => 'Kwinjira',
+    'register' => 'Kwiyandikisha',
+    'logout' => 'Gusohoka',
+    'profile' => 'Umwirondoro',
+    'dashboard' => 'Aho Witoreza',
+    'admin' => 'Konti ya admin',
+    'welcome' => 'Urakaza neza na none',
+    'forum' => 'Ikiganiro',
+    'settings' => 'Igenamiterere',
+    'search' => 'Gushakisha',
+    'quick_links' => 'Aho wahera',
+    'pricing_plans' => 'Ifatabuguzi',
+    'about_us' => 'Dusobanukirwe',
+    'settings' => 'Igenamiterere',
+    'notifications' => 'Amanota',
+    'tagline' => 'Urugendo rwawe rutangirira aha'
+];

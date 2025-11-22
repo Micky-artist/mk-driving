@@ -1,0 +1,276 @@
+# Environment
+.env
+.env.*
+!.env.example
+
+# Laravel 4 & 5
+bootstrap/compiled.php
+bootstrap/cache/*.php
+bootstrap/cache/*.txt
+bootstrap/cache/packages.php
+bootstrap/cache/services.php
+
+# Laravel 5 & Lumen specific
+database/*.sqlite
+database/*.sqlite-journal
+
+# Laravel 5 & Lumen specific with changed public path
+public/storage
+public/hot
+public/storage/*
+
+# Laravel 5 & Lumen specific with changed public path
+public/js/
+public/css/
+public/fonts/
+
+# Laravel 5 & Lumen specific with changed public path
+/public/hot
+/public/storage
+/public/.htaccess
+
+# Laravel 5 & Lumen specific with changed public path
+/storage/*.key
+/storage/pail
+/storage/debugbar/
+
+# Laravel 5 & Lumen specific with changed public path
+/vendor
+/node_modules
+
+# Laravel 5 & Lumen specific with changed public path
+.phpunit.result.cache
+.phpunit.cache
+.php-cs-fixer.cache
+.phpunit.result.cache
+
+# IDE specific files
+.idea
+.vscode
+.zed
+.fleet
+.nova
+
+# OS generated files
+.DS_Store
+.DS_Store?
+._*
+.Spotlight-V100
+.Trashes
+ehthumbs.db
+Thumbs.db
+
+# Local development
+Homestead.json
+Homestead.yaml
+
+# Composer
+composer.lock
+composer.phar
+
+# NPM
+yarn-error.log
+npm-debug.log
+
+# Debug
+*.log
+
+# Testing
+.phpunit.cache
+.phpunit.result.cache
+
+# Local development
+.php_cs.cache
+.phpcs-cache
+
+# Backup files
+*~
+*.bak
+*.swp
+*.swo
+
+# Local environment files
+.env.local
+.env.*.local
+
+# Development environment files
+.env.development
+.env.staging
+.env.testing
+
+# Deployment files
+_ide_helper.php
+_ide_helper_models.php
+.phpstorm.meta.php
+
+# Laravel 5 & Lumen specific with changed public path
+/public/build
+/public/hot
+/public/storage
+
+# Laravel 5 & Lumen specific with changed public path
+*.sublime-*
+
+# Laravel 5 & Lumen specific with changed public path
+*.sass-cache
+
+# Laravel 5 & Lumen specific with changed public path
+*.sass-cache/
+
+# Laravel 5 & Lumen specific with changed public path
+*.sass.map
+
+# Laravel 5 & Lumen specific with changed public path
+*.scss.map
+
+# Laravel 5 & Lumen specific with changed public path
+*.sass.map
+
+# Laravel 5 & Lumen specific with changed public path
+*.css.map
+
+# Laravel 5 & Lumen specific with changed public path
+*.sass
+
+# Laravel 5 & Lumen specific with changed public path
+*.scss
+
+# Laravel 5 & Lumen specific with changed public path
+*.css
+
+# Laravel 5 & Lumen specific with changed public path
+*.js.map
+
+# Laravel 5 & Lumen specific with changed public path
+*.js
+
+# Laravel 5 & Lumen specific with changed public path
+*.log
+
+# Laravel 5 & Lumen specific with changed public path
+*.sql
+
+# Laravel 5 & Lumen specific with changed public path
+*.sqlite
+
+# Laravel 5 & Lumen specific with changed public path
+*.sqlite-journal
+
+# Laravel 5 & Lumen specific with changed public path
+*.sqlite-shm
+
+# Laravel 5 & Lumen specific with changed public path
+*.sqlite-wal
+
+# Laravel 5 & Lumen specific with changed public path
+*.swp
+
+# Laravel 5 & Lumen specific with changed public path
+*.swo
+
+# Laravel 5 & Lumen specific with changed public path
+*~
+
+# Laravel 5 & Lumen specific with changed public path
+.DS_Store
+
+# Laravel 5 & Lumen specific with changed public path
+.idea
+
+# Laravel 5 & Lumen specific with changed public path
+.vscode
+
+# Laravel 5 & Lumen specific with changed public path
+.zed
+
+# Laravel 5 & Lumen specific with changed public path
+.fleet
+
+# Laravel 5 & Lumen specific with changed public path
+.nova
+
+# Laravel 5 & Lumen specific with changed public path
+.phpunit.cache
+
+# Laravel 5 & Lumen specific with changed public path
+.phpunit.result.cache
+
+# Laravel 5 & Lumen specific with changed public path
+.php-cs-fixer.cache
+
+# Laravel 5 & Lumen specific with changed public path
+.php_cs.cache
+
+# Laravel 5 & Lumen specific with changed public path
+.phpcs-cache
+
+# Laravel 5 & Lumen specific with changed public path
+Homestead.json
+
+# Laravel 5 & Lumen specific with changed public path
+Homestead.yaml
+
+# Laravel 5 & Lumen specific with changed public path
+Thumbs.db
+
+# Laravel 5 & Lumen specific with changed public path
+.env
+
+# Laravel 5 & Lumen specific with changed public path
+.env.*
+
+# Laravel 5 & Lumen specific with changed public path
+!.env.example
+
+# Laravel 5 & Lumen specific with changed public path
+bootstrap/cache/*.php
+
+# Laravel 5 & Lumen specific with changed public path
+bootstrap/cache/*.txt
+
+# Laravel 5 & Lumen specific with changed public path
+bootstrap/cache/packages.php
+
+# Laravel 5 & Lumen specific with changed public path
+bootstrap/cache/services.php
+
+# Laravel 5 & Lumen specific with changed public path
+bootstrap/compiled.php
+
+# Laravel 5 & Lumen specific with changed public path
+composer.lock
+
+# Laravel 5 & Lumen specific with changed public path
+composer.phar
+
+# Laravel 5 & Lumen specific with changed public path
+package-lock.json
+
+# Laravel 5 & Lumen specific with changed public path
+yarn.lock
+
+# Laravel 5 & Lumen specific with changed public path
+node_modules/
+
+# Laravel 5 & Lumen specific with changed public path
+public/build/
+
+# Laravel 5 & Lumen specific with changed public path
+public/hot/
+
+# Laravel 5 & Lumen specific with changed public path
+public/storage/
+
+# Laravel 5 & Lumen specific with changed public path
+storage/
+!storage/app/public/
+storage/app/public/.*
+!storage/app/public/.gitignore
+storage/debugbar/
+storage/framework/cache/**
+storage/framework/sessions/
+storage/framework/testing/
+storage/framework/views/
+storage/logs/
+storage/oauth-private.key
+storage/oauth-public.key

@@ -1,0 +1,31 @@
+<?php
+
+return [
+    'default_title' => 'Untitled Article',
+    'default_content' => 'No content available.',
+    'no_articles' => 'No articles found.',
+    'back_to_news' => 'Back to News',
+    'published_on' => 'Published on',
+    'by' => 'By',
+    'read_more' => 'Read more',
+    'viewAll' => 'View All',
+    'gallery' => 'Gallery',
+    'share' => 'Share',
+    'lastUpdated' => 'Last updated',
+    'relatedPosts' => 'Related Posts',
+    'author' => 'Author',
+    'unknown_author' => 'Unknown Author',
+    'searchButton' => 'Search',
+    'searchPlaceholder' => 'Search articles...',
+    'newsOnTime' => 'News on Time',
+    'newsDescription' => 'Stay updated with the latest news and updates from our platform.',
+    'noArticlesFound' => 'No articles found.',
+    'categories' => [
+        'all' => 'All',
+        'advice' => 'Driving Advice',
+        'police' => 'Police Updates',
+        'trends' => 'Trending',
+        'vehicle' => 'Vehicle Tips',
+        'news' => 'Latest News',
+    ],
+];

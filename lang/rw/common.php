@@ -1,0 +1,30 @@
+<?php
+
+return [
+    'loading' => 'Birategereje...',
+    'error' => 'Habaye ikosa',
+    'success' => 'Byagenze neza',
+    'cancel' => 'Kuraguza',
+    'save' => 'Kubika',
+    'edit' => 'Guhindura',
+    'delete' => 'Gusiba',
+    'confirm' => 'Kwemeza',
+    'back' => 'Gusubira inyuma',
+    'next' => 'Komeza',
+    'previous' => 'Ibanziriza',
+    'submit' => 'Kohereza',
+    'close' => 'Gufunga',
+    'search' => 'Gushakisha',
+    'filter' => 'Gutoranya',
+    'clear' => 'Gusiba',
+    'select' => 'Guhitamo',
+    'all' => 'Byose',
+    'none' => 'Nta kimwe',
+    'continue' => 'Komeza',
+    'try_again' => 'Ongera Ugerageze',
+    'user_updated' => 'Umukoresha yahinduwe neza',
+    'user_deleted' => 'Umukoresha yasibwe neza',
+    'user_status_updated' => 'Uko umukoresha akora byahinduwe neza',
+    'back_to_home' => 'Subira Ahabanza',
+    'contact_support' => 'Vugana n\'abafasha'
+];

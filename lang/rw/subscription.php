@@ -1,0 +1,26 @@
+<?php
+
+return [
+    'subscribe' => 'Kwiyandikisha',
+    'title' => 'Ibyiciro by\'ifatabuguzi',
+    'my_subscriptions' => 'Ifatabuguzi ryanjye',
+    'active_subscriptions' => 'Ifatabuguzi nishyuye',
+    'popular_choice' => 'Irakunzwe',
+    'active' => 'Irakora',
+    'inactive' => 'Ntirikora',
+    'expired' => 'Byarangiye',
+    'renew' => 'Kongera kwishyura',
+    'upgrade' => 'Kuzamura icyiciro',
+    'downgrade' => 'Kumanura icyiciro',
+    'cancel' => 'Kureka',
+    'subscription_plans' => 'Ibyiciro by\'ifatabuguzi',
+    'monthly' => 'Ukwezi',
+    'quarterly' => 'Amezi 3',
+    'yearly' => 'Umwaka',
+    'select_plan' => 'Hitamo icyiciro',
+    'current_plan' => 'Icyiciro ufite',
+    'next_billing_date' => 'Itariki ikurikira yo kwishyura',
+    'billing_history' => 'Amakuru yiy\'ishyura',
+    'no_subscription' => 'Nta fatabuguzi mufite',
+    'subscribe_now' => 'Tangira',
+];

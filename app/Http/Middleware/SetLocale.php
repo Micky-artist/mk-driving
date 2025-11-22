@@ -1,0 +1,80 @@
+<?php
+
+namespace App\Http\Middleware;
+
+use Closure;
+use Illuminate\Http\Request;
+use App\Services\LocaleService;
+use Illuminate\Support\Facades\Log;
+
+class SetLocale
+{
+    protected $localeService;
+
+    public function __construct(LocaleService $localeService)
+    {
+        $this->localeService = $localeService;
+    }
+
+    public function handle(Request $request, Closure $next)
+    {
+        // Get locale from URL first
+        $locale = $request->segment(1);
+        $localeSource = 'url';
+        
+        // If not in URL, try session or browser
+        if (!$this->localeService->validateLocale($locale)) {
+            $locale = session('locale') ?: $request->getPreferredLanguage(
+                array_keys($this->localeService->getAvailableLocales())
+            );
+            $localeSource = $locale === session('locale') ? 'session' : 'browser';
+            
+            // If we need to redirect to include the locale in the URL
+            if ($this->shouldRedirectToIncludeLocale($request, $locale)) {
+                return $this->redirectWithLocale($request, $locale);
+            }
+        }
+        
+        // Set the application locale
+        $this->localeService->setLocale($locale);
+        
+        // Set Carbon locale for date formatting
+        if (class_exists('Carbon\Carbon')) {
+            \Carbon\Carbon::setLocale($locale);
+        }
+        
+        // Set system locale for date formatting
+        if (function_exists('setlocale')) {
+            setlocale(LC_TIME, $locale . '.UTF-8');
+        }
+        
+        // Debug logging
+        if (config('app.debug')) {
+            Log::debug('Locale set', [
+                'locale' => $locale,
+                'source' => $localeSource,
+                'url' => $request->fullUrl(),
+                'available_locales' => array_keys($this->localeService->getAvailableLocales())
+            ]);
+        }
+        
+        return $next($request);
+    }
+    
+    protected function shouldRedirectToIncludeLocale($request, $locale)
+    {
+        return !$request->is('api/*') && 
+               !in_array($request->segment(1), array_keys($this->localeService->getAvailableLocales()));
+    }
+    
+    protected function redirectWithLocale($request, $locale)
+    {
+        $newUrl = '/' . $locale . '/' . ltrim($request->path(), '/');
+        
+        if (!empty($request->query())) {
+            $newUrl .= '?' . http_build_query($request->query());
+        }
+        
+        return redirect($newUrl);
+    }
+}

@@ -1,0 +1,446 @@
+[
+  [
+    {
+      "imgpath": "<img src=\"../examMedia/427.jpg\" alt=\"\">",
+      "question": "Ni ikihe icyapa gisobanura umuhanda w'icyerekezo kimwe:",
+      "correct": 2,
+      "choices": [
+        "Icyapa D1a",
+        "Icyapa E13a",
+        "Icyapa C19",
+        "Icyapa C1"
+      ]
+    },
+    {
+      "imgpath": "<img src=\"../examMedia/ifungana.jpg\" alt=\"\">",
+      "question": "Iki cyapa gisobanura iki?",
+      "correct": 4,
+      "choices": [
+        "Aho imihanda ihurira",
+        "Inkomane y'aho umuhanda umwe urasukira iburyo",
+        "Umuhanda udakomeza",
+        "Nta gisubizo kirimo"
+      ]
+    },
+    {
+      "imgpath": "<img src=\"../examMedia/iherezo urombereje.jpg\" alt=\"\">",
+      "question": "Iki cyapa gisobanura iki?",
+      "correct": 1,
+      "choices": [
+        "Iherezo ry'umuhanda urombeje w'ibice byinshi",
+        "Birabujijwe kunyura mu muhanda w'ikindi cyerekezo",
+        "Birabujijwe kunyuranaho",
+        "Birabujijwe guhagara ku iteme"
+      ]
+    },
+    {
+      "imgpath": "<img src=\"../examMedia/324.jpg\" alt=\"\">",
+      "question": "Iki kimenyetso kiri mu muhanda kivuze iki?",
+      "correct": 2,
+      "choices": [
+        "Biremewe kunyuranaho",
+        "Umuyobozi abujijwe kukirenga",
+        "Wegereye icyapa cyo guhagarara umwanya muto",
+        "Umuhanda ufunganye"
+      ]
+    },
+    {
+      "imgpath": "<img src=\"../examMedia/ucagaguye2.jpg\" alt=\"\">",
+      "question": "Iki kimenyetso kiri mu muhanda kivuze iki?",
+      "correct": 1,
+      "choices": [
+        "Umuyobozi abujijwe gusimbuza ikinyabiziga",
+        "Umuhanda ufunganye",
+        "Umuyobozi abujijwe kurenga",
+        "Umuhanda ufite imyanya yo guhagarara"
+      ]
+    },
+    {
+      "imgpath": "<img src=\"../examMedia/umuhanda_umwe.jpg\" alt=\"\">",
+      "question": "Iki kimenyetso gisobanura iki?",
+      "correct": 3,
+      "choices": [
+        "Umuhanda ufite ibice bibiri",
+        "Umuhanda ufite ibice bitatu",
+        "Umuhanda umwe gusa",
+        "Umuhanda ufite ibice bine"
+      ]
+    },
+    {
+      "imgpath": "<img src=\"../examMedia/umuhanda_ibice_bibiri.jpg\" alt=\"\">",
+      "question": "Iki kimenyetso gisobanura iki?",
+      "correct": 2,
+      "choices": [
+        "Umuhanda umwe gusa",
+        "Umuhanda ufite ibice bibiri",
+        "Umuhanda ufite ibice bitatu",
+        "Umuhanda ufite ibice bine"
+      ]
+    },
+    {
+      "imgpath": "<img src=\"../examMedia/umuhanda_ibice_bitatu.jpg\" alt=\"\">",
+      "question": "Iki kimenyetso gisobanura iki?",
+      "correct": 3,
+      "choices": [
+        "Umuhanda umwe gusa",
+        "Umuhanda ufite ibice bibiri",
+        "Umuhanda ufite ibice bitatu",
+        "Umuhanda ufite ibice bine"
+      ]
+    },
+    {
+      "imgpath": "<img src=\"../examMedia/umuhanda_ibice_bine.jpg\" alt=\"\">",
+      "question": "Iki kimenyetso gisobanura iki?",
+      "correct": 4,
+      "choices": [
+        "Umuhanda umwe gusa",
+        "Umuhanda ufite ibice bibiri",
+        "Umuhanda ufite ibice bitatu",
+        "Umuhanda ufite ibice bine"
+      ]
+    },
+    {
+      "imgpath": "<img src=\"../examMedia/umuhanda_umwe_ibice_bibiri.jpg\" alt=\"\">",
+      "question": "Iki kimenyetso gisobanura iki?",
+      "correct": 1,
+      "choices": [
+        "Umuhanda umwe ufite ibice bibiri",
+        "Umuhanda umwe gusa",
+        "Umuhanda ufite ibice bitatu",
+        "Umuhanda ufite ibice bine"
+      ]
+    },
+    {
+      "imgpath": "<img src=\"../examMedia/umuhanda_umwe_ibice_bitatu.jpg\" alt=\"\">",
+      "question": "Iki kimenyetso gisobanura iki?",
+      "correct": 2,
+      "choices": [
+        "Umuhanda umwe gusa",
+        "Umuhanda umwe ufite ibice bitatu",
+        "Umuhanda ufite ibice bibiri",
+        "Umuhanda ufite ibice bine"
+      ]
+    },
+    {
+      "imgpath": "<img src=\"../examMedia/umuhanda_umwe_ibice_bine.jpg\" alt=\"\">",
+      "question": "Iki kimenyetso gisobanura iki?",
+      "correct": 3,
+      "choices": [
+        "Umuhanda umwe gusa",
+        "Umuhanda ufite ibice bibiri",
+        "Umuhanda umwe ufite ibice bine",
+        "Umuhanda ufite ibice bitatu"
+      ]
+    },
+    {
+      "imgpath": "<img src=\"../examMedia/umuhanda_ibice_bibiri_ibice_bitatu.jpg\" alt=\"\">",
+      "question": "Iki kimenyetso gisobanura iki?",
+      "correct": 4,
+      "choices": [
+        "Umuhanda umwe gusa",
+        "Umuhanda ufite ibice bibiri",
+        "Umuhanda ufite ibice bitatu",
+        "Umuhanda ufite ibice bibiri cyangwa bitatu"
+      ]
+    },
+    {
+      "imgpath": "<img src=\"../examMedia/umuhanda_ibice_bibiri_ibice_bine.jpg\" alt=\"\">",
+      "question": "Iki kimenyetso gisobanura iki?",
+      "correct": 1,
+      "choices": [
+        "Umuhanda ufite ibice bibiri cyangwa bine",
+        "Umuhanda umwe gusa",
+        "Umuhanda ufite ibice bitatu",
+        "Umuhanda ufite ibice bine"
+      ]
+    },
+    {
+      "imgpath": "<img src=\"../examMedia/umuhanda_ibice_bitatu_ibice_bine.jpg\" alt=\"\">",
+      "question": "Iki kimenyetso gisobanura iki?",
+      "correct": 2,
+      "choices": [
+        "Umuhanda umwe gusa",
+        "Umuhanda ufite ibice bitatu cyangwa bine",
+        "Umuhanda ufite ibice bibiri",
+        "Umuhanda ufite ibice bine"
+      ]
+    },
+    {
+      "imgpath": "<img src=\"../examMedia/umuhanda_ibice_bibiri_ibice_bitatu_ibice_bine.jpg\" alt=\"\">",
+      "question": "Iki kimenyetso gisobanura iki?",
+      "correct": 3,
+      "choices": [
+        "Umuhanda umwe gusa",
+        "Umuhanda ufite ibice bibiri",
+        "Umuhanda ufite ibice bibiri, bitatu, cyangwa bine",
+        "Umuhanda ufite ibice bine"
+      ]
+    },
+    {
+      "imgpath": "<img src=\"../examMedia/umuhanda_umwe_ibice_bibiri_ibice_bitatu.jpg\" alt=\"\">",
+      "question": "Iki kimenyetso gisobanura iki?",
+      "correct": 4,
+      "choices": [
+        "Umuhanda umwe gusa",
+        "Umuhanda ufite ibice bibiri",
+        "Umuhanda ufite ibice bitatu",
+        "Umuhanda umwe ufite ibice bibiri cyangwa bitatu"
+      ]
+    },
+    {
+      "imgpath": "<img src=\"../examMedia/umuhanda_umwe_ibice_bibiri_ibice_bine.jpg\" alt=\"\">",
+      "question": "Iki kimenyetso gisobanura iki?",
+      "correct": 1,
+      "choices": [
+        "Umuhanda umwe ufite ibice bibiri cyangwa bine",
+        "Umuhanda umwe gusa",
+        "Umuhanda ufite ibice bitatu",
+        "Umuhanda ufite ibice bine"
+      ]
+    },
+    {
+      "imgpath": "<img src=\"../examMedia/umuhanda_umwe_ibice_bitatu_ibice_bine.jpg\" alt=\"\">",
+      "question": "Iki kimenyetso gisobanura iki?",
+      "correct": 2,
+      "choices": [
+        "Umuhanda umwe gusa",
+        "Umuhanda umwe ufite ibice bitatu cyangwa bine",
+        "Umuhanda ufite ibice bibiri",
+        "Umuhanda ufite ibice bine"
+      ]
+    },
+    {
+      "imgpath": "<img src=\"../examMedia/umuhanda_ibice_bibiri_ibice_bitatu_ibice_bine.jpg\" alt=\"\">",
+      "question": "Iki kimenyetso gisobanura iki?",
+      "correct": 3,
+      "choices": [
+        "Umuhanda umwe gusa",
+        "Umuhanda ufite ibice bibiri",
+        "Umuhanda ufite ibice bibiri, bitatu, cyangwa bine",
+        "Umuhanda ufite ibice bine"
+      ]
+    }
+  ],
+  [
+    {
+      "imgpath": "<img src=\"../examMedia/427.jpg\" alt=\"\">",
+      "question": "Ni ikihe icyapa gisobanura umuhanda w'icyerekezo kimwe:",
+      "correct": 2,
+      "choices": [
+        "Icyapa D1a",
+        "Icyapa E13a",
+        "Icyapa C19",
+        "Icyapa C1"
+      ]
+    },
+    {
+      "imgpath": "<img src=\"../examMedia/ifungana.jpg\" alt=\"\">",
+      "question": "Iki cyapa gisobanura iki?",
+      "correct": 4,
+      "choices": [
+        "Aho imihanda ihurira",
+        "Inkomane y'aho umuhanda umwe urasukira iburyo",
+        "Umuhanda udakomeza",
+        "Nta gisubizo kirimo"
+      ]
+    },
+    {
+      "imgpath": "<img src=\"../examMedia/iherezo urombereje.jpg\" alt=\"\">",
+      "question": "Iki cyapa gisobanura iki?",
+      "correct": 1,
+      "choices": [
+        "Iherezo ry'umuhanda urombeje w'ibice byinshi",
+        "Birabujijwe kunyura mu muhanda w'ikindi cyerekezo",
+        "Birabujijwe kunyuranaho",
+        "Birabujijwe guhagara ku iteme"
+      ]
+    },
+    {
+      "imgpath": "<img src=\"../examMedia/324.jpg\" alt=\"\">",
+      "question": "Iki kimenyetso kiri mu muhanda kivuze iki?",
+      "correct": 2,
+      "choices": [
+        "Biremewe kunyuranaho",
+        "Umuyobozi abujijwe kukirenga",
+        "Wegereye icyapa cyo guhagarara umwanya muto",
+        "Umuhanda ufunganye"
+      ]
+    },
+    {
+      "imgpath": "<img src=\"../examMedia/ucagaguye2.jpg\" alt=\"\">",
+      "question": "Iki kimenyetso kiri mu muhanda kivuze iki?",
+      "correct": 1,
+      "choices": [
+        "Umuyobozi abujijwe gusimbuza ikinyabiziga",
+        "Umuhanda ufunganye",
+        "Umuyobozi abujijwe kurenga",
+        "Umuhanda ufite imyanya yo guhagarara"
+      ]
+    },
+    {
+      "imgpath": "<img src=\"../examMedia/umuhanda_umwe.jpg\" alt=\"\">",
+      "question": "Iki kimenyetso gisobanura iki?",
+      "correct": 3,
+      "choices": [
+        "Umuhanda ufite ibice bibiri",
+        "Umuhanda ufite ibice bitatu",
+        "Umuhanda umwe gusa",
+        "Umuhanda ufite ibice bine"
+      ]
+    },
+    {
+      "imgpath": "<img src=\"../examMedia/umuhanda_ibice_bibiri.jpg\" alt=\"\">",
+      "question": "Iki kimenyetso gisobanura iki?",
+      "correct": 2,
+      "choices": [
+        "Umuhanda umwe gusa",
+        "Umuhanda ufite ibice bibiri",
+        "Umuhanda ufite ibice bitatu",
+        "Umuhanda ufite ibice bine"
+      ]
+    },
+    {
+      "imgpath": "<img src=\"../examMedia/umuhanda_ibice_bitatu.jpg\" alt=\"\">",
+      "question": "Iki kimenyetso gisobanura iki?",
+      "correct": 3,
+      "choices": [
+        "Umuhanda umwe gusa",
+        "Umuhanda ufite ibice bibiri",
+        "Umuhanda ufite ibice bitatu",
+        "Umuhanda ufite ibice bine"
+      ]
+    },
+    {
+      "imgpath": "<img src=\"../examMedia/umuhanda_ibice_bine.jpg\" alt=\"\">",
+      "question": "Iki kimenyetso gisobanura iki?",
+      "correct": 4,
+      "choices": [
+        "Umuhanda umwe gusa",
+        "Umuhanda ufite ibice bibiri",
+        "Umuhanda ufite ibice bitatu",
+        "Umuhanda ufite ibice bine"
+      ]
+    },
+    {
+      "imgpath": "<img src=\"../examMedia/umuhanda_umwe_ibice_bibiri.jpg\" alt=\"\">",
+      "question": "Iki kimenyetso gisobanura iki?",
+      "correct": 1,
+      "choices": [
+        "Umuhanda umwe ufite ibice bibiri",
+        "Umuhanda umwe gusa",
+        "Umuhanda ufite ibice bitatu",
+        "Umuhanda ufite ibice bine"
+      ]
+    },
+    {
+      "imgpath": "<img src=\"../examMedia/umuhanda_umwe_ibice_bitatu.jpg\" alt=\"\">",
+      "question": "Iki kimenyetso gisobanura iki?",
+      "correct": 2,
+      "choices": [
+        "Umuhanda umwe gusa",
+        "Umuhanda umwe ufite ibice bitatu",
+        "Umuhanda ufite ibice bibiri",
+        "Umuhanda ufite ibice bine"
+      ]
+    },
+    {
+      "imgpath": "<img src=\"../examMedia/umuhanda_umwe_ibice_bine.jpg\" alt=\"\">",
+      "question": "Iki kimenyetso gisobanura iki?",
+      "correct": 3,
+      "choices": [
+        "Umuhanda umwe gusa",
+        "Umuhanda ufite ibice bibiri",
+        "Umuhanda umwe ufite ibice bine",
+        "Umuhanda ufite ibice bitatu"
+      ]
+    },
+    {
+      "imgpath": "<img src=\"../examMedia/umuhanda_ibice_bibiri_ibice_bitatu.jpg\" alt=\"\">",
+      "question": "Iki kimenyetso gisobanura iki?",
+      "correct": 4,
+      "choices": [
+        "Umuhanda umwe gusa",
+        "Umuhanda ufite ibice bibiri",
+        "Umuhanda ufite ibice bitatu",
+        "Umuhanda ufite ibice bibiri cyangwa bitatu"
+      ]
+    },
+    {
+      "imgpath": "<img src=\"../examMedia/umuhanda_ibice_bibiri_ibice_bine.jpg\" alt=\"\">",
+      "question": "Iki kimenyetso gisobanura iki?",
+      "correct": 1,
+      "choices": [
+        "Umuhanda ufite ibice bibiri cyangwa bine",
+        "Umuhanda umwe gusa",
+        "Umuhanda ufite ibice bitatu",
+        "Umuhanda ufite ibice bine"
+      ]
+    },
+    {
+      "imgpath": "<img src=\"../examMedia/umuhanda_ibice_bitatu_ibice_bine.jpg\" alt=\"\">",
+      "question": "Iki kimenyetso gisobanura iki?",
+      "correct": 2,
+      "choices": [
+        "Umuhanda umwe gusa",
+        "Umuhanda ufite ibice bitatu cyangwa bine",
+        "Umuhanda ufite ibice bibiri",
+        "Umuhanda ufite ibice bine"
+      ]
+    },
+    {
+      "imgpath": "<img src=\"../examMedia/umuhanda_ibice_bibiri_ibice_bitatu_ibice_bine.jpg\" alt=\"\">",
+      "question": "Iki kimenyetso gisobanura iki?",
+      "correct": 3,
+      "choices": [
+        "Umuhanda umwe gusa",
+        "Umuhanda ufite ibice bibiri",
+        "Umuhanda ufite ibice bibiri, bitatu, cyangwa bine",
+        "Umuhanda ufite ibice bine"
+      ]
+    },
+    {
+      "imgpath": "<img src=\"../examMedia/umuhanda_umwe_ibice_bibiri_ibice_bitatu.jpg\" alt=\"\">",
+      "question": "Iki kimenyetso gisobanura iki?",
+      "correct": 4,
+      "choices": [
+        "Umuhanda umwe gusa",
+        "Umuhanda ufite ibice bibiri",
+        "Umuhanda ufite ibice bitatu",
+        "Umuhanda umwe ufite ibice bibiri cyangwa bitatu"
+      ]
+    },
+    {
+      "imgpath": "<img src=\"../examMedia/umuhanda_umwe_ibice_bibiri_ibice_bine.jpg\" alt=\"\">",
+      "question": "Iki kimenyetso gisobanura iki?",
+      "correct": 1,
+      "choices": [
+        "Umuhanda umwe ufite ibice bibiri cyangwa bine",
+        "Umuhanda umwe gusa",
+        "Umuhanda ufite ibice bitatu",
+        "Umuhanda ufite ibice bine"
+      ]
+    },
+    {
+      "imgpath": "<img src=\"../examMedia/umuhanda_umwe_ibice_bitatu_ibice_bine.jpg\" alt=\"\">",
+      "question": "Iki kimenyetso gisobanura iki?",
+      "correct": 2,
+      "choices": [
+        "Umuhanda umwe gusa",
+        "Umuhanda umwe ufite ibice bitatu cyangwa bine",
+        "Umuhanda ufite ibice bibiri",
+        "Umuhanda ufite ibice bine"
+      ]
+    },
+    {
+      "imgpath": "<img src=\"../examMedia/umuhanda_ibice_bibiri_ibice_bitatu_ibice_bine.jpg\" alt=\"\">",
+      "question": "Iki kimenyetso gisobanura iki?",
+      "correct": 3,
+      "choices": [
+        "Umuhanda umwe gusa",
+        "Umuhanda ufite ibice bibiri",
+        "Umuhanda ufite ibice bibiri, bitatu, cyangwa bine",
+        "Umuhanda ufite ibice bine"
+      ]
+    }
+  ]
+]

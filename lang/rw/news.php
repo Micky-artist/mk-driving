@@ -1,0 +1,31 @@
+<?php
+
+return [
+    'default_title' => 'Inyandiko itarafashwe',
+    'default_content' => 'Nta bikubiyemo.',
+    'no_articles' => 'Nta nkuru zibonetse.',
+    'back_to_news' => 'Subira kuri Amakuru',
+    'published_on' => 'Yanditswe ku',
+    'by' => 'Na',
+    'read_more' => 'Soma ibindi',
+    'viewAll' => 'Reba Byose',
+    'gallery' => 'Ishusho',
+    'share' => 'Sangiza',
+    'lastUpdated' => 'Yahinduwe bwa nyuma',
+    'relatedPosts' => 'Inyandiko zihuye',
+    'author' => 'Umwanditsi',
+    'unknown_author' => 'Umwanditsi Ntazwi',
+    'searchButton' => 'Shakisha',
+    'searchPlaceholder' => 'Shakisha amakuru...',
+    'newsOnTime' => 'Amakuru kuri Kuri Kuri',
+    'newsDescription' => 'Kurkirana amakuru mashya n\'amakuru ava kuri sisitemu yacu.',
+    'noArticlesFound' => 'Nta makuru yabonetse.',
+    'categories' => [
+        'all' => 'Byose',
+        'advice' => 'Inama zo Gukoresha Imodoka',
+        'police' => 'Amakuru y\'Abapolisi',
+        'trends' => 'Ibikurikira',
+        'vehicle' => 'Inama z\'Imodoka',
+        'news' => 'Amakuru Mashya',
+    ],
+];
