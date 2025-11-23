@@ -3,6 +3,10 @@
 .env.*
 !.env.example
 
+# Logs
+*.log
+/storage/logs/*.log
+
 # Laravel 4 & 5
 bootstrap/compiled.php
 bootstrap/cache/*.php
@@ -10,11 +14,98 @@ bootstrap/cache/*.txt
 bootstrap/cache/packages.php
 bootstrap/cache/services.php
 
+# Dependencies
+/vendor/
+/node_modules/
+package-lock.json
+yarn.lock
+
+# Build files
+/public/build/
+/public/hot/
+/public/storage/
+
+# Debugbar
+/storage/debugbar/
+
+# IDE specific files
+.idea
+.vscode
+.zed
+.fleet
+.nova
+.phpstorm.meta.php
+_ide_helper.php
+_ide_helper_models.php
+
+# OS generated files
+.DS_Store
+.DS_Store?
+._*
+.Spotlight-V100
+.Trashes
+ehthumbs.db
+Thumbs.db
+
+# Local development
+Homestead.json
+Homestead.yaml
+
+# Testing
+.phpunit.cache
+.phpunit.result.cache
+.php-cs-fixer.cache
+.php_cs.cache
+.phpcs-cache
+
+# Backup files
+*~
+*.bak
+*.swp
+*.swo
+
+# Local environment files
+.env.local
+.env.*.local
+
+# Development environment files
+.env.development
+.env.staging
+.env.testing
+
+# Large binary files
+*.png
+*.jpg
+*.jpeg
+*.gif
+*.bmp
+*.tiff
+*.ico
+*.pdf
+*.zip
+*.tar.gz
+*.rar
+*.7z
+
+# Laravel specific
+/storage/framework/views/*.php
+/storage/logs/*.log
+/storage/*.key
+
+# Debugging
+.phpunit.result.cache
+.phpunit.cache
+
 # Laravel 5 & Lumen specific
 database/*.sqlite
 database/*.sqlite-journal
 
 # Laravel 5 & Lumen specific with changed public path
+/public/js/
+/public/css/
+/public/fonts/
+/public/storage/*
+/storage/pail
 public/storage
 public/hot
 public/storage/*

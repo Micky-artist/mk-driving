@@ -202,6 +202,11 @@ Route::prefix('{locale}')
         Route::post('/{quiz}/submit', [\App\Http\Controllers\Web\GuestQuizController::class, 'submit'])
             ->where('quiz', '[0-9]+')  // Ensure quiz is numeric
             ->name('guest-quiz.submit');
+            
+        // Reset the quiz session
+        Route::post('/{quiz}/reset', [\App\Http\Controllers\Web\GuestQuizController::class, 'reset'])
+            ->where('quiz', '[0-9]+')  // Ensure quiz is numeric
+            ->name('guest-quiz.reset');
     });
     
     // Quizzes routes (authenticated)
