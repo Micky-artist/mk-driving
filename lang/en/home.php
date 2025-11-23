@@ -34,6 +34,7 @@ return [
         'month' => 'month',
         'purchase' => 'Purchase',
         'subscribe' => 'Subscribe',
+        'loginToSubscribe' => 'Login to Subscribe',
         'currentPlan' => 'Current Plan',
         'mostPopular' => 'Most Popular',
         'noFeatures' => 'No features available',

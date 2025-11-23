@@ -77,20 +77,55 @@
         </div>
     </div><!-- Stats Cards -->
     <div class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-4 sm:gap-6">
-        <!-- Total Quizzes -->
-        <div class="bg-white rounded-lg shadow p-4 sm:p-6">
-            <div class="flex items-center justify-between">
-                <div>
-                    <p class="text-sm font-medium text-gray-500 truncate">{{ __('dashboard.stats.total_quizzes') }}</p>
-                    <p class="mt-1 text-2xl font-semibold text-gray-900">{{ $stats['total_quizzes'] }}</p>
+        <!-- Available Quizzes -->
+        <a href="{{ route('dashboard.quizzes.index', ['locale' => app()->getLocale()]) }}" class="block group">
+            <div class="bg-white rounded-lg shadow p-4 sm:p-6 hover:shadow-md transition-shadow duration-200 border border-transparent hover:border-blue-200">
+                <div class="flex items-center justify-between">
+                    <div>
+                        <p class="text-sm font-medium text-gray-500 group-hover:text-blue-600 transition-colors truncate">{{ __('Available Quizzes') }}</p>
+                        <p class="mt-1 text-2xl font-semibold text-blue-600 group-hover:text-blue-700 transition-colors">{{ $stats['total_quizzes'] }}</p>
+                    </div>
+                    <div class="p-3 rounded-full bg-blue-50 group-hover:bg-blue-100 text-blue-600 transition-colors">
+                        <svg xmlns="http://www.w3.org/2000/svg" class="h-6 w-6" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 12h6m-6 4h6m2 5H7a2 2 0 01-2-2V5a2 2 0 012-2h5.586a1 1 0 01.707.293l5.414 5.414a1 1 0 01.293.707V19a2 2 0 01-2 2z" />
+                        </svg>
+                    </div>
                 </div>
-                <div class="p-3 rounded-full bg-blue-100 text-blue-600">
-                    <svg xmlns="http://www.w3.org/2000/svg" class="h-6 w-6" fill="none" viewBox="0 0 24 24" stroke="currentColor">
-                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 12h6m-6 4h6m2 5H7a2 2 0 01-2-2V5a2 2 0 012-2h5.586a1 1 0 01.707.293l5.414 5.414a1 1 0 01.293.707V19a2 2 0 01-2 2z" />
-                    </svg>
+                <div class="mt-2 text-right">
+                    <span class="text-xs text-blue-500 font-medium inline-flex items-center">
+                        {{ __('View all') }}
+                        <svg xmlns="http://www.w3.org/2000/svg" class="h-3.5 w-3.5 ml-0.5" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="3" d="M9 5l7 7-7 7" />
+                        </svg>
+                    </span>
                 </div>
             </div>
-        </div>
+        </a>
+
+        <!-- In Progress Quizzes -->
+        <a href="{{ route('dashboard.quizzes.in-progress', ['locale' => app()->getLocale()]) }}" class="block group">
+            <div class="bg-white rounded-lg shadow p-4 sm:p-6 hover:shadow-md transition-shadow duration-200 border border-transparent hover:border-purple-200">
+                <div class="flex items-center justify-between">
+                    <div>
+                        <p class="text-sm font-medium text-gray-500 group-hover:text-purple-600 transition-colors truncate">{{ __('In Progress') }}</p>
+                        <p class="mt-1 text-2xl font-semibold text-purple-600 group-hover:text-purple-700 transition-colors">{{ $stats['in_progress_count'] }}</p>
+                    </div>
+                    <div class="p-3 rounded-full bg-purple-50 group-hover:bg-purple-100 text-purple-600 transition-colors">
+                        <svg xmlns="http://www.w3.org/2000/svg" class="h-6 w-6" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 8v4l3 3m6-3a9 9 0 11-18 0 9 9 0 0118 0z" />
+                        </svg>
+                    </div>
+                </div>
+                <div class="mt-2 text-right">
+                    <span class="text-xs text-purple-500 font-medium inline-flex items-center">
+                        {{ __('Continue learning') }}
+                        <svg xmlns="http://www.w3.org/2000/svg" class="h-3.5 w-3.5 ml-0.5" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="3" d="M9 5l7 7-7 7" />
+                        </svg>
+                    </span>
+                </div>
+            </div>
+        </a>
 
         <!-- Completed Quizzes -->
         <div class="bg-white rounded-lg shadow p-4 sm:p-6">
@@ -107,20 +142,6 @@
             </div>
         </div>
 
-        <!-- In Progress Quizzes -->
-        <div class="bg-white rounded-lg shadow p-4 sm:p-6">
-            <div class="flex items-center justify-between">
-                <div>
-                    <p class="text-sm font-medium text-gray-500 truncate">{{ __('dashboard.stats.in_progress') }}</p>
-                    <p class="mt-1 text-2xl font-semibold text-yellow-600">{{ $stats['in_progress_count'] }}</p>
-                </div>
-                <div class="p-3 rounded-full bg-yellow-100 text-yellow-600">
-                    <svg xmlns="http://www.w3.org/2000/svg" class="h-6 w-6" fill="none" viewBox="0 0 24 24" stroke="currentColor">
-                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 8v4l3 3m6-3a9 9 0 11-18 0 9 9 0 0118 0z" />
-                    </svg>
-                </div>
-            </div>
-        </div>
 
         <!-- Average Score -->
         <div class="bg-white rounded-lg shadow p-4 sm:p-6">
@@ -172,7 +193,7 @@
                             </p>
                             <p class="text-xs text-gray-600">{{ $plan->duration }} {{ __('dashboard.days') }}</p>
                         </div>
-                        <a href="{{ route('subscriptions.index', ['locale' => app()->getLocale()]) }}" class="mt-2 inline-block w-full">
+                        <a href="{{ route('subscriptions', ['locale' => app()->getLocale()]) }}" class="mt-2 inline-block w-full">
                             <button 
                                 type="button"
                                 class="w-full flex justify-center py-1.5 px-3 border border-gray-300 rounded-md shadow-sm text-xs sm:text-sm font-medium text-gray-700 bg-white hover:bg-gray-50 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-blue-500 disabled:opacity-50 disabled:cursor-not-allowed"
@@ -198,7 +219,7 @@
                 <div class="flex items-center justify-between mb-4">
                     <h2 class="text-lg font-medium text-gray-900">{{ __('dashboard.quizzes.new') }}</h2>
                     @if(Route::has('quizzes.index'))
-                        <a href="{{ route('quizzes.index', ['locale' => app()->getLocale()]) }}" class="text-sm font-medium text-blue-600 hover:text-blue-500">{{ __('dashboard.quizzes.view_all') }}</a>
+                        <a href="{{ route('dashboard.quizzes.index', ['locale' => app()->getLocale()]) }}" class="text-sm font-medium text-blue-600 hover:text-blue-500">{{ __('dashboard.quizzes.view_all') }}</a>
                     @endif
                 </div>
                 <div class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-4">
@@ -262,18 +283,23 @@
                                     </div>
                                 </div>
                                 <div class="mt-3 sm:mt-0 sm:ml-4">
-                                    <a href="{{ route('quizzes.attempt', $attempt) }}" class="inline-flex items-center px-3 py-1.5 border border-transparent text-xs font-medium rounded shadow-sm text-white bg-blue-600 hover:bg-blue-700 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-blue-500">
+                                    <a href="{{ route('quizzes.attempt', ['quiz' => $attempt->quiz_id, 'locale' => app()->getLocale()]) }}" class="inline-flex items-center px-3 py-1.5 border border-transparent text-xs font-medium rounded shadow-sm text-white bg-blue-600 hover:bg-blue-700 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-blue-500">
                                         {{ __('dashboard.quizzes.continue') }}
                                     </a>
                                 </div>
                             </div>
                             <div class="mt-3">
+                                @php
+                                    $progressPercentage = $attempt->total_questions > 0 
+                                        ? round(($attempt->current_question / $attempt->total_questions) * 100)
+                                        : 0;
+                                @endphp
                                 <div class="flex justify-between text-sm mb-1">
                                     <span>{{ __('dashboard.quizzes.progress') }}</span>
-                                    <span>{{ round(($attempt->current_question / $attempt->total_questions) * 100) }}%</span>
+                                    <span>{{ $progressPercentage }}%</span>
                                 </div>
                                 <div class="w-full bg-gray-200 rounded-full h-2">
-                                    <div class="bg-blue-600 h-2 rounded-full" style="width: {{ ($attempt->current_question / $attempt->total_questions) * 100 }}%"></div>
+                                    <div class="bg-blue-600 h-2 rounded-full" style="width: {{ $progressPercentage }}%"></div>
                                 </div>
                             </div>
                         </div>
@@ -289,7 +315,7 @@
             <div class="p-4 sm:p-6">
                 <div class="flex items-center justify-between mb-4">
                     <h2 class="text-lg font-medium text-gray-900">{{ __('dashboard.quizzes.recently_completed') }}</h2>
-                    <a href="{{ route('quizzes.index', ['locale' => app()->getLocale()]) }}" class="text-sm font-medium text-blue-600 hover:text-blue-500">{{ __('dashboard.quizzes.view_all') }}</a>
+                    <a href="{{ route('dashboard.quizzes.index', ['locale' => app()->getLocale()]) }}" class="text-sm font-medium text-blue-600 hover:text-blue-500">{{ __('dashboard.quizzes.view_all') }}</a>
                 </div>
                 
                 <div class="space-y-4">

@@ -9,19 +9,32 @@ use App\Enums\QuizAttemptStatus;
 
 class QuizAttempt extends Model
 {
+    protected $table = 'quiz_attempts';
+    
     protected $fillable = [
         'status',
         'score',
+        'score_percentage',
         'user_id',
         'quiz_id',
         'started_at',
         'completed_at',
+        'time_spent_seconds',
+        'total_questions',
         'active_quiz_id_for_user'
     ];
 
     protected $casts = [
-        'status' => QuizAttemptStatus::class,
         'score' => 'integer',
+        'score_percentage' => 'decimal:2',
+        'started_at' => 'datetime',
+        'completed_at' => 'datetime',
+        'time_spent_seconds' => 'integer',
+        'time_taken' => 'integer',
+        'total_questions' => 'integer',
+        'percentage' => 'decimal:2',
+        'passed' => 'boolean',
+        'answers' => 'array',
     ];
     
     // Add these properties to match Prisma schema
@@ -47,10 +60,35 @@ class QuizAttempt extends Model
 
     /**
      * Get all user answers for this attempt.
+     * Now returns answers from the JSON column.
      */
-    public function userAnswers()
+    public function getUserAnswersAttribute()
     {
-        return $this->hasMany(UserAnswer::class, 'attempt_id');
+        return collect($this->answers ?? []);
+    }
+
+    /**
+     * Alias for userAnswers for backward compatibility.
+     */
+    public function answers()
+    {
+        // Return a query builder that won't actually query the database
+        // since we're storing answers in the JSON column
+        return new class($this) {
+            protected $attempt;
+            
+            public function __construct($attempt) {
+                $this->attempt = $attempt;
+            }
+            
+            public function get() {
+                return collect($this->attempt->answers ?? []);
+            }
+            
+            public function toArray() {
+                return $this->get()->toArray();
+            }
+        };
     }
 
     /**
@@ -69,7 +107,7 @@ class QuizAttempt extends Model
      */
     public function isInProgress(): bool
     {
-        return $this->status === 'in_progress';
+        return $this->status === 'IN_PROGRESS';
     }
 
     /**
@@ -77,7 +115,7 @@ class QuizAttempt extends Model
      */
     public function isCompleted(): bool
     {
-        return $this->status === 'completed';
+        return $this->status === 'COMPLETED';
     }
 
     /**

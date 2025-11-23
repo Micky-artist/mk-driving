@@ -22,5 +22,9 @@ return [
     'about_us' => 'Dusobanukirwe',
     'settings' => 'Igenamiterere',
     'notifications' => 'Amanota',
-    'tagline' => 'Urugendo rwawe rutangirira aha'
+    'tagline' => 'Urugendo rwawe rutangirira aha',
+    'users' => 'Abakoresha',
+    'subscription_plans' => 'Amabwiriza yo kwiyandikisha',
+    'subscriptions' => 'Ibyiyandikisho',
+    'manage_account' => 'Gucunga konti'
 ];

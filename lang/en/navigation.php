@@ -21,4 +21,8 @@ return [
     'about_us' => 'About Us',
     'notifications' => 'Notifications',
     'tagline' => 'Your Journey Starts Here',
+    'users' => 'Users',
+    'subscription_plans' => 'Subscription Plans',
+    'subscriptions' => 'Subscriptions',
+    'manage_account' => 'Manage Account',
 ];

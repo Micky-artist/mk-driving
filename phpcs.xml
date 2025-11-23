@@ -1,0 +1,31 @@
+<?xml version="1.0"?>
+<ruleset name="Laravel">
+    <description>PHP_CodeSniffer rules for Laravel projects</description>
+
+    <!-- Base path: the root of your project -->
+    <file>app</file>
+    <file>config</file>
+    <file>database</file>
+    <file>routes</file>
+    <file>tests</file>
+
+    <!-- Exclude directories -->
+    <exclude-pattern>*/vendor/*</exclude-pattern>
+    <exclude-pattern>*/storage/*</exclude-pattern>
+    <exclude-pattern>*/bootstrap/cache/*</exclude-pattern>
+    <exclude-pattern>*/node_modules/*</exclude-pattern>
+
+    <!-- PSR-12 as a base rule set -->
+    <rule ref="PSR12">
+        <!-- Exclude PSR1.Methods.CamelCapsMethodName for Laravel's naming conventions -->
+        <exclude name="PSR1.Methods.CamelCapsMethodName"/>
+    </rule>
+
+    <!-- Additional rules for Laravel -->
+    <rule ref="Squiz.WhiteSpace.ScopeKeywordSpacing"/>
+    <rule ref="Squiz.WhiteSpace.SuperfluousWhitespace">
+        <properties>
+            <property name="ignoreBlankLines" value="false"/>
+        </properties>
+    </rule>
+</ruleset>

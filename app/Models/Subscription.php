@@ -20,8 +20,6 @@ class Subscription extends Model
     protected $fillable = [
         'id',
         'status',
-        'start_date',
-        'end_date',
         'starts_at',
         'ends_at',
         'canceled_at',
@@ -47,8 +45,6 @@ class Subscription extends Model
      */
     protected $casts = [
         'status' => 'string',
-        'start_date' => 'datetime',
-        'end_date' => 'datetime',
         'starts_at' => 'datetime',
         'ends_at' => 'datetime',
         'canceled_at' => 'datetime',

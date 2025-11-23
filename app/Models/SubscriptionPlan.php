@@ -45,6 +45,39 @@ class SubscriptionPlan extends Model
         'updated_at' => 'datetime',
         'deleted_at' => 'datetime',
     ];
+    
+    /**
+     * Get the features for the current locale.
+     *
+     * @return array
+     */
+    public function getFeaturesAttribute($value)
+    {
+        // If value is already an array, use it directly
+        if (is_array($value)) {
+            $features = $value;
+        } else {
+            // Try to decode JSON string
+            $decoded = json_decode($value, true);
+            $features = json_last_error() === JSON_ERROR_NONE ? $decoded : [];
+        }
+        
+        $locale = app()->getLocale();
+        $fallback = config('app.fallback_locale', 'en');
+        
+        // Ensure $features is an array before mapping
+        if (!is_array($features)) {
+            return [];
+        }
+        
+        return array_map(function($feature) use ($locale, $fallback) {
+            if (is_array($feature)) {
+                return $feature[$locale] ?? $feature[$fallback] ?? '';
+            }
+            // If feature is a string, return it as is
+            return $feature;
+        }, $features);
+    }
 
     /**
      * Get the quizzes associated with this subscription plan.

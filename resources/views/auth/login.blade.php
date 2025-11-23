@@ -98,8 +98,6 @@
             </div>
         </div>
     </div>
-    
-    @include('components.footer')
 </div>
 @push('scripts')
 <script>

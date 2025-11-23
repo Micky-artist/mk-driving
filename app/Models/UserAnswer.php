@@ -10,11 +10,18 @@ class UserAnswer extends Model
 {
     use HasFactory;
 
+    protected $table = 'quiz_attempt_answers';
+    
     protected $fillable = [
-        'attempt_id',
+        'quiz_attempt_id',
         'question_id',
-        'selected_option_id'
+        'option_id',
+        'is_correct',
+        'points_earned'
     ];
+    
+    // Override the primary key if needed
+    protected $primaryKey = 'id';
 
     // This table doesn't need timestamps as per Prisma schema
     public $timestamps = false;
@@ -24,7 +31,7 @@ class UserAnswer extends Model
      */
     public function attempt(): BelongsTo
     {
-        return $this->belongsTo(QuizAttempt::class, 'attempt_id');
+        return $this->belongsTo(QuizAttempt::class, 'quiz_attempt_id');
     }
 
     /**
@@ -40,7 +47,7 @@ class UserAnswer extends Model
      */
     public function option(): BelongsTo
     {
-        return $this->belongsTo(Option::class);
+        return $this->belongsTo(Option::class, 'option_id');
     }
 
     /**

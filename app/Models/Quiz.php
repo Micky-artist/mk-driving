@@ -5,7 +5,9 @@ namespace App\Models;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\Relations\BelongsTo;
 use Illuminate\Database\Eloquent\Relations\HasMany;
+use Illuminate\Database\Eloquent\Relations\HasManyThrough;
 use Illuminate\Database\Eloquent\SoftDeletes;
+use App\Models\Bookmark;
 
 class Quiz extends Model
 {
@@ -67,6 +69,23 @@ class Quiz extends Model
     public function attempts()
     {
         return $this->hasMany(QuizAttempt::class);
+    }
+
+    /**
+     * Get all bookmarks for this quiz.
+     */
+    public function bookmarks()
+    {
+        return $this->hasMany(Bookmark::class);
+    }
+
+    /**
+     * Get the users who bookmarked this quiz.
+     */
+    public function bookmarkedBy()
+    {
+        return $this->belongsToMany(User::class, 'quiz_bookmarks', 'quiz_id', 'user_id')
+            ->withTimestamps();
     }
     
     /**

@@ -12,6 +12,8 @@ use App\Http\Controllers\Api\SubscriptionPlanController;
 use App\Http\Controllers\Api\SubscriptionController;
 use App\Http\Controllers\Api\UploadController;
 use App\Http\Controllers\Api\UserController;
+use App\Http\Controllers\API\BookmarkController;
+use App\Http\Controllers\Api\QuizAttemptController;
 
 // Public routes
 Route::post('/register', [AuthController::class, 'register']);
@@ -47,6 +49,26 @@ Route::prefix('payments')->group(function () {
     Route::post('/webhook/mtn', [\App\Http\Controllers\Api\PaymentController::class, 'handleWebhook'])->name('payment.webhook.mtn');
 });
 
+// Bookmark routes
+Route::middleware('auth:sanctum')->group(function () {
+    Route::post('/quizzes/{quiz}/bookmark', [BookmarkController::class, 'toggle']);
+    Route::get('/quizzes/{quiz}/bookmark/check', [BookmarkController::class, 'check']);
+    Route::get('/bookmarks', [BookmarkController::class, 'index']);
+    
+    // Test route to check if bookmarks are working
+    Route::get('/test-bookmark/{quiz}', function($quizId) {
+        $user = auth()->user();
+        $isBookmarked = $user->bookmarks()->where('quiz_id', $quizId)->exists();
+        
+        return response()->json([
+            'user_id' => $user->id,
+            'quiz_id' => $quizId,
+            'is_bookmarked' => $isBookmarked,
+            'bookmarks' => $user->bookmarks->pluck('quiz_id')
+        ]);
+    });
+});
+
 // Public upload routes
 Route::middleware('auth:sanctum')->group(function () {
     Route::post('/upload/image', [UploadController::class, 'uploadImage']);
@@ -78,6 +100,11 @@ Route::middleware('auth:sanctum')->group(function () {
         Route::get('/conversations', [ChatbotController::class, 'getConversationHistory']);
     });
     
+    // Quiz Attempts
+    Route::post('/quizzes/start', [QuizAttemptController::class, 'start']);
+    Route::get('/attempts/{attemptId}', [QuizAttemptController::class, 'getAttempt']);
+    Route::put('/attempts/{attemptId}', [QuizAttemptController::class, 'updateAttempt']);
+
     // Forum routes
     Route::prefix('forum')->group(function () {
         Route::post('/questions', [ForumController::class, 'storeQuestion']);

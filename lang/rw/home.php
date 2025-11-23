@@ -34,6 +34,7 @@ return [
         'month' => 'ukwezi',
         'purchase' => 'Kwishyura',
         'subscribe' => 'Kwiyandikisha',
+        'loginToSubscribe' => 'Injira kugirango wiyandikishe',
         'currentPlan' => 'Ifatabuguzi ryawe',
         'mostPopular' => 'Iyi irakunzwe',
         'noFeatures' => 'Ibikubiyemo ntibibonetse',

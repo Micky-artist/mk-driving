@@ -4,6 +4,8 @@ namespace App\Http\Controllers\Web;
 
 use App\Http\Controllers\Controller;
 use App\Models\Quiz;
+use App\Models\QuizAttempt;
+use App\Models\UserAnswer;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Log;
 use Illuminate\View\View;
@@ -112,11 +114,33 @@ class GuestQuizController extends Controller
         
         $validated = $request->validate([
             'answers' => 'required|array',
-            'answers.*' => 'required|exists:answers,id',
+            'answers.*' => 'required|exists:options,id',
+            'time_taken' => 'required|integer',
         ]);
 
-        // Calculate score and return results
-        $results = $this->calculateResults($quiz, $validated['answers']);
+        // Create quiz attempt
+        $attempt = QuizAttempt::create([
+            'user_id' => auth()->id(),
+            'quiz_id' => $quiz->id,
+            'status' => 'COMPLETED',
+            'score' => 0,
+            'time_spent_seconds' => $validated['time_taken'],
+            'started_at' => $quizStartTime ?? now(),
+            'completed_at' => now(),
+            'total_questions' => $quiz->questions()->count()
+        ]);
+
+        // Calculate results and save answers
+        $results = $this->calculateResults($quiz, $validated['answers'], $attempt->id);
+
+        // Update attempt with final score
+        $attempt->update([
+            'score' => $results['correct_answers'],
+            'score_percentage' => $results['score']
+        ]);
+        
+        // Clear the quiz start time from the session
+        session()->forget('quiz_start_time');
         
         return response()->json([
             'success' => true,
@@ -147,7 +171,7 @@ class GuestQuizController extends Controller
     /**
      * Calculate quiz results
      */
-    protected function calculateResults(Quiz $quiz, array $userAnswers): array
+    protected function calculateResults(Quiz $quiz, array $userAnswers, $attemptId = null): array
     {
         $questions = $quiz->questions;
         $totalQuestions = $questions->count();
@@ -155,23 +179,39 @@ class GuestQuizController extends Controller
         $results = [];
 
         foreach ($questions as $question) {
-            $correctAnswer = $question->answers->where('is_correct', true)->first();
-            $userAnswer = in_array($correctAnswer->id, $userAnswers);
+            $correctOption = $question->options()->where('is_correct', true)->first();
+            $userSelectedOption = $userAnswers[$question->id] ?? null;
+            $isCorrect = $userSelectedOption && $userSelectedOption == $correctOption->id;
             
-            if ($userAnswer) {
+            if ($isCorrect) {
                 $correctAnswers++;
             }
 
+            // Save user answer if attempt ID is provided
+            if ($attemptId) {
+                \App\Models\UserAnswer::create([
+                    'quiz_attempt_id' => $attemptId,
+                    'question_id' => $question->id,
+                    'option_id' => $userSelectedOption,
+                    'is_correct' => $isCorrect,
+                    'points_earned' => $isCorrect ? 1 : 0,
+                    'created_at' => now(),
+                    'updated_at' => now()
+                ]);
+            }
+
             $results[] = [
-                'question' => $question->text,
-                'correct' => $userAnswer,
-                'correct_answer' => $correctAnswer->text,
-                'explanation' => $question->explanation
+                'question_id' => $question->id,
+                'question' => $question->getTranslation('text', app()->getLocale()),
+                'correct' => $isCorrect,
+                'selected_option' => $userSelectedOption,
+                'correct_option' => $correctOption->id,
+                'explanation' => $question->getTranslation('explanation', app()->getLocale())
             ];
         }
 
-        $score = ($correctAnswers / $totalQuestions) * 100;
-        $passingScore = $quiz->passing_score ?? 70; // Default to 70% if not set
+        $score = $totalQuestions > 0 ? ($correctAnswers / $totalQuestions) * 100 : 0;
+        $passingScore = $quiz->passing_score ?? 70;
 
         return [
             'score' => round($score, 2),

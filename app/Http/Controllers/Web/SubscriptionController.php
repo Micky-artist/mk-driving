@@ -14,29 +14,35 @@ class SubscriptionController extends Controller
     public function index()
     {
         $user = Auth::user();
+        $currentLocale = app()->getLocale();
         
-        // Get all active subscription plans
+        // Get all active subscription plans with formatted data for the component
         $plans = SubscriptionPlan::where('is_active', true)
             ->orderBy('price')
-            ->get();
+            ->get()
+            ->map(function($plan) use ($currentLocale, $user) {
+                $name = json_decode($plan->name, true) ?? [];
+                $description = json_decode($plan->description, true) ?? [];
+                
+                return [
+                    'id' => $plan->id,
+                    'slug' => $plan->slug,
+                    'name' => $name,
+                    'display_name' => $name[$currentLocale] ?? $name['en'] ?? 'Unnamed Plan',
+                    'description' => $description,
+                    'display_description' => $description[$currentLocale] ?? $description['en'] ?? '',
+                    'price' => $plan->price,
+                    'duration' => $plan->duration,
+                    'features' => $plan->features,
+                    'is_current' => $user->subscriptions()
+                        ->where('subscription_plan_id', $plan->id)
+                        ->whereIn('status', ['ACTIVE', 'PENDING'])
+                        ->exists(),
+                ];
+            });
             
-        // Get user's active subscriptions
-        $activeSubscriptions = $user->subscriptions()
-            ->where('status', 'ACTIVE')
-            ->where('end_date', '>', now())
-            ->with('subscriptionPlan')
-            ->get();
-            
-        // Get user's pending subscriptions
-        $pendingSubscriptions = $user->subscriptions()
-            ->where('status', 'PENDING')
-            ->with('subscriptionPlan')
-            ->get();
-            
-        return view('dashboard.subscriptions.index', [
+        return view('subscriptions.index', [
             'plans' => $plans,
-            'activeSubscriptions' => $activeSubscriptions,
-            'pendingSubscriptions' => $pendingSubscriptions,
             'user' => $user
         ]);
     }

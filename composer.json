@@ -21,7 +21,9 @@
         "laravel/telescope": "^5.15",
         "mockery/mockery": "^1.6",
         "nunomaduro/collision": "^8.6",
-        "phpunit/phpunit": "^11.5.3"
+        "php-parallel-lint/php-parallel-lint": "^2.0",
+        "phpunit/phpunit": "^11.5.3",
+        "squizlabs/php_codesniffer": "^3.8"
     },
     "autoload": {
         "psr-4": {
@@ -39,6 +41,13 @@
         }
     },
     "scripts": {
+        "lint": [
+            "parallel-lint app --exclude vendor --exclude storage --exclude bootstrap/cache",
+            "phpcs -p --standard=PSR12 --extensions=php --ignore=vendor/,storage/,bootstrap/cache/ app/"
+        ],
+        "lint:fix": [
+            "phpcbf -p --standard=PSR12 --extensions=php --ignore=vendor/,storage/,bootstrap/cache/ app/"
+        ],
         "setup": [
             "composer install",
             "@php -r \"file_exists('.env') || copy('.env.example', '.env');\"",

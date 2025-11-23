@@ -27,6 +27,9 @@ return [
         'logout' => 'Logout',
     ],
     'quizzes' => [
+        'all_quizzes' => 'All Quizzes',
+        'completed' => 'Completed',
+        'in_progress' => 'In Progress',
         'new' => 'New Quizzes',
         'continue_learning' => 'Continue Learning',
         'recently_completed' => 'Recently Completed',

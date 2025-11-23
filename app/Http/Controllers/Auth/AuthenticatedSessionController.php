@@ -44,14 +44,24 @@ class AuthenticatedSessionController extends Controller
     /**
      * Destroy an authenticated session.
      */
-    public function destroy(Request $request): Response
+    /**
+     * Destroy an authenticated session.
+     *
+     * @param  \Illuminate\Http\Request  $request
+     * @return \Illuminate\Http\Response
+     */
+    public function destroy(Request $request)
     {
+        // Get the current locale before logging out
+        $locale = $request->route('locale') ?? app()->getLocale();
+        
         Auth::guard('web')->logout();
 
         $request->session()->invalidate();
 
         $request->session()->regenerateToken();
 
-        return response()->noContent();
+        // Redirect to login page with the current locale
+        return redirect()->route('login', ['locale' => $locale]);
     }
 }

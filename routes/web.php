@@ -8,10 +8,16 @@ use App\Models\Blog;
 use App\Http\Controllers\SitemapController;
 use App\Models\SubscriptionPlan;
 use App\Services\LocaleService;
+use App\Http\Controllers\Web\PaymentController;
 
 // Sitemap
 Route::get('/sitemap.xml', [SitemapController::class, 'index'])
     ->name('sitemap.index');
+
+// Payment routes (no locale needed)
+Route::post('/payments/request', [PaymentController::class, 'store'])
+    ->middleware(['auth', 'verified'])
+    ->name('payments.request');
 
 // API endpoints (no locale needed)
 Route::get('/api/subscription-plans', function(LocaleService $localeService) {
@@ -60,6 +66,7 @@ Route::prefix('{locale}')
     ->group(function () {
         
         // Profile routes
+        // Profile routes (authenticated only)
         Route::middleware(['auth'])->group(function () {
             // Profile
             Route::get('/profile', [\App\Http\Controllers\ProfileController::class, 'show'])
@@ -81,6 +88,16 @@ Route::prefix('{locale}')
             Route::delete('/profile/photo', [\App\Http\Controllers\ProfileController::class, 'deletePhoto'])
                 ->name('profile.photo.destroy');
         });
+        
+        // Subscription routes (public but with auth middleware on specific actions)
+        Route::prefix('subscriptions')->name('subscriptions.')->group(function () {
+            Route::get('/', [\App\Http\Controllers\Web\SubscriptionController::class, 'index'])->name('index');
+            Route::get('/{plan}', [\App\Http\Controllers\Web\SubscriptionController::class, 'show'])->name('show');
+            Route::middleware(['auth'])->group(function () {
+                Route::post('/{plan}/subscribe', [\App\Http\Controllers\Web\SubscriptionController::class, 'subscribe'])
+                    ->name('subscribe');
+            });
+        });
     // Homepage route (handles /{locale} and /{locale}/home)
     Route::get('', function ($locale) {
         // Set the application locale
@@ -91,26 +108,34 @@ Route::prefix('{locale}')
             ->orderBy('price')
             ->get()
             ->map(function($plan) use ($locale) {
-                $name = json_decode($plan->name, true);
-                $description = json_decode($plan->description, true);
-                
-                // Process features
-                $features = [];
-                $rawFeatures = json_decode($plan->features, true);
-                
-                if (is_array($rawFeatures)) {
-                    if (isset($rawFeatures[$locale])) {
-                        $features = (array)$rawFeatures[$locale];
-                    } elseif (isset($rawFeatures[config('app.fallback_locale', 'en')])) {
-                        $features = (array)$rawFeatures[config('app.fallback_locale', 'en')];
-                    } else {
-                        $features = is_array($rawFeatures) ? $rawFeatures : [];
-                    }
-                } elseif (is_string($rawFeatures)) {
-                    $features = [$rawFeatures];
+                // Handle name (string or array)
+                $name = $plan->name;
+                if (is_string($name)) {
+                    $name = json_decode($name, true) ?: [];
+                }
+                $displayName = $name[$locale] ?? $name[config('app.fallback_locale', 'en')] ?? 'Unnamed Plan';
+
+                // Handle description (string or array)
+                $description = $plan->description;
+                if (is_string($description)) {
+                    $description = json_decode($description, true) ?: [];
+                }
+                $displayDescription = $description[$locale] ?? $description[config('app.fallback_locale', 'en')] ?? '';
+
+                // Handle features (string, array, or JSON string)
+                $features = $plan->features;
+                if (is_string($features)) {
+                    $features = json_decode($features, true) ?: [];
                 }
                 
-                $features = array_map('strval', (array)$features);
+                // Ensure features is an array and process it
+                $features = is_array($features) ? $features : [];
+                if (isset($features[$locale])) {
+                    $features = (array)$features[$locale];
+                } elseif (isset($features[config('app.fallback_locale', 'en')])) {
+                    $features = (array)$features[config('app.fallback_locale', 'en')];
+                }
+                $features = array_map('strval', $features);
                 
                 return [
                     'id' => $plan->id,
@@ -210,14 +235,18 @@ Route::prefix('{locale}')
     });
     
     // Quizzes routes (authenticated)
-    Route::get('quizzes', [\App\Http\Controllers\Web\QuizController::class, 'index'])
+    Route::get('quizzes', [\App\Http\Controllers\Web\Dashboard\QuizController::class, 'index'])
         ->name('quizzes')
         ->middleware('auth');
         
     // Subscriptions routes (authenticated)
-    Route::get('subscriptions', [\App\Http\Controllers\Web\SubscriptionController::class, 'index'])
-        ->name('subscriptions')
-        ->middleware('auth');
+    Route::middleware('auth')->group(function () {
+        Route::get('subscriptions', [\App\Http\Controllers\Web\SubscriptionController::class, 'index'])
+            ->name('subscriptions');
+            
+        Route::post('subscriptions/{plan}', [\App\Http\Controllers\Web\SubscriptionController::class, 'store'])
+            ->name('subscriptions.store');
+    });
     
     // Authentication Routes
     Route::middleware('guest')->group(function () {
@@ -244,17 +273,42 @@ Route::prefix('{locale}')
             ->orderBy('price')
             ->get()
             ->map(function($plan) use ($locale) {
-                $name = json_decode($plan->name, true);
-                $description = json_decode($plan->description, true);
-                $features = json_decode($plan->features, true) ?? [];
+                // Handle name (string or array)
+                $name = $plan->name;
+                if (is_string($name)) {
+                    $name = json_decode($name, true) ?: [];
+                }
+                $displayName = $name[$locale] ?? $name[config('app.fallback_locale', 'en')] ?? 'Unnamed Plan';
+
+                // Handle description (string or array)
+                $description = $plan->description;
+                if (is_string($description)) {
+                    $description = json_decode($description, true) ?: [];
+                }
+                $displayDescription = $description[$locale] ?? $description[config('app.fallback_locale', 'en')] ?? '';
+
+                // Handle features (string, array, or JSON string)
+                $features = $plan->features;
+                if (is_string($features)) {
+                    $features = json_decode($features, true) ?: [];
+                }
+                
+                // Ensure features is an array and process it
+                $features = is_array($features) ? $features : [];
+                if (isset($features[$locale])) {
+                    $features = (array)$features[$locale];
+                } elseif (isset($features[config('app.fallback_locale', 'en')])) {
+                    $features = (array)$features[config('app.fallback_locale', 'en')];
+                }
+                $features = array_map('strval', $features);
                 
                 return [
                     'id' => $plan->id,
                     'slug' => $plan->slug,
                     'name' => $name,
-                    'display_name' => $name[$locale] ?? $name['en'] ?? 'Unnamed Plan',
+                    'display_name' => $displayName,
                     'description' => $description,
-                    'display_description' => $description[$locale] ?? $description['en'] ?? '',
+                    'display_description' => $displayDescription,
                     'price' => $plan->price,
                     'duration' => $plan->duration,
                     'features' => $features,
@@ -275,17 +329,69 @@ Route::prefix('{locale}')
         // Dashboard route
         Route::get('dashboard', 'DashboardController@index')
             ->name('dashboard');
+            
+        // User quiz routes
+        Route::get('dashboard/my-quizzes', 'DashboardController@myQuizzes')
+            ->name('dashboard.my-quizzes');
+            
+        // Quiz attempt API routes
+        Route::prefix('api')->group(function () {
+            // Get or create an active quiz attempt
+            Route::get('quizzes/{quiz}/attempt', 'QuizAttemptController@getActiveAttempt')
+                ->name('api.quizzes.attempt');
+                
+            // Update a quiz attempt (save progress or submit)
+            Route::put('attempts/{attempt}', 'QuizAttemptController@update')
+                ->name('api.attempts.update');
+                
+            // Get user's quiz attempts
+            Route::get('my-attempts', 'QuizAttemptController@getUserAttempts')
+                ->name('api.my-attempts');
+                
+            // Start or continue a quiz attempt
+            Route::get('quizzes/{quiz}/start', 'QuizAttemptController@start')
+                ->name('quizzes.attempt');
+        });
         
         // Forum
         Route::get('forum', [\App\Http\Controllers\Web\ForumController::class, 'index'])->name('forum');
         
-        // Dashboard My Quizzes Routes
-        Route::prefix('dashboard/my-quizzes')->name('dashboard.quizzes.')->group(function() {
+        // Dashboard Quizzes Routes
+        Route::prefix('dashboard/quizzes')->name('dashboard.quizzes.')->group(function() {
+            // All quizzes
             Route::get('/', [\App\Http\Controllers\Web\Dashboard\QuizController::class, 'index'])
                 ->name('index');
                 
+            // In Progress quizzes
+            Route::get('/in-progress', [\App\Http\Controllers\Web\Dashboard\QuizController::class, 'inProgress'])
+                ->name('in-progress');
+                
+            // Completed quizzes
+            Route::get('/completed', [\App\Http\Controllers\Web\Dashboard\QuizController::class, 'completed'])
+                ->name('completed');
+                
+            // Add bookmark route
+            Route::post('/{quiz}/bookmark', [\App\Http\Controllers\Web\Dashboard\QuizController::class, 'bookmark'])
+                ->name('bookmark');
+                
+            // Update quiz attempt
+            Route::put('/attempts/{attempt}', [\App\Http\Controllers\Web\Dashboard\QuizAttemptController::class, 'update'])
+                ->name('attempt.update');
+                
+            // Quiz submission
+            Route::post('/{quiz}/submit', [\App\Http\Controllers\Web\Dashboard\QuizAttemptController::class, 'update'])
+                ->name('submit')
+                ->where('quiz', '[0-9]+');
+                
+            // Quiz details
             Route::get('/{quiz}', [\App\Http\Controllers\Web\Dashboard\QuizController::class, 'show'])
-                ->name('show');
+                ->name('show')
+                ->where('quiz', '[0-9]+');
+                
+            // Attempt details
+            Route::get('/attempts/{attempt}', [\App\Http\Controllers\Web\Dashboard\QuizController::class, 'attemptDetails'])
+                ->name('attempt.details')
+                ->where('attempt', '[0-9]+');
         });
         
         // News Routes
@@ -295,26 +401,21 @@ Route::prefix('{locale}')
         Route::get('news/{news:slug}', [\App\Http\Controllers\Web\NewsDetailController::class, 'show'])
             ->name('news.show');
         
-        // Subscription Routes
-        Route::prefix('subscriptions')->name('subscriptions.')->group(function() {
-            Route::get('/', [\App\Http\Controllers\Web\SubscriptionController::class, 'index'])
-                ->name('index');
-                
-            Route::get('/success', [\App\Http\Controllers\Web\SubscriptionController::class, 'success'])
-                ->name('success');
-                
-            Route::get('/cancel', [\App\Http\Controllers\Web\SubscriptionController::class, 'cancel'])
-                ->name('cancel');
-                
-            Route::delete('/{subscription}', [\App\Http\Controllers\Web\SubscriptionController::class, 'destroy'])
-                ->name('destroy');
-        });
+            // Subscription success/cancel routes
+        Route::get('subscriptions/success', [\App\Http\Controllers\Web\SubscriptionController::class, 'success'])
+            ->name('subscriptions.success');
+            
+        Route::get('subscriptions/cancel', [\App\Http\Controllers\Web\SubscriptionController::class, 'cancel'])
+            ->name('subscriptions.cancel');
+            
+        Route::delete('subscriptions/{subscription}', [\App\Http\Controllers\Web\SubscriptionController::class, 'destroy'])
+            ->name('subscriptions.destroy');
     });
-});
 
-// Forum Routes
-Route::prefix('{locale}/forum')
-    ->where(['locale' => '[a-zA-Z]{2}'])
+// Admin routes have been removed
+
+// Forum Routes (already inside locale prefix)
+Route::prefix('forum')
     ->name('forum.')
     ->group(function () {
         Route::get('/', [\App\Http\Controllers\Web\ForumController::class, 'index'])->name('index');
@@ -337,6 +438,8 @@ Route::prefix('{locale}/forum')
             ->name('best-answer')
             ->middleware('auth');
     });
+
+    }); // Close the locale prefix group
 
 // Authentication routes (from auth.php)
 require __DIR__.'/auth.php';

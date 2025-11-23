@@ -63,11 +63,10 @@
                                 </x-dropdown-link>
 
                                 <!-- Authentication -->
-                                <form method="POST" action="{{ route('logout', ['locale' => app()->getLocale()]) }}">
+                                <form id="logout-form" method="POST" action="{{ route('logout', ['locale' => app()->getLocale()]) }}">
                                     @csrf
                                     <x-dropdown-link :href="route('logout', ['locale' => app()->getLocale()])"
-                                            onclick="event.preventDefault();
-                                                        this.closest('form').submit();">
+                                            onclick="event.preventDefault(); this.closest('form').submit();">
                                         {{ __('navigation.logout') }}
                                     </x-dropdown-link>
                                 </form>
@@ -114,11 +113,10 @@
                         </x-responsive-nav-link>
 
                         <!-- Authentication -->
-                        <form method="POST" action="{{ route('logout', ['locale' => app()->getLocale()]) }}">
+                        <form id="mobile-logout-form" method="POST" action="{{ route('logout', ['locale' => app()->getLocale()]) }}">
                             @csrf
                             <x-responsive-nav-link :href="route('logout', ['locale' => app()->getLocale()])"
-                                    onclick="event.preventDefault();
-                                                this.closest('form').submit();">
+                                    onclick="event.preventDefault(); this.closest('form').submit();">
                                 {{ __('navigation.logout') }}
                             </x-responsive-nav-link>
                         </form>

@@ -27,6 +27,9 @@ return [
         'logout' => 'Gusohoka',
     ],
     'quizzes' => [
+        'all_quizzes' => 'Ibizamini Byose',
+        'completed' => 'Byarangiye',
+        'in_progress' => 'Biri mu nzira',
         'new' => 'Ibyatoranijwe bishya',
         'continue_learning' => 'Komeza kwiga',
         'recently_completed' => 'Byarangiye vuba aha',

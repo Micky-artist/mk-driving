@@ -95,6 +95,20 @@
                     {{ __('navigation.settings') }}
                 </a>
 
+                <!-- Admin Portal Link -->
+                @if(Auth::user() && Auth::user()->isAdmin())
+                <a 
+                    href="{{ route('dashboard', app()->getLocale()) }}" 
+                    class="flex items-center px-3 py-2 text-sm text-gray-700 rounded-md hover:bg-gray-100 transition-colors"
+                    @click="open = false"
+                >
+                    <svg class="w-4 h-4 mr-3 text-gray-400" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 11H5m14 0a2 2 0 012 2v6a2 2 0 01-2 2H5a2 2 0 01-2-2v-6a2 2 0 012-2m14 0V9a2 2 0 00-2-2M5 11V9a2 2 0 012-2m0 0V5a2 2 0 012-2h6a2 2 0 012 2v2M7 7h10" />
+                    </svg>
+                    {{ __('Admin Portal') }}
+                </a>
+                @endif
+
                 <div class="border-t border-gray-100 my-1"></div>
 
                 <form method="POST" action="{{ route('logout', ['locale' => $locale]) }}">

@@ -56,5 +56,26 @@
     @include('components.footer')
 
     @stack('scripts')
+    
+    <!-- Notifications Component -->
+    <x-notifications />
+    
+    <script>
+        document.addEventListener('alpine:init', () => {
+            // Display any server-side flash notifications
+            @if(session('notification'))
+                const notification = @json(session('notification'));
+                window.notify[notification.type](notification.message, notification.duration || 5000);
+            @endif
+
+            // Intercept browser alerts and show them as notifications
+            const originalAlert = window.alert;
+            window.alert = function(message) {
+                window.notify.info(message);
+                // Uncomment the line below if you want to keep the original alert as well
+                // originalAlert(message);
+            };
+        });
+    </script>
 </body>
 </html>

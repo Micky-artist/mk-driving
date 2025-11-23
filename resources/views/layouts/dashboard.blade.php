@@ -17,20 +17,21 @@
     <!-- Alpine.js -->
     <script defer src="https://cdn.jsdelivr.net/npm/alpinejs@3.x.x/dist/cdn.min.js"></script>
     
-    @stack('styles')
-    
+    <!-- Base Styles -->
     <style>
         [x-cloak] { 
             display: none !important; 
         }
         
-        /* Ensure full height */
         html, body {
             height: 100%;
             margin: 0;
             padding: 0;
         }
     </style>
+    
+    <!-- Page-specific Styles -->
+    @stack('styles')
 </head>
 <body class="font-sans antialiased bg-gray-50 h-full">
     <div id="app" x-data="{ sidebarOpen: false }" class="h-screen flex overflow-hidden bg-gray-50">
@@ -98,6 +99,9 @@
 
     @stack('scripts')
     
+    <!-- Notifications Component -->
+    <x-notifications />
+    
     <script>
         document.addEventListener('alpine:init', () => {
             // Close mobile sidebar when clicking a link
@@ -111,6 +115,20 @@
                     }
                 }
             });
+
+            // Display any server-side flash notifications
+            @if(session('notification'))
+                const notification = @json(session('notification'));
+                window.notify[notification.type](notification.message, notification.duration || 5000);
+            @endif
+
+            // Intercept browser alerts and show them as notifications
+            const originalAlert = window.alert;
+            window.alert = function(message) {
+                window.notify.info(message);
+                // Uncomment the line below if you want to keep the original alert as well
+                // originalAlert(message);
+            };
         });
     </script>
 </body>

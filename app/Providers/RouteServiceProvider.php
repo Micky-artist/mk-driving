@@ -62,7 +62,18 @@ class RouteServiceProvider extends ServiceProvider
         
         // Explicitly bind the Quiz model for route model binding
         Route::bind('quiz', function ($value) {
-            return \App\Models\Quiz::findOrFail($value);
+            // Convert string ID to integer if possible
+            $id = is_numeric($value) ? (int)$value : $value;
+            
+            // Try to find the quiz with the given ID
+            $quiz = \App\Models\Quiz::find($id);
+            
+            // If quiz not found, throw 404
+            if (!$quiz) {
+                abort(404, 'Quiz not found.');
+            }
+            
+            return $quiz;
         });
 
         $this->routes(function () {
@@ -94,13 +105,13 @@ class RouteServiceProvider extends ServiceProvider
                     // Load the web routes with the locale prefix
                     Route::prefix($locale)
                         ->group(base_path('routes/web.php'));
+                        
+                    // Admin routes with localization
+                    Route::prefix($locale . '/admin')
+                        ->name('admin.')
+                        ->middleware(['web', 'auth', 'admin'])
+                        ->group(base_path('routes/admin.php'));
                 });
-                    
-            // Admin routes (no localization)
-            Route::middleware(['web', 'auth', 'admin'])
-                ->prefix('admin')
-                ->name('admin.')
-                ->group(base_path('routes/admin.php'));
         });
         
         // Add a global view composer to share the current locale with all views

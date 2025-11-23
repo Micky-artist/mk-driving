@@ -326,7 +326,7 @@
                     <div class="flex-1">
                         <h3 class="text-lg font-bold mb-2 text-gray-900">Upgrade to Premium</h3>
                         <p class="text-gray-600 mb-3">Get unlimited access to all quizzes, detailed analytics, and AI-powered study recommendations!</p>
-                        <a href="{{ route('pricing', ['locale' => app()->getLocale()]) }}" class="inline-flex items-center px-5 py-2 bg-gradient-to-r from-purple-600 to-indigo-600 text-white font-semibold rounded-lg hover:from-purple-700 hover:to-indigo-700 transition-colors">
+                        <a href="{{ route('plans', ['locale' => app()->getLocale()]) }}" class="inline-flex items-center px-5 py-2 bg-gradient-to-r from-purple-600 to-indigo-600 text-white font-semibold rounded-lg hover:from-purple-700 hover:to-indigo-700 transition-colors">
                             View Plans
                             <svg class="w-4 h-4 ml-2" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                                 <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 5l7 7-7 7"></path>

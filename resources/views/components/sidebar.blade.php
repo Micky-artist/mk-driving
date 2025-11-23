@@ -17,7 +17,30 @@ $dashboardNav = [
         'icon' => 'M12 6.253v13m0-13C10.832 5.477 9.246 5 7.5 5S4.168 5.477 3 6.253v13C4.168 18.477 5.754 18 7.5 18s3.332.477 4.5 1.253m0-13C13.168 5.477 14.754 5 16.5 5c1.747 0 3.332.477 4.5 1.253v13C19.832 18.477 18.247 18 16.5 18c-1.746 0-3.332.477-4.5 1.253',
         'key' => 'quizzes',
         'route' => 'dashboard.quizzes.index',
-        'is_external' => false
+        'is_external' => false,
+        'children' => [
+            [
+                'icon' => 'M12 6.253v13m0-13C10.832 5.477 9.246 5 7.5 5S4.168 5.477 3 6.253v13C4.168 18.477 5.754 18 7.5 18s3.332.477 4.5 1.253m0-13C13.168 5.477 14.754 5 16.5 5c1.747 0 3.332.477 4.5 1.253v13C19.832 18.477 18.247 18 16.5 18c-1.746 0-3.332.477-4.5 1.253',
+                'key' => 'all_quizzes',
+                'route' => 'dashboard.quizzes.index',
+                'is_external' => false,
+                'translation_group' => 'quizzes'
+            ],
+            [
+                'icon' => 'M12 8v4l3 3m6-3a9 9 0 11-18 0 9 9 0 0118 0z',
+                'key' => 'in_progress',
+                'translation_group' => 'quizzes',
+                'route' => 'dashboard.quizzes.in-progress',
+                'is_external' => false
+            ],
+            [
+                'icon' => 'M12 8v4l3 3m6-3a9 9 0 11-18 0 9 9 0 0118 0z',
+                'key' => 'completed',
+                'translation_group' => 'quizzes',
+                'route' => 'dashboard.quizzes.completed',
+                'is_external' => false
+            ]
+        ]
     ]
 ];
 
@@ -82,44 +105,108 @@ $navigation = array_merge(
                 }
 
                 $params = ['locale' => $currentLocale];
+                if (isset($item['route_params'])) {
+                    $params = array_merge($params, $item['route_params']);
+                }
                 $routeExists = Route::has($item['route']);
                 $isActive = request()->routeIs($item['route']);
+                
+                // Check for quiz routes
+                if (in_array($item['route'], ['dashboard.quizzes.index', 'dashboard.quizzes.in-progress', 'dashboard.quizzes.completed'])) {
+                    $isActive = request()->routeIs($item['route']);
+                }
+                
                 $href = $routeExists ? route($item['route'], $params) : '#';
                 
                 // Special case for dashboard
                 if ($item['key'] === 'home' && request()->routeIs('home')) {
                     $isActive = true;
                 }
-            @endphp
                 
-            <a 
-                href="{{ $href }}" 
-                class="group flex items-center justify-between px-4 py-3 text-sm font-medium rounded-lg transition-colors duration-150 {{ $isActive ? 'bg-blue-50 text-blue-700' : 'text-gray-700 hover:bg-gray-100 hover:text-gray-900' }}"
-                @if(!$routeExists) title="Coming soon" @endif
-                @if($item['is_external'] ?? false) target="_blank" @endif
-            >
-                <div class="flex items-center">
-                    <svg 
-                        class="w-5 h-5 mr-3 flex-shrink-0 {{ $isActive ? 'text-blue-700' : 'text-gray-400' }}" 
-                        fill="none" 
-                        stroke="currentColor" 
-                        viewBox="0 0 24 24"
-                    >
-                        <path 
-                            stroke-linecap="round" 
-                            stroke-linejoin="round" 
-                            stroke-width="2" 
-                            d="{{ $item['icon'] }}"
-                        />
-                    </svg>
-                    <span>@lang('dashboard.navigation.' . $item['key'])</span>
-                </div>
-                @if($item['is_external'] ?? false)
-                    <svg class="w-4 h-4 text-gray-400 group-hover:text-gray-500" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M10 6H6a2 2 0 00-2 2v10a2 2 0 002 2h10a2 2 0 002-2v-4M14 4h6m0 0v6m0-6L10 14" />
-                    </svg>
+                // Check if any child is active for parent item
+                $hasActiveChild = false;
+                if (isset($item['children'])) {
+                    foreach ($item['children'] as $child) {
+                        if (request()->routeIs($child['route'])) {
+                            if (isset($child['route_params']['status']) && request()->get('status') === $child['route_params']['status']) {
+                                $hasActiveChild = true;
+                                break;
+                            } elseif (!isset($child['route_params']['status']) && !request()->has('status')) {
+                                $hasActiveChild = true;
+                                break;
+                            }
+                        }
+                    }
+                }
+            @endphp
+            
+            <div class="space-y-1">
+                <a 
+                    href="{{ $href }}" 
+                    class="group flex items-center justify-between px-4 py-3 text-sm font-medium rounded-lg transition-colors duration-150 {{ ($isActive || $hasActiveChild) ? 'bg-blue-50 text-blue-700' : 'text-gray-700 hover:bg-gray-100 hover:text-gray-900' }}"
+                    @if(!$routeExists) title="Coming soon" @endif
+                    @if($item['is_external'] ?? false) target="_blank" @endif
+                >
+                    <div class="flex items-center">
+                        <svg 
+                            class="w-5 h-5 mr-3 flex-shrink-0 {{ ($isActive || $hasActiveChild) ? 'text-blue-700' : 'text-gray-400' }}" 
+                            fill="none" 
+                            stroke="currentColor" 
+                            viewBox="0 0 24 24"
+                        >
+                            <path 
+                                stroke-linecap="round" 
+                                stroke-linejoin="round" 
+                                stroke-width="2" 
+                                d="{{ $item['icon'] }}"
+                            />
+                        </svg>
+                        <span>@lang('dashboard.navigation.' . $item['key'])</span>
+                    </div>
+                    @if($item['is_external'] ?? false)
+                        <svg class="w-4 h-4 text-gray-400 group-hover:text-gray-500" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M10 6H6a2 2 0 00-2 2v10a2 2 0 002 2h10a2 2 0 002-2v-4M14 4h6m0 0v6m0-6L10 14" />
+                        </svg>
+                    @elseif(isset($item['children']))
+                        <svg class="w-4 h-4 transform transition-transform duration-150 {{ ($isActive || $hasActiveChild) ? 'rotate-0' : 'rotate-90' }}" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 5l7 7-7 7" />
+                        </svg>
+                    @endif
+                </a>
+                
+                @if(isset($item['children']))
+                    <div class="ml-8 space-y-1">
+                        @foreach($item['children'] as $child)
+                            @php
+                                $childParams = ['locale' => $currentLocale];
+                                if (isset($child['route_params'])) {
+                                    $childParams = array_merge($childParams, $child['route_params']);
+                                }
+                                $childRouteExists = Route::has($child['route']);
+                                $isChildActive = request()->routeIs($child['route']);
+                                
+                                // Check for quiz child routes
+                                if (in_array($child['route'], ['dashboard.quizzes.index', 'dashboard.quizzes.in-progress', 'dashboard.quizzes.completed'])) {
+                                    $isChildActive = request()->routeIs($child['route']);
+                                }
+                                
+                                $childHref = $childRouteExists ? route($child['route'], $childParams) : '#';
+                            @endphp
+                            <a 
+                                href="{{ $childHref }}" 
+                                class="block px-4 py-2 text-sm rounded-md transition-colors duration-150 {{ $isChildActive ? 'bg-blue-50 text-blue-700' : 'text-gray-700 hover:bg-gray-100 hover:text-gray-900' }}"
+                                @if(!$childRouteExists) title="Coming soon" @endif
+                            >
+                                @if(isset($child['translation_group']))
+                                    @lang('dashboard.' . $child['translation_group'] . '.' . $child['key'])
+                                @else
+                                    @lang('dashboard.navigation.' . $child['key'])
+                                @endif
+                            </a>
+                        @endforeach
+                    </div>
                 @endif
-            </a>
+            </div>
         @endforeach
     </nav>
 

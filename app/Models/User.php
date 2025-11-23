@@ -9,6 +9,8 @@ use Illuminate\Database\Eloquent\Relations\HasMany;
 use App\Models\QuizAttempt;
 use App\Models\Quiz;
 use App\Models\Subscription;
+use App\Models\Bookmark;
+use App\Enums\Role;
 use Illuminate\Foundation\Auth\User as Authenticatable;
 use Illuminate\Notifications\Notifiable;
 use Laravel\Sanctum\HasApiTokens;
@@ -70,6 +72,31 @@ class User extends Authenticatable
     }
 
     /**
+     * Check if the user has a specific role
+     *
+     * @param string|Role $role
+     * @return bool
+     */
+    public function hasRole($role): bool
+    {
+        if ($role instanceof Role) {
+            $role = $role->value;
+        }
+        
+        return strtolower($this->role) === strtolower($role);
+    }
+
+    /**
+     * Get the user's full name (alias for getFullNameAttribute).
+     *
+     * @return string
+     */
+    public function getNameAttribute(): string
+    {
+        return $this->getFullNameAttribute();
+    }
+
+    /**
      * Check if the user is subscribed to a specific plan
      */
     /**
@@ -113,7 +140,61 @@ class User extends Authenticatable
     {
         return $this->hasMany(QuizAttempt::class);
     }
+    
+    /**
+     * Get all bookmarks for the user.
+     * 
+     * @return \Illuminate\Database\Eloquent\Relations\HasMany<Bookmark>
+     */
+    public function bookmarks(): HasMany
+    {
+        return $this->hasMany(Bookmark::class);
+    }
 
+    /**
+     * Check if the user has bookmarked a specific quiz.
+     */
+    public function hasBookmarked(Quiz $quiz): bool
+    {
+        return $this->bookmarks()->where('quiz_id', $quiz->id)->exists();
+    }
+    
+    /**
+     * Get the user's current streak of days with at least one quiz attempt.
+     *
+     * @return int The current streak in days
+     */
+    public function getCurrentStreak(): int
+    {
+        $dates = $this->quizAttempts()
+            ->selectRaw('DATE(created_at) as attempt_date')
+            ->distinct()
+            ->orderBy('attempt_date', 'desc')
+            ->pluck('attempt_date')
+            ->toArray();
+
+        $streak = 0;
+        $yesterday = now()->subDay()->startOfDay();
+        
+        foreach ($dates as $date) {
+            $attemptDate = \Carbon\Carbon::parse($date)->startOfDay();
+            
+            if ($attemptDate->isToday()) {
+                // Count today's attempts towards the streak
+                $streak++;
+            } elseif ($attemptDate->equalTo($yesterday)) {
+                // If the last attempt was yesterday, continue the streak
+                $streak++;
+                $yesterday->subDay();
+            } elseif ($attemptDate->lessThan($yesterday)) {
+                // If there's a gap of more than one day, break the streak
+                break;
+            }
+        }
+        
+        return $streak;
+    }
+    
     /**
      * Get all forum questions created by this user.
      *
@@ -187,6 +268,6 @@ class User extends Authenticatable
      */
     public function isAdmin(): bool
     {
-        return $this->role === self::ROLE_ADMIN;
+        return strtolower($this->role) === strtolower(self::ROLE_ADMIN);
     }
 }
