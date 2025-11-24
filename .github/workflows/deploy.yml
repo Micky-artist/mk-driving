@@ -28,9 +28,17 @@ jobs:
           node-version: '18'
           cache: 'npm'
 
+      - name: Create storage directories
+        run: |
+          mkdir -p storage/framework/views
+          mkdir -p storage/framework/cache/data
+          mkdir -p storage/framework/sessions
+          mkdir -p bootstrap/cache
+          chmod -R 775 storage bootstrap/cache
+
       - name: Install PHP dependencies
         run: |
-          composer install --no-interaction --prefer-dist --optimize-autoloader --no-dev
+          COMPOSER_MEMORY_LIMIT=-1 composer install --no-interaction --prefer-dist --optimize-autoloader --no-dev
 
       - name: Install frontend dependencies and build assets
         run: |
