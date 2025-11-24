@@ -17,9 +17,16 @@ cd $APP_DIR
 echo -e "${YELLOW}📦 Installing PHP dependencies...${NC}"
 composer install --no-dev --optimize-autoloader --no-interaction
 
+# Ensure required directories exist
+echo -e "${YELLOW}📂 Creating required directories...${NC}"
+mkdir -p storage/framework/views
+mkdir -p storage/framework/cache/data
+mkdir -p storage/framework/sessions
+
 # Permissions
 echo -e "${YELLOW}🔒 Setting permissions...${NC}"
 chmod -R 775 storage bootstrap/cache
+chmod -R 775 storage/framework/views storage/framework/cache/data storage/framework/sessions
 
 # Storage link
 if [ ! -L "public/storage" ]; then
