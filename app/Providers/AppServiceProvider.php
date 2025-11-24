@@ -5,6 +5,8 @@ namespace App\Providers;
 use Illuminate\Auth\Notifications\ResetPassword;
 use Illuminate\Support\ServiceProvider;
 use Illuminate\Support\Facades\URL;
+use Illuminate\Support\Facades\Blade;
+use App\View\Components\InputError;
 
 class AppServiceProvider extends ServiceProvider
 {
@@ -21,6 +23,9 @@ class AppServiceProvider extends ServiceProvider
      */
     public function boot(): void
     {
+        // Register components
+        Blade::component('input-error', InputError::class);
+
         // Set default URL parameters for route generation
         URL::defaults([
             'locale' => $this->getCurrentLocale(),
