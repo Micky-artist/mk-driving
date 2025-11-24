@@ -32,7 +32,7 @@ class AdminController extends Controller
             'total_revenue' => Subscription::where('status', 'active')
                 ->sum('amount'),
             'active_subscriptions' => Subscription::where('status', 'active')
-                ->where('end_date', '>', now())
+                ->where('ends_at', '>', now())
                 ->count(),
         ];
 
@@ -78,7 +78,7 @@ class AdminController extends Controller
     {
         $subscribers = User::whereHas('subscriptions', function($query) {
                 $query->where('status', 'active')
-                    ->where('end_date', '>', now());
+                    ->where('ends_at', '>', now());
             })
             ->with(['subscriptions.plan'])
             ->withCount('quizAttempts')

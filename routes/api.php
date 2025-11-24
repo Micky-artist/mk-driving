@@ -149,6 +149,7 @@ Route::middleware('auth:sanctum')->group(function () {
         // Subscription routes
         Route::prefix('subscriptions')->group(function () {
             // User subscription management
+            Route::post('/request', [SubscriptionController::class, 'requestSubscription']);
             Route::get('/', [SubscriptionController::class, 'getUserSubscriptions']);
             Route::get('/active', [SubscriptionController::class, 'getActiveUserSubscriptions']);
             Route::get('/pending', [SubscriptionController::class, 'getPendingUserSubscriptions']);

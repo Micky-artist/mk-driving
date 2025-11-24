@@ -7,6 +7,7 @@ use Illuminate\Http\Request;
 use App\Models\Quiz;
 use App\Models\Bookmark;
 use App\Models\QuizAttempt;
+use App\Models\SubscriptionPlan;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\Log;
 use Illuminate\Support\Facades\DB;
@@ -160,6 +161,44 @@ class QuizController extends Controller
         return sprintf('%02d:%02d', $minutes, $seconds);
     }
     
+    /**
+     * Check if user can access a quiz based on their subscription
+     */
+    protected function canAccessQuiz($user, $quiz)
+    {
+        // Admins can access all quizzes
+        if ($user->isAdmin()) {
+            return true;
+        }
+
+        // Guest users can only access guest quizzes
+        if (!$user) {
+            return $quiz->is_guest_quiz;
+        }
+
+        // If quiz is for guests, anyone can access it
+        if ($quiz->is_guest_quiz) {
+            return true;
+        }
+
+        // If quiz doesn't require a specific plan, it's accessible to all authenticated users
+        if (!$quiz->subscription_plan_slug) {
+            return true;
+        }
+
+        // Check if user has an active subscription to the required plan
+        $activeSubscription = $user->activeSubscriptions()
+            ->whereHas('plan', function($q) use ($quiz) {
+                $q->where('slug', $quiz->subscription_plan_slug);
+            })
+            ->exists();
+
+        return $activeSubscription;
+    }
+
+    /**
+     * Get quizzes filtered by status and user's subscription
+     */
     protected function getQuizzesByStatus($status = null)
     {
         $user = Auth::user();
@@ -183,9 +222,25 @@ class QuizController extends Controller
                   ->whereNotNull('completed_at');
             });
         }
+
+        // Get all quizzes first
+        $allQuizzes = $query->orderBy('created_at', 'desc')->get();
         
-        $quizzes = $query->orderBy('created_at', 'desc')
-                        ->paginate(9);
+        // Filter quizzes based on user's subscription
+        $filteredQuizzes = $allQuizzes->filter(function($quiz) use ($user) {
+            return $this->canAccessQuiz($user, $quiz);
+        });
+
+        // Paginate the filtered results
+        $perPage = 9;
+        $page = request()->get('page', 1);
+        $quizzes = new \Illuminate\Pagination\LengthAwarePaginator(
+            $filteredQuizzes->forPage($page, $perPage),
+            $filteredQuizzes->count(),
+            $perPage,
+            $page,
+            ['path' => request()->url(), 'query' => request()->query()]
+        );
 
         return view('dashboard.quizzes.index', [
             'quizzes' => $quizzes,
@@ -209,24 +264,21 @@ class QuizController extends Controller
         }
 
         // Fetch the quiz with relationships
-        $quiz = Quiz::with(['questions' => function($query) {
+        $quiz = Quiz::where('is_active', true)
+            ->with(['questions' => function($query) {
                 $query->with(['options']);
             }])
-            ->where('is_active', true)
             ->findOrFail($id);
             
-        // Debug log the quiz data with raw values and types
-        Log::debug('Dashboard Quiz Data - Raw Structure:', [
-            'quiz' => [
-                'id' => $quiz->id,
-                'title' => $quiz->title,
-                'title_type' => gettype($quiz->title),
-                'passing_score' => $quiz->passing_score,
-                'passing_score_type' => gettype($quiz->passing_score),
-                'questions_count' => $quiz->questions->count(),
-                'attributes' => $quiz->getAttributes()
-            ]
-        ]);
+        // Check if user can access this quiz
+        $user = Auth::user();
+        if (!$this->canAccessQuiz($user, $quiz)) {
+            if (!$user) {
+                return redirect()->route('login');
+            }
+            return redirect()->route('dashboard.quizzes.index')
+                ->with('error', 'You do not have access to this quiz. Please upgrade your subscription.');
+        }
         
         // Direct database query for the first question's options
         if ($quiz->questions->isNotEmpty()) {

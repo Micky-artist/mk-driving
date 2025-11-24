@@ -3,7 +3,7 @@
 use Illuminate\Support\Facades\Route;
 use App\Http\Controllers\Web\QuizController;
 use App\Http\Controllers\Web\Dashboard\QuizAttemptController;
-use App\Http\Controllers\Dashboard\DashboardController;
+use App\Http\Controllers\Web\Dashboard\DashboardController;
 use App\Http\Controllers\Web\Dashboard\PaymentController;
 
 Route::prefix('{locale}')->where(['locale' => '[a-zA-Z]{2}'])
@@ -44,4 +44,8 @@ Route::prefix('{locale}')->where(['locale' => '[a-zA-Z]{2}'])
         Route::get('/{payment}', [PaymentController::class, 'show'])->name('show');
         Route::post('/{payment}/confirm', [PaymentController::class, 'confirm'])->name('confirm');
     });
+    
+    // Subscription History
+    Route::get('/subscription/history', [\App\Http\Controllers\Web\Dashboard\DashboardController::class, 'subscriptionHistory'])
+        ->name('dashboard.subscription.history');
 });

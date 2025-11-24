@@ -40,6 +40,11 @@
                             <x-nav-link :href="route('subscriptions.index', ['locale' => app()->getLocale()])" :active="request()->routeIs('subscriptions.*')">
                                 {{ __('dashboard.navigation.subscriptions') }}
                             </x-nav-link>
+                            @can('isAdmin')
+                            <x-nav-link :href="route('admin.dashboard')" class="bg-yellow-100 text-yellow-800 hover:bg-yellow-200" :active="request()->is('admin*')">
+                                {{ __('Admin Panel') }}
+                            </x-nav-link>
+                            @endcan
                         </div>
                     </div>
 
@@ -61,6 +66,12 @@
                                 <x-dropdown-link :href="route('profile.show', ['locale' => app()->getLocale()])">
                                     {{ __('navigation.profile') }}
                                 </x-dropdown-link>
+
+                                @can('isAdmin')
+                                <a href="{{ route('admin.dashboard', ['locale' => app()->getLocale()]) }}" class="block px-4 py-2 text-sm text-gray-700 hover:bg-gray-100" role="menuitem">
+                                    {{ __('Go to Admin Dashboard') }}
+                                </a>
+                                @endcan
 
                                 <!-- Authentication -->
                                 <form id="logout-form" method="POST" action="{{ route('logout', ['locale' => app()->getLocale()]) }}">
@@ -98,6 +109,11 @@
                     <x-responsive-nav-link :href="route('subscriptions.index', ['locale' => app()->getLocale()])" :active="request()->routeIs('subscriptions.*')">
                         {{ __('dashboard.navigation.subscriptions') }}
                     </x-responsive-nav-link>
+                    @can('isAdmin')
+                    <x-responsive-nav-link :href="route('admin.dashboard')" class="bg-yellow-50 text-yellow-800" :active="request()->is('admin*')">
+                        {{ __('Admin Panel') }}
+                    </x-responsive-nav-link>
+                    @endcan
                 </div>
 
                 <!-- Responsive Settings Options -->

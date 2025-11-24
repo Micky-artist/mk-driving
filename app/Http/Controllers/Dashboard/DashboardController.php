@@ -9,6 +9,7 @@ use App\Models\Subscription;
 use Carbon\Carbon;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
+use Illuminate\Pagination\LengthAwarePaginator;
 
 class DashboardController extends Controller
 {
@@ -26,12 +27,18 @@ class DashboardController extends Controller
     {
         $user = Auth::user();
         
-        // Get user's active subscriptions
+        // Get user's active subscriptions with plan details and quiz count
         $currentSubscriptions = $user->subscriptions()
-            ->with('plan')
+            ->with(['plan' => function($query) {
+                $query->withCount('quizzes');
+            }])
             ->where('ends_at', '>=', now())
             ->where('status', 'ACTIVE')
-            ->get();
+            ->get()
+            ->each(function($subscription) {
+                $subscription->quizzes_count = $subscription->plan->quizzes_count ?? 0;
+                return $subscription;
+            });
             
         // Get available subscription plans
         $availablePlans = \App\Models\SubscriptionPlan::where('is_active', true)
@@ -318,6 +325,26 @@ class DashboardController extends Controller
             'newQuizzes' => $newQuizzes,
             'inProgressQuizzes' => $inProgressQuizzes,
             'completedQuizzes' => $completedQuizzesList,
+        ]);
+    }
+    
+    /**
+     * Display the user's subscription history
+     *
+     * @return \Illuminate\View\View
+     */
+    public function subscriptionHistory()
+    {
+        $user = Auth::user();
+        
+        // Get user's subscription history with pagination
+        $subscriptions = $user->subscriptions()
+            ->with('plan')
+            ->orderBy('created_at', 'desc')
+            ->paginate(10);
+            
+        return view('dashboard.subscription-history', [
+            'subscriptions' => $subscriptions
         ]);
     }
 }

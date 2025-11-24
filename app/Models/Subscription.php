@@ -74,9 +74,18 @@ class Subscription extends Model
 
     /**
      * Get the subscription plan associated with the subscription.
+     * This is an alias of plan() for backward compatibility.
      */
     public function subscriptionPlan(): BelongsTo
     {
-        return $this->belongsTo(SubscriptionPlan::class);
+        return $this->plan();
+    }
+
+    /**
+     * Get the payment associated with the subscription.
+     */
+    public function payment()
+    {
+        return $this->hasOne(Payment::class);
     }
 }

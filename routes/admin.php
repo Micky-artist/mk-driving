@@ -31,11 +31,30 @@ Route::group([], function () {
         Route::resource('subscription-plans', SubscriptionPlanController::class)->names('subscription-plans');
         
         // Subscription Management
-        Route::resource('subscriptions', SubscriptionController::class)->names('subscriptions');
+        Route::get('subscriptions', [SubscriptionController::class, 'index'])->name('subscriptions.index');
+        Route::get('subscriptions/pending', [SubscriptionController::class, 'pending'])->name('subscriptions.pending');
+        Route::get('subscriptions/active', [SubscriptionController::class, 'active'])->name('subscriptions.active');
+        Route::resource('subscriptions', SubscriptionController::class)->names('subscriptions')->except(['index', 'pending']);
+            
+        // Subscription approval routes
         Route::post('subscriptions/{subscription}/approve', [SubscriptionController::class, 'approve'])
             ->name('subscriptions.approve');
         Route::post('subscriptions/{subscription}/reject', [SubscriptionController::class, 'reject'])
             ->name('subscriptions.reject');
+            
+        // Payment approval routes - only allow PATCH for security
+        // Note: The locale is already in the URL prefix from the route group
+        Route::patch('payments/{id}/approve', [SubscriptionController::class, 'approvePayment'])
+            ->name('payments.approve')
+            ->middleware('verified')
+            ->where('id', '[0-9]+');
+
+        Route::patch('payments/{id}/reject', [SubscriptionController::class, 'rejectPayment'])
+            ->name('payments.reject')
+            ->middleware('verified')
+            ->where('id', '[0-9]+');
+            
+        // Other subscription routes
         Route::post('subscriptions/{subscription}/cancel', [SubscriptionController::class, 'cancel'])
             ->name('subscriptions.cancel');
         Route::get('subscriptions/stats', [SubscriptionController::class, 'stats'])

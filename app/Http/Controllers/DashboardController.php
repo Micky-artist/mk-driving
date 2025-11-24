@@ -23,7 +23,7 @@ class DashboardController extends Controller
         
         // Get user's current subscriptions from loaded relationship
         $currentSubscriptions = $user->subscriptions
-            ->where('end_date', '>=', now())
+            ->where('ends_at', '>=', now())
             ->values();
 
         // Get available subscription plans
@@ -58,7 +58,7 @@ class DashboardController extends Controller
         $subscriptions = $user->subscriptions;
         $subscriptionStats = [
             'total' => $subscriptions->count(),
-            'active' => $subscriptions->where('end_date', '>=', now())->count(),
+            'active' => $subscriptions->where('ends_at', '>=', now())->count(),
             'pending' => $subscriptions->where('status', 'pending')->count(),
         ];
 

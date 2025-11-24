@@ -412,7 +412,13 @@ Route::prefix('{locale}')
             ->name('subscriptions.destroy');
     });
 
-// Admin routes have been removed
+// Admin routes - wrapped in web middleware group for session and CSRF protection
+Route::middleware('web')->group(function () {
+    Route::prefix('admin')
+        ->name('admin.')
+        ->middleware(['auth', 'verified', 'can:isAdmin'])
+        ->group(base_path('routes/admin.php'));
+});
 
 // Forum Routes (already inside locale prefix)
 Route::prefix('forum')

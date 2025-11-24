@@ -49,7 +49,15 @@ class Payment extends Model
      */
     public function plan(): BelongsTo
     {
-        return $this->belongsTo(SubscriptionPlan::class);
+        return $this->belongsTo(SubscriptionPlan::class, 'plan_id');
+    }
+
+    /**
+     * Get the subscription associated with the payment.
+     */
+    public function subscription()
+    {
+        return $this->belongsTo(Subscription::class);
     }
 
     /**

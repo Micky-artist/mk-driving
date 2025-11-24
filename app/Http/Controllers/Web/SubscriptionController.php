@@ -3,8 +3,8 @@
 namespace App\Http\Controllers\Web;
 
 use App\Http\Controllers\Controller;
-use App\Models\SubscriptionPlan;
 use App\Models\Subscription;
+use App\Models\SubscriptionPlan;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\DB;
@@ -47,6 +47,12 @@ class SubscriptionController extends Controller
         ]);
     }
     
+/**
+     * Show a specific subscription plan
+     *
+     * @param SubscriptionPlan $plan
+     * @return \Illuminate\View\View
+     */
     public function show(SubscriptionPlan $plan)
     {
         return view('subscriptions.show', [
@@ -75,11 +81,17 @@ class SubscriptionController extends Controller
                 ->where('status', 'ACTIVE')
                 ->update(['status' => 'CANCELLED']);
             
+            // Calculate end date based on plan duration
+            $endDate = null;
+            if ($plan->duration > 0) {
+                $endDate = now()->addDays($plan->duration);
+            } // For unlimited (duration = 0), end_date remains null
+            
             // Create new subscription
             $subscription = $user->subscriptions()->create([
                 'subscription_plan_id' => $plan->id,
                 'start_date' => now(),
-                'end_date' => now()->addMonths($plan->duration),
+                'ends_at' => $endDate,
                 'status' => 'PENDING', // Will be updated after payment
                 'amount' => $plan->price,
             ]);
@@ -92,6 +104,12 @@ class SubscriptionController extends Controller
         });
     }
     
+/**
+     * Show subscription success page
+     *
+     * @param Subscription $subscription
+     * @return \Illuminate\View\View
+     */
     public function success(Subscription $subscription)
     {
         if ($subscription->user_id !== auth()->id()) {
@@ -106,6 +124,12 @@ class SubscriptionController extends Controller
     /**
      * Cancel a subscription
      */
+/**
+     * Cancel a subscription
+     *
+     * @param Subscription $subscription
+     * @return \Illuminate\Http\RedirectResponse
+     */
     public function cancel(Subscription $subscription)
     {
         if ($subscription->user_id !== auth()->id()) {
@@ -119,7 +143,7 @@ class SubscriptionController extends Controller
         
         $subscription->update([
             'status' => 'CANCELLED',
-            'end_date' => now()
+            'ends_at' => now()
         ]);
         
         return redirect()->route('subscriptions.index')

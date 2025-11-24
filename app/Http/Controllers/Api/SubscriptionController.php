@@ -11,11 +11,107 @@ use App\Models\Quiz;
 use App\Models\User;
 use Carbon\Carbon;
 use Illuminate\Http\JsonResponse;
+use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\DB;
+use Illuminate\Support\Facades\Log;
 
 class SubscriptionController extends Controller
 {
+    /**
+     * Handle subscription request
+     */
+    public function requestSubscription(Request $request): JsonResponse
+    {
+        // Log the incoming request data
+        \Log::info('Subscription request received', [
+            'user_id' => auth()->id(),
+            'request_data' => $request->all(),
+            'headers' => $request->headers->all()
+        ]);
+
+        $request->validate([
+            'plan_id' => 'required|exists:subscription_plans,id',
+            'phone_number' => 'required|string|min:10|max:15',
+            'payment_method' => 'required|in:mtn_mobile_money,card,bank_transfer',
+        ]);
+
+        $user = auth()->user();
+        $plan = SubscriptionPlan::findOrFail($request->plan_id);
+
+        // Check if user already has an active subscription for this plan
+        $existingSubscription = $user->subscriptions()
+            ->where('subscription_plan_id', $plan->id)
+            ->whereIn('status', ['ACTIVE', 'PENDING'])
+            ->first();
+
+        if ($existingSubscription) {
+            return response()->json([
+                'message' => 'You already have an active or pending subscription for this plan.',
+                'subscription' => $existingSubscription
+            ], 422);
+        }
+
+        try {
+            // Start database transaction
+            return DB::transaction(function () use ($user, $plan, $request) {
+                // Cancel any existing active subscriptions
+                $user->subscriptions()
+                    ->where('status', 'ACTIVE')
+                    ->update(['status' => 'CANCELLED']);
+                
+                // Calculate end date based on plan duration
+                $endDate = null;
+                if ($plan->duration > 0) {
+                    $endDate = now()->addDays($plan->duration);
+                } // For unlimited (duration = 0), end_date remains null
+                
+                // Create new subscription
+                $subscription = $user->subscriptions()->create([
+                    'subscription_plan_id' => $plan->id,
+                    'start_date' => now(),
+                    'ends_at' => $endDate,
+                    'status' => 'PENDING',
+                    'amount' => $plan->price,
+                    'payment_method' => $request->payment_method,
+                    'phone_number' => $request->phone_number,
+                    'metadata' => [
+                        'ip_address' => $request->ip(),
+                        'user_agent' => $request->userAgent(),
+                    ]
+                ]);
+
+                // Log the created subscription
+                \Log::info('Subscription created', [
+                    'subscription_id' => $subscription->id,
+                    'user_id' => $user->id,
+                    'plan_id' => $plan->id,
+                    'amount' => $plan->price,
+                    'status' => 'PENDING'
+                ]);
+
+                // TODO: Process payment here
+                // For now, we'll mark it as pending and handle payment asynchronously
+                
+                return response()->json([
+                    'message' => 'Subscription request received and is being processed.',
+                    'subscription' => $subscription->load('subscriptionPlan')
+                ]);
+            });
+        } catch (\Exception $e) {
+            \Log::error('Subscription request failed', [
+                'error' => $e->getMessage(),
+                'trace' => $e->getTraceAsString()
+            ]);
+
+            return response()->json([
+                'message' => 'Failed to process subscription request. Please try again.',
+                'error' => config('app.debug') ? $e->getMessage() : null
+            ], 500);
+        }
+    }
+
+    /**
     /**
      * Simulate a payment for a subscription
      */

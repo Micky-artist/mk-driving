@@ -46,6 +46,7 @@ class User extends Authenticatable
      *
      * @var list<string>
      */
+
     protected $hidden = [
         'password',
         'remember_token',
@@ -69,21 +70,6 @@ class User extends Authenticatable
     public function getFullNameAttribute(): string
     {
         return "{$this->first_name} {$this->last_name}";
-    }
-
-    /**
-     * Check if the user has a specific role
-     *
-     * @param string|Role $role
-     * @return bool
-     */
-    public function hasRole($role): bool
-    {
-        if ($role instanceof Role) {
-            $role = $role->value;
-        }
-        
-        return strtolower($this->role) === strtolower($role);
     }
 
     /**
@@ -232,7 +218,7 @@ class User extends Authenticatable
      */
     public function subscriptions(): HasMany
     {
-        return $this->hasMany(Subscription::class);
+        return $this->hasMany(Subscription::class, 'user_id');
     }
 
     /**
@@ -268,6 +254,33 @@ class User extends Authenticatable
      */
     public function isAdmin(): bool
     {
-        return strtolower($this->role) === strtolower(self::ROLE_ADMIN);
+        return $this->hasRole(self::ROLE_ADMIN);
+    }
+    
+    /**
+     * Check if user has the specified role.
+     *
+     * @param string $role The role to check for
+     * @return bool True if the user has the role, false otherwise.
+     */
+    public function hasRole($role): bool
+    {
+        return strtolower($this->role) === strtolower($role);
+    }
+
+    /**
+     * Determine if the user has the given ability.
+     *
+     * @param  string  $ability
+     * @param  array|mixed  $arguments
+     * @return bool
+     */
+    public function can($ability, $arguments = [])
+    {
+        if ($ability === 'admin') {
+            return $this->isAdmin();
+        }
+
+        return parent::can($ability, $arguments);
     }
 }
