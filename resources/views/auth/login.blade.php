@@ -138,6 +138,10 @@
 @section('content')
 <div class="w-full min-h-screen flex flex-col relative overflow-hidden gradient-bg">
     @include('components.navbar')
+
+    <!-- Background Animation Component -->
+    <x-background-animation />
+    
     
     <div class="flex-grow flex items-center justify-center p-4 relative z-10">
         <div class="w-full max-w-md mx-auto">

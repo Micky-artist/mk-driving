@@ -37,7 +37,7 @@
                     <h3 class="text-xl font-bold text-gray-900 dark:text-white mb-3">{{ $blog['title'] }}</h3>
                     <p class="text-gray-600 dark:text-gray-300 mb-4 flex-1">{{ $blog['excerpt'] }}</p>
                     <a 
-                        href="{{ route('news.show', ['locale' => app()->getLocale(), 'slug' => $blog['slug']]) }}" 
+                        href="{{ route('news.show', ['locale' => app()->getLocale(), 'news' => $blog['slug']]) }}" 
                         class="text-[#023047] dark:text-blue-400 font-medium hover:underline flex items-center group transition-colors duration-200"
                     >
                         {{ __('home.blogs.read_more') }}

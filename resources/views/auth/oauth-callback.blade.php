@@ -1,32 +1,24 @@
 <!DOCTYPE html>
 <html>
 <head>
-    <title>Redirecting...</title>
+    <title>Login Successful</title>
     <script>
-        // Close the popup and redirect the parent window
-        window.onload = function() {
-            // If this is a popup and has an opener (parent window)
+        // Close the popup immediately
+        // The session is already established on the backend
+        (function() {
             if (window.opener) {
-                // Send message to parent window
-                window.opener.postMessage({
-                    type: 'oauth-callback',
-                    status: '{{ $status }}',
-                    message: '{{ $message }}',
-                    redirectUrl: '{{ $redirectUrl }}'
-                }, window.location.origin);
-                
-                // Close the popup
+                // Close immediately - the parent window will handle the refresh
                 window.close();
             } else {
                 // If not in a popup, just redirect
                 window.location.href = '{{ $redirectUrl }}';
             }
-        };
+        })();
     </script>
 </head>
 <body>
     <div style="text-align: center; padding: 2rem;">
-        <p>Redirecting...</p>
+        <p>Login successful! Closing...</p>
     </div>
 </body>
 </html>

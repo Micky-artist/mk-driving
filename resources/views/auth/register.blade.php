@@ -149,21 +149,29 @@
                     </p>
                 </div>
 
-                        <div class="px-8 pb-8">
-                            <!-- Validation Errors -->
-                            @if ($errors->any())
-                                <div class="mb-4 p-4 bg-red-50 rounded-md">
-                                    <div class="font-medium text-red-600">
-                                        {{ __('auth.whoops') }}
-                                    </div>
-                                    <ul class="mt-2 list-disc list-inside text-sm text-red-600">
-                                        @foreach ($errors->all() as $error)
-                                            <li>{{ $error }}</li>
-                                        @endforeach
-                                    </ul>
-                                </div>
-                            @endif
+                <div class="space-y-5">
+                    <!-- Session Status -->
+                    @if (session('status'))
+                        <div class="mb-4 text-sm font-medium text-green-600">
+                            {{ session('status') }}
+                        </div>
+                    @endif
 
+
+                    <!-- Google Sign In Button -->
+                    <div class="mb-6">
+                        <a href="{{ route('google.login') }}" class="btn-google w-full flex items-center justify-center space-x-3 py-2.5 px-4">
+                            <img src="{{ asset('images/google-icon.png') }}" alt="Google" class="w-8 h-8">
+                            <span class="text-lg font-medium">{{ __('Continue with Google') }}</span>
+                        </a>
+                    </div>
+
+                    <div class="divider">
+                        {{ __('Or sign up with email') }}
+                    </div>
+
+                    <form id="registerForm" method="POST" action="{{ route('register', app()->getLocale()) }}">
+                        @csrf
                     <div class="grid grid-cols-1 md:grid-cols-2 gap-6">
                         <!-- First Name -->
                         <div class="form-group">
@@ -213,123 +221,116 @@
                         </div>
                     </div>
 
-                    <!-- Email -->
-                    <div class="form-group">
-                        <div class="relative">
-                            <input 
-                                id="email" 
-                                name="email" 
-                                type="email" 
-                                value="{{ old('email') }}" 
-                                required 
-                                autocomplete="username"
-                                placeholder="{{ __('auth.register.email') }}"
-                                class="input-field"
-                            />
-                            <div class="absolute left-4 top-1/2 -translate-y-1/2 text-gray-400">
-                                <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg">
-                                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M3 8l7.89 5.26a2 2 0 002.22 0L21 8M5 19h14a2 2 0 002-2V7a2 2 0 00-2-2H5a2 2 0 00-2 2v10a2 2 0 002 2z"></path>
-                                </svg>
+                        <!-- Email -->
+                        <div class="form-group">
+                            <div class="relative">
+                                <input 
+                                    id="email" 
+                                    name="email" 
+                                    type="email" 
+                                    value="{{ old('email') }}" 
+                                    required 
+                                    autocomplete="username"
+                                    placeholder="{{ __('auth.register.email') }}"
+                                    class="input-field"
+                                />
+                                <div class="absolute left-4 top-1/2 -translate-y-1/2 text-gray-400">
+                                    <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg">
+                                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M3 8l7.89 5.26a2 2 0 002.22 0L21 8M5 19h14a2 2 0 002-2V7a2 2 0 00-2-2H5a2 2 0 00-2 2v10a2 2 0 002 2z"></path>
+                                    </svg>
+                                </div>
+                            </div>
+                            @error('email')
+                                <p class="text-sm text-red-500">{{ $message }}</p>
+                            @enderror
+                        </div>
+
+                        <!-- Password -->
+                        <div class="form-group">
+                            <div class="relative">
+                                <input 
+                                    id="password" 
+                                    name="password" 
+                                    type="password" 
+                                    required 
+                                    autocomplete="new-password"
+                                    placeholder="{{ __('auth.register.password') }}"
+                                    class="input-field"
+                                />
+                                <div class="absolute left-4 top-1/2 -translate-y-1/2 text-gray-400">
+                                    <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg">
+                                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 15v2m-6 4h12a2 2 0 002-2v-6a2 2 0 00-2-2H6a2 2 0 00-2 2v6a2 2 0 002 2zm10-10V7a4 4 0 00-8 0v4h8z" />
+                                    </svg>
+                                </div>
+                                <button type="button" 
+                                        onclick="togglePasswordVisibility('password')" 
+                                        class="absolute right-4 top-1/2 -translate-y-1/2 text-gray-400 hover:text-gray-600 dark:hover:text-gray-300 focus:outline-none"
+                                        aria-label="Toggle password visibility">
+                                    <svg id="eye-icon-password" class="w-5 h-5" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M15 12a3 3 0 11-6 0 3 3 0 016 0z" />
+                                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M2.458 12C3.732 7.943 7.523 5 12 5c4.478 0 8.268 2.943 9.542 7-1.274 4.057-5.064 7-9.542 7-4.477 0-8.268-2.943-9.542-7z" />
+                                    </svg>
+                                </button>
+                            </div>
+                            @error('password')
+                                <p class="text-sm text-red-500">{{ $message }}</p>
+                            @enderror
+                        </div>
+
+                        <!-- Password Confirmation -->
+                        <div class="form-group">
+                            <div class="relative">
+                                <input 
+                                    id="password_confirmation" 
+                                    name="password_confirmation" 
+                                    type="password" 
+                                    required 
+                                    autocomplete="new-password"
+                                    placeholder="{{ __('auth.register.confirm_password') }}"
+                                    class="input-field"
+                                />
+                                <div class="absolute left-4 top-1/2 -translate-y-1/2 text-gray-400">
+                                    <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg">
+                                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 12l2 2 4-4m5.618-4.016A11.955 11.955 0 0112 2.944a11.955 11.955 0 01-8.618 3.04A12.02 12.02 0 003 9c0 5.591 3.824 10.29 9 11.622 5.176-1.332 9-6.03 9-11.622 0-1.042-.133-2.052-.382-3.016z" />
+                                    </svg>
+                                </div>
+                                <button type="button" 
+                                        onclick="togglePasswordVisibility('password_confirmation')" 
+                                        class="absolute right-4 top-1/2 -translate-y-1/2 text-gray-400 hover:text-gray-600 dark:hover:text-gray-300 focus:outline-none"
+                                        aria-label="Toggle password confirmation visibility">
+                                    <svg id="eye-icon-password_confirmation" class="w-5 h-5" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M15 12a3 3 0 11-6 0 3 3 0 016 0z" />
+                                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M2.458 12C3.732 7.943 7.523 5 12 5c4.478 0 8.268 2.943 9.542 7-1.274 4.057-5.064 7-9.542 7-4.477 0-8.268-2.943-9.542-7z" />
+                                    </svg>
+                                </button>
                             </div>
                         </div>
-                        @error('email')
-                            <p class="text-sm text-red-500">{{ $message }}</p>
-                        @enderror
-                    </div>
 
-                    <!-- Password -->
-                    <div class="form-group">
-                        <div class="relative">
-                            <input 
-                                id="password" 
-                                name="password" 
-                                type="password" 
-                                required 
-                                autocomplete="new-password"
-                                placeholder="{{ __('auth.register.password') }}"
-                                class="input-field"
-                            />
-                            <div class="absolute left-4 top-1/2 -translate-y-1/2 text-gray-400">
-                                <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg">
-                                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 15v2m-6 4h12a2 2 0 002-2v-6a2 2 0 00-2-2H6a2 2 0 00-2 2v6a2 2 0 002 2zm10-10V7a4 4 0 00-8 0v4h8z" />
-                                </svg>
+                        <!-- API Error -->
+                        @if(session('error'))
+                            <div class="p-3 bg-red-50 dark:bg-red-900/20 text-red-700 dark:text-red-300 rounded-lg text-sm text-center">
+                                {{ session('error') }}
                             </div>
-                            <button type="button" 
-                                    onclick="togglePasswordVisibility('password')" 
-                                    class="absolute right-4 top-1/2 -translate-y-1/2 text-gray-400 hover:text-gray-600 dark:hover:text-gray-300 focus:outline-none"
-                                    aria-label="Toggle password visibility">
-                                <svg id="eye-icon-password" class="w-5 h-5" fill="none" viewBox="0 0 24 24" stroke="currentColor">
-                                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M15 12a3 3 0 11-6 0 3 3 0 016 0z" />
-                                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M2.458 12C3.732 7.943 7.523 5 12 5c4.478 0 8.268 2.943 9.542 7-1.274 4.057-5.064 7-9.542 7-4.477 0-8.268-2.943-9.542-7z" />
-                                </svg>
+                        @endif
+
+                        <div class="mt-6">
+                            <button type="submit" class="btn-primary">
+                                {{ __('auth.register.register_button') }}
+                                <span id="registerButtonText" class="ml-2"></span>
                             </button>
                         </div>
-                        @error('password')
-                            <p class="text-sm text-red-500">{{ $message }}</p>
-                        @enderror
-                    </div>
 
-                    <!-- Password Confirmation -->
-                    <div class="form-group">
-                        <div class="relative">
-                            <input 
-                                id="password_confirmation" 
-                                name="password_confirmation" 
-                                type="password" 
-                                required 
-                                autocomplete="new-password"
-                                placeholder="{{ __('auth.register.confirm_password') }}"
-                                class="input-field"
-                            />
-                            <div class="absolute left-4 top-1/2 -translate-y-1/2 text-gray-400">
-                                <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg">
-                                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 12l2 2 4-4m5.618-4.016A11.955 11.955 0 0112 2.944a11.955 11.955 0 01-8.618 3.04A12.02 12.02 0 003 9c0 5.591 3.824 10.29 9 11.622 5.176-1.332 9-6.03 9-11.622 0-1.042-.133-2.052-.382-3.016z" />
-                                </svg>
-                            </div>
-                            <button type="button" 
-                                    onclick="togglePasswordVisibility('password_confirmation')" 
-                                    class="absolute right-4 top-1/2 -translate-y-1/2 text-gray-400 hover:text-gray-600 dark:hover:text-gray-300 focus:outline-none"
-                                    aria-label="Toggle password confirmation visibility">
-                                <svg id="eye-icon-password_confirmation" class="w-5 h-5" fill="none" viewBox="0 0 24 24" stroke="currentColor">
-                                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M15 12a3 3 0 11-6 0 3 3 0 016 0z" />
-                                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M2.458 12C3.732 7.943 7.523 5 12 5c4.478 0 8.268 2.943 9.542 7-1.274 4.057-5.064 7-9.542 7-4.477 0-8.268-2.943-9.542-7z" />
-                                </svg>
-                            </button>
+                        <div class="mt-6 text-center">
+                            <p class="text-sm text-gray-600 dark:text-gray-400">
+                                {{ __('auth.register.have_account') }}
+                                <a href="{{ route('login', app()->getLocale()) }}" class="font-medium text-slate-800 hover:text-slate-900 dark:text-slate-200 dark:hover:text-white transition-colors">
+                                    {{ __('auth.register.sign_in') }}
+                                </a>
+                            </p>
                         </div>
-                    </div>
-
-                    <!-- API Error -->
-                    @if(session('error'))
-                        <div class="p-3 bg-red-50 dark:bg-red-900/20 text-red-700 dark:text-red-300 rounded-lg text-sm text-center">
-                            {{ session('error') }}
-                        </div>
-                    @endif
-
-                    <div class="mt-6">
-                        <button type="submit" class="btn-primary">
-                            {{ __('auth.register.register_button') }}
-                            <span id="registerButtonText" class="ml-2"></span>
-                        </button>
-                    </div>
-
-                    <div class="mt-6 text-center">
-                        <p class="text-sm text-gray-600 dark:text-gray-400">
-                            {{ __('auth.register.have_account') }}
-                            <a href="{{ route('login', app()->getLocale()) }}" class="font-medium text-slate-800 hover:text-slate-900 dark:text-slate-200 dark:hover:text-white transition-colors">
-                                {{ __('auth.register.sign_in') }}
-                            </a>
-                        </p>
-                    </div>
-                </form>
+                    </form>
                 
-                <div class="divider">
-                    {{ __('Or sign up with') }}
                 </div>
-                
-                <button type="button" class="btn-google" onclick="openGoogleAuthPopup()">
-                    <img src="{{ asset('images/google-icon.png') }}" alt="Google">
-                    {{ __('Continue with Google') }}
-                </button>
             </div>
         </div>
     </div>
