@@ -40,10 +40,13 @@ jobs:
         run: |
           COMPOSER_MEMORY_LIMIT=-1 composer install --no-interaction --prefer-dist --optimize-autoloader --no-dev
 
-      - name: Install frontend dependencies and build assets
+      - name: Install frontend dependencies
         run: |
           npm ci
-          npm run build
+          npm install -D vite
+          
+      - name: Build frontend assets
+        run: npm run build
         env:
           NODE_ENV: production
 
