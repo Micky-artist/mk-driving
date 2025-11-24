@@ -43,7 +43,7 @@ jobs:
       - name: Install frontend dependencies
         run: |
           npm ci
-          npm install -D vite
+          npm install -D vite @vitejs/plugin-vue
           
       - name: Build frontend assets
         run: |
@@ -52,6 +52,11 @@ jobs:
         env:
           NODE_ENV: production
           VITE_APP_ENV: production
+          
+      - name: Ensure build directory exists
+        run: |
+          mkdir -p public/build
+          touch public/build/.gitkeep
 
       - name: Setup SSH
         uses: webfactory/ssh-agent@v0.9.0
