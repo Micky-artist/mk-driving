@@ -13,21 +13,23 @@ echo -e "${YELLOW}🚀 Starting deployment...${NC}"
 
 cd $APP_DIR
 
-# PHP dependencies
-echo -e "${YELLOW}📦 Installing PHP dependencies...${NC}"
-composer install --no-dev --optimize-autoloader --no-interaction
-
-# Ensure required directories exist
+# Ensure required directories
 echo -e "${YELLOW}📂 Creating required directories...${NC}"
+mkdir -p bootstrap/cache
 mkdir -p storage/framework/views
 mkdir -p storage/framework/cache/data
 mkdir -p storage/framework/sessions
 
-
-# Permissions
+# Set proper ownership and permissions
 echo -e "${YELLOW}🔒 Setting permissions...${NC}"
-chmod -R 775 storage bootstrap/cache
-chmod -R 775 storage/framework/views storage/framework/cache/data storage/framework/sessions
+chmod -R 775 storage
+chmod -R 775 bootstrap/cache
+chown -R $USER:www-data storage
+chown -R $USER:www-data bootstrap/cache
+
+# PHP dependencies
+echo -e "${YELLOW}📦 Installing PHP dependencies...${NC}"
+COMPOSER_MEMORY_LIMIT=-1 composer install --no-dev --optimize-autoloader --no-interaction
 
 # Storage link
 if [ ! -L "public/storage" ]; then
