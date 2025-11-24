@@ -10,6 +10,7 @@
         <div class="mb-4 text-sm text-gray-600">
             {{ __('Please enter your new password below.') }}
         </div>
+        
 
         <form method="POST" action="{{ route('password.store') }}">
             @csrf
