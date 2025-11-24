@@ -13,6 +13,7 @@ Route::prefix('{locale}')->where(['locale' => '[a-zA-Z]{2}'])
     Route::get('/dashboard', [DashboardController::class, 'index'])
         ->name('dashboard');
 
+        
     // Quiz Routes
     Route::prefix('dashboard/quizzes')->name('dashboard.quizzes.')->group(function () {
         Route::get('/', [QuizController::class, 'index'])->name('index');
