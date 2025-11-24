@@ -23,6 +23,7 @@ mkdir -p storage/framework/views
 mkdir -p storage/framework/cache/data
 mkdir -p storage/framework/sessions
 
+
 # Permissions
 echo -e "${YELLOW}🔒 Setting permissions...${NC}"
 chmod -R 775 storage bootstrap/cache
