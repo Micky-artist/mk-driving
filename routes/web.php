@@ -221,7 +221,7 @@ Route::prefix('{locale}')
         ->name('news');
         
     Route::get('news/{slug}', [\App\Http\Controllers\Web\NewsController::class, 'show'])
-        ->name('news.show');
+        ->name('news.detail');
         
     // Guest Quiz Routes - Accessible without authentication
     Route::prefix('guest-quiz')->group(function () {
