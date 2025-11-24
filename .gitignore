@@ -17,7 +17,6 @@ bootstrap/cache/services.php
 # Dependencies
 /vendor/
 /node_modules/
-package-lock.json
 yarn.lock
 
 # Build files
@@ -333,9 +332,6 @@ composer.lock
 
 # Laravel 5 & Lumen specific with changed public path
 composer.phar
-
-# Laravel 5 & Lumen specific with changed public path
-package-lock.json
 
 # Laravel 5 & Lumen specific with changed public path
 yarn.lock
