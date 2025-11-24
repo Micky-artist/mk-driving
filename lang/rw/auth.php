@@ -23,6 +23,7 @@ return [
         'password' => 'Ijambo ry\'ibanga',
         'login_button' => 'Injira',
         'no_account' => 'Ntago ufite konti?',
+        'forgot_password' => 'Wibagiwe ijambo ry\'ibanga?',
         'sign_up' => 'Iyandikishe',
         'logging_in' => 'Kwinjira...',
     ],

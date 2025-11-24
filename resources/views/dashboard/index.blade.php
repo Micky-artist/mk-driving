@@ -266,8 +266,8 @@
                     <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 8v4l3 3m6-3a9 9 0 11-18 0 9 9 0 0118 0z" />
                 </svg>
             </div>
-            <h3 class="text-lg font-medium text-gray-900 mb-2">{{ __('dashboard.subscription.no_active') }}</h3>
-            <p class="text-gray-600 mb-6 max-w-md mx-auto">{{ __('dashboard.subscription.upgrade_message') }}</p>
+            <h3 class="text-lg font-medium text-gray-900 mb-2">{{ __('subscription.no_subscription') }}</h3>
+            <p class="text-gray-600 mb-6 max-w-md mx-auto">{{ __('subscription.upgrade_message') }}</p>
             <div class="flex flex-col sm:flex-row justify-center gap-3">
                 <a href="{{ route('plans', ['locale' => app()->getLocale()]) }}" 
                    class="px-6 py-3 border border-transparent text-base font-medium rounded-md shadow-sm text-white bg-blue-600 hover:bg-blue-700 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-blue-500 transition-colors">

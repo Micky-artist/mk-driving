@@ -35,17 +35,18 @@ class SetLocale
             }
         }
         
-        // Set the application locale
-        $this->localeService->setLocale($locale);
+        // Validate and set the application locale
+        $validatedLocale = $this->localeService->validateLocale($locale);
+        $this->localeService->setLocale($validatedLocale);
         
         // Set Carbon locale for date formatting
         if (class_exists('Carbon\Carbon')) {
-            \Carbon\Carbon::setLocale($locale);
+            \Carbon\Carbon::setLocale($validatedLocale);
         }
         
         // Set system locale for date formatting
         if (function_exists('setlocale')) {
-            setlocale(LC_TIME, $locale . '.UTF-8');
+            setlocale(LC_TIME, $validatedLocale . '.UTF-8');
         }
         
         // Debug logging

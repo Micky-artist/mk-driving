@@ -23,6 +23,7 @@ return [
         'password' => 'Password',
         'login_button' => 'Sign In',
         'no_account' => "Don't have an account?",
+        'forgot_password' => 'Forgot password?',
         'sign_up' => 'Sign up',
         'logging_in' => 'Logging in...'
     ],

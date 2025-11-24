@@ -55,13 +55,20 @@ class AuthenticatedSessionController extends Controller
         // Get the current locale before logging out
         $locale = $request->route('locale') ?? app()->getLocale();
         
+        // Logout from the application
         Auth::guard('web')->logout();
-
+        
+        // Invalidate the session
         $request->session()->invalidate();
-
+        
+        // Regenerate CSRF token
         $request->session()->regenerateToken();
-
-        // Redirect to login page with the current locale
-        return redirect()->route('login', ['locale' => $locale]);
+        
+        // Clear any OAuth session data
+        $request->session()->forget('auth_locale');
+        $request->session()->forget('socialite_google_state');
+        
+        // Redirect to the homepage
+        return redirect('/');
     }
 }

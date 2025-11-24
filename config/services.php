@@ -44,6 +44,12 @@ return [
     | Make sure to set the correct environment variables in your .env file.
     |
     */
+    'google' => [
+        'client_id' => env('GOOGLE_CLIENT_ID'),
+        'client_secret' => env('GOOGLE_CLIENT_SECRET'),
+        'redirect' => env('GOOGLE_REDIRECT_URI', '/auth/google/callback'),
+    ],
+
     'mtn_momo' => [
         // Base URL for the MTN MoMo API (sandbox or production)
         'base_url' => env('MTN_MOMO_BASE_URL', 'https://sandbox.momodeveloper.mtn.com'),

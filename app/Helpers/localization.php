@@ -1,5 +1,6 @@
 <?php
 
+use App\Helpers\VersionHelper;
 use App\Services\LocaleService;
 
 if (!function_exists('formatDuration')) {
@@ -51,5 +52,49 @@ if (!function_exists('available_locales')) {
     function available_locales()
     {
         return app(LocaleService::class)->getAvailableLocales();
+    }
+}
+
+if (!function_exists('app_version')) {
+    /**
+     * Get the application version
+     *
+     * @param bool $fullVersion Whether to include build number
+     * @return string
+     */
+    function app_version(bool $fullVersion = true): string
+    {
+        return $fullVersion ? VersionHelper::getFullVersion() : VersionHelper::getVersion();
+    }
+}
+
+if (!function_exists('app_build')) {
+    /**
+     * Get the application build number
+     *
+     * @return int
+     */
+    function app_build(): int
+    {
+        return VersionHelper::getBuildNumber();
+    }
+}
+
+if (!function_exists('app_changelog')) {
+    /**
+     * Get the application changelog
+     *
+     * @param int $limit Number of entries to return (0 for all)
+     * @return array
+     */
+    function app_changelog(int $limit = 0): array
+    {
+        $changelog = VersionHelper::getChangelog();
+        
+        if ($limit > 0) {
+            return array_slice($changelog, -$limit);
+        }
+        
+        return $changelog;
     }
 }

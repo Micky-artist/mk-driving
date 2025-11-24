@@ -88,10 +88,10 @@
 
     $getTextClass = function ($planType) {
         return match ($planType) {
-            'gold-unlimited' => 'text-amber-700',
-            'premium' => 'text-blue-900',
-            'standard' => 'text-blue-800',
-            default => 'text-blue-700',
+            'gold-unlimited' => 'text-amber-700 dark:text-amber-300',
+            'premium' => 'text-blue-900 dark:text-blue-200',
+            'standard' => 'text-blue-800 dark:text-blue-200',
+            default => 'text-blue-700 dark:text-blue-300',
         };
     };
 
@@ -106,10 +106,10 @@
 
     $getCardBgClass = function ($planType) {
         return match ($planType) {
-            'gold-unlimited' => 'bg-amber-50',
-            'premium' => 'bg-blue-50',
-            'standard' => 'bg-blue-50',
-            default => 'bg-blue-50',
+            'gold-unlimited' => 'bg-amber-50 dark:bg-amber-900/20',
+            'premium' => 'bg-blue-50 dark:bg-blue-900/20',
+            'standard' => 'bg-blue-50 dark:bg-blue-800/20',
+            default => 'bg-blue-50 dark:bg-blue-700/20',
         };
     };
 
@@ -183,8 +183,8 @@
 
 <div class="my-16">
     <div class="text-center mb-10">
-        <h2 class="text-2xl sm:text-3xl font-bold text-gray-900 mb-4">{{ __('home.subscriptionPlans.title') }}</h2>
-        <p class="text-gray-600 max-w-2xl mx-auto">
+        <h2 class="text-2xl sm:text-3xl font-bold text-gray-900 dark:text-white mb-4">{{ __('home.subscriptionPlans.title') }}</h2>
+        <p class="text-gray-600 dark:text-gray-300 max-w-2xl mx-auto">
             {{ __('home.subscriptionPlans.subtitle') }}
         </p>
     </div>
@@ -222,7 +222,7 @@
                         <p class="text-3xl font-bold {{ $getTextClass($planType) }}">
                             {{ __('home.subscriptionPlans.billing.currency', ['amount' => number_format($plan['price'])]) }}
                         </p>
-                        <p class="text-base font-normal text-gray-600 mb-4">
+                        <p class="text-base font-normal text-gray-600 dark:text-gray-300 mb-4">
                             @php
                                 $duration = $plan['duration'] ?? 0;
                                 $durationType = $plan['duration_type'] ?? 'day';
@@ -260,10 +260,10 @@
                                         <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
                                             d="M5 13l4 4L19 7" />
                                     </svg>
-                                    <span class="break-words text-gray-700">{{ $feature }}</span>
+                                    <span class="break-words text-gray-700 dark:text-gray-300">{{ $feature }}</span>
                                 </li>
                             @empty
-                                <li class="text-gray-500 text-sm">{{ __('home.subscriptionPlans.noFeatures') }}</li>
+                                <li class="text-gray-500 dark:text-gray-400 text-sm">{{ __('home.subscriptionPlans.noFeatures') }}</li>
                             @endforelse
                         </ul>
                     </div>
@@ -307,9 +307,9 @@
     </div>
 
     <div class="mt-10 text-center">
-        <p class="text-gray-600 mb-4">{{ __('home.subscriptionPlans.needHelp') }}</p>
-        <a href="{{ route('home', ['#subscription-plans']) }}" class="text-teal-600 font-medium hover:underline">
-            {{ __('home.subscriptionPlans.comparePlans') }}
+        <p class="text-gray-600 dark:text-gray-300 mb-4">{{ __('home.subscriptionPlans.needHelp') }}</p>
+        <a href="{{ route('home', ['#subscription-plans']) }}" class="text-teal-600 dark:text-teal-400 font-medium hover:underline">
+            {{ __('forum.footer.contact_us') }}
         </a>
     </div>
 </div>
@@ -482,7 +482,7 @@
     @click.self="closeModal()">
 
         <!-- Modal panel -->
-        <div class="w-full max-w-2xl bg-white rounded-none sm:rounded-lg shadow-xl overflow-y-auto overflow-x-hidden flex flex-col max-h-screen sm:max-h-[90vh] transform transition-all sm:w-full mx-auto my-auto"
+        <div class="w-full max-w-2xl bg-white dark:bg-gray-800 rounded-none sm:rounded-lg shadow-xl overflow-y-auto overflow-x-hidden flex flex-col max-h-screen sm:max-h-[90vh] transform transition-all sm:w-full mx-auto my-auto"
             @click.stop x-show="showModal" x-transition:enter="ease-out duration-300"
             x-transition:enter-start="opacity-0 translate-y-4 sm:translate-y-0 sm:scale-95"
             x-transition:enter-end="opacity-100 translate-y-0 sm:scale-100" x-transition:leave="ease-in duration-200"
@@ -514,7 +514,7 @@
             <div class="px-6 py-6 sm:px-8 sm:py-8 overflow-y-auto flex-1">
                 <!-- Payment Instructions -->
                 <div x-show="paymentStatus !== 'requested'" class="mb-8">
-                    <div class="bg-blue-50 border-l-4 border-blue-400 p-4 mb-6">
+                    <div class="bg-blue-50 dark:bg-blue-900/30 border-l-4 border-blue-400 dark:border-blue-500 p-4 mb-6">
                         <div class="flex">
                             <div class="flex-shrink-0">
                                 <svg class="h-5 w-5 text-blue-400" xmlns="http://www.w3.org/2000/svg"
@@ -594,7 +594,7 @@
 
                 <!-- Phone Number Input (only show if not submitted) -->
                 <div x-show="!success" class="mt-8">
-                    <label for="phone" class="block text-sm font-medium text-gray-700 mb-1">
+                    <label for="phone" class="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-1">
                         {{ __('Your Phone Number') }}
                         <span class="text-red-500">*</span>
                     </label>
@@ -622,7 +622,7 @@
             </div>
 
             <!-- Footer -->
-            <div class="bg-gray-50 px-6 py-4 sm:px-8 sm:py-5 border-t border-gray-200">
+            <div class="bg-gray-50 dark:bg-gray-800 px-6 py-4 sm:px-8 sm:py-5 border-t border-gray-200 dark:border-gray-700">
                 <div class="flex justify-end space-x-3">
                     <button type="button" @click="closeModal()" :disabled="isLoading"
                         class="inline-flex items-center px-4 py-2 border border-gray-300 shadow-sm text-sm font-medium rounded-md text-gray-700 bg-white hover:bg-gray-50 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-blue-500 disabled:opacity-50">

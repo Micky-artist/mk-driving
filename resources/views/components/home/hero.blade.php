@@ -13,8 +13,8 @@
                 />
             </div>
             <div class="absolute bottom-2 left-2 max-w-40 sm:max-w-48 md:max-w-52 w-fit rounded-xl sm:rounded-2xl border-2 border-white p-2 sm:p-3 bg-white/40 backdrop-blur-xl text-white">
-                <p class="font-bold text-xs sm:text-sm md:text-base">{{ __('hero.get_started') }}</p>
-                <p class="text-xs sm:text-sm">
+                <p class="font-bold text-xs sm:text-sm md:text-base dark:text-gray-900">{{ __('hero.get_started') }}</p>
+                <p class="text-xs sm:text-sm dark:text-gray-900">
                     {{ __('hero.start_test_description') }}
                 </p>
             </div>
@@ -22,24 +22,24 @@
             @if($guestQuiz ?? false)
                 <a
                     href="{{ route('guest-quiz.show', ['locale' => app()->getLocale(), 'quiz' => $guestQuiz->id]) }}"
-                    class="absolute bottom-2 right-2 max-w-40 sm:max-w-48 md:max-w-52 w-fit rounded-full border-2 border-white p-2 sm:p-3 bg-white/40 hover:bg-white/50 hover:scale-105 backdrop-blur-xl text-[#023047]"
+                    class="absolute bottom-2 right-2 max-w-40 sm:max-w-48 md:max-w-52 w-fit rounded-full border-2 border-white p-2 sm:p-3 bg-white/40 hover:bg-white/50 hover:scale-105 backdrop-blur-xl text-[#023047] dark:text-gray-900"
                 >
                     <p class="font-bold text-xs sm:text-sm md:text-base">{{ __('hero.start_test') }}</p>
                 </a>
             @else
-                <div class="absolute bottom-2 right-2 max-w-40 sm:max-w-48 md:max-w-52 w-fit rounded-full border-2 border-white p-2 sm:p-3 bg-white/40 backdrop-blur-xl text-[#023047]">
+                <div class="absolute bottom-2 right-2 max-w-40 sm:max-w-48 md:max-w-52 w-fit rounded-full border-2 border-white p-2 sm:p-3 bg-white/40 backdrop-blur-xl text-[#023047] dark:text-gray-900">
                     <p class="font-bold text-xs sm:text-sm">{{ __('hero.no_guest_quiz') }}</p>
                 </div>
             @endif
         </div>
     </div>
-    <div class="w-full lg:w-1/2 z-10 text-[#023047]">
+    <div class="w-full lg:w-1/2 z-10 text-[#023047] dark:text-white">
         <div class="flex flex-col gap-2 sm:gap-3 md:gap-4 ml-auto max-w-lg text-center lg:text-left">
             <p class="text-sm sm:text-base md:text-lg font-medium">{{ __('hero.be_our_guest') }}</p>
             <p class="font-bold text-xl sm:text-2xl md:text-3xl lg:text-4xl leading-tight">
                 {{ __('hero.title') }}
             </p>
-            <p class="text-xs sm:text-sm md:text-base text-gray-600 leading-relaxed">
+            <p class="text-xs sm:text-sm md:text-base text-gray-600 dark:text-gray-300 leading-relaxed">
                 {{ __('hero.subtitle') }}
             </p>
             <div class="mt-4 sm:mt-6">

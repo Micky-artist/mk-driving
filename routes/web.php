@@ -10,6 +10,13 @@ use App\Models\SubscriptionPlan;
 use App\Services\LocaleService;
 use App\Http\Controllers\Web\PaymentController;
 
+// Google OAuth Routes
+Route::get('/auth/google', [\App\Http\Controllers\Auth\GoogleAuthController::class, 'redirect'])
+    ->name('google.login');
+
+Route::get('/auth/google/callback', [\App\Http\Controllers\Auth\GoogleAuthController::class, 'callback'])
+    ->name('google.callback');
+
 // Sitemap
 Route::get('/sitemap.xml', [SitemapController::class, 'index'])
     ->name('sitemap.index');

@@ -1,0 +1,27 @@
+<?php
+
+return [
+    'subscribe' => 'Subscribe',
+    'title' => 'Subscription Plans',
+    'my_subscriptions' => 'My Subscriptions',
+    'active_subscriptions' => 'Active Subscriptions',
+    'popular_choice' => 'Popular Choice',
+    'active' => 'Active',
+    'inactive' => 'Inactive',
+    'expired' => 'Expired',
+    'renew' => 'Renew',
+    'upgrade' => 'Upgrade Plan',
+    'downgrade' => 'Downgrade Plan',
+    'cancel' => 'Cancel',
+    'subscription_plans' => 'Subscription Plans',
+    'monthly' => 'Monthly',
+    'quarterly' => 'Quarterly',
+    'yearly' => 'Yearly',
+    'select_plan' => 'Select Plan',
+    'current_plan' => 'Your Current Plan',
+    'next_billing_date' => 'Next Billing Date',
+    'billing_history' => 'Billing History',
+    'no_subscription' => 'No Active Subscription',
+    'subscribe_now' => 'Get Started',
+    'upgrade_message' => 'Upgrade your plan to access all quizzes and features.',
+];

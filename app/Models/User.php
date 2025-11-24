@@ -34,6 +34,7 @@ class User extends Authenticatable
         'last_name',
         'email',
         'password',
+        'google_id',
         'role',
         'phone_number',
         'profile_image',
@@ -254,18 +255,18 @@ class User extends Authenticatable
      */
     public function isAdmin(): bool
     {
-        return $this->hasRole(self::ROLE_ADMIN);
+        return $this->role === Role::ADMIN->value;
     }
     
     /**
      * Check if user has the specified role.
      *
-     * @param string $role The role to check for
+     * @param string $role The role to check for (e.g., 'ADMIN', 'INSTRUCTOR', 'USER')
      * @return bool True if the user has the role, false otherwise.
      */
     public function hasRole($role): bool
     {
-        return strtolower($this->role) === strtolower($role);
+        return $this->role === $role;
     }
 
     /**
