@@ -31,7 +31,7 @@ jobs:
       - name: Install frontend dependencies and build assets
         run: |
           npm ci
-          npm run production
+          npm run build
 
       - name: Setup SSH
         uses: webfactory/ssh-agent@v0.9.0
