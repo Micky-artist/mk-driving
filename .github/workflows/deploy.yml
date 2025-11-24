@@ -43,10 +43,12 @@ jobs:
       - name: Install frontend dependencies
         run: |
           npm ci
-          npm install -D vite
+          npm install -D vite @vitejs/plugin-vue
           
       - name: Build frontend assets
-        run: npm run build
+        run: |
+          mkdir -p public/build
+          npm run build
         env:
           NODE_ENV: production
 
