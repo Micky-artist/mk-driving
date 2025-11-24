@@ -2,18 +2,18 @@
 
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Route;
-use App\Http\Controllers\API\AuthController;
-use App\Http\Controllers\API\ChatbotController;
-use App\Http\Controllers\API\ForumController;
-use App\Http\Controllers\API\AdminController;
-use App\Http\Controllers\API\NewsController;
-use App\Http\Controllers\API\SearchController;
-use App\Http\Controllers\API\SubscriptionPlanController;
-use App\Http\Controllers\API\SubscriptionController;
-use App\Http\Controllers\API\UploadController;
-use App\Http\Controllers\API\UserController;
-use App\Http\Controllers\API\BookmarkController;
-use App\Http\Controllers\API\QuizAttemptController;
+use App\Http\Controllers\Api\AuthController;
+use App\Http\Controllers\Api\ChatbotController;
+use App\Http\Controllers\Api\ForumController;
+use App\Http\Controllers\Api\AdminController;
+use App\Http\Controllers\Api\NewsController;
+use App\Http\Controllers\Api\SearchController;
+use App\Http\Controllers\Api\SubscriptionPlanController;
+use App\Http\Controllers\Api\SubscriptionController;
+use App\Http\Controllers\Api\UploadController;
+use App\Http\Controllers\Api\UserController;
+use App\Http\Controllers\Api\BookmarkController;
+use App\Http\Controllers\Api\QuizAttemptController;
 
 // Public routes
 Route::post('/register', [AuthController::class, 'register']);
