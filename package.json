@@ -1,16 +1,12 @@
 {
   "private": true,
   "scripts": {
-    "dev": "vite",
-    "build": "vite build"
+    "dev": "echo 'No development server is needed. Use Laravel's built-in server.'"
   },
   "devDependencies": {
-    "@vitejs/plugin-vue": "^4.0.0",
     "autoprefixer": "^10.4.14",
     "axios": "^1.1.2",
-    "laravel-vite-plugin": "^0.8.0",
-    "postcss": "^8.4.21",
-    "vite": "^4.0.0"
+    "postcss": "^8.4.21"
   },
   "dependencies": {
     "@headlessui/vue": "^1.7.14",
