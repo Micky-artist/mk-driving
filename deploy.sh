@@ -33,15 +33,78 @@ find bootstrap/cache -type f -exec chmod 664 {} \;
 echo -e "${YELLOW}📦 Installing PHP dependencies...${NC}"
 COMPOSER_MEMORY_LIMIT=-1 composer install --no-dev --optimize-autoloader --no-interaction
 
-# Storage link - using PHP's symlink() function
+# Storage link - with detailed error handling
 if [ ! -L "public/storage" ]; then
     echo -e "${YELLOW}🔗 Linking storage...${NC}"
-    # Remove existing symlink if it exists
-    rm -f public/storage
-    # Create the storage directory structure if it doesn't exist
+    
+    # Debug: Show current directory and permissions
+    echo "📂 Current directory: $(pwd)"
+    echo "🔍 Storage directory contents:"
+    ls -la storage/ 2>/dev/null || echo "No storage directory found"
+    
+    # Ensure public directory exists
+    mkdir -p public
+    
+    # Remove any existing symlink or file
+    if [ -e "public/storage" ]; then
+        echo "🗑️  Removing existing public/storage..."
+        rm -rf public/storage
+    fi
+    
+    # Create the storage directory structure with proper permissions
+    echo "📁 Creating storage/app/public directory..."
     mkdir -p storage/app/public
+    chmod -R 775 storage/app/public
+    
     # Create the symlink using PHP's native symlink function
-    php -r "symlink('$APP_DIR/storage/app/public', 'public/storage');"
+    echo "🔗 Creating symlink..."
+    if php -r "
+        \$target = '$APP_DIR/storage/app/public';
+        \$link = 'public/storage';
+        
+        echo "Creating symlink from: " . \$target . PHP_EOL;
+        echo "To: " . \$link . PHP_EOL;
+        
+        if (!file_exists(\$target)) {
+            echo "❌ Error: Target directory does not exist: " . \$target . PHP_EOL;
+            exit(1);
+        }
+        
+        if (file_exists(\$link)) {
+            echo "❌ Error: Link already exists: " . \$link . PHP_EOL;
+            exit(1);
+        }
+        
+        if (!@symlink(\$target, \$link)) {
+            echo "❌ Error: Failed to create symlink" . PHP_EOL;
+            echo "Error: " . error_get_last()['message'] . PHP_EOL;
+            exit(1);
+        }
+        
+        echo "✅ Symlink created successfully" . PHP_EOL;
+    "; then
+        echo -e "${GREEN}✅ Storage linked successfully!${NC}"
+    else
+        echo -e "${RED}❌ Failed to create storage link. Trying alternative method...${NC}"
+        
+        # Fallback: Try creating a relative symlink
+        echo "🔄 Trying alternative method with relative path..."
+        if ln -sfn ../storage/app/public public/storage; then
+            echo -e "${GREEN}✅ Storage linked successfully using fallback method!${NC}"
+        else
+            echo -e "${RED}❌ All storage link methods failed.${NC}"
+            echo "💡 Please create the storage link manually by running:"
+            echo "   ssh -p 65002 u722035022@82.29.189.212 'cd $APP_DIR && php artisan storage:link'"
+            exit 1
+        fi
+    fi
+    
+    # Verify the symlink was created
+    if [ -L "public/storage" ]; then
+        echo -e "${GREEN}✅ Verified storage link exists${NC}"
+    else
+        echo -e "${YELLOW}⚠️  Warning: Storage link verification failed, but continuing...${NC}"
+    fi
 fi
 
 # Database migrations
