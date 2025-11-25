@@ -209,8 +209,21 @@ jobs:
             ./ $USERNAME@$HOST:$TARGET_DIR/
             
           # Set proper permissions
-          ssh -i ~/.ssh/id_rsa -p $PORT $USERNAME@$HOST "chmod -R 775 $TARGET_DIR/bootstrap/cache $TARGET_DIR/storage"
-          ssh -i ~/.ssh/id_rsa -p $PORT $USERNAME@$HOST "chmod -R 777 $TARGET_DIR/storage"
+          echo "🔒 Setting permissions..."
+          ssh -i ~/.ssh/id_rsa -p $PORT $USERNAME@$HOST "
+            # Set directory permissions to 755
+            find $TARGET_DIR -type d -exec chmod 755 {} \;
+            # Set file permissions to 644
+            find $TARGET_DIR -type f -exec chmod 644 {} \;
+            # Make storage and bootstrap/cache writable
+            chmod -R 775 $TARGET_DIR/storage $TARGET_DIR/bootstrap/cache
+            # Ensure all directories under storage are writable
+            find $TARGET_DIR/storage -type d -exec chmod 775 {} \;
+            find $TARGET_DIR/bootstrap/cache -type d -exec chmod 775 {} \;
+            # Ensure all files under storage are writable
+            find $TARGET_DIR/storage -type f -exec chmod 664 {} \;
+            find $TARGET_DIR/bootstrap/cache -type f -exec chmod 664 {} \;
+          "
 
           # Copy .env if exists locally (optional)
           if [ -f .env ]; then
