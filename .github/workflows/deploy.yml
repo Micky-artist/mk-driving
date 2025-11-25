@@ -75,9 +75,9 @@ jobs:
 
       - name: Setup SSH
         env:
-          HOSTINGER_HOST: ${{ secrets.HOSTINGER_HOST }}
-          HOSTINGER_USERNAME: ${{ secrets.HOSTINGER_USERNAME }}
-          SSH_PORT: ${{ secrets.SSH_PORT || '22' }}
+          HOSTINGER_IP: 82.29.189.212
+          HOSTINGER_USERNAME: u722035022
+          SSH_PORT: 65002
         run: |
           echo "🚀 Starting SSH setup..."
           
@@ -124,23 +124,17 @@ jobs:
             exit 1
           fi
           
-          echo "🔍 Testing host resolution for: $HOSTINGER_HOST"
-          if ! host "$HOSTINGER_HOST" >/dev/null 2>&1; then
-            echo "❌ ERROR: Could not resolve host: $HOSTINGER_HOST"
-            echo "Trying with 'host' command..."
-            host "$HOSTINGER_HOST" || true
-            echo "Trying with 'nslookup'..."
-            nslookup "$HOSTER_HOST" || true
-            echo "❌ Please verify the HOSTINGER_HOST is correct and resolvable"
-            exit 1
-          fi
+          # Skip host resolution since we're using IP directly
+          echo "🔍 Using direct IP address: $HOSTINGER_IP"
+          echo "🔑 SSH User: $HOSTINGER_USERNAME"
+          echo "🔌 SSH Port: $SSH_PORT"
           
-          echo "🔑 Running ssh-keyscan for $HOSTINGER_HOST..."
-          if ! ssh-keyscan -H -p "$SSH_PORT" "$HOSTINGER_HOST" > ~/ssh_host_keys 2>ssh-keyscan.log; then
+          echo "🔑 Running ssh-keyscan for $HOSTINGER_IP..."
+          if ! ssh-keyscan -H -p "$SSH_PORT" "$HOSTINGER_IP" > ~/ssh_host_keys 2>ssh-keyscan.log; then
             echo "❌ ssh-keyscan failed with error:"
             cat ssh-keyscan.log
             echo "\nTrying with -v flag for more details..."
-            ssh-keyscan -v -H -p "$SSH_PORT" "$HOSTINGER_HOST" || true
+            ssh-keyscan -v -H -p "$SSH_PORT" "$HOSTINGER_IP" || true
             exit 1
           fi
           
@@ -155,10 +149,10 @@ jobs:
           chmod -v 600 ~/.ssh/known_hosts
           
           # Test SSH connection
-          echo "🔌 Testing SSH connection to $HOSTINGER_USERNAME@$HOSTINGER_HOST..."
-          if [ -n "$HOSTINGER_USERNAME" ] && [ -n "$HOSTINGER_HOST" ]; then
+          echo "🔌 Testing SSH connection to $HOSTINGER_USERNAME@$HOSTINGER_IP..."
+          if [ -n "$HOSTINGER_USERNAME" ] && [ -n "$HOSTINGER_IP" ]; then
             echo "🔑 Testing with private key:"
-            ssh -i ~/.ssh/id_rsa -v -o BatchMode=yes -o StrictHostKeyChecking=no -p "$SSH_PORT" "$HOSTINGER_USERNAME@$HOSTINGER_HOST" echo "✅ SSH connection successful!" || \
+            ssh -i ~/.ssh/id_rsa -v -o BatchMode=yes -o StrictHostKeyChecking=no -p "$SSH_PORT" "$HOSTINGER_USERNAME@$HOSTINGER_IP" echo "✅ SSH connection successful!" || \
             { echo "❌ SSH connection failed"; exit 1; }
           else
             echo "⚠️  Skipping SSH test: HOSTINGER_USERNAME or HOSTINGER_HOST not set"
@@ -168,9 +162,9 @@ jobs:
 
       - name: Deploy to Hostinger
         env:
-          HOST: ${{ secrets.HOSTINGER_HOST }}
-          USERNAME: ${{ secrets.HOSTINGER_USERNAME }}
-          PORT: ${{ secrets.SSH_PORT || '22' }}
+          HOST: 82.29.189.212
+          USERNAME: u722035022
+          PORT: 65002
           TARGET_DIR: ${{ secrets.HOSTINGER_DEPLOY_PATH || '/home/u722035022/domains/driving.mkscholars.com/laravel' }}
         run: |
           # Ensure deployment folder exists
