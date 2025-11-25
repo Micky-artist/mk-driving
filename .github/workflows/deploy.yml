@@ -52,17 +52,64 @@ jobs:
 
       - name: Setup SSH
         run: |
-          # Create .ssh directory with correct permissions
-          mkdir -p ~/.ssh/
-          chmod 700 ~/.ssh/
+          echo "🚀 Starting SSH setup..."
           
-          # Write the private key with proper formatting
-          echo "${{ secrets.SSH_PRIVATE_KEY }}" > ~/.ssh/id_rsa
-          chmod 600 ~/.ssh/id_rsa
+          # Debug: Show current directory and files
+          echo "📂 Current directory: $(pwd)"
+          echo "📁 Listing files in ~/.ssh/ (if exists):"
+          ls -la ~/.ssh/ 2>/dev/null || echo "No ~/.ssh/ directory exists yet"
+          
+          # Create .ssh directory with correct permissions
+          echo "🔧 Creating .ssh directory..."
+          mkdir -vp ~/.ssh/
+          chmod -v 700 ~/.ssh/
+          
+          # Debug: Verify the secret exists and has content
+          echo "🔑 Checking SSH private key..."
+          if [ -z "${{ secrets.SSH_PRIVATE_KEY }}" ]; then
+            echo "❌ ERROR: SSH_PRIVATE_KEY secret is empty or not set!"
+            echo "Please make sure you've added the private key to GitHub Secrets"
+            exit 1
+          else
+            echo "✅ SSH_PRIVATE_KEY secret exists"
+            # Print first 10 chars of the key for verification (not the whole key for security)
+            echo "   Key starts with: ${SSH_PRIVATE_KEY:0:10}..."
+            
+            # Write the private key
+            echo "✏️ Writing private key..."
+            echo "${{ secrets.SSH_PRIVATE_KEY }}" > ~/.ssh/id_rsa
+            chmod -v 600 ~/.ssh/id_rsa
+            
+            # Verify the key was written
+            if [ -s ~/.ssh/id_rsa ]; then
+              echo "✅ Private key written successfully"
+              echo "   Key size: $(wc -c < ~/.ssh/id_rsa) bytes"
+            else
+              echo "❌ ERROR: Failed to write private key"
+              exit 1
+            fi
+          fi
           
           # Add host to known_hosts
-          ssh-keyscan -H ${{ secrets.HOSTINGER_HOST }} >> ~/.ssh/known_hosts 2>/dev/null
-          chmod 600 ~/.ssh/known_hosts
+          echo "🌐 Adding host to known_hosts..."
+          if [ -z "${{ secrets.HOSTINGER_HOST }}" ]; then
+            echo "❌ ERROR: HOSTINGER_HOST secret is not set!"
+            exit 1
+          fi
+          
+          ssh-keyscan -H "${{ secrets.HOSTINGER_HOST }}" >> ~/.ssh/known_hosts 2>/dev/null
+          chmod -v 600 ~/.ssh/known_hosts
+          
+          # Test SSH connection
+          echo "🔌 Testing SSH connection..."
+          if [ -n "${{ secrets.HOSTINGER_USERNAME }}" ] && [ -n "${{ secrets.HOSTINGER_HOST }}" ]; then
+            ssh -i ~/.ssh/id_rsa -o StrictHostKeyChecking=no -p ${SSH_PORT:-22} ${{ secrets.HOSTINGER_USERNAME }}@${{ secrets.HOSTINGER_HOST }} "echo '✅ SSH connection successful!'; exit 0" || \
+            { echo "❌ SSH connection failed"; exit 1; }
+          else
+            echo "⚠️  Skipping SSH test: HOSTINGER_USERNAME or HOSTINGER_HOST not set"
+          fi
+          
+          echo "✨ SSH setup completed successfully!"
 
       - name: Deploy to Hostinger
         env:
