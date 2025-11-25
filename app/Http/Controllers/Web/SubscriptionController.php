@@ -149,4 +149,50 @@ class SubscriptionController extends Controller
         return redirect()->route('subscriptions.index')
             ->with('success', 'Your subscription has been cancelled successfully.');
     }
+
+    /**
+     * Subscribe to a plan
+     *
+     * @param SubscriptionPlan $plan
+     * @return \Illuminate\Http\RedirectResponse
+     */
+    public function subscribe(SubscriptionPlan $plan)
+    {
+        $user = auth()->user();
+        
+        // Check if user already has an active subscription for this plan
+        $existingSubscription = $user->subscriptions()
+            ->where('subscription_plan_id', $plan->id)
+            ->whereIn('status', ['ACTIVE', 'PENDING'])
+            ->exists();
+            
+        if ($existingSubscription) {
+            return redirect()->back()->with('error', 'You already have an active or pending subscription for this plan.');
+        }
+        
+        return $this->store(new Request(), $plan);
+    }
+
+    /**
+     * Remove the specified subscription
+     *
+     * @param  \App\Models\Subscription  $subscription
+     * @return \Illuminate\Http\Response
+     */
+    public function destroy(Subscription $subscription)
+    {
+        if ($subscription->user_id !== auth()->id()) {
+            abort(403);
+        }
+        
+        // Only allow deleting cancelled or expired subscriptions
+        if (!in_array($subscription->status, ['CANCELLED', 'EXPIRED'])) {
+            return redirect()->back()->with('error', 'Only cancelled or expired subscriptions can be deleted.');
+        }
+        
+        $subscription->delete();
+        
+        return redirect()->route('subscriptions.index')
+            ->with('success', 'Subscription removed successfully.');
+    }
 }

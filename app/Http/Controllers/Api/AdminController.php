@@ -197,6 +197,48 @@ class AdminController extends Controller
     }
 
     /**
+     * Update a subscription
+     */
+    public function updateSubscription(UpdateSubscriptionRequest $request, $id): JsonResponse
+    {
+        $validated = $request->validated();
+        
+        $subscription = Subscription::findOrFail($id);
+        
+        DB::beginTransaction();
+        
+        try {
+            // Update the subscription
+            $subscription->update([
+                'status' => $validated['status'] ?? $subscription->status,
+                'ends_at' => $validated['ends_at'] ?? $subscription->ends_at,
+                'notes' => $validated['notes'] ?? $subscription->notes,
+            ]);
+            
+            // If this is a cancellation, update the ends_at field
+            if (isset($validated['status']) && $validated['status'] === 'cancelled') {
+                $subscription->update([
+                    'ends_at' => now(),
+                ]);
+            }
+            
+            DB::commit();
+            
+            return response()->json([
+                'message' => 'Subscription updated successfully',
+                'subscription' => $subscription->load('user', 'plan')
+            ]);
+            
+        } catch (\Exception $e) {
+            DB::rollBack();
+            return response()->json([
+                'message' => 'Failed to update subscription',
+                'error' => $e->getMessage()
+            ], 500);
+        }
+    }
+
+    /**
      * Delete a subscription
      */
     public function deleteSubscription(string $id): JsonResponse

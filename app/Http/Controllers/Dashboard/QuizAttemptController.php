@@ -126,6 +126,71 @@ class QuizAttemptController extends Controller
     }
     
     /**
+     * Start a new quiz attempt
+     *
+     * @param string $locale
+     * @param string $quizId
+     * @return \Illuminate\Http\JsonResponse
+     */
+    public function start($locale, $quizId)
+    {
+        $user = Auth::user();
+        
+        // Check if the quiz exists and is active
+        $quiz = Quiz::where('id', $quizId)
+            ->where('is_active', true)
+            ->firstOrFail();
+            
+        // Check if user has an active subscription if the quiz requires it
+        if ($quiz->requires_subscription) {
+            $hasActiveSubscription = $user->subscriptions()
+                ->where('status', 'ACTIVE')
+                ->where('ends_at', '>', now())
+                ->exists();
+                
+            if (!$hasActiveSubscription) {
+                return response()->json([
+                    'success' => false,
+                    'message' => __('This quiz requires an active subscription.'),
+                    'requires_subscription' => true
+                ], 403);
+            }
+        }
+        
+        // Check for existing in-progress attempt
+        $existingAttempt = QuizAttempt::where('user_id', $user->id)
+            ->where('quiz_id', $quizId)
+            ->where('status', 'in_progress')
+            ->whereNull('completed_at')
+            ->first();
+            
+        if ($existingAttempt) {
+            return response()->json([
+                'success' => true,
+                'attempt' => $existingAttempt,
+                'message' => 'Resuming existing attempt',
+            ]);
+        }
+        
+        // Create a new attempt
+        $attempt = QuizAttempt::create([
+            'user_id' => $user->id,
+            'quiz_id' => $quizId,
+            'started_at' => now(),
+            'status' => 'in_progress',
+            'answers' => [],
+            'score' => 0,
+            'total_questions' => $quiz->questions()->count(),
+        ]);
+        
+        return response()->json([
+            'success' => true,
+            'attempt' => $attempt,
+            'message' => 'New quiz attempt started',
+        ]);
+    }
+    
+    /**
      * Get a user's quiz attempts
      *
      * @return \Illuminate\Http\JsonResponse

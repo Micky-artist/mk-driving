@@ -13,6 +13,75 @@ use Illuminate\Support\Facades\Log;
 class SubscriptionController extends Controller
 {
     /**
+     * Show the form for creating a new subscription.
+     *
+     * @return \Illuminate\View\View
+     */
+    public function create()
+    {
+        $plans = SubscriptionPlan::where('is_active', true)->orderBy('price')->get();
+        $users = \App\Models\User::select('id', 'name', 'email')
+            ->orderBy('name')
+            ->get();
+            
+        return view('admin.subscriptions.create', compact('plans', 'users'));
+    }
+    
+    /**
+     * Store a newly created subscription in storage.
+     *
+     * @param  \Illuminate\Http\Request  $request
+     * @return \Illuminate\Http\RedirectResponse
+     */
+    public function store(Request $request)
+    {
+        $validated = $request->validate([
+            'user_id' => 'required|exists:users,id',
+            'subscription_plan_id' => 'required|exists:subscription_plans,id',
+            'starts_at' => 'required|date',
+            'status' => 'required|in:pending,active,cancelled',
+            'payment_status' => 'required|in:pending,completed,failed,refunded',
+            'amount' => 'required|numeric|min:0',
+            'payment_method' => 'nullable|string|max:50',
+            'notes' => 'nullable|string',
+        ]);
+        
+        DB::beginTransaction();
+        
+        try {
+            // Create the subscription
+            $subscription = Subscription::create([
+                'user_id' => $validated['user_id'],
+                'subscription_plan_id' => $validated['subscription_plan_id'],
+                'starts_at' => $validated['starts_at'],
+                'ends_at' => now()->addDays(SubscriptionPlan::find($validated['subscription_plan_id'])->duration_days),
+                'status' => $validated['status'],
+                'notes' => $validated['notes'] ?? null,
+            ]);
+            
+            // Create a payment record
+            Payment::create([
+                'user_id' => $validated['user_id'],
+                'subscription_id' => $subscription->id,
+                'amount' => $validated['amount'],
+                'status' => $validated['payment_status'],
+                'payment_method' => $validated['payment_method'] ?? 'manual',
+                'transaction_id' => 'MANUAL-' . time(),
+                'payment_date' => now(),
+            ]);
+            
+            DB::commit();
+            
+            return redirect()->route('admin.subscriptions.show', $subscription)
+                ->with('success', 'Subscription created successfully.');
+                
+        } catch (\Exception $e) {
+            DB::rollBack();
+            Log::error('Failed to create subscription: ' . $e->getMessage());
+            return back()->withInput()->with('error', 'Failed to create subscription: ' . $e->getMessage());
+        }
+    }
+    /**
      * Display the subscriptions dashboard.
      */
     public function index()
@@ -99,6 +168,77 @@ class SubscriptionController extends Controller
     }
 
     /**
+     * Cancel the specified subscription.
+     *
+     * @param  \App\Models\Subscription  $subscription
+     * @return \Illuminate\Http\RedirectResponse
+     */
+    public function destroy(Subscription $subscription)
+    {
+        try {
+            $subscription->update(['status' => 'cancelled']);
+            return redirect()->back()->with('success', 'Subscription cancelled successfully.');
+        } catch (\Exception $e) {
+            Log::error('Failed to cancel subscription: ' . $e->getMessage());
+            return redirect()->back()->with('error', 'Failed to cancel subscription.');
+        }
+    }
+
+    /**
+     * Cancel the specified subscription immediately.
+     *
+     * @param  \App\Models\Subscription  $subscription
+     * @return \Illuminate\Http\RedirectResponse
+     */
+    public function cancel(Subscription $subscription)
+    {
+        try {
+            $subscription->update([
+                'status' => 'cancelled',
+                'ends_at' => now()
+            ]);
+            return redirect()->back()->with('success', 'Subscription cancelled successfully.');
+        } catch (\Exception $e) {
+            Log::error('Failed to cancel subscription: ' . $e->getMessage());
+            return redirect()->back()->with('error', 'Failed to cancel subscription.');
+        }
+    }
+
+    /**
+     * Display subscription statistics.
+     *
+     * @return \Illuminate\View\View
+     */
+    public function stats()
+    {
+        $stats = [
+            'total' => Subscription::count(),
+            'active' => Subscription::where('status', 'active')
+                ->where('ends_at', '>=', now())
+                ->count(),
+            'pending' => Subscription::where('status', 'pending')->count(),
+            'cancelled' => Subscription::where('status', 'cancelled')->count(),
+            'revenue' => Payment::where('status', 'COMPLETED')
+                ->sum('amount')
+        ];
+
+        // Get subscription growth data for the last 6 months
+        $subscriptionGrowth = Subscription::select(
+                DB::raw('DATE_FORMAT(created_at, "%Y-%m") as month'),
+                DB::raw('count(*) as count')
+            )
+            ->where('created_at', '>=', now()->subMonths(6))
+            ->groupBy('month')
+            ->orderBy('month')
+            ->get();
+
+        return view('admin.subscriptions.stats', [
+            'stats' => $stats,
+            'subscriptionGrowth' => $subscriptionGrowth
+        ]);
+    }
+
+    /**
      * Display the specified subscription.
      *
      * @param  \App\Models\Subscription  $subscription
@@ -111,6 +251,65 @@ class SubscriptionController extends Controller
         return view('admin.subscriptions.show', [
             'subscription' => $subscription
         ]);
+    }
+    
+    /**
+     * Show the form for editing the specified subscription.
+     *
+     * @param  \App\Models\Subscription  $subscription
+     * @return \Illuminate\View\View
+     */
+    public function edit(Subscription $subscription)
+    {
+        $plans = SubscriptionPlan::where('is_active', true)
+            ->orderBy('price')
+            ->get();
+            
+        return view('admin.subscriptions.edit', [
+            'subscription' => $subscription,
+            'plans' => $plans,
+        ]);
+    }
+    
+    /**
+     * Update the specified subscription in storage.
+     *
+     * @param  \Illuminate\Http\Request  $request
+     * @param  \App\Models\Subscription  $subscription
+     * @return \Illuminate\Http\RedirectResponse
+     */
+    public function update(Request $request, Subscription $subscription)
+    {
+        $validated = $request->validate([
+            'subscription_plan_id' => 'required|exists:subscription_plans,id',
+            'starts_at' => 'required|date',
+            'ends_at' => 'nullable|date|after_or_equal:starts_at',
+            'status' => 'required|in:pending,active,cancelled,expired',
+            'notes' => 'nullable|string',
+        ]);
+        
+        DB::beginTransaction();
+        
+        try {
+            // If the plan is being changed, update the end date based on the new plan's duration
+            if ($subscription->subscription_plan_id != $validated['subscription_plan_id']) {
+                $plan = SubscriptionPlan::find($validated['subscription_plan_id']);
+                $validated['ends_at'] = $validated['ends_at'] ?? 
+                    $validated['starts_at']->addDays($plan->duration_days);
+            }
+            
+            $subscription->update($validated);
+            
+            DB::commit();
+            
+            return redirect()->route('admin.subscriptions.show', $subscription)
+                ->with('success', 'Subscription updated successfully.');
+                
+        } catch (\Exception $e) {
+            DB::rollBack();
+            Log::error('Failed to update subscription: ' . $e->getMessage());
+            return back()->withInput()->with('error', 'Failed to update subscription: ' . $e->getMessage());
+        }
     }
 
     /**
