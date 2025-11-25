@@ -4,7 +4,7 @@ use App\Http\Controllers\Web\Admin\AdminController;
 use App\Http\Controllers\Web\Admin\UserController;
 use App\Http\Controllers\Web\Admin\SubscriptionPlanController;
 use App\Http\Controllers\Web\Admin\SubscriptionController;
-use App\Http\Controllers\Web\Admin\ProfileController;
+use App\Http\Controllers\ProfileController;
 use App\Http\Controllers\Web\Admin\NewsController;
 use App\Http\Controllers\Web\Admin\GuestQuizController;
 use App\Http\Controllers\Web\Admin\ForumController;
