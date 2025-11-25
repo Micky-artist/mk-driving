@@ -51,9 +51,11 @@ jobs:
           cp -r resources/js/* public/js/ 2>/dev/null || :
 
       - name: Setup SSH
-        uses: webfactory/ssh-agent@v0.9.0
-        with:
-          ssh-private-key: ${{ secrets.SSH_PRIVATE_KEY }}
+        run: |
+          mkdir -p ~/.ssh
+          echo "${{ secrets.SSH_PRIVATE_KEY }}" > ~/.ssh/id_rsa
+          chmod 600 ~/.ssh/id_rsa
+          ssh-keyscan -H ${{ secrets.HOSTINGER_HOST }} >> ~/.ssh/known_hosts 2>/dev/null
 
       - name: Deploy to Hostinger
         env:
@@ -63,17 +65,49 @@ jobs:
           TARGET_DIR: ${{ secrets.HOSTINGER_DEPLOY_PATH || '/home/u722035022/domains/driving.mkscholars.com/laravel' }}
         run: |
           # Ensure deployment folder exists
-          ssh -o StrictHostKeyChecking=no -p $PORT $USERNAME@$HOST "mkdir -p $TARGET_DIR"
-
-          # Sync files (exclude sensitive or unnecessary files)
-          rsync -avz -e "ssh -p $PORT -o StrictHostKeyChecking=no" \
+          ssh -i ~/.ssh/id_rsa -o StrictHostKeyChecking=no -p $PORT $USERNAME@$HOST "mkdir -p $TARGET_DIR"
+          
+          # Sync files using rsync (faster than scp for multiple files)
+          rsync -avz -e "ssh -i ~/.ssh/id_rsa -o StrictHostKeyChecking=no -p $PORT" \
             --exclude='.git' \
             --exclude='.github' \
             --exclude='node_modules' \
-            --exclude='.env' \
             --exclude='storage' \
+            --exclude='.env' \
+            --exclude='.gitignore' \
+            --exclude='.gitattributes' \
+            --exclude='.editorconfig' \
+            --exclude='.styleci.yml' \
+            --exclude='.php_cs' \
+            --exclude='.phpunit.*' \
+            --exclude='phpunit.xml' \
+            --exclude='README.md' \
+            --exclude='_ide_helper.php' \
+            --exclude='.phpstorm.meta.php' \
+            --exclude='tests' \
+            --exclude='.php-cs-fixer.cache' \
+            --exclude='.php-cs-fixer.dist.php' \
+            --exclude='.php_cs.cache' \
+            --exclude='.php_cs.dist' \
+            --exclude='.phpcs.xml' \
+            --exclude='.phpcs.xml.dist' \
+            --exclude='.phplint.yml' \
+            --exclude='.phpunit.result.cache' \
+            --exclude='phpcs.xml' \
+            --exclude='phpunit.xml.dist' \
+            --exclude='phpunit.xml' \
+            --exclude='storage' \
+            --exclude='.env.example' \
+            --exclude='.gitkeep' \
+            --exclude='.htaccess' \
+            --exclude='web.config' \
             --exclude='public/storage' \
+            --delete \
             ./ $USERNAME@$HOST:$TARGET_DIR/
+            
+          # Set proper permissions
+          ssh -i ~/.ssh/id_rsa -p $PORT $USERNAME@$HOST "chmod -R 775 $TARGET_DIR/bootstrap/cache $TARGET_DIR/storage"
+          ssh -i ~/.ssh/id_rsa -p $PORT $USERNAME@$HOST "chmod -R 777 $TARGET_DIR/storage"
 
           # Copy .env if exists locally (optional)
           if [ -f .env ]; then
