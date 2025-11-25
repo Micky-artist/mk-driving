@@ -16,10 +16,11 @@ return [
     'instructors' => 'Abarimu',
     'login_button' => 'Kwinjira',
     'start_test_description' => 'Tangira umwitozo wambere nonaha.',
+    'upsell_benefit' => 'Menya uko wigeguye!',
     'no_guest_quiz' => 'Imyitozo y\'ubuntu ntayo',
     'loading' => 'Biri gutungana...',
     'start_test' => 'Tangira umwitozo',
-    
+
     // Guest Quiz Section
     'test_your_knowledge' => 'Suzuma ubumenyi bwawe',
     'guest_quiz_description' => 'Dukunda abashyitsi. Imenyereze n\'ikizamini cyambere ntabwishyu.',

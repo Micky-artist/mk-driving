@@ -1,6 +1,7 @@
 <?php
 
 use Illuminate\Support\Facades\Route;
+use Illuminate\Support\Facades\Log;
 use App\Http\Controllers\Web\NewsController;
 use App\Http\Controllers\Web\NewsDetailController;
 use App\Http\Controllers\LanguageController;
@@ -27,13 +28,13 @@ Route::post('/payments/request', [PaymentController::class, 'store'])
     ->name('payments.request');
 
 // API endpoints (no locale needed)
-Route::get('/api/subscription-plans', function(LocaleService $localeService) {
+Route::get('/api/subscription-plans', function (LocaleService $localeService) {
     $locale = $localeService->getLocale();
     
     $plans = SubscriptionPlan::where('is_active', true)
         ->orderBy('price')
         ->get()
-        ->map(function($plan) use ($locale) {
+        ->map(function ($plan) use ($locale) {
             $name = json_decode($plan->name, true);
             $description = json_decode($plan->description, true);
             
@@ -71,8 +72,163 @@ Route::prefix('{locale}')
     ->where(['locale' => '[a-zA-Z]{2}'])
     ->middleware(['web', 'localize'])
     ->group(function () {
+        // Homepage route (handles /{locale} and /{locale}/home)
+        Route::get('', function ($locale) {
+            \Illuminate\Support\Facades\Log::info('Home route accessed', ['locale' => $locale]);
+            
+            // Set the application locale
+            app()->setLocale($locale);
+            \Illuminate\Support\Facades\Log::debug('Locale set to: ' . app()->getLocale());
+            
+            // Get active subscription plans with all language data
+            $plans = \App\Models\SubscriptionPlan::where('is_active', true)
+                ->orderBy('price')
+                ->get()
+                ->map(function ($plan) use ($locale) {
+                    // Handle name (string or array)
+                    $name = $plan->name;
+                    if (is_string($name)) {
+                        $name = json_decode($name, true) ?: [];
+                    }
+                    $displayName = $name[$locale] ?? $name[config('app.fallback_locale', 'en')] ?? 'Unnamed Plan';
+
+                    // Handle description (string or array)
+                    $description = $plan->description;
+                    if (is_string($description)) {
+                        $description = json_decode($description, true) ?: [];
+                    }
+                    $displayDescription = $description[$locale] ?? $description[config('app.fallback_locale', 'en')] ?? '';
+
+                    // Handle features (string, array, or JSON string)
+                    $features = $plan->features;
+                    if (is_string($features)) {
+                        $features = json_decode($features, true) ?: [];
+                    }
+                    
+                    // Ensure features is an array and process it
+                    $features = is_array($features) ? $features : [];
+                    if (isset($features[$locale])) {
+                        $features = (array)$features[$locale];
+                    } elseif (isset($features[config('app.fallback_locale', 'en')])) {
+                        $features = (array)$features[config('app.fallback_locale', 'en')];
+                    }
+                    $features = array_map('strval', $features);
+                    
+                    return [
+                        'id' => $plan->id,
+                        'slug' => $plan->slug,
+                        'name' => $name,
+                        'display_name' => $name[$locale] ?? $name['en'] ?? 'Unnamed Plan',
+                        'description' => $description,
+                        'display_description' => $description[$locale] ?? $description['en'] ?? '',
+                        'price' => $plan->price,
+                        'duration' => $plan->duration,
+                        'features' => $features,
+                        'display_features' => $features,
+                        'color' => $plan->color,
+                        'max_quizzes' => $plan->max_quizzes
+                    ];
+                });
+
+            // Get latest blog posts
+            $blogs = \App\Models\Blog::where('is_published', true)
+                ->with('author')
+                ->orderBy('published_at', 'desc')
+                ->take(3)
+                ->get()
+                ->map(function ($post) use ($locale) {
+                    $title = $post->title;
+                    $content = $post->content;
+                    
+                    return [
+                        'id' => $post->id,
+                        'title' => $title[$locale] ?? $title['en'] ?? 'No title',
+                        'excerpt' => \Illuminate\Support\Str::limit(strip_tags($content[$locale] ?? $content['en'] ?? ''), 100),
+                        'image' => $post->featured_image,
+                        'date' => $post->published_at->format('M d, Y'),
+                        'read_time' => ceil(str_word_count(strip_tags($content[$locale] ?? $content['en'] ?? '')) / 200) . ' min read',
+                        'slug' => $post->slug
+                    ];
+                });
+
+            // Get active quizzes with relationships
+            \Illuminate\Support\Facades\Log::debug('Starting quizzes query');
+            $quizzes = collect();
+            
+            try {
+                // Debug: Check if we can connect to the database
+                \Illuminate\Support\Facades\DB::connection()->getPdo();
+                \Illuminate\Support\Facades\Log::debug('Database connection successful');
+                
+                // Get active guest quizzes with plan data and all active questions
+                $quizzes = \App\Models\Quiz::where('is_guest_quiz', true)
+        ->where('is_active', true)
+        ->withCount('questions')
+        ->with(['questions' => function($query) {
+            $query->where('is_active', true)
+                  ->with(['options' => function($q) {
+                      $q->where('is_active', true)
+                        ->orderBy('order');
+                  }]);
+            $query->orderBy('order');
+        }])
+        ->orderBy('created_at', 'desc')
+        ->take(3)
+        ->get();
+
+// Fallback to any active quizzes if no guest quizzes found
+if ($quizzes->isEmpty()) {
+    $quizzes = \App\Models\Quiz::where('is_active', true)
+        ->with(['questions' => function ($query) {
+            $query->where('is_active', true)
+                  ->with(['options' => function ($q) {
+                      $q->where('is_active', true);
+                  }]);
+        }])
+        ->withCount(['questions' => function ($query) {
+            $query->where('is_active', true);
+        }])
+        ->orderBy('created_at', 'desc')
+        ->take(3)
+        ->get();
+}
+                    
+                // Log the actual number of questions loaded for each quiz
+                foreach ($quizzes as $quiz) {
+                    \Illuminate\Support\Facades\Log::debug('Quiz questions loaded', [
+                        'quiz_id' => $quiz->id,
+                        'quiz_title' => $quiz->title,
+                        'questions_count' => $quiz->questions_count,
+                        'questions_loaded' => $quiz->questions->count(),
+                        'sample_question' => $quiz->questions->isNotEmpty() ? 'exists' : 'none'
+                    ]);
+                }
+                
+                // Log basic quiz info for debugging
+                \Illuminate\Support\Facades\Log::debug('Homepage - Quizzes loaded:', [
+                    'count' => $quizzes->count(),
+                    'quiz_ids' => $quizzes->pluck('id'),
+                    'has_questions' => $quizzes->every(fn($q) => $q->questions->isNotEmpty())
+                ]);
+            } catch (\Exception $e) {
+                \Illuminate\Support\Facades\Log::error('Error in quizzes query: ' . $e->getMessage(), [
+                    'exception' => get_class($e),
+                    'file' => $e->getFile(),
+                    'line' => $e->getLine(),
+                    'trace' => $e->getTraceAsString()
+                ]);
+                $quizzes = collect(); // Return empty collection on error
+            }
+
+            // Render the home view
+            return view('home', [
+                'plans' => $plans,
+                'blogs' => $blogs,
+                'quizzes' => $quizzes,
+                'currentLocale' => $locale
+            ]);
+        })->name('home');
         
-        // Profile routes
         // Profile routes (authenticated only)
         Route::middleware(['auth'])->group(function () {
             // Profile
@@ -105,16 +261,18 @@ Route::prefix('{locale}')
                     ->name('subscribe');
             });
         });
-    // Homepage route (handles /{locale} and /{locale}/home)
     Route::get('', function ($locale) {
+        \Illuminate\Support\Facades\Log::info('Home route accessed', ['locale' => $locale]);
+        
         // Set the application locale
         app()->setLocale($locale);
+        \Illuminate\Support\Facades\Log::debug('Locale set to: ' . app()->getLocale());
         
         // Get active subscription plans with all language data
         $plans = SubscriptionPlan::where('is_active', true)
             ->orderBy('price')
             ->get()
-            ->map(function($plan) use ($locale) {
+            ->map(function ($plan) use ($locale) {
                 // Handle name (string or array)
                 $name = $plan->name;
                 if (is_string($name)) {
@@ -166,7 +324,7 @@ Route::prefix('{locale}')
             ->orderBy('published_at', 'desc')
             ->take(3)
             ->get()
-            ->map(function($post) use ($locale) {
+            ->map(function ($post) use ($locale) {
                 $title = $post->title;
                 $content = $post->content;
                 
@@ -181,38 +339,117 @@ Route::prefix('{locale}')
                 ];
             });
 
-        // Get guest quiz if available
-        $guestQuiz = \App\Models\Quiz::where('is_guest_quiz', true)
-            ->where('is_active', true)
-            ->first();
-
+        $quizzes = collect();
+        
+        try {
+            // First try to get guest quizzes
+            $quizzes = \App\Models\Quiz::where('is_active', true)
+    ->where('is_guest_quiz', true)
+    ->with(['questions' => function ($query) {
+        $query->where('is_active', true);
+    }])
+    ->withCount(['questions' => function ($query) {
+        $query->where('is_active', true);
+    }])
+    ->orderBy('created_at', 'desc')
+    ->take(3)
+    ->get();
+                
+            // If no guest quizzes found, get any active quizzes
+            if ($quizzes->isEmpty()) {
+                $quizzes = \App\Models\Quiz::where('is_active', true)
+                    ->withCount(['questions' => function ($query) {
+                        $query->where('is_active', true);
+                    }])
+                    ->orderBy('created_at', 'desc')
+                    ->take(3)
+                    ->get();
+            }
+            
+            // Format the quizzes data
+            $quizzes = $quizzes->map(function ($quiz) use ($locale) {
+    try {
+        $quiz->title = is_array($quiz->title) 
+            ? ($quiz->title[$locale] ?? $quiz->title['en'] ?? 'Untitled Quiz')
+            : $quiz->title;
+            
+        $quiz->description = is_array($quiz->description)
+            ? ($quiz->description[$locale] ?? $quiz->description['en'] ?? '')
+            : $quiz->description;
+            
+        return $quiz;
+    } catch (\Exception $e) {
+        \Illuminate\Support\Facades\Log::error('Error formatting quiz data: ' . $e->getMessage(), [
+            'quiz_id' => $quiz->id ?? null,
+            'error' => $e->getTraceAsString()
+        ]);
+        return null;
+    }
+})->filter(); // Remove any null entries from the collection
+        } catch (\Exception $e) {
+            \Illuminate\Support\Facades\Log::error('Error in quizzes query: ' . $e->getMessage(), [
+                'exception' => get_class($e),
+                'file' => $e->getFile(),
+                'line' => $e->getLine(),
+                'trace' => $e->getTraceAsString()
+            ]);
+            $quizzes = collect(); // Return empty collection on error
+        }
+            
+        \Illuminate\Support\Facades\Log::debug('Final quiz data prepared for homepage', [
+    'quizzes_count' => $quizzes->count(),
+    'quizzes' => $quizzes->map(function($quiz) {
+        return [
+            'id' => $quiz->id,
+            'title' => $quiz->title,
+            'questions_count' => $quiz->questions_count,
+            'is_guest_quiz' => $quiz->is_guest_quiz,
+            'subscription_plan_slug' => $quiz->subscription_plan_slug,
+            'created_at' => $quiz->created_at,
+            'questions' => $quiz->questions->map(function($question) {
+                return [
+                    'id' => $question->id,
+                    'text' => $question->text,
+                    'options' => $question->options->map(function($option) {
+                        return [
+                            'id' => $option->id,
+                            'option_text' => $option->option_text,
+                            'is_correct' => $option->is_correct
+                        ];
+                    })
+                ];
+            })
+        ];
+    })
+]);
+            
         return view('home', [
             'plans' => $plans,
             'blogs' => $blogs,
-            'guestQuiz' => $guestQuiz,
+            'quizzes' => $quizzes,
             'currentLocale' => $locale
         ]);
     })->name('home');
     
     // Alias for home
-    Route::get('home', function($locale) {
+    Route::get('home', function ($locale) {
         return redirect()->route('home', ['locale' => $locale]);
     });
     
     // Public Pages
-    Route::get('about', function() {
+    Route::get('about', function () {
         return view('about');
     })->name('about');
     
-    Route::get('contact', function() {
+    Route::get('contact', function () {
         return view('contact');
     })->name('contact');
     
-    Route::get('privacy', function() {
+    Route::get('privacy', function () {
         return view('privacy');
     })->name('privacy');
     
-    Route::get('terms', function() {
+    Route::get('terms', function () {
         return view('terms');
     })->name('terms');
     
@@ -273,13 +510,13 @@ Route::prefix('{locale}')
         ->name('logout');
     
     // Plans Page
-    Route::get('plans', function(LocaleService $localeService) {
+    Route::get('plans', function (LocaleService $localeService) {
         $locale = $localeService->getLocale();
         
         $plans = SubscriptionPlan::where('is_active', true)
             ->orderBy('price')
             ->get()
-            ->map(function($plan) use ($locale) {
+            ->map(function ($plan) use ($locale) {
                 // Handle name (string or array)
                 $name = $plan->name;
                 if (is_string($name)) {
@@ -364,7 +601,7 @@ Route::prefix('{locale}')
         Route::get('forum', [\App\Http\Controllers\Web\ForumController::class, 'index'])->name('forum');
         
         // Dashboard Quizzes Routes
-        Route::prefix('dashboard/quizzes')->name('dashboard.quizzes.')->group(function() {
+        Route::prefix('dashboard/quizzes')->name('dashboard.quizzes.')->group(function () {
             // All quizzes
             Route::get('/', [\App\Http\Controllers\Web\Dashboard\QuizController::class, 'index'])
                 ->name('index');
@@ -417,7 +654,7 @@ Route::prefix('{locale}')
             
         Route::delete('subscriptions/{subscription}', [\App\Http\Controllers\Web\SubscriptionController::class, 'destroy'])
             ->name('subscriptions.destroy');
-    });
+        });
 
 // Admin routes - wrapped in web middleware group for session and CSRF protection
 Route::middleware('web')->group(function () {
@@ -451,8 +688,7 @@ Route::prefix('forum')
             ->name('best-answer')
             ->middleware('auth');
     });
-
     }); // Close the locale prefix group
 
 // Authentication routes (from auth.php)
-require __DIR__.'/auth.php';
+require __DIR__ . '/auth.php';

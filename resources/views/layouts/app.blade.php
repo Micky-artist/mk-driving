@@ -35,6 +35,36 @@
 
     <!-- Tailwind CSS -->
     <script src="https://cdn.tailwindcss.com"></script>
+    
+    <!-- Scroll Animation Styles -->
+    <style>
+        .fade-in {
+            opacity: 0;
+            transform: translateY(20px);
+            transition: opacity 0.6s ease-out, transform 0.6s ease-out;
+        }
+
+        .fade-in.visible {
+            opacity: 1;
+            transform: translateY(0);
+        }
+
+        .fade-in.delay-100 {
+            transition-delay: 0.1s;
+        }
+
+        .fade-in.delay-200 {
+            transition-delay: 0.2s;
+        }
+
+        .fade-in.delay-300 {
+            transition-delay: 0.3s;
+        }
+
+        .fade-in.delay-400 {
+            transition-delay: 0.4s;
+        }
+    </style>
     <script>
         tailwind.config = {
             darkMode: 'class',
@@ -135,7 +165,7 @@
         }
     </style>
 </head>
-<body class="font-sans antialiased text-gray-900 dark:text-gray-100 min-h-screen transition-colors duration-200 bg-gradient-to-br from-gray-50 to-gray-100 dark:from-[#0f172a] dark:to-[#1e293b] bg-fixed overflow-x-hidden m-0 p-0">
+<body class="font-sans antialiased text-gray-900 dark:text-gray-100 min-h-screen transition-colors duration-200 bg-gradient-to-br from-white to-gray-50 dark:from-gray-900 dark:to-gray-800 bg-fixed overflow-x-hidden m-0 p-0">
     <!-- Header -->
     @if (!request()->is('dashboard*') && !request()->is('login'))
         @include('components.navbar')
@@ -174,6 +204,26 @@
                 // Uncomment the line below if you want to keep the original alert as well
                 // originalAlert(message);
             };
+        });
+
+        // Scroll reveal animation
+        document.addEventListener('DOMContentLoaded', function() {
+            const fadeElements = document.querySelectorAll('.fade-in');
+            
+            const observer = new IntersectionObserver((entries) => {
+                entries.forEach(entry => {
+                    if (entry.isIntersecting) {
+                        entry.target.classList.add('visible');
+                    }
+                });
+            }, {
+                threshold: 0.1,
+                rootMargin: '0px 0px -50px 0px'
+            });
+
+            fadeElements.forEach(element => {
+                observer.observe(element);
+            });
         });
     </script>
 </body>

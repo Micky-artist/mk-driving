@@ -10,6 +10,7 @@ return [
     'no_guest_quiz' => 'No guest quiz available',
     'loading' => 'Loading...',
     'login_button' => 'Login',
+    'upsell_benefit' => 'Track readiness!',
     
     // Guest Quiz Section
     'test_your_knowledge' => 'Test Your Knowledge',

@@ -1,4 +1,4 @@
-<nav class="w-full bg-[#0640d48e] shadow-lg z-50 overflow-hidden md:fixed" x-data="{ open: false, mobileMenuOpen: false }">
+<nav class="w-full bg-[#0640d4] dark:bg-blue-900 shadow-lg z-50 overflow-hidden md:fixed transition-colors duration-200" x-data="{ open: false, mobileMenuOpen: false }">
     <div class="w-full max-w-full md:max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
         <div class="flex items-center justify-between h-20">
             <!-- Mobile menu button (left on mobile, hidden on desktop) -->
@@ -187,27 +187,47 @@
         x-transition:enter="transition-opacity ease-linear duration-200"
         x-transition:enter-start="opacity-0"
         x-transition:enter-end="opacity-100"
-        x-transition:leave="transition-opacity ease-linear duration-200"
+        x-transition:leave="transition-opacity ease-linear duration-150"
         x-transition:leave-start="opacity-100"
         x-transition:leave-end="opacity-0"
-        class="fixed inset-0 bg-gray-900/80 backdrop-blur-sm z-40 md:hidden"
-        x-cloak>
+        class="md:hidden fixed inset-0 bg-black/70 backdrop-blur-sm z-40"
+        x-cloak
+        x-transition:enter="transition ease-in-out duration-300 transform"
+        x-transition:enter-start="-translate-x-full"
+        x-transition:enter-end="translate-x-0"
+        x-transition:leave="transition ease-in-out duration-300 transform"
+        x-transition:leave-start="translate-x-0"
+        x-transition:leave-end="-translate-x-full">
+        
+        <!-- Backdrop -->
+        <div x-show="mobileMenuOpen" 
+             @click="mobileMenuOpen = false"
+             class="fixed inset-0 bg-gray-900 bg-opacity-50 z-40 lg:hidden"
+             x-transition:enter="transition-opacity ease-linear duration-300"
+             x-transition:enter-start="opacity-0"
+             x-transition:enter-end="opacity-100"
+             x-transition:leave="transition-opacity ease-linear duration-300"
+             x-transition:leave-start="opacity-100"
+             x-transition:leave-end="opacity-0">
+        </div>
         
         <!-- Mobile menu panel -->
         <div class="fixed inset-y-0 left-0 w-80 max-w-full bg-white dark:bg-gray-800 shadow-2xl overflow-y-auto z-50 transform transition-transform duration-300 ease-in-out"
-            :class="mobileMenuOpen ? 'translate-x-0' : '-translate-x-full'"
-            @click.away="mobileMenuOpen = false"
-        >
-            <div class="pt-2 pb-3 space-y-1">
+             :class="{ 'translate-x-0': mobileMenuOpen, '-translate-x-full': !mobileMenuOpen }"
+             @click.away="mobileMenuOpen = false"
+             role="dialog"
+             aria-modal="true"
+             x-show="mobileMenuOpen">
+            
+            <!-- Navigation Links -->
+            <nav class="flex-1 pt-2 pb-4 space-y-1 px-4">
                 @foreach($navLinks as $link)
                     @php
                         $isActive = false;
                         if ($link['route'] !== '#') {
                             foreach ($link['routes'] as $route) {
                                 if (request()->routeIs($route)) {
-                                    // If this is a home route, check if we're on the home page
                                     if ($link['is_home'] && $link['fragment']) {
-                                        // For subscription plans, check the URL fragment
                                         $isActive = request()->is(trim(route($link['route'], [], false), '/') . '#' . $link['fragment']);
                                     } else {
                                         $isActive = true;
@@ -216,102 +236,104 @@
                                 }
                             }
                         }
+                        
                         $routeName = $link['route'];
-                        $mobileClasses = $isActive 
-                            ? 'bg-blue-50 border-blue-500 text-blue-700' 
-                            : 'border-transparent text-gray-600 hover:bg-gray-300 hover:border-gray-300 hover:text-gray-800';
-                        
-                        // Generate route parameters
-                        $routeParams = [];
-                        if ($routeName !== '#') {
-                            $routeParams['locale'] = app()->getLocale();
-                        }
-                        
-                        // Merge any additional route parameters
+                        $routeParams = $routeName !== '#' ? ['locale' => app()->getLocale()] : [];
                         if (isset($link['route_params']) && is_array($link['route_params'])) {
                             $routeParams = array_merge($routeParams, $link['route_params']);
                         }
-                        if (isset($link['route_params']) && is_array($link['route_params'])) {
-                            $routeParams = array_merge($routeParams, $link['route_params']);
-                        }
+                        
+                        $activeClasses = $isActive 
+                            ? 'bg-blue-50 dark:bg-blue-900/30 border-blue-500 text-blue-700 dark:text-blue-300' 
+                            : 'border-transparent text-gray-700 dark:text-gray-300 hover:bg-gray-100 dark:hover:bg-gray-700 hover:border-gray-300 dark:hover:border-gray-600';
                     @endphp
-                    <a 
-                        href="{{ route($routeName, $routeParams) }}{{ $link['fragment'] ? '#' . $link['fragment'] : '' }}" 
-                        class="block pl-3 pr-4 py-2 border-l-4 text-base font-medium {{ $mobileClasses }}"
-                        @if($link['fragment']) 
-                            x-data="{}" 
-                            @click="$event.preventDefault(); 
-                                   $dispatch('close-mobile-menu');
-                                   document.querySelector('#{{ $link['fragment'] }}').scrollIntoView({ behavior: 'smooth' });
-                                   window.history.pushState(null, '', '{{ route($link['route'], ['locale' => app()->getLocale()]) }}#{{ $link['fragment'] }}');"
-                        @endif
-                    >
-                        {{ $link['text'] }}
+                    
+                    <a href="{{ $routeName !== '#' ? route($routeName, $routeParams) : '#' }}{{ $link['fragment'] ? '#' . $link['fragment'] : '' }}" 
+                       class="group flex items-center px-3 py-3 text-sm font-medium rounded-md transition-colors duration-150 {{ $activeClasses }}"
+                       @if($link['fragment']) 
+                           x-data="{}" 
+                           @click="$event.preventDefault();
+                                  $dispatch('close-mobile-menu');
+                                  const target = document.querySelector('#{{ $link['fragment'] }}');
+                                  if (target) {
+                                      target.scrollIntoView({ behavior: 'smooth' });
+                                      window.history.pushState(null, '', '{{ route($link['route'], ['locale' => app()->getLocale()]) }}#{{ $link['fragment'] }}');
+                                  }"
+                       @endif>
+                        <span class="flex-1">{{ $link['text'] }}</span>
                     </a>
                 @endforeach
-                
-                <!-- Mobile Language Switcher -->
-                <div class="pt-2 pb-2 border-t border-gray-700 dark:border-gray-600">
-                    <div class="px-4 py-2">
-                        <p class="text-xs font-medium text-gray-300 dark:text-gray-400 uppercase tracking-wider mb-2">{{ __('Change Language') }}</p>
-                        <div class="flex flex-wrap gap-2">
-                            @foreach(config('app.available_locales') as $locale => $name)
-                                <a 
-                                    href="{{ route('language.switch', $locale) }}" 
-                                    class="px-3 py-1.5 text-sm rounded-md font-medium transition-colors duration-200
-                                    {{ app()->getLocale() === $locale 
-                                        ? 'bg-[#0369a1] text-white hover:bg-[#047ab6]' 
-                                        : 'bg-gray-700 text-gray-200 hover:bg-gray-600 dark:bg-gray-700 dark:text-gray-200 dark:hover:bg-gray-600' }}"
-                                >
-                                    {{ strtoupper($locale) }}
-                                </a>
-                            @endforeach
-                        </div>
-                    </div>
+            </nav>
+            
+            <!-- Language Switcher -->
+            <div class="border-t border-gray-200 dark:border-gray-700 px-4 py-4">
+                <h3 class="text-xs font-semibold text-gray-500 dark:text-gray-400 uppercase tracking-wider mb-3 px-3">
+                    {{ __('Change Language') }}
+                </h3>
+                <div class="flex flex-wrap gap-2">
+                    @foreach(config('app.available_locales') as $locale => $name)
+                        @php
+                            $isCurrent = app()->getLocale() === $locale;
+                            $languageClasses = [
+                                'px-3 py-2 text-sm rounded-md font-medium transition-all duration-200 flex items-center',
+                                $isCurrent ? 'bg-blue-100 text-blue-800 dark:bg-blue-900/50 dark:text-blue-100' : 'bg-gray-100 text-gray-700 hover:bg-gray-200 dark:bg-gray-700 dark:text-gray-300 dark:hover:bg-gray-600',
+                            ];
+                        @endphp
+                        <a href="{{ route('language.switch', $locale) }}" 
+                           class="{{ implode(' ', $languageClasses) }}"
+                           title="{{ $name }}">
+                            {{ strtoupper($locale) }}
+                            @if($isCurrent)
+                                <svg class="ml-1.5 h-4 w-4 text-blue-500" fill="currentColor" viewBox="0 0 20 20">
+                                    <path fill-rule="evenodd" d="M16.707 5.293a1 1 0 010 1.414l-8 8a1 1 0 01-1.414 0l-4-4a1 1 0 011.414-1.414L8 12.586l7.293-7.293a1 1 0 011.414 0z" clip-rule="evenodd" />
+                                </svg>
+                            @endif
+                        </a>
+                    @endforeach
                 </div>
             </div>
-            <div class="pt-4 pb-3 border-t border-gray-200">
+            
+            <!-- User Section -->
+            <div class="border-t border-gray-200 dark:border-gray-700 pt-4 pb-3">
                 @auth
                     <div class="flex items-center px-4">
                         <div class="flex-shrink-0">
-                            <svg class="h-10 w-10 rounded-full text-gray-400" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke="currentColor">
-                                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M16 7a4 4 0 11-8 0 4 4 0 018 0zM12 14a7 7 0 00-7 7h14a7 7 0 00-7-7z" />
-                            </svg>
+                            <div class="h-10 w-10 rounded-full bg-gradient-to-br from-blue-500 to-blue-700 flex items-center justify-center text-white font-semibold">
+                                {{ substr(Auth::user()->name, 0, 1) }}
+                            </div>
                         </div>
-                        <div class="ml-3">
-                            <div class="text-base font-medium text-gray-800">{{ Auth::user()->name }}</div>
-                            <div class="text-sm font-medium text-gray-500">{{ Auth::user()->email }}</div>
+                        <div class="ml-3 min-w-0 flex-1">
+                            <div class="text-base font-medium text-gray-800 dark:text-white truncate">{{ Auth::user()->name }}</div>
+                            <div class="text-sm font-medium text-gray-500 dark:text-gray-400 truncate">{{ Auth::user()->email }}</div>
                         </div>
                     </div>
                     <div class="mt-3 space-y-1">
-                        <a 
-                            href="{{ route('dashboard', ['locale' => app()->getLocale()]) }}" 
-                            class="block px-4 py-2 text-base font-medium text-gray-500 hover:text-gray-800 hover:bg-gray-100"
-                        >
+                        <a href="{{ route('dashboard', ['locale' => app()->getLocale()]) }}" 
+                           class="group flex items-center px-4 py-2 text-sm font-medium text-gray-700 dark:text-gray-300 hover:bg-gray-100 dark:hover:bg-gray-700 rounded-md">
+                            <svg class="mr-3 h-5 w-5 text-gray-400 group-hover:text-gray-500 dark:group-hover:text-gray-300" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4 6a2 2 0 012-2h2a2 2 0 012 2v2a2 2 0 01-2 2H6a2 2 0 01-2-2V6zM14 6a2 2 0 012-2h2a2 2 0 012 2v2a2 2 0 01-2 2h-2a2 2 0 01-2-2V6zM4 16a2 2 0 012-2h2a2 2 0 012 2v2a2 2 0 01-2 2H6a2 2 0 01-2-2v-2zM14 16a2 2 0 012-2h2a2 2 0 012 2v2a2 2 0 01-2 2h-2a2 2 0 01-2-2v-2z" />
+                            </svg>
                             {{ __('navigation.dashboard') }}
                         </a>
                         <form method="POST" action="{{ route('logout', ['locale' => app()->getLocale()]) }}">
                             @csrf
-                            <button 
-                                type="submit" 
-                                class="w-full text-left px-4 py-2 text-base font-medium text-gray-500 hover:text-gray-800 hover:bg-gray-100"
-                            >
+                            <button type="submit" 
+                                    class="group w-full flex items-center px-4 py-2 text-sm font-medium text-gray-700 dark:text-gray-300 hover:bg-gray-100 dark:hover:bg-gray-700 rounded-md">
+                                <svg class="mr-3 h-5 w-5 text-gray-400 group-hover:text-red-500" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M17 16l4-4m0 0l-4-4m4 4H7m6 4v1a3 3 0 01-3 3H6a3 3 0 01-3-3V7a3 3 0 013-3h4a3 3 0 013 3v1" />
+                                </svg>
                                 {{ __('navigation.logout') }}
                             </button>
                         </form>
                     </div>
                 @else
-                    <div class="space-y-1">
-                        <a 
-                            href="{{ route('login', app()->getLocale()) }}" 
-                            class="block w-full px-4 py-2 text-base font-medium text-gray-500 hover:text-gray-800 hover:bg-gray-100"
-                        >
+                    <div class="space-y-2 px-4">
+                        <a href="{{ route('login', app()->getLocale()) }}" 
+                           class="w-full flex items-center justify-center px-4 py-2 border border-transparent rounded-md shadow-sm text-sm font-medium text-white bg-blue-600 hover:bg-blue-700 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-blue-500 transition-colors duration-150">
                             {{ __('navigation.login') }}
                         </a>
-                        <a 
-                            href="{{ route('register', app()->getLocale()) }}" 
-                            class="block w-full px-4 py-2 text-base font-medium text-[#023047] hover:bg-gray-100"
-                        >
+                        <a href="{{ route('register', app()->getLocale()) }}" 
+                           class="w-full flex items-center justify-center px-4 py-2 border border-gray-300 dark:border-gray-600 rounded-md shadow-sm text-sm font-medium text-gray-700 dark:text-gray-300 bg-white dark:bg-gray-800 hover:bg-gray-50 dark:hover:bg-gray-700 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-blue-500 transition-colors duration-150">
                             {{ __('navigation.register') }}
                         </a>
                     </div>

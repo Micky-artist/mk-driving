@@ -37,7 +37,18 @@ class ImportDrivingQuestions extends Command
             return 1;
         }
 
-        $this->info(sprintf('Found %d quizzes', count($quizzes)));
+        // If we only have one quiz in the JSON, create 5 guest quizzes from it
+        if (count($quizzes) === 1) {
+            $firstQuiz = $quizzes[0];
+            for ($i = 1; $i < 5; $i++) {
+                $quizzes[] = $firstQuiz; // Duplicate the first quiz 4 more times
+            }
+        }
+        
+        $this->info(sprintf('Will create %d quizzes (5 guest quizzes, %d regular)', 
+            count($quizzes), 
+            max(0, count($quizzes) - 5)
+        ));
         
         // Debug: Show structure of first quiz and its first question
         if (!empty($quizzes[0])) {
@@ -87,15 +98,22 @@ class ImportDrivingQuestions extends Command
                 
                 $this->info("Creating quiz with subscription plan ID: " . $subscriptionPlan->id);
                 
+                // First 5 quizzes will be guest quizzes, rest will be non-guest
+                $isGuestQuiz = $quizIndex < 5;
+                
                 // Create the quiz with auto-incrementing ID
                 $quiz = new Quiz([
-                    'title' => ['rw' => "Umwitozo {$quizNumber}"],
-                    'description' => ['rw' => "Igikorwa cy'umuhanda {$quizNumber}"],
+                    'title' => $isGuestQuiz 
+                        ? ['rw' => "Umwitozo bwa mbere {$quizNumber}", 'en' => "Practice Quiz {$quizNumber}"]
+                        : ['rw' => "Umwitozo {$quizNumber}", 'en' => "Quiz {$quizNumber}"],
+                    'description' => $isGuestQuiz
+                        ? ['rw' => "Igikorwa cy'umuhanda cya mbere {$quizNumber}", 'en' => "Practice driving test questions set {$quizNumber}"]
+                        : ['rw' => "Igikorwa cy'umuhanda {$quizNumber}", 'en' => "Driving test questions set {$quizNumber}"],
                     'time_limit_minutes' => 20,
                     'is_active' => true,
-                    'is_guest_quiz' => $quizIndex === 0, // Only first quiz is guest quiz
+                    'is_guest_quiz' => $isGuestQuiz,
                     'creator_id' => $adminUser->id,
-                    'subscription_plan_slug' => $subscriptionPlan->slug, // Use slug instead of ID
+                    'subscription_plan_slug' => $subscriptionPlan->slug,
                 ]);
                 
                 if (!$quiz->save()) {

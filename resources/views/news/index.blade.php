@@ -11,431 +11,290 @@
     .aspect-\[4\/3\] {
         aspect-ratio: 4/3;
     }
+    .fade-in {
+        opacity: 0;
+        transform: translateY(20px);
+        transition: opacity 0.6s ease-out, transform 0.6s ease-out;
+    }
+    .fade-in.visible {
+        opacity: 1;
+        transform: translateY(0);
+    }
+    .scrollbar-hide::-webkit-scrollbar {
+        display: none;
+    }
+    .scrollbar-hide {
+        -ms-overflow-style: none;
+        scrollbar-width: none;
+    }
 </style>
 @endpush
 
 @section('content')
-<div class="bg-gray-50">
-        <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
-            <!-- Search Bar -->
-            <div class="mb-8">
-                <div class="flex items-center max-w-2xl mx-auto">
-                    <div class="relative flex-1">
-                        <input
-                            type="text"
-                            id="searchInput"
-                            placeholder="{{ __('news.searchPlaceholder') }}"
-                            class="w-full px-4 py-3 pl-12 pr-4 border border-gray-300 rounded-l-xl focus:outline-none focus:ring-2 focus:ring-[#023047] focus:border-transparent"
-                        />
-                        <div class="absolute inset-y-0 left-0 pl-3 flex items-center pointer-events-none">
-                            <svg class="h-5 w-5 text-gray-400" fill="none" viewBox="0 0 24 24" stroke="currentColor">
-                                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M21 21l-6-6m2-5a7 7 0 11-14 0 7 7 0 0114 0z" />
-                            </svg>
-                        </div>
+<div class="min-h-screen bg-gradient-to-b from-gray-50 to-gray-100 dark:from-gray-900 dark:to-gray-800 transition-colors duration-300">
+    <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-12">
+        <!-- Search Bar with Animation -->
+        <div class="mb-12 transform transition-all duration-500 hover:scale-[1.01]">
+            <div class="flex flex-col md:flex-row items-center justify-between gap-4">
+                <div class="relative w-full md:w-1/2">
+                    <div class="absolute inset-y-0 left-0 pl-3 flex items-center pointer-events-none">
+                        <svg class="h-5 w-5 text-blue-500" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M21 21l-6-6m2-5a7 7 0 11-14 0 7 7 0 0114 0z" />
+                        </svg>
                     </div>
-                    <button id="searchButton" class="bg-[#023047] text-white px-6 py-3 rounded-r-xl hover:bg-[#023047]/90 transition-colors">
-                        {{ __('news.searchButton') }}
-                    </button>
+                    <input
+                        type="text"
+                        id="searchInput"
+                        placeholder="{{ __('news.searchPlaceholder') }}"
+                        class="w-full pl-10 pr-4 py-3 rounded-xl border-2 border-transparent bg-white/80 dark:bg-gray-800/80 backdrop-blur-sm text-gray-900 dark:text-gray-100 placeholder-gray-400 dark:placeholder-gray-500 focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-transparent transition-all duration-300 shadow-lg"
+                    />
                 </div>
+                <button id="searchButton" 
+                        class="w-full md:w-auto px-6 py-3 bg-gradient-to-r from-blue-600 to-blue-700 hover:from-blue-700 hover:to-blue-800 text-white rounded-xl font-medium transition-all duration-300 transform hover:scale-105 shadow-lg hover:shadow-xl">
+                    {{ __('news.searchButton') }}
+                    <span class="ml-2">🔍</span>
+                </button>
             </div>
+        </div>
 
-            <!-- Category Filter -->
-            <div class="flex flex-wrap justify-center gap-2 mb-8">
-                @foreach($categories as $category)
-                    <a href="?category={{ $category }}{{ request('search') ? '&search=' . request('search') : '' }}"
-                       class="px-4 py-2 rounded-full text-sm font-medium transition-colors
-                              {{ $activeCategory === $category 
-                                 ? 'bg-[#023047] text-white' 
-                                 : 'bg-white text-gray-700 hover:bg-gray-100' }}">
-                        {{ __("news.categories.$category") }}
-                    </a>
-                @endforeach
-            </div>
-
-            <!-- Page Title -->
-            <div class="text-center mb-12 flex flex-col justify-center items-center">
-                <h1 class="text-4xl font-bold text-[#023047] mb-4">
-                    {{ __('news.newsOnTime') }}
-                </h1>
-                <p class="w-full md:w-[70%] font-medium">
-                    {{ __('news.newsDescription') }}
-                </p>
-            </div>
-
-            <!-- Articles -->
-            <div id="newsContainer">
-                @if($articles->count() > 0)
-                    <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
-                        @foreach($articles as $article)
-                            <a href="{{ route('news.show', ['locale' => app()->getLocale(), 'slug' => $article->slug]) }}" class="block group">
-                                <div class="bg-white rounded-xl shadow-md hover:shadow-xl transition-all duration-300 overflow-hidden border border-gray-100">
-                                    <div class="relative aspect-[4/3] overflow-hidden">
-                                        @php
-                                            $hasImages = is_array($article->images) && count($article->images) > 0 && !empty($article->images[0]);
-                                        @endphp
-                                        @if($hasImages)
-                                            <img 
-                                                src="{{ $article->images[0] }}" 
-                                                alt="{{ $article->title }}"
-                                                class="w-full h-full object-cover group-hover:scale-105 transition-transform duration-300"
-                                                onerror="this.style.display='none'; this.nextElementSibling.style.display='flex';"
-                                                loading="lazy"
-                                            >
-                                        @endif
-                                        <div class="w-full h-full {{ $hasImages ? 'hidden' : 'flex' }} items-center justify-center bg-gradient-to-br from-blue-50 to-gray-100">
-                                            <svg class="w-12 h-12 text-gray-400" fill="none" viewBox="0 0 24 24" stroke="currentColor">
-                                                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="1" d="M9 12h6m-6 4h6m2 5H7a2 2 0 01-2-2V5a2 2 0 012-2h5.586a1 1 0 01.707.293l5.414 5.414a1 1 0 01.293.707V19a2 2 0 01-2 2z" />
-                                            </svg>
-                                        </div>
-                                        <div class="absolute top-3 left-3">
-                                            @php
-                                                $category = $article->category ?? 'news';
-                                                $color = [
-                                                    'advice' => 'bg-blue-100 text-blue-600',
-                                                    'police' => 'bg-green-100 text-green-600',
-                                                    'trends' => 'bg-purple-100 text-purple-600',
-                                                    'vehicle' => 'bg-orange-100 text-orange-600',
-                                                    'news' => 'bg-gray-100 text-gray-600',
-                                                ][$category] ?? 'bg-gray-100 text-gray-600';
-                                                
-                                                $icon = [
-                                                    'advice' => '💡',
-                                                    'police' => '🚔',
-                                                    'trends' => '📈',
-                                                    'vehicle' => '🚗',
-                                                ][$category] ?? '📰';
-                                            @endphp
-                                            <div class="{{ $color }} px-2 py-1 rounded-full text-xs font-medium inline-flex items-center">
-                                                <span class="mr-1">{{ $icon }}</span>
-                                                {{ __("news.categories.$category") }}
-                                            </div>
-                                        </div>
-                                        @if(is_array($article->images) && count($article->images) > 1)
-                                            <div class="absolute top-3 right-3">
-                                                <div class="bg-black/50 text-white px-2 py-1 rounded-full text-xs font-medium">
-                                                    +{{ count($article->images) - 1 }}
-                                                </div>
-                                            </div>
-                                        @endif
-                                    </div>
-                                    <div class="p-4">
-                                        <h3 class="font-semibold text-gray-900 text-sm leading-snug mb-3 group-hover:text-[#023047] transition-colors line-clamp-2">
-                                            {{ $article->localized_title }}
-                                        </h3>
-                                        <div class="flex items-center justify-between text-xs text-gray-500">
-                                            <span>{{ $article->created_at->format('M j, Y') }}</span>
-                                            @if($article->author)
-                                                <span>{{ __('news.author') }} {{ $article->author->first_name }} {{ $article->author->last_name }}</span>
-                                            @else
-                                                <span>{{ __('news.unknown_author') }}</span>
-                                            @endif
-                                        </div>
-                                    </div>
-                                </div>
+        <!-- Enhanced Category Filter with Smooth Scrolling -->
+        <div class="mb-12 relative group">
+            <div class="relative">
+                <!-- Gradient overlays that fade in on hover -->
+                <div class="absolute inset-y-0 left-0 w-12 bg-gradient-to-r from-gray-50 to-transparent dark:from-gray-900 z-10 pointer-events-none opacity-0 group-hover:opacity-100 transition-opacity duration-300"></div>
+                <div class="absolute inset-y-0 right-0 w-12 bg-gradient-to-l from-gray-50 to-transparent dark:from-gray-900 z-10 pointer-events-none opacity-0 group-hover:opacity-100 transition-opacity duration-300"></div>
+                
+                <div class="overflow-x-auto pb-6 scrollbar-hide snap-x snap-mandatory scroll-smooth">
+                    <div class="flex space-x-2.5 px-1">
+                        <!-- All Categories Button -->
+                        <a href="?{{ request('search') ? 'search=' . request('search') : '' }}"
+                           class="snap-center px-4 py-2 rounded-xl text-sm font-medium whitespace-nowrap transition-all duration-300 flex-shrink-0 shadow-sm
+                                  {{ !$activeCategory 
+                                     ? 'bg-gradient-to-r from-blue-600 to-blue-700 text-white shadow-lg scale-[1.02] ring-2 ring-blue-400/30' 
+                                     : 'bg-white/90 dark:bg-gray-800/90 text-gray-700 dark:text-gray-300 hover:bg-gray-50 dark:hover:bg-gray-700/90 shadow-md hover:shadow-lg' }}">
+                            {{ __('news.categories.all') }}
+                            @if(!$activeCategory)
+                                <span class="ml-1.5 inline-flex">✨</span>
+                            @endif
+                        </a>
+                        
+                        <!-- Category Items -->
+                        @foreach($categories as $category)
+                            <a href="?category={{ $category }}{{ request('search') ? '&search=' . request('search') : '' }}"
+                               class="snap-center px-4 py-2 rounded-xl text-sm font-medium whitespace-nowrap transition-all duration-300 flex-shrink-0 shadow-sm
+                                      {{ $activeCategory === $category 
+                                         ? 'bg-gradient-to-r from-blue-600 to-blue-700 text-white shadow-lg scale-[1.02] ring-2 ring-blue-400/30' 
+                                         : 'bg-white/90 dark:bg-gray-800/90 text-gray-700 dark:text-gray-300 hover:bg-gray-50 dark:hover:bg-gray-700/90 shadow-md hover:shadow-lg' }}">
+                                <span class="relative">
+                                    {{ __("news.categories.$category") }}
+                                    @if($activeCategory === $category)
+                                        <span class="absolute -top-2 -right-3 text-yellow-400 text-xs">•</span>
+                                    @endif
+                                </span>
                             </a>
                         @endforeach
                     </div>
-                    
-                    <!-- Pagination -->
-                    @if($articles->hasPages())
-                        <div class="mt-8">
-                            {{ $articles->appends(request()->query())->links() }}
-                        </div>
-                    @endif
-                @else
-                    <div class="text-center py-16">
-                        <p class="text-gray-600">{{ __('blogs.noArticlesFound') }}</p>
-                    </div>
-                @endif
+                </div>
+                
+                <!-- Scroll indicators (visible on mobile) -->
+                <div class="md:hidden absolute bottom-0 left-0 right-0 flex justify-center space-x-1.5 pt-2">
+                    @foreach($categories as $index => $category)
+                        <span class="block w-1.5 h-1.5 rounded-full bg-gray-300 dark:bg-gray-600 transition-all duration-300 {{ $activeCategory === $category ? 'w-6 bg-blue-500' : '' }}"></span>
+                    @endforeach
+                </div>
             </div>
         </div>
+
+        <!-- Page Title with Animation -->
+        <div class="text-center mb-16 fade-in">
+            <h1 class="text-4xl md:text-5xl font-bold bg-clip-text text-transparent bg-gradient-to-r from-blue-600 to-cyan-500 mb-4">
+                {{ __('news.newsOnTime') }}
+            </h1>
+            <p class="text-lg text-gray-600 dark:text-gray-300 max-w-3xl mx-auto">
+                {{ __('news.newsDescription') }}
+            </p>
+        </div>
+
+        <!-- Articles Grid -->
+        <div id="newsContainer">
+            @if($articles->count() > 0)
+                <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-8">
+                    @foreach($articles as $article)
+                        <a href="{{ route('news.detail', ['locale' => app()->getLocale(), 'slug' => $article->slug]) }}" 
+                           class="group block transform transition-all duration-500 hover:-translate-y-2 fade-in" data-animate>
+                            <div class="h-full bg-white/80 dark:bg-gray-800/80 backdrop-blur-sm rounded-2xl overflow-hidden border border-gray-200 dark:border-gray-700 shadow-lg hover:shadow-2xl transition-all duration-300">
+                                <!-- Image Container -->
+                                <div class="relative aspect-[4/3] overflow-hidden">
+                                    @php
+                                        $hasImages = is_array($article->images) && count($article->images) > 0 && !empty($article->images[0]);
+                                    @endphp
+                                    @if($hasImages)
+                                        <img 
+                                            src="{{ $article->images[0] }}" 
+                                            alt="{{ $article->title }}"
+                                            class="w-full h-full object-cover transition-transform duration-700 group-hover:scale-110"
+                                            onerror="this.style.display='none'; this.nextElementSibling.style.display='flex';"
+                                            loading="lazy"
+                                        >
+                                    @endif
+                                    <div class="w-full h-full {{ $hasImages ? 'hidden' : 'flex' }} items-center justify-center bg-gradient-to-br from-blue-50 to-gray-100 dark:from-gray-700 dark:to-gray-800">
+                                        <svg class="w-16 h-16 text-gray-400 dark:text-gray-600" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="1" d="M9 12h6m-6 4h6m2 5H7a2 2 0 01-2-2V5a2 2 0 012-2h5.586a1 1 0 01.707.293l5.414 5.414a1 1 0 01.293.707V19a2 2 0 01-2 2z" />
+                                        </svg>
+                                    </div>
+                                    
+                                    <!-- Category Badge -->
+                                    @php
+                                        $category = $article->category ?? 'news';
+                                        $colorClasses = [
+                                            'advice' => 'bg-blue-100 text-blue-600 dark:bg-blue-900/50 dark:text-blue-300',
+                                            'police' => 'bg-green-100 text-green-600 dark:bg-green-900/50 dark:text-green-300',
+                                            'trends' => 'bg-purple-100 text-purple-600 dark:bg-purple-900/50 dark:text-purple-300',
+                                            'vehicle' => 'bg-orange-100 text-orange-600 dark:bg-orange-900/50 dark:text-orange-300',
+                                            'news' => 'bg-gray-100 text-gray-600 dark:bg-gray-700/50 dark:text-gray-300',
+                                        ][$category] ?? 'bg-gray-100 text-gray-600 dark:bg-gray-700/50 dark:text-gray-300';
+                                        
+                                        $icons = [
+                                            'advice' => '💡',
+                                            'police' => '🚔',
+                                            'trends' => '📈',
+                                            'vehicle' => '🚗',
+                                        ][$category] ?? '📰';
+                                    @endphp
+                                    <div class="absolute top-3 left-3 transform transition-transform duration-300 group-hover:scale-110">
+                                        <div class="{{ $colorClasses }} px-3 py-1 rounded-full text-xs font-medium inline-flex items-center backdrop-blur-sm">
+                                            <span class="mr-1.5 text-sm">{{ $icons }}</span>
+                                            {{ __("news.categories.$category") }}
+                                        </div>
+                                    </div>
+
+                                    @if(is_array($article->images) && count($article->images) > 1)
+                                        <div class="absolute top-3 right-3 bg-black/60 text-white px-2.5 py-1 rounded-full text-xs font-medium backdrop-blur-sm">
+                                            +{{ count($article->images) - 1 }} {{ __('news.more_photos') }}
+                                        </div>
+                                    @endif
+                                </div>
+
+                                <!-- Article Content -->
+                                <div class="p-5">
+                                    <h3 class="font-bold text-gray-900 dark:text-white text-lg leading-tight mb-3 group-hover:text-blue-600 dark:group-hover:text-blue-400 transition-colors duration-300 line-clamp-2">
+                                        {{ $article->localized_title }}
+                                    </h3>
+                                    <p class="text-gray-600 dark:text-gray-300 text-sm mb-4 line-clamp-3">
+                                        {{ $article->localized_excerpt ?? \Illuminate\Support\Str::limit(strip_tags($article->localized_content), 120) }}
+                                    </p>
+                                    <div class="flex items-center justify-between text-sm text-gray-500 dark:text-gray-400">
+                                        <span class="flex items-center">
+                                            <svg class="w-4 h-4 mr-1" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M8 7V3m8 4V3m-9 8h10M5 21h14a2 2 0 002-2V7a2 2 0 00-2-2H5a2 2 0 00-2 2v12a2 2 0 002 2z" />
+                                            </svg>
+                                            {{ $article->created_at->translatedFormat('M j, Y') }}
+                                        </span>
+                                        @if($article->author)
+                                            <span class="flex items-center">
+                                                <svg class="w-4 h-4 mr-1" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M16 7a4 4 0 11-8 0 4 4 0 018 0zM12 14a7 7 0 00-7 7h14a7 7 0 00-7-7z" />
+                                                </svg>
+                                                {{ $article->author->first_name }} {{ $article->author->last_name }}
+                                            </span>
+                                        @endif
+                                    </div>
+                                </div>
+                            </div>
+                        </a>
+                    @endforeach
+                </div>
+
+                <!-- Pagination -->
+                @if($articles->hasPages())
+                    <div class="mt-16 fade-in">
+                        {{ $articles->links('pagination::tailwind') }}
+                    </div>
+                @endif
+            @else
+                <div class="text-center py-20 fade-in">
+                    <div class="max-w-md mx-auto">
+                        <div class="w-24 h-24 mx-auto mb-6 text-gray-400">
+                            <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="1" d="M9.172 16.172a4 4 0 015.656 0M9 10h.01M15 10h.01M21 12a9 9 0 11-18 0 9 9 0 0118 0z" />
+                            </svg>
+                        </div>
+                        <h3 class="text-xl font-medium text-gray-900 dark:text-white mb-2">{{ __('news.no_articles_found') }}</h3>
+                        <p class="text-gray-500 dark:text-gray-400">{{ __('news.try_different_search') }}</p>
+                    </div>
+                </div>
+            @endif
+        </div>
     </div>
+</div>
+@endsection
 
 @push('scripts')
 <script>
-// Category icon mapping
-const categoryIcons = {
-    'advice': '💡',
-    'police': '🚔',
-    'trends': '📈',
-    'vehicle': '🚗',
-    'news': '📰'
-};
-
-// Category color mapping
-const categoryColors = {
-    'advice': 'bg-blue-100 text-blue-600',
-    'police': 'bg-green-100 text-green-600',
-    'trends': 'bg-purple-100 text-purple-600',
-    'vehicle': 'bg-orange-100 text-orange-600',
-    'news': 'bg-gray-100 text-gray-600'
-};
-
-document.addEventListener('DOMContentLoaded', function() {
-    const newsContainer = document.getElementById('newsContainer');
-    const searchInput = document.getElementById('searchInput');
-    const searchButton = document.getElementById('searchButton');
-    
-    // Set initial search input value from URL
-    const urlParams = new URLSearchParams(window.location.search);
-    const searchQuery = urlParams.get('search') || '';
-    searchInput.value = searchQuery;
-    
-    // Search functionality with debounce
-    let searchTimeout;
-    
-    function handleSearch() {
-        clearTimeout(searchTimeout);
-        searchTimeout = setTimeout(() => {
-            const searchQuery = searchInput.value.trim();
-            const url = new URL(window.location.href);
-            
-            if (searchQuery) {
-                url.searchParams.set('search', searchQuery);
-                // Reset to first page when searching
-                url.searchParams.set('page', '1');
-            } else {
-                url.searchParams.delete('search');
-            }
-            
-            // Update URL without page reload
-            window.history.pushState({}, '', url.toString());
-            
-            // Load articles with search query and current category
-            loadNews(searchQuery);
-        }, 500);
-    }
-    
-    // Load news articles with current filters
-    function loadNews(searchQuery = '') {
-        const url = new URL('/api/news', window.location.origin);
-        const params = new URLSearchParams(window.location.search);
+    // Intersection Observer for fade-in animations
+    document.addEventListener('DOMContentLoaded', function() {
+        const animateElements = document.querySelectorAll('[data-animate]');
         
-        // Add current pagination, search, and category filters
-        if (searchQuery) {
-            params.set('search', searchQuery);
-        } else {
-            params.delete('search');
-        }
-        
-        // Preserve category filter
-        const category = '{{ $activeCategory }}';
-        if (category && category !== 'all') {
-            params.set('category', category);
-        } else {
-            params.delete('category');
-        }
-        
-        // Add pagination if not in URL
-        if (!params.has('page')) {
-            params.set('page', '1');
-        }
-        
-        url.search = params.toString();
-        
-        // Show loading state
-        const currentContent = newsContainer.innerHTML;
-        newsContainer.innerHTML = `
-            <div class="flex items-center justify-center py-16">
-                <div class="animate-spin rounded-full h-8 w-8 border-b-2 border-blue-600"></div>
-                <span class="ml-2">{{ __('blogs.Loading articles') }}...</span>
-            </div>
-        `;
-        
-        fetch(url, {
-            headers: {
-                'Accept': 'application/json',
-                'X-Requested-With': 'XMLHttpRequest'
-            }
-        })
-        .then(response => response.json())
-        .then(data => {
-            if (data.data && data.data.length > 0) {
-                renderNews(data);
-            } else {
-                newsContainer.innerHTML = `
-                    <div class="text-center py-16">
-                        <p class="text-gray-600">{{ __('blogs.noArticlesFound') }}</p>
-                    </div>
-                `;
-            }
-        })
-        .catch(error => {
-            console.error('Error loading news:', error);
-            newsContainer.innerHTML = `
-                <div class="text-center py-16">
-                    <p class="text-red-500">{{ __('Failed to load news. Please try again later.') }}</p>
-                    <button onclick="window.location.reload()" class="mt-4 px-4 py-2 bg-blue-600 text-white rounded-md hover:bg-blue-700">
-                        {{ __('Retry') }}
-                    </button>
-                </div>
-            `;
-        });
-    }
-    
-    // Render news articles with pagination
-    function renderNews(response) {
-        const articles = response.data || [];
-        const pagination = response.meta;
-        
-        if (articles.length === 0) {
-            newsContainer.innerHTML = `
-                <div class="text-center py-16">
-                    <p class="text-gray-600">{{ __('blogs.noArticlesFound') }}</p>
-                </div>
-            `;
-            return;
-        }
-        
-        const articlesHtml = articles.map(article => {
-            const category = article.category || 'news';
-            const icon = categoryIcons[category] || '📰';
-            const color = categoryColors[category] || 'bg-gray-100 text-gray-600';
-            const imageCount = article.images ? article.images.length : 0;
-            const imageUrl = imageCount > 0 ? article.images[0] : '';
-            const hasMultipleImages = imageCount > 1;
-            const authorName = article.author ? `${article.author.first_name} ${article.author.last_name}` : '';
-            const publishDate = new Date(article.created_at).toLocaleDateString('en-US', {
-                year: 'numeric',
-                month: 'short',
-                day: 'numeric'
+        const observer = new IntersectionObserver((entries) => {
+            entries.forEach(entry => {
+                if (entry.isIntersecting) {
+                    entry.target.classList.add('visible');
+                    // Unobserve after animation
+                    observer.unobserve(entry.target);
+                }
             });
+        }, {
+            threshold: 0.1,
+            rootMargin: '0px 0px -50px 0px'
+        });
+
+        animateElements.forEach(element => {
+            observer.observe(element);
+            // Add staggered delay based on element position
+            element.style.transitionDelay = `${Math.random() * 0.2}s`;
+        });
+
+        // Add scroll event for category filter shadow
+        const categoryContainer = document.querySelector('.overflow-x-auto');
+        if (categoryContainer) {
+            const updateScrollShadow = () => {
+                const { scrollLeft, scrollWidth, clientWidth } = categoryContainer;
+                const leftGradient = document.querySelector('.left-gradient');
+                const rightGradient = document.querySelector('.right-gradient');
+                
+                if (leftGradient) leftGradient.style.opacity = scrollLeft > 10 ? '1' : '0';
+                if (rightGradient) rightGradient.style.opacity = scrollLeft < scrollWidth - clientWidth - 10 ? '1' : '0';
+            };
             
-            return `
-                <a href="/news/${article.slug}" class="block group">
-                    <div class="bg-white rounded-xl shadow-md hover:shadow-xl transition-all duration-300 overflow-hidden border border-gray-100 h-full flex flex-col">
-                        <div class="relative aspect-[4/3] overflow-hidden">
-                            ${imageUrl ? `
-                                <img 
-                                    src="${imageUrl}" 
-                                    alt="${article.title}"
-                                    class="w-full h-full object-cover group-hover:scale-105 transition-transform duration-300"
-                                    onerror="this.style.display='none'; this.nextElementSibling.style.display='flex';"
-                                    loading="lazy"
-                                >
-                            ` : ''}
-                            <div class="w-full h-full ${imageUrl ? 'hidden' : 'flex'} items-center justify-center bg-gradient-to-br from-blue-50 to-gray-100">
-                                <svg class="w-12 h-12 text-gray-400" fill="none" viewBox="0 0 24 24" stroke="currentColor">
-                                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="1" d="M9 12h6m-6 4h6m2 5H7a2 2 0 01-2-2V5a2 2 0 012-2h5.586a1 1 0 01.707.293l5.414 5.414a1 1 0 01.293.707V19a2 2 0 01-2 2z" />
-                                </svg>
-                            </div>
-                            <div class="absolute top-3 left-3">
-                                <div class="${color} px-2 py-1 rounded-full text-xs font-medium inline-flex items-center">
-                                    <span class="mr-1">${icon}</span>
-                                    {{ __("blogs.categories.${category}" || 'news') }}
-                                </div>
-                            </div>
-                            ${hasMultipleImages ? `
-                                <div class="absolute top-3 right-3">
-                                    <div class="bg-black/50 text-white px-2 py-1 rounded-full text-xs font-medium">
-                                        +${imageCount - 1}
-                                    </div>
-                                </div>
-                            ` : ''}
-                        </div>
-                        <div class="p-4 flex-1 flex flex-col">
-                            <h3 class="font-semibold text-gray-900 text-sm leading-snug mb-3 group-hover:text-[#023047] transition-colors line-clamp-2">
-                                ${article.title}
-                            </h3>
-                            <div class="mt-auto">
-                                <div class="flex items-center justify-between text-xs text-gray-500">
-                                    <span>${publishDate}</span>
-                                    <span>{{ __('blogs.author') }} ${authorName}</span>
-                                </div>
-                            </div>
-                        </div>
-                    </div>
-                </a>
-            `;
-        }).join('');
-        
-        // Generate pagination links
-        let paginationHtml = '';
-        if (pagination && pagination.last_page > 1) {
-            const currentPage = pagination.current_page;
-            const lastPage = pagination.last_page;
-            
-            paginationHtml = `
-                <div class="mt-8 flex items-center justify-center space-x-2">
-                    ${currentPage > 1 ? `
-                        <a href="?${updateQueryString('page', currentPage - 1)}" class="px-3 py-1 rounded-md border border-gray-300 hover:bg-gray-50">
-                            &larr; {{ __('Previous') }}
-                        </a>
-                    ` : ''}
-                    
-                    ${Array.from({ length: Math.min(5, lastPage) }, (_, i) => {
-                        let pageNum;
-                        if (lastPage <= 5) {
-                            pageNum = i + 1;
-                        } else if (currentPage <= 3) {
-                            pageNum = i + 1;
-                        } else if (currentPage >= lastPage - 2) {
-                            pageNum = lastPage - 4 + i;
-                        } else {
-                            pageNum = currentPage - 2 + i;
-                        }
-                        
-                        return `
-                            <a href="?${updateQueryString('page', pageNum)}" 
-                               class="px-3 py-1 rounded-md ${currentPage === pageNum ? 'bg-[#023047] text-white' : 'border border-gray-300 hover:bg-gray-50'}">
-                                ${pageNum}
-                            </a>
-                        `;
-                    }).join('')}
-                    
-                    ${currentPage < lastPage ? `
-                        <a href="?${updateQueryString('page', currentPage + 1)}" class="px-3 py-1 rounded-md border border-gray-300 hover:bg-gray-50">
-                            {{ __('Next') }} &rarr;
-                        </a>
-                    ` : ''}
-                </div>
-            `;
-        }
-        
-        newsContainer.innerHTML = `
-            <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
-                ${articlesHtml}
-            </div>
-            ${paginationHtml}
-        `;
-    }
-    
-    // Helper function to update query string parameters
-    function updateQueryString(key, value) {
-        const params = new URLSearchParams(window.location.search);
-        if (value) {
-            params.set(key, value);
-        } else {
-            params.delete(key);
-        }
-        return params.toString();
-    }
-    
-    // Event listeners
-    searchInput.addEventListener('input', handleSearch);
-    
-    searchButton.addEventListener('click', () => {
-        handleSearch();
-    });
-    
-    searchInput.addEventListener('keypress', (e) => {
-        if (e.key === 'Enter') {
-            handleSearch();
+            categoryContainer.addEventListener('scroll', updateScrollShadow);
+            // Initial check
+            updateScrollShadow();
         }
     });
-    
-    // Handle browser back/forward buttons
-    window.addEventListener('popstate', () => {
-        const searchQuery = new URLSearchParams(window.location.search).get('search') || '';
-        searchInput.value = searchQuery;
-        loadNews(searchQuery);
+// Add smooth scrolling to category links
+document.querySelectorAll('a[href^="#"]').forEach(anchor => {
+    anchor.addEventListener('click', function (e) {
+        e.preventDefault();
+        document.querySelector(this.getAttribute('href')).scrollIntoView({
+            behavior: 'smooth'
+        });
     });
-    
-    // Initial load (only if not already server-rendered)
-    if (document.querySelector('#newsContainer').children.length === 0) {
-        loadNews(searchQuery);
-    }
+});
+
+// Add fade-in animation to elements when they come into view
+const observer = new IntersectionObserver((entries) => {
+    entries.forEach(entry => {
+        if (entry.isIntersecting) {
+            entry.target.classList.add('fade-in-visible');
+            observer.unobserve(entry.target);
+        }
+    });
+}, {
+    threshold: 0.1
+});
+
+document.querySelectorAll('.fade-in').forEach((el) => {
+    observer.observe(el);
 });
 </script>
 @endpush
-@endsection

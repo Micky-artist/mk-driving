@@ -217,12 +217,6 @@ class PaymentController extends Controller
             // Send confirmation email (you can implement this)
             // $user->notify(new SubscriptionActivated($payment));
             
-            Log::info('Subscription activated', [
-                'user_id' => $user->id,
-                'plan_id' => $plan->id,
-                'payment_id' => $payment->id,
-            ]);
-            
         } catch (\Exception $e) {
             Log::error('Failed to activate subscription: ' . $e->getMessage(), [
                 'payment_id' => $payment->id,

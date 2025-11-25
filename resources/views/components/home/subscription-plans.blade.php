@@ -1,27 +1,6 @@
 @php
-    // Debug: Log the plans data
-    \Log::info('Subscription plans data received:', [
-        'plans_count' => count($plans),
-        'plans_sample' =>
-            count($plans) > 0
-                ? [
-                    'id' => $plans[0]['id'] ?? null,
-                    'slug' => $plans[0]['slug'] ?? null,
-                    'name' => $plans[0]['name'] ?? null,
-                    'display_name' => $plans[0]['display_name'] ?? null,
-                ]
-                : 'No plans found',
-    ]);
-
     // Helper functions to determine plan styling
     $getPlanType = function ($plan) {
-        // Debug the incoming plan data
-        \Log::debug('Processing plan:', [
-            'plan_data' => $plan,
-            'is_array' => is_array($plan),
-            'is_object' => is_object($plan),
-        ]);
-
         // First try to get the slug directly
         $slug = null;
 
@@ -34,13 +13,6 @@
         // If we have a slug, use it directly
         if (!empty($slug)) {
             $slug = strtolower(trim($slug));
-
-            // Debug information
-            \Log::info('Plan theming - using slug:', [
-                'plan_id' => is_array($plan) ? $plan['id'] ?? null : (is_object($plan) ? $plan->id : null),
-                'slug' => $slug,
-                'plan_data_keys' => is_array($plan) ? array_keys($plan) : [],
-            ]);
 
             // Return the slug as the plan type if it matches our expected values
             if (in_array($slug, ['gold-unlimited', 'premium', 'standard', 'basic'])) {
@@ -57,13 +29,6 @@
                 : '');
 
         $planName = strtolower($planName);
-
-        // Debug fallback
-        \Log::info('Plan theming - falling back to name matching:', [
-            'plan_id' => is_array($plan) ? $plan['id'] ?? null : (is_object($plan) ? $plan->id : null),
-            'plan_name' => $planName,
-            'original_slug' => $slug ?? 'not_found',
-        ]);
 
         if (str_contains($planName, 'gold-unlimited')) {
             return 'gold-unlimited';
@@ -182,9 +147,9 @@
 @endphp
 
 <div class="my-16">
-    <div class="text-center mb-10">
+    <div class="text-center mb-10 fade-in">
         <h2 class="text-2xl sm:text-3xl font-bold text-gray-900 dark:text-white mb-4">{{ __('home.subscriptionPlans.title') }}</h2>
-        <p class="text-gray-600 dark:text-gray-300 max-w-2xl mx-auto">
+        <p class="text-gray-600 dark:text-gray-300 max-w-2xl mx-auto fade-in delay-100">
             {{ __('home.subscriptionPlans.subtitle') }}
         </p>
     </div>
@@ -195,19 +160,12 @@
                 $planType = $getPlanType($plan);
                 $isPopular = $planType === 'premium';
                 $features = $processFeatures($plan['features'] ?? []);
-                $isCurrentPlan = $plan['is_current'] ?? false;
-
-                // Debug the plan type determination
-                \Log::info('Plan theming result:', [
-                    'plan_id' => $plan['id'] ?? null,
-                    'slug' => $plan['slug'] ?? null,
-                    'plan_type' => $planType,
-                    'is_popular' => $isPopular,
-                ]);
+                $isCurrentPlan = $plan['is_current'] ?? false
             @endphp
 
             <div
-                class="relative pt-8 h-full rounded-xl overflow-visible shadow-md hover:shadow-lg transition-all duration-300 transform hover:-translate-y-1 {{ $getCardBgClass($planType) }}">
+                class="relative pt-8 h-full rounded-xl overflow-visible shadow-md hover:shadow-lg transition-all duration-300 transform hover:-translate-y-1 {{ $getCardBgClass($planType) }} fade-in"
+                style="animation-delay: {{ $loop->index * 0.1 }}s;">
                 @if ($isPopular)
                     <div
                         class="absolute -top-3 left-1/2 -translate-x-1/2 bg-gradient-to-r {{ $getBadgeClass($planType) }} text-white text-xs font-bold px-4 py-1 rounded-full shadow-lg z-50 whitespace-nowrap">
@@ -216,7 +174,7 @@
                 @endif
 
                 <div class="h-full flex flex-col">
-                    <div class="p-6 pb-0">
+                    <div class="p-6 pb-0 fade-in delay-100">
                         <h3 class="text-xl font-bold {{ $getTextClass($planType) }} mb-2">
                             {{ $plan['display_name'] ?? ($plan['name']['en'] ?? 'Unnamed Plan') }}</h3>
                         <p class="text-3xl font-bold {{ $getTextClass($planType) }}">
@@ -268,7 +226,7 @@
                         </ul>
                     </div>
 
-                    <div class="p-6 pt-0 mt-auto">
+                    <div class="p-6 pt-0 mt-auto fade-in delay-300">
                         @if ($isCurrentPlan)
                             <button
                                 class="w-full text-center bg-gray-400 text-white font-medium py-2 px-4 rounded-lg cursor-not-allowed"
@@ -306,10 +264,10 @@
         @endforeach
     </div>
 
-    <div class="mt-10 text-center">
+    <div class="mt-10 text-center fade-in delay-400">
         <p class="text-gray-600 dark:text-gray-300 mb-4">{{ __('home.subscriptionPlans.needHelp') }}</p>
-        <a href="{{ route('home', ['#subscription-plans']) }}" class="text-teal-600 dark:text-teal-400 font-medium hover:underline">
-            {{ __('forum.footer.contact_us') }}
+        <a href="{{ route('home', ['#subscription-plans']) }}" class="text-teal-600 dark:text-teal-400 font-medium hover:underline transition-colors duration-200 hover:text-teal-700 dark:hover:text-teal-300">
+            {{ __('home.subscriptionPlans.contact_us') }}
         </a>
     </div>
 </div>
