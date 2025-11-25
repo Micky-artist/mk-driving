@@ -19,6 +19,7 @@ class UploadController extends Controller
     {
         $this->uploadService = $uploadService;
     }
+    
     /**
      * Upload an image file
      */
