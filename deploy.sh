@@ -20,12 +20,14 @@ mkdir -p storage/framework/views
 mkdir -p storage/framework/cache/data
 mkdir -p storage/framework/sessions
 
-# Set proper ownership and permissions
+# Set proper permissions
 echo -e "${YELLOW}🔒 Setting permissions...${NC}"
-chmod -R 775 storage
-chmod -R 775 bootstrap/cache
-chown -R $USER:www-data storage
-chown -R $USER:www-data bootstrap/cache
+# Set directory permissions to 775
+find storage -type d -exec chmod 775 {} \;
+find bootstrap/cache -type d -exec chmod 775 {} \;
+# Set file permissions to 664
+find storage -type f -exec chmod 664 {} \;
+find bootstrap/cache -type f -exec chmod 664 {} \;
 
 # PHP dependencies
 echo -e "${YELLOW}📦 Installing PHP dependencies...${NC}"
