@@ -33,10 +33,15 @@ find bootstrap/cache -type f -exec chmod 664 {} \;
 echo -e "${YELLOW}📦 Installing PHP dependencies...${NC}"
 COMPOSER_MEMORY_LIMIT=-1 composer install --no-dev --optimize-autoloader --no-interaction
 
-# Storage link
+# Storage link - using PHP's symlink() function
 if [ ! -L "public/storage" ]; then
     echo -e "${YELLOW}🔗 Linking storage...${NC}"
-    php artisan storage:link
+    # Remove existing symlink if it exists
+    rm -f public/storage
+    # Create the storage directory structure if it doesn't exist
+    mkdir -p storage/app/public
+    # Create the symlink using PHP's native symlink function
+    php -r "symlink('$APP_DIR/storage/app/public', 'public/storage');"
 fi
 
 # Database migrations
