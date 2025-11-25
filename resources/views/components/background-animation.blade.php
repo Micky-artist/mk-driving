@@ -1,8 +1,14 @@
 <!-- Background Elements - EXACT SAME POSITIONING AS BEFORE -->
 <div
-    class="fixed right-0 translate-x-[30%] sm:translate-x-[50%] -translate-y-1/3 rounded-full w-[20rem] sm:w-[30rem] md:w-[40rem] lg:w-[50rem] aspect-square bg-[#8ECAE680]/50 dark:bg-[#1E3A8A80]/40 pointer-events-none -z-10 transition-colors duration-300">
+    class="fixed right-0 translate-x-[30%] sm:translate-x-[50%] -translate-y-1/3 rounded-full w-[20rem] sm:w-[30rem] md:w-[40rem] lg:w-[50rem] aspect-square bg-[#8ECAE680]/50 dark:bg-[#1E3A8A80]/40 pointer-events-none -z-10 transition-colors duration-300"
+    @props([
+        'class' => '',
+        'mobileTranslate' => '-translate-x-1/5',
+    ])
+>
     <div
-        class="absolute bottom-0 left-1/2 -translate-x-1/2 rounded-full w-[50%] aspect-square bg-[#8ECAE680]/70 dark:bg-blue-900/80 backdrop-blur-sm shadow-md transition-colors duration-300 overflow-hidden">
+        class="absolute bottom-0 left-1/2 -translate-x-1/2 rounded-full w-[50%] aspect-square bg-[#8ECAE680]/70 dark:bg-blue-900/80 backdrop-blur-sm shadow-md transition-colors duration-300 overflow-hidden"
+    >
         <!-- 1. Moving dashed road lines (3 lanes) -->
         <div class="absolute inset-y-0 left-0 w-full opacity-70 pointer-events-none">
             <div class="absolute inset-0 flex flex-col justify-center items-start gap-16">
@@ -27,7 +33,7 @@
 
 
         <!-- 3. Car - NOW STATIC + tiny floating animation for life -->
-        <div class="absolute -translate-x-1/4 inset-0 flex items-center justify-center p-4 text-center">
+        <div class="absolute {{ $mobileTranslate }} sm:-translate-x-1/4 inset-0 flex items-center justify-center p-4 text-center">
             <div class="text-5xl sm:text-6xl md:text-7xl lg:text-8xl drop-shadow-2xl select-none pointer-events-none animate-float"
                 style="transform: rotate(90deg);">
 

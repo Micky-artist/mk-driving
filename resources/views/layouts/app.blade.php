@@ -90,22 +90,64 @@
     
     @stack('styles')
     <style>
-        /* Gradient background is now applied directly to the body */
-        html {
+        /* Ensure full height and proper scrolling */
+        html, body {
             min-height: 100%;
+            scroll-behavior: smooth;
+            max-width: 100%;
+            overflow-x: hidden;
+            position: relative;
+            width: 100%;
+        }
+        
+        /* Prevent horizontal scrolling */
+        html {
+            overflow-x: hidden;
+            width: 100%;
+        }
+        
+        /* Ensure all elements stay within viewport */
+        * {
+            max-width: 100%;
+            box-sizing: border-box;
+        }
+        
+        /* Better touch targets for mobile */
+        @media (max-width: 640px) {
+            button, a, [role="button"], [type="button"], [type="submit"] {
+                min-height: 44px;
+                min-width: 44px;
+            }
+        }
+        
+        /* Smooth scrolling for anchor links */
+        html {
+            scroll-padding-top: 1rem; /* Default padding for mobile */
+            margin: 0;
+            padding: 0;
+        }
+        
+        /* Adjust for desktop with fixed header */
+        @media (min-width: 768px) {
+            html {
+                scroll-padding-top: 5rem; /* Height of the fixed header */
+            }
         }
     </style>
 </head>
-<body class="font-sans antialiased text-gray-900 dark:text-gray-100 min-h-screen transition-colors duration-200 bg-gradient-to-br from-gray-50 to-gray-100 dark:from-[#0f172a] dark:to-[#1e293b] bg-fixed">
+<body class="font-sans antialiased text-gray-900 dark:text-gray-100 min-h-screen transition-colors duration-200 bg-gradient-to-br from-gray-50 to-gray-100 dark:from-[#0f172a] dark:to-[#1e293b] bg-fixed overflow-x-hidden m-0 p-0">
     <!-- Header -->
-    @if (!request()->is('dashboard*'))
+    @if (!request()->is('dashboard*') && !request()->is('login'))
         @include('components.navbar')
     @endif
 
     <!-- Page Content -->
-    <main class="flex-grow pt-16">
-        <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-6">
-            @yield('content')
+    <main class="flex-grow">
+        <div class="w-full mx-auto">
+            <!-- Add a top padding that matches the header height on mobile -->
+            <div class="pt-4 md:pt-24 px-4 sm:px-6 lg:px-8 max-w-7xl mx-auto">
+                @yield('content')
+            </div>
         </div>
     </main>
 

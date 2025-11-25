@@ -124,7 +124,7 @@
     <!-- Background Animation Component -->
     <x-background-animation />
     
-    <div class="flex-grow flex items-center justify-center p-4 relative z-10">
+    <div class="flex-grow flex items-center justify-center px-1 relative z-10">
         <div class="w-full max-w-md mx-auto">
             <div class="login-card rounded-2xl p-8">
                 <div class="text-center pb-4">

@@ -46,9 +46,14 @@ jobs:
           
       - name: Copy assets
         run: |
-          mkdir -p public/css public/js
+          mkdir -p public/css public/js public/images
           cp -r resources/css/* public/css/ 2>/dev/null || :
+          cp -r public/images/* public/images/ 2>/dev/null || :
           cp -r resources/js/* public/js/ 2>/dev/null || :
+          
+      - name: Link storage
+        run: |
+          php artisan storage:link
 
       - name: Debug Secrets
         env:

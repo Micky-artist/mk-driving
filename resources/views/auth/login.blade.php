@@ -2,6 +2,7 @@
 
 @push('styles')
 <style>
+    /* Override some styles for the login page */
     :root {
         --primary-color: #0369a1;
         --primary-hover: #0e7490;
@@ -16,6 +17,12 @@
         --card-border: rgba(255, 255, 255, 0.2);
         --card-shadow: 0 10px 30px rgba(0, 0, 0, 0.15), 0 0 0 1px rgba(0, 0, 0, 0.05);
         --card-hover-shadow: 0 20px 40px rgba(0, 0, 0, 0.2), 0 0 0 1px rgba(0, 0, 0, 0.1);
+    }
+    
+    /* Ensure the login form is properly spaced below the navbar */
+    .login-container {
+        min-height: calc(100vh - 5rem); /* Account for navbar height */
+        padding-top: 0.5rem; /* Space for fixed navbar */
     }
 
     @media (prefers-color-scheme: dark) {
@@ -136,14 +143,12 @@
 @endpush
 
 @section('content')
-<div class="w-full min-h-screen flex flex-col relative overflow-hidden gradient-bg">
-    @include('components.navbar')
-
+@section('content')
+<div class="w-full min-h-screen flex flex-col relative overflow-hidden gradient-bg login-container">
     <!-- Background Animation Component -->
     <x-background-animation />
     
-    
-    <div class="flex-grow flex items-center justify-center p-4 relative z-10">
+    <div class="flex-grow flex items-center justify-center px-1 relative z-10">
         <div class="w-full max-w-md mx-auto">
             <div class="login-card rounded-2xl p-8">
                         <div class="text-center pb-4">
@@ -311,6 +316,8 @@
         </div>
     </div>
 </div>
+@endsection
+
 @push('scripts')
 <script src="{{ asset('js/google-auth.js') }}"></script>
 <script>
