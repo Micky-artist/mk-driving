@@ -73,11 +73,17 @@ Homestead.yaml
 .env.testing
 
 # Large binary files
+# Ignore images by default, but allow them in public directory
 *.png
+!public/**/*.png
 *.jpg
+!public/**/*.jpg
 *.jpeg
+!public/**/*.jpeg
 *.gif
+!public/**/*.gif
 *.bmp
+!public/**/*.bmp
 *.tiff
 *.ico
 *.pdf
