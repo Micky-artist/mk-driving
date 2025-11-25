@@ -74,6 +74,10 @@ jobs:
           echo "✅ All required secrets are present"
 
       - name: Setup SSH
+        env:
+          HOSTINGER_HOST: ${{ secrets.HOSTINGER_HOST }}
+          HOSTINGER_USERNAME: ${{ secrets.HOSTINGER_USERNAME }}
+          SSH_PORT: ${{ secrets.SSH_PORT || '22' }}
         run: |
           echo "🚀 Starting SSH setup..."
           
@@ -115,18 +119,46 @@ jobs:
           
           # Add host to known_hosts
           echo "🌐 Adding host to known_hosts..."
-          if [ -z "${{ secrets.HOSTINGER_HOST }}" ]; then
-            echo "❌ ERROR: HOSTINGER_HOST secret is not set!"
+          if [ -z "$HOSTINGER_HOST" ]; then
+            echo "❌ ERROR: HOSTINGER_HOST is not set!"
             exit 1
           fi
           
-          ssh-keyscan -H "${{ secrets.HOSTINGER_HOST }}" >> ~/.ssh/known_hosts 2>/dev/null
+          echo "🔍 Testing host resolution for: $HOSTINGER_HOST"
+          if ! host "$HOSTINGER_HOST" >/dev/null 2>&1; then
+            echo "❌ ERROR: Could not resolve host: $HOSTINGER_HOST"
+            echo "Trying with 'host' command..."
+            host "$HOSTINGER_HOST" || true
+            echo "Trying with 'nslookup'..."
+            nslookup "$HOSTER_HOST" || true
+            echo "❌ Please verify the HOSTINGER_HOST is correct and resolvable"
+            exit 1
+          fi
+          
+          echo "🔑 Running ssh-keyscan for $HOSTINGER_HOST..."
+          if ! ssh-keyscan -H -p "$SSH_PORT" "$HOSTINGER_HOST" > ~/ssh_host_keys 2>ssh-keyscan.log; then
+            echo "❌ ssh-keyscan failed with error:"
+            cat ssh-keyscan.log
+            echo "\nTrying with -v flag for more details..."
+            ssh-keyscan -v -H -p "$SSH_PORT" "$HOSTINGER_HOST" || true
+            exit 1
+          fi
+          
+          if [ ! -s ~/ssh_host_keys ]; then
+            echo "❌ ERROR: ssh-keyscan did not return any keys"
+            exit 1
+          fi
+          
+          echo "🔒 Adding host keys to known_hosts:"
+          cat ~/ssh_host_keys
+          cat ~/ssh_host_keys >> ~/.ssh/known_hosts
           chmod -v 600 ~/.ssh/known_hosts
           
           # Test SSH connection
-          echo "🔌 Testing SSH connection..."
-          if [ -n "${{ secrets.HOSTINGER_USERNAME }}" ] && [ -n "${{ secrets.HOSTINGER_HOST }}" ]; then
-            ssh -i ~/.ssh/id_rsa -o StrictHostKeyChecking=no -p ${SSH_PORT:-22} ${{ secrets.HOSTINGER_USERNAME }}@${{ secrets.HOSTINGER_HOST }} "echo '✅ SSH connection successful!'; exit 0" || \
+          echo "🔌 Testing SSH connection to $HOSTINGER_USERNAME@$HOSTINGER_HOST..."
+          if [ -n "$HOSTINGER_USERNAME" ] && [ -n "$HOSTINGER_HOST" ]; then
+            echo "🔑 Testing with private key:"
+            ssh -i ~/.ssh/id_rsa -v -o BatchMode=yes -o StrictHostKeyChecking=no -p "$SSH_PORT" "$HOSTINGER_USERNAME@$HOSTINGER_HOST" echo "✅ SSH connection successful!" || \
             { echo "❌ SSH connection failed"; exit 1; }
           else
             echo "⚠️  Skipping SSH test: HOSTINGER_USERNAME or HOSTINGER_HOST not set"
