@@ -119,8 +119,8 @@ jobs:
           
           # Add host to known_hosts
           echo "🌐 Adding host to known_hosts..."
-          if [ -z "$HOSTINGER_HOST" ]; then
-            echo "❌ ERROR: HOSTINGER_HOST is not set!"
+          if [ -z "$HOSTINGER_IP" ]; then
+            echo "❌ ERROR: HOSTINGER_IP is not set!"
             exit 1
           fi
           
