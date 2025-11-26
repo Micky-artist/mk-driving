@@ -91,7 +91,7 @@
                             @endforeach
                         </div>
                         <p class="text-xs sm:text-sm text-gray-600 dark:text-gray-400">
-                            <span class="font-semibold text-gray-900 dark:text-white">{{ __('hero.trusted_by', ['default' => 'Trusted by DMVs']) }}</span>
+                            <span class="font-semibold text-gray-900 dark:text-white">{{ __('hero.trusted_by', ['default' => 'Trusted']) }}</span>
                             {{ __('hero.and_libraries', ['default' => '& 10+ libraries']) }}
                         </p>
                     </div>

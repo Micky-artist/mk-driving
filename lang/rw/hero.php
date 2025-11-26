@@ -15,10 +15,10 @@ return [
     'join_count' => 'Isange mu bandi 1K+',
     'pass_rate' => 'Dutsindisha',
     'questions' => 'Ibibazo',
-    'get_all_questions' => 'Gerageza ibibazo :count+',
+    'get_all_questions' => 'Gerageza ibibazo 650+',
     
     // CTA Buttons
-    'try_free_quiz' => 'Gerageza ibibazo :count by\'ubuntu',
+    'try_free_quiz' => 'Gerageza ibibazo 20 by\'ubuntu',
     'sign_up_free' => 'Iyandikishe ku buntu',
     
     // Who's this for section
@@ -29,10 +29,10 @@ return [
     'parent' => 'Umubyeyi',
     
     // Trust indicators
-    'verified_pass_rate' => ':rate% Dutsindisha',
+    'verified_pass_rate' => '97% Dutsindisha',
     'pass_guarantee' => 'Birizewe gutsinda',
     'trusted_by' => 'Turizewe',
-    'and_libraries' => 'n\'amasomero :count+',
+    'and_libraries' => 'n\'amasomero 10+',
     'dmv_approved' => 'Turizewe',
     'success_guaranteed' => 'Nta gushidikanya',
     

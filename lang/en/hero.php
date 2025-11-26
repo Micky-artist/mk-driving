@@ -15,7 +15,7 @@ return [
     'join_count' => 'Join 1K+ drivers who passed',
     'pass_rate' => 'Pass Rate',
     'questions' => 'Questions',
-    'get_all_questions' => 'Get all :count+ exam-like questions',
+    'get_all_questions' => 'Get all 650+ exam-like questions',
     
     // CTA Buttons
     'try_free_quiz' => 'Try :count Free Questions',
@@ -29,7 +29,7 @@ return [
     'parent' => 'Parent',
     
     // Trust indicators
-    'verified_pass_rate' => ':rate% verified pass rate',
+    'verified_pass_rate' => '97% verified pass rate',
     'pass_guarantee' => 'Pass Guarantee',
     'trusted_by' => 'Trusted by DMVs',
     'and_libraries' => 'and 10+ libraries',
