@@ -1,42 +1,48 @@
-<!-- Background Elements - EXACT SAME POSITIONING AS BEFORE -->
-<div
-    class="fixed right-0 translate-x-[30%] sm:translate-x-[50%] -translate-y-1/3 rounded-full w-[20rem] sm:w-[30rem] md:w-[40rem] lg:w-[50rem] aspect-square bg-[#8ECAE680]/50 dark:bg-[#1E3A8A80]/40 pointer-events-none -z-10 transition-colors duration-300"
-    @props([
-        'class' => '',
-        'mobileTranslate' => '-translate-x-1/5',
-    ])
->
-    <div
-        class="absolute bottom-0 left-1/2 -translate-x-1/2 rounded-full w-[50%] aspect-square bg-[#8ECAE680]/70 dark:bg-blue-900/80 backdrop-blur-sm shadow-md transition-colors duration-300 overflow-hidden"
-    >
-        <!-- 1. Moving dashed road lines (3 lanes) -->
-        <div class="absolute inset-y-0 left-0 w-full opacity-70 pointer-events-none">
-            <div class="absolute inset-0 flex flex-col justify-center items-start gap-16">
-                <div class="h-1 bg-gray-400/80 dark:bg-gray-800/60 w-full animate-roadLines animation-duration-1600">
-                </div>
-                <div
-                    class="h-1 bg-gray-400/80 dark:bg-gray-800/60 w-full animate-roadLines animation-duration-1600 animation-delay-500">
-                </div>
-                <div
-                    class="h-1 bg-gray-400/80 dark:bg-gray-800/60 w-full animate-roadLines animation-duration-1600 animation-delay-1000">
-                </div>
+<div class="relative w-full overflow-hidden bg-gradient-to-br from-blue-50 to-white dark:from-gray-900 dark:to-gray-800">
+    <!-- Moving dashed road lines (3 lanes) -->
+    <div class="absolute inset-0 opacity-70 pointer-events-none">
+        <div class="absolute inset-0 flex flex-col justify-center items-start gap-16">
+            <div class="h-1 bg-gray-400/80 dark:bg-gray-800/60 w-full animate-roadLines animation-duration-1600"></div>
+            <div
+                class="h-1 bg-gray-400/80 dark:bg-gray-800/60 w-full animate-roadLines animation-duration-1600 animation-delay-500">
+            </div>
+            <div
+                class="h-1 bg-gray-400/80 dark:bg-gray-800/60 w-full animate-roadLines animation-duration-1600 animation-delay-1000">
             </div>
         </div>
+    </div>
 
-        <!-- 2. Subtle moving ground layers -->
-        <div class="absolute left-0 top-0 bottom-0 w-2/3 pointer-events-none overflow-hidden">
-            <!-- Base layer - lightest shade with smoother gradient -->
-            <div class="absolute inset-0 bg-gradient-to-r from-gray-300/20 via-transparent to-transparent dark:from-gray-800/30 dark:via-transparent animate-groundMove" style="animation-delay: 0s; mask-image: linear-gradient(to right, black, transparent);"></div>
-            <!-- Mid layer - medium shade with smoother gradient -->
-            <div class="absolute inset-0 bg-gradient-to-r from-gray-400/25 via-transparent to-transparent dark:from-gray-700/40 dark:via-transparent animate-groundMove" style="animation-duration: 8s; animation-delay: -2s; mask-image: linear-gradient(to right, black, transparent);"></div>
-                    </div>
+    <!-- Subtle moving ground layers -->
+    <div class="absolute left-0 top-0 bottom-0 w-2/3 pointer-events-none overflow-hidden">
+        <!-- Base layer - lightest shade with smoother gradient -->
+        <div class="absolute inset-0 bg-gradient-to-r from-gray-300/20 via-transparent to-transparent dark:from-gray-800/30 dark:via-transparent animate-groundMove"
+            style="animation-delay: 0s; mask-image: linear-gradient(to right, black, transparent);"></div>
+        <!-- Mid layer - medium shade with smoother gradient -->
+        <div class="absolute inset-0 bg-gradient-to-r from-gray-400/25 via-transparent to-transparent dark:from-gray-700/40 dark:via-transparent animate-groundMove"
+            style="animation-duration: 8s; animation-delay: -2s; mask-image: linear-gradient(to right, black, transparent);">
+        </div>
+    </div>
 
+    <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 relative z-10">
+        <div class="text-center -mb-6 sm:-mb-8">
+            <h2 class="text-2xl font-bold text-gray-900 dark:text-white sm:text-3xl">
+                {{ __('home.car_animation.title') }}
+            </h2>
+            <p class="mt-1 text-gray-600 dark:text-gray-300">
+                {{ __('home.car_animation.subtitle') }}
+            </p>
+        </div>
 
-        <!-- 3. Car - NOW STATIC + tiny floating animation for life -->
-        <div class="absolute {{ $mobileTranslate }} sm:-translate-x-1/4 inset-0 flex items-center justify-center p-4 text-center">
-            <div class="text-5xl sm:text-6xl md:text-7xl lg:text-8xl drop-shadow-2xl select-none pointer-events-none animate-float"
-                style="transform: rotate(90deg);">
+        <!-- Car Animation Container -->
+        <div class="relative h-64 sm:h-80 md:h-96 flex items-center justify-center">
+            <!-- Road -->
+            <div class="absolute bottom-12 md:bottom-20 left-0 right-0 h-4 bg-gray-800">
+                <!-- Road edge shadow -->
+                <div class="absolute -top-1 left-0 right-0 h-2 bg-gradient-to-b from-gray-900/20 to-transparent"></div>
+            </div>
 
+            <!-- Car SVG (facing left) - positioned to sit on the road -->
+            <div class="relative z-20 w-80 sm:w-96 md:w-[32rem] -mb-4 translate-x-4">
                 <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 240 140" width="100%" height="100%"
                     class="drop-shadow-2xl scale-110 sm:scale-100">
                     <defs>
@@ -145,7 +151,23 @@
                 </svg>
             </div>
         </div>
+
+        <!-- CTA Button -->
+        <div class="text-center -mt-6">
+            <a href="{{ route('register', app()->getLocale()) }}"
+                class="inline-flex items-center justify-center px-8 py-3 border border-transparent text-base font-medium rounded-md text-white bg-blue-600 hover:bg-blue-700 md:py-4 md:text-lg md:px-10 transition-colors duration-300">
+                {{ __('home.car_animation.cta') }}
+                <svg class="ml-2 -mr-1 w-5 h-5" fill="currentColor" viewBox="0 0 20 20">
+                    <path fill-rule="evenodd"
+                        d="M10.293 5.293a1 1 0 011.414 0l4 4a1 1 0 010 1.414l-4 4a1 1 0 01-1.414-1.414L12.586 11H5a1 1 0 110-2h7.586l-2.293-2.293a1 1 0 010-1.414z"
+                        clip-rule="evenodd" />
+                </svg>
+            </a>
+        </div>
     </div>
+
+    <!-- Moving road effect -->
+    <div class="absolute bottom-0 left-0 right-0 h-1/3 bg-gradient-to-t from-gray-800 to-transparent opacity-30"></div>
 </div>
 
 @push('styles')
@@ -158,7 +180,7 @@
             }
 
             50% {
-                transform: translateY(-0.5px) rotate(0.5deg);
+                transform: translateY(-5px) rotate(0.5deg);
             }
         }
 
@@ -184,6 +206,14 @@
             }
         }
 
+        .fade-in {
+            animation: fadeIn 0.8s ease-out forwards;
+        }
+
+        .fade-in.delay-200 {
+            animation-delay: 0.2s;
+        }
+
         .animate-roadLines {
             animation: roadLines 2.2s linear infinite;
         }
@@ -205,8 +235,16 @@
             background-size: 200% 100%;
         }
 
-        .animate-float {
-            animation: float 7s ease-in-out infinite;
+        @keyframes fadeIn {
+            from {
+                opacity: 0;
+                transform: translateY(10px);
+            }
+
+            to {
+                opacity: 1;
+                transform: translateY(0);
+            }
         }
     </style>
 @endpush

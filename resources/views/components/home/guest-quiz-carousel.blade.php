@@ -257,8 +257,8 @@
                     }">
                     <div class="bg-white dark:bg-gray-800 rounded-lg shadow-md overflow-hidden h-full flex flex-col border border-gray-200 dark:border-gray-700 hover:shadow-lg transition-shadow duration-300">
                         <div class="p-6 flex-1 flex flex-col">
-                            <h3 class="text-xl font-bold text-gray-900 dark:text-white mb-2 line-clamp-2" title="{{ $title }}">
-                                {{ $title }}
+                            <h3 class="text-xl font-bold text-gray-900 dark:text-white mb-2 line-clamp-2" title="{{ is_array($title) ? ($title[$currentLocale] ?? $title['en'] ?? reset($title)) : $title }}">
+                                {{ is_array($title) ? ($title[$currentLocale] ?? $title['en'] ?? reset($title)) : $title }}
                             </h3>
                             @if($sampleQuestion)
                                 <div class="mt-4 pt-4 border-t border-gray-100 dark:border-gray-700">
@@ -267,9 +267,13 @@
                                     </p>
                                     <div class="bg-gray-50 dark:bg-gray-700 rounded-lg p-4">
                                         <p class="text-gray-800 dark:text-gray-200 mb-3">
-                                            {{ is_array($sampleQuestion->text) 
-                                                ? ($sampleQuestion->text[$currentLocale] ?? $sampleQuestion->text['en'] ?? $sampleQuestion->text) 
-                                                : $sampleQuestion->text }}
+                                            @php
+                                                $questionText = $sampleQuestion->text;
+                                                if (is_array($questionText)) {
+                                                    $questionText = $questionText[$currentLocale] ?? $questionText['en'] ?? array_values($questionText)[0] ?? '';
+                                                }
+                                                echo e($questionText);
+                                            @endphp
                                         </p>
                                         
                                         @if($sampleQuestion->options->isNotEmpty())
@@ -279,9 +283,10 @@
                                                 @endphp
                                                 @foreach($sampleQuestion->options as $option)
                                                     @php
-                                                        $optionText = is_array($option->option_text) 
-                                                            ? ($option->option_text[$currentLocale] ?? $option->option_text['en'] ?? $option->option_text)
-                                                            : $option->option_text;
+                                                        $optionText = $option->option_text;
+                                                        if (is_array($optionText)) {
+                                                            $optionText = $optionText[$currentLocale] ?? $optionText['en'] ?? array_values($optionText)[0] ?? '';
+                                                        }
                                                     @endphp
                                                     <li 
                                                         @click="$dispatch('select-option', { optionId: {{ $option->id }}, isCorrect: {{ $option->is_correct ? 'true' : 'false' }} })"

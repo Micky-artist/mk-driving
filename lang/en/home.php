@@ -37,6 +37,7 @@ return [
         'loginToSubscribe' => 'Login to Subscribe',
         'currentPlan' => 'Current Plan',
         'mostPopular' => 'Most Popular',
+        'contact_us' => 'Contact Us',
         'noFeatures' => 'No features available',
         'needHelp' => 'Not sure which plan is right for you?',
         'comparePlans' => 'Compare all plans',
@@ -93,6 +94,12 @@ return [
     'searchPlaceholder' => 'Search for quizzes, courses, or articles...',
     'searchButton' => 'Search',
     
+    'car_animation' => [
+        'title' => 'Get Ready to Hit the Road',
+        'subtitle' => 'Start your driving journey with our comprehensive tests',
+        'cta' => 'Practice Today',
+    ],
+
     'footer' => [
         'tagline' => 'Your trusted partner in driving education. We help you prepare for your driving test with comprehensive resources and expert guidance.',
         'contact' => 'Contact',

@@ -185,12 +185,12 @@
                             <div class="mb-6">
                                 <a href="{{ route('google.login') }}" class="btn-google w-full flex items-center justify-center space-x-3 py-2.5 px-4">
                                     <img src="{{ asset('images/google-icon.png') }}" alt="Google" class="w-8 h-8">
-                                    <span class="text-lg font-medium">{{ __('Continue with Google') }}</span>
+                                    <span class="text-lg font-medium">{{ __('auth.continue_with_google') }}</span>
                                 </a>
                             </div>
 
                             <div class="divider">
-                                {{ __('Or sign in with email') }}
+                                {{ __('auth.or_sign_in_with_email') }}
                             </div>
 
                             <form id="loginForm" method="POST" action="{{ route('login', app()->getLocale()) }}" class="space-y-4">

@@ -173,12 +173,9 @@
 
     <!-- Page Content -->
     <main class="flex-grow">
-        <div class="w-full mx-auto">
-            <!-- Add a top padding that matches the header height on mobile -->
-            <div class="pt-4 md:pt-24 px-4 sm:px-6 lg:px-8 max-w-7xl mx-auto">
-                @yield('content')
-            </div>
-        </div>
+      <div class="pt-4 md:pt-24">
+        @yield('content')
+      </div>
     </main>
 
     <!-- Footer -->

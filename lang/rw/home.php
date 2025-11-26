@@ -38,6 +38,7 @@ return [
         'currentPlan' => 'Ifatabuguzi ryawe',
         'mostPopular' => 'Iyi irakunzwe',
         'noFeatures' => 'Ibikubiyemo ntibibonetse',
+        'contact_us' => 'Twandikire',
         'needHelp' => 'Mukeneye ubufasha?',
         'comparePlans' => 'Gereranya ibyiciro by\'ifatabuguzi',
         'processing' => 'Biri kugenda...',
@@ -93,6 +94,12 @@ return [
     'searchPlaceholder' => 'Shakisha ibarura, amasomo, cyangwa inyandiko...',
     'searchButton' => 'Shakisha',
     
+    'car_animation' => [
+        'title' => 'Witeguye Gukora Ikizamini?',
+        'subtitle' => "Tangira urugendo rwawe rwo kwitegura ikizamini n'amasomo yuzuye",
+        'cta' => 'Itoze Uyu munsi',
+    ],
+
     'footer' => [
         'tagline' => 'Umufatanyabikorwa wizewe mu kwiga amategeko y\'umuhanda. Dukugufasha kwitegura ikizamini cyawe hakoreshejwe ibikoresho n\'ubujyanama bw\'abahanga.',
         'contact' => 'Twandikire',

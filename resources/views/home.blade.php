@@ -1,15 +1,21 @@
 @extends('layouts.app')
 
 @section('content')
-    <!-- Background Animation Component -->
-    <x-background-animation />
-    
-    <!-- Semi-transparent overlay layer -->
-    <div class="fixed inset-0 bg-white/10 dark:bg-gray-900/40 -z-10"></div>
-
-    <!-- MAIN CONTENT - COMPLETELY UNTOUCHED -->
-    <div class="relative z-10">
+    <!-- Hero Section (No Overlay) -->
+    <div class="relative z-20">
         @include('components.home.hero')
+    </div>
+    
+    <!-- Car Animation Component -->
+    <x-home.car-animation 
+        title="Start Your Driving Journey"
+        subtitle="Join thousands of successful drivers who passed with our help"
+        ctaText="Get Started Now"
+    />
+    
+    <!-- Main Content with Overlay -->
+    <div class="relative bg-white/90 dark:bg-gray-900/90">
+        <div class="relative z-10 px-4 sm:px-6 lg:px-8">
 
         <div class="my-8 sm:my-12 lg:my-16 fade-in delay-200">
             <h2 class="text-2xl sm:text-3xl font-bold text-center mb-6 sm:mb-8 px-4 fade-in delay-300">
@@ -22,9 +28,10 @@
                 ])
             </div>
         </div>
-
+        
         @include('components.home.offers')
         @include('components.home.subscription-plans')
         @include('components.home.blogs')
-    </div>
+        </div> <!-- Close relative z-10 -->
+    </div> <!-- Close main content with overlay -->
 @endsection

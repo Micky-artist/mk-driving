@@ -28,6 +28,11 @@ return [
         'logging_in' => 'Kwinjira...',
     ],
     
+    // Google Sign In
+    'continue_with_google' => 'Koresha Google',
+    'or_sign_in_with_email' => 'Cg ukoreshe imeri',
+    'or_sign_up_with_email' => 'Cg wiyandikishe ukoresheje imeri',
+    
     // Common
     'email' => 'Imeri',
     'name' => 'Izina ryuzuye',
