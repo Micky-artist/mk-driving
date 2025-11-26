@@ -99,6 +99,9 @@ return [
         'title' => 'Get Ready to Hit the Road',
         'subtitle' => 'Start your driving journey with our comprehensive tests',
         'cta' => 'Practice Today',
+        'loading' => 'Loading...',
+        'free_test' => 'Free Test!',
+        'no_sign_up' => 'No Sign up!',
     ],
 
     'footer' => [

@@ -18,8 +18,17 @@
             </div>
         </div>
 
+        <!-- Loading State -->
+        <div id="animation-loading" class="flex flex-col items-center justify-center w-full overflow-hidden md:my-28 -mx-1">
+            <div class="relative w-16 h-16 mb-4">
+                <div class="absolute inset-0 rounded-full border-4 border-blue-400 border-t-transparent animate-spin"></div>
+                <div class="absolute inset-1 rounded-full border-4 border-blue-300 border-t-transparent animate-spin animation-delay-200"></div>
+            </div>
+            <p class="text-blue-100 text-lg font-medium">{{ __('home.car_animation.loading') }}</p>
+        </div>
+
         <!-- Animation Container -->
-        <div class="flex flex-row items-center gap-2 justify-center w-full overflow-hidden md:-my-40 -mx-1">
+        <div id="animation-container" class="flex flex-row items-center gap-2 justify-center w-full overflow-hidden md:-my-40 -mx-1 opacity-0 transition-opacity duration-500 hidden">
             <!-- Car Animation -->
             <div id="car-animation" class="w-1/2 max-w-[80%] h-auto aspect-[4/3] md:aspect-[16/9] scale-[2] md:scale-200"></div>
             
@@ -47,70 +56,164 @@
 </div>
 
 <!-- Lottie Library -->
-<script src="https://cdnjs.cloudflare.com/ajax/libs/lottie-web/5.12.2/lottie.min.js"></script>
+<!-- Preload Lottie library with preconnect and preload hints -->
+<link rel="preconnect" href="https://cdnjs.cloudflare.com">
+<link rel="preload" as="script" href="https://cdnjs.cloudflare.com/ajax/libs/lottie-web/5.12.2/lottie.min.js">
+<script src="https://cdnjs.cloudflare.com/ajax/libs/lottie-web/5.12.2/lottie.min.js" defer></script>
 
 <script>
     document.addEventListener('DOMContentLoaded', function() {
         console.log('DOM loaded, initializing Lottie animations...');
         
-        // Animation containers
+        // Get DOM elements
+        const animationContainer = document.getElementById('animation-container');
+        const loadingElement = document.getElementById('animation-loading');
         const carContainer = document.getElementById('car-animation');
         const bikeContainer = document.getElementById('bike-animation');
         let carAnimation, bikeAnimation;
 
-        // Function to initialize animations
+        // Function to initialize animations with optimized settings
         function initAnimations() {
+            // Show loading state
+            loadingElement.classList.remove('hidden');
+            animationContainer.classList.add('hidden');
+            animationContainer.classList.remove('flex');
+            
             // Clean up existing animations if they exist
             if (carAnimation) carAnimation.destroy();
             if (bikeAnimation) bikeAnimation.destroy();
 
-            // Car Animation
-            carAnimation = lottie.loadAnimation({
-                container: carContainer,
-                renderer: 'svg',
-                loop: true,
-                autoplay: true,
-                path: '{{ asset("json/car-moving.json") }}'
-            });
-            
-            carAnimation.addEventListener('DOMLoaded', function() {
-                console.log('Car animation loaded successfully');
-            });
-
-            // Bike Animation
-            bikeAnimation = lottie.loadAnimation({
-                container: bikeContainer,
-                renderer: 'svg',
-                loop: true,
-                autoplay: true,
-                path: '{{ asset("json/bike-moving.json") }}'
-            });
-            
-            bikeAnimation.addEventListener('DOMLoaded', function() {
-                console.log('Bike animation loaded successfully');
-                bikeAnimation.goToAndPlay(0, true);
-            });
-            
-            // Error handling
-            carAnimation.addEventListener('data_failed', function() {
-                console.error('Failed to load car animation');
-            });
-            
-            bikeAnimation.addEventListener('data_failed', function() {
-                console.error('Failed to load bike animation');
+            // Load animations with optimized settings
+            Promise.all([
+                loadAnimationWithRetry(carContainer, '{{ asset("json/car-moving.json") }}', 3, 1000),
+                loadAnimationWithRetry(bikeContainer, '{{ asset("json/bike-moving.json") }}', 3, 1000)
+            ]).then(([carAnim, bikeAnim]) => {
+                carAnimation = carAnim;
+                bikeAnimation = bikeAnim;
+                
+                // Hide loading and show animations
+                loadingElement.classList.add('hidden');
+                animationContainer.classList.remove('hidden');
+                animationContainer.classList.add('flex');
+                setTimeout(() => {
+                    animationContainer.style.opacity = '1';
+                }, 50);
+                
+                console.log('All animations loaded successfully');
+            }).catch(error => {
+                console.error('Error loading animations:', error);
+                // Fallback to static images if animations fail to load
+                handleAnimationError();
             });
         }
+        
+        // Function to load animation with retry logic
+        function loadAnimationWithRetry(container, path, maxRetries = 3, delay = 1000) {
+            return new Promise((resolve, reject) => {
+                let attempts = 0;
+                
+                const tryLoad = () => {
+                    attempts++;
+                    
+                    const animation = lottie.loadAnimation({
+                        container: container,
+                        renderer: 'svg',
+                        loop: true,
+                        autoplay: true,
+                        rendererSettings: {
+                            preserveAspectRatio: 'xMidYMid meet',
+                            progressiveLoad: true
+                        },
+                        path: path
+                    });
+                    
+                    animation.addEventListener('DOMLoaded', () => {
+                        console.log(`Animation loaded: ${path}`);
+                        resolve(animation);
+                    });
+                    
+                    animation.addEventListener('data_failed', () => {
+                        animation.destroy();
+                        if (attempts < maxRetries) {
+                            console.log(`Retry ${attempts + 1} for ${path}...`);
+                            setTimeout(tryLoad, delay * attempts);
+                        } else {
+                            reject(new Error(`Failed to load animation after ${maxRetries} attempts: ${path}`));
+                        }
+                    });
+                };
+                
+                tryLoad();
+            });
+        }
+        
+        // Handle animation loading errors with fallback
+        function handleAnimationError() {
+            loadingElement.innerHTML = `
+                <div class="text-center">
+                    <div class="inline-block p-4 bg-blue-900/50 rounded-full mb-4">
+                        <svg class="w-12 h-12 text-orange-400" fill="none" stroke="currentColor" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg">
+                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 9v2m0 4h.01m-6.938 4h13.856c1.54 0 2.502-1.667 1.732-3L13.732 4c-.77-1.333-2.694-1.333-3.464 0L3.34 16c-.77 1.333.192 3 1.732 3z"></path>
+                        </svg>
+                    </div>
+                    <p class="text-blue-100">{{ __('Could not load interactive experience.') }}</p>
+                    <button onclick="window.location.reload()" class="mt-4 px-6 py-2 bg-orange-500 hover:bg-orange-600 text-white rounded-full text-sm font-medium transition-colors duration-200">
+                        {{ __('Try Again') }}
+                    </button>
+                </div>
+            `;
+            loadingElement.classList.remove('opacity-0');
+        }
 
-        // Initialize animations on load
-        initAnimations();
+        // Initialize animations when Lottie is loaded
+        if (window.lottie) {
+            initAnimations();
+        } else {
+            // Fallback in case Lottie fails to load
+            document.addEventListener('lottie_loaded', initAnimations);
+        }
 
-        // Handle window resize
+        // Handle window resize with debounce
         let resizeTimer;
-        window.addEventListener('resize', function() {
+        let isResizing = false;
+        
+        function handleResize() {
+            if (!isResizing) {
+                isResizing = true;
+                loadingElement.classList.remove('hidden');
+                loadingElement.style.opacity = '1';
+                animationContainer.style.opacity = '0';
+            }
+            
             clearTimeout(resizeTimer);
             resizeTimer = setTimeout(function() {
-                initAnimations();
-            }, 250);
-        });
+                if (carAnimation) carAnimation.destroy();
+                if (bikeAnimation) bikeAnimation.destroy();
+                
+                // Reinitialize with current container dimensions
+                requestAnimationFrame(initAnimations);
+                isResizing = false;
+            }, 300);
+        }
+        
+        window.addEventListener('resize', handleResize, { passive: true });
+        
+        // Add animation delay utility
+        const style = document.createElement('style');
+        style.textContent = `
+            @keyframes spin {
+                to { transform: rotate(360deg); }
+            }
+            .animate-spin {
+                animation: spin 1s linear infinite;
+            }
+            .animation-delay-200 {
+                animation-delay: 0.2s;
+            }
+            #animation-loading {
+                transition: opacity 0.3s ease-in-out;
+            }
+        `;
+        document.head.appendChild(style);
     });
 </script>

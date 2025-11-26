@@ -99,6 +99,9 @@ return [
         'title' => 'Witeguye Gukora Ikizamini?',
         'subtitle' => "Tangira urugendo rwawe rwo kwitegura ikizamini n'amasomo yuzuye",
         'cta' => 'Itoze Uyu munsi',
+        'loading' => 'Akanya gato...',
+        'free_test' => 'Itoze k\'ubuntu!',
+        'no_sign_up' => 'Ntibisaba kwiyandikisha!',
     ],
 
     'footer' => [
