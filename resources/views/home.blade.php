@@ -1,17 +1,18 @@
 @extends('layouts.app')
 
 @section('content')
-    <!-- Hero Section (No Overlay) -->
-    <div class="relative z-20">
-        @include('components.home.hero')
-    </div>
-    
+
     <!-- Car Animation Component -->
     <x-home.car-animation 
         title="Start Your Driving Journey"
         subtitle="Join thousands of successful drivers who passed with our help"
         ctaText="Get Started Now"
     />
+
+    <!-- Hero Section (No Overlay) -->
+    <div class="relative z-20">
+        @include('components.home.hero')
+    </div>
     
     <!-- Main Content with Overlay -->
     <div class="relative bg-white/90 dark:bg-gray-900/90">

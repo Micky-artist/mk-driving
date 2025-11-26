@@ -173,7 +173,7 @@
 
     <!-- Page Content -->
     <main class="flex-grow">
-      <div class="pt-4 md:pt-24">
+      <div class="md:pt-20">
         @yield('content')
       </div>
     </main>
