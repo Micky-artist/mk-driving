@@ -18,7 +18,7 @@ return [
     // Login page
     'login' => [
         'title' => 'Murakaza neza',
-        'subtitle' => 'Injira amakuru yawe kugirango winjire muri konti yawe',
+        'subtitle' => 'Injira muri konti yawe',
         'email' => 'Imeri',
         'password' => 'Ijambo ry\'ibanga',
         'login_button' => 'Injira',
@@ -29,7 +29,7 @@ return [
     ],
     
     // Google Sign In
-    'continue_with_google' => 'Koresha Google',
+    'continue_with_google' => 'Koresha Konti ya Google',
     'or_sign_in_with_email' => 'Cg ukoreshe imeri',
     'or_sign_up_with_email' => 'Cg wiyandikishe ukoresheje imeri',
     

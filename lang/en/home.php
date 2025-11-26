@@ -90,6 +90,7 @@ return [
         'read_more' => 'Read More',
         'no_articles' => 'No articles available at the moment.',
         'view_all' => 'View All Articles',
+        'view_all_articles' => 'View All Articles',
     ],
     'searchPlaceholder' => 'Search for quizzes, courses, or articles...',
     'searchButton' => 'Search',

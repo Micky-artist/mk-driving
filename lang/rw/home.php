@@ -85,11 +85,12 @@ return [
         ],
     ],
     'blogs' => [
-        'title' => 'Inyandiko Nshya',
+        'title' => 'Amakuru mashya',
         'subtitle' => 'Menya iby\'ingenzi kuri gahunda yo kwiga gutwara imodoka, amakuru n\'ibikorwa byacu',
         'read_more' => 'Soma ibindi',
         'no_articles' => 'Nta nyandiko ziboneka ubu.',
         'view_all' => 'Reba Inyandiko Zose',
+        'view_all_articles' => 'Reba Amakuru Yose',
     ],
     'searchPlaceholder' => 'Shakisha ibarura, amasomo, cyangwa inyandiko...',
     'searchButton' => 'Shakisha',
