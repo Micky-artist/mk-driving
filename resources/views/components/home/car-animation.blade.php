@@ -36,9 +36,9 @@
         <!-- Car Animation Container -->
         <div class="relative h-64 sm:h-80 md:h-96 flex items-center justify-center">
             <!-- Road -->
-            <div class="absolute bottom-12 md:bottom-20 left-0 right-0 h-4 bg-gray-800">
+            <div class="absolute bottom-12 md:bottom-20 left-0 right-0 h-4 bg-gray-300 dark:bg-gray-800">
                 <!-- Road edge shadow -->
-                <div class="absolute -top-1 left-0 right-0 h-2 bg-gradient-to-b from-gray-900/20 to-transparent"></div>
+                <div class="absolute -top-1 left-0 right-0 h-2 bg-gradient-to-b dark:from-gray-900/20 from-gray-500/20 to-transparent"></div>
             </div>
 
             <!-- Car SVG (facing left) - positioned to sit on the road -->
@@ -131,7 +131,7 @@
                             <line x1="-7" y1="-7" x2="7" y2="7" stroke-width="2" />
                             <line x1="-7" y1="7" x2="7" y2="-7" stroke-width="2" />
                             <animateTransform attributeName="transform" attributeType="XML" type="rotate"
-                                from="0 0 0" to="360 0 0" dur="0.8s" repeatCount="indefinite" />
+                                from="360 0 0" to="0 0 0" dur="0.8s" repeatCount="indefinite" />
                         </g>
                     </g>
 
@@ -145,7 +145,7 @@
                             <line x1="-7" y1="-7" x2="7" y2="7" stroke-width="2" />
                             <line x1="-7" y1="7" x2="7" y2="-7" stroke-width="2" />
                             <animateTransform attributeName="transform" attributeType="XML" type="rotate"
-                                from="0 0 0" to="360 0 0" dur="0.8s" repeatCount="indefinite" />
+                                from="360 0 0" to="0 0 0" dur="0.8s" repeatCount="indefinite" />
                         </g>
                     </g>
                 </svg>

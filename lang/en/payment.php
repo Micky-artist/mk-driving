@@ -1,0 +1,41 @@
+<?php
+
+return [
+    'title' => 'Payment',
+    'amount' => 'Amount',
+    'currency' => 'RWF',
+    'pay_now' => 'Pay Now',
+    'payment_method' => 'Payment Method',
+    'card_number' => 'Card Number',
+    'expiry_date' => 'Expiry Date',
+    'cvv' => 'CVV',
+    'name_on_card' => 'Name on Card',
+    'copy' => 'Copy',
+    'processing' => 'Processing...',
+    'payment_success' => 'Payment Successful!',
+    'payment_failed' => 'Payment Failed',
+    'receipt' => 'Receipt',
+    'download_receipt' => 'Download Receipt',
+    'momo_instructions' => [
+        'title' => 'Mobile Money Payment Instructions',
+        'step1' => 'Dial *182# on your phone',
+        'step2' => 'Select "Pay Bill"',
+        'step3' => 'Enter Bill Number: :bill_number',
+        'step4' => 'Enter Amount: :amount RWF',
+        'step5' => 'Enter your PIN',
+        'step6' => 'Confirm the transaction',
+        'or' => 'OR',
+        'copy_code' => 'Copy the code below and paste it in your phone dialer:',
+        'copy_button' => 'Copy Code',
+        'copied' => 'Copied!'
+    ],
+    'enter_phone' => 'Enter your MTN Mobile Money number',
+    'phone_placeholder' => 'e.g., 78XXXXXXX',
+    'submit_payment' => 'Submit Payment',
+    'close' => 'Close',
+    'invalid_phone' => 'Please enter a valid MTN Mobile Money number (e.g., 72xxxxxxx, 73xxxxxxx, 78xxxxxxx, or 79xxxxxxx)',
+    'payment_requested' => 'Payment Requested!',
+    'payment_requested_message' => 'A payment request has been sent to your phone. Please complete the payment on your mobile device.',
+    'payment_processing' => 'Processing your payment...',
+    'error_occurred' => 'An error occurred. Please try again.'
+];

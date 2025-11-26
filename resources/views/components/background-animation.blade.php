@@ -33,7 +33,7 @@
 
 
         <!-- 3. Car - NOW STATIC + tiny floating animation for life -->
-        <div class="absolute {{ $mobileTranslate }} sm:-translate-x-1/4 inset-0 flex items-center justify-center p-4 text-center">
+        <div class="absolute {{ $mobileTranslate }} sm:-translate-x-1/4  inset-0 flex items-center justify-center p-4 text-center">
             <div class="text-5xl sm:text-6xl md:text-7xl lg:text-8xl drop-shadow-2xl select-none pointer-events-none animate-float"
                 style="transform: rotate(90deg);">
 
@@ -125,7 +125,7 @@
                             <line x1="-7" y1="-7" x2="7" y2="7" stroke-width="2" />
                             <line x1="-7" y1="7" x2="7" y2="-7" stroke-width="2" />
                             <animateTransform attributeName="transform" attributeType="XML" type="rotate"
-                                from="0 0 0" to="360 0 0" dur="0.8s" repeatCount="indefinite" />
+                                from="360 0 0" to="0 0 0" dur="0.8s" repeatCount="indefinite" />
                         </g>
                     </g>
 
@@ -139,7 +139,7 @@
                             <line x1="-7" y1="-7" x2="7" y2="7" stroke-width="2" />
                             <line x1="-7" y1="7" x2="7" y2="-7" stroke-width="2" />
                             <animateTransform attributeName="transform" attributeType="XML" type="rotate"
-                                from="0 0 0" to="360 0 0" dur="0.8s" repeatCount="indefinite" />
+                                from="360 0 0" to="0 0 0" dur="0.8s" repeatCount="indefinite" />
                         </g>
                     </g>
                 </svg>

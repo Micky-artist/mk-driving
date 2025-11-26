@@ -255,7 +255,8 @@ class User extends Authenticatable
      */
     public function isAdmin(): bool
     {
-        return $this->role === Role::ADMIN->value;
+        // Check both the enum value and the string value for backward compatibility
+        return in_array(strtoupper($this->role), [Role::ADMIN->value, 'ADMIN', 'admin']);
     }
     
     /**
@@ -266,7 +267,19 @@ class User extends Authenticatable
      */
     public function hasRole($role): bool
     {
-        return $this->role === $role;
+        if (is_string($role) && str_contains($role, '|')) {
+            // Handle pipe-separated roles (e.g., 'admin|instructor')
+            $roles = array_map('trim', explode('|', $role));
+            foreach ($roles as $r) {
+                if (strtoupper($this->role) === strtoupper($r)) {
+                    return true;
+                }
+            }
+            return false;
+        }
+        
+        // Single role check
+        return strtoupper($this->role) === strtoupper($role);
     }
 
     /**

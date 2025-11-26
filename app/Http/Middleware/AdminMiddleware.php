@@ -6,6 +6,7 @@ use Closure;
 use Illuminate\Http\Request;
 use Symfony\Component\HttpFoundation\Response;
 use Illuminate\Support\Facades\Auth;
+use Symfony\Component\HttpKernel\Exception\HttpException;
 
 class AdminMiddleware
 {
@@ -25,8 +26,15 @@ class AdminMiddleware
     {
         $user = Auth::user();
         
-        if (!$user || !$user->isAdmin()) {
-            abort(403, 'Unauthorized action.');
+        if (!$user) {
+            return redirect()->route('login');
+        }
+        
+        if (!$user->isAdmin()) {
+            throw new HttpException(
+                403,
+                'You do not have permission to access the admin area.'
+            );
         }
 
         return $next($request);

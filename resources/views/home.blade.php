@@ -29,8 +29,8 @@
             </div>
         </div>
         
-        @include('components.home.offers')
         @include('components.home.subscription-plans')
+        @include('components.home.offers')
         @include('components.home.blogs')
         </div> <!-- Close relative z-10 -->
     </div> <!-- Close main content with overlay -->

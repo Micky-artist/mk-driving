@@ -72,6 +72,12 @@ Route::prefix('{locale}')
     ->where(['locale' => '[a-zA-Z]{2}'])
     ->middleware(['web', 'localize'])
     ->group(function () {
+        
+        // Admin routes
+        Route::prefix('admin')
+            ->name('admin.')
+            ->middleware(['auth', 'verified', 'can:isAdmin'])
+            ->group(base_path('routes/admin.php'));
         // Homepage route (handles /{locale} and /{locale}/home)
         Route::get('', function ($locale) {
             \Illuminate\Support\Facades\Log::info('Home route accessed', ['locale' => $locale]);
@@ -656,13 +662,7 @@ if ($quizzes->isEmpty()) {
             ->name('subscriptions.destroy');
         });
 
-// Admin routes - wrapped in web middleware group for session and CSRF protection
-Route::middleware('web')->group(function () {
-    Route::prefix('admin')
-        ->name('admin.')
-        ->middleware(['auth', 'verified', 'can:isAdmin'])
-        ->group(base_path('routes/admin.php'));
-});
+// Admin routes - moved inside locale group to support localized admin routes
 
 // Forum Routes (already inside locale prefix)
 Route::prefix('forum')
