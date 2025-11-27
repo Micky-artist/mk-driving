@@ -19,7 +19,7 @@ class ImportDrivingQuestions extends Command
     public function handle()
     {
         try {
-            $filePath = __DIR__ . '/Questions.json';
+            $filePath = __DIR__ . '/questions.json';
             
             if (!File::exists($filePath)) {
                 $this->error("The file {$filePath} does not exist.");
