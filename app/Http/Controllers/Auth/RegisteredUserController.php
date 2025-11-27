@@ -30,27 +30,36 @@ class RegisteredUserController extends Controller
      */
     public function store(Request $request)
     {
-        $validated = $request->validate([
-            'first_name' => ['required', 'string', 'max:255'],
-            'last_name' => ['required', 'string', 'max:255'],
-            'email' => ['required', 'string', 'email', 'max:255', 'unique:users'],
-            'password' => ['required', 'confirmed', Rules\Password::defaults()],
-        ]);
+        try {
+            $validated = $request->validate([
+                'first_name' => ['required', 'string', 'max:255'],
+                'last_name' => ['required', 'string', 'max:255'],
+                'email' => ['required', 'string', 'email', 'max:255', 'unique:users'],
+                'password' => ['required', 'confirmed', Rules\Password::defaults()],
+            ], [
+                'email.unique' => __('auth.errors.email_exists')
+            ]);
 
-        $user = User::create([
-            'first_name' => $validated['first_name'],
-            'last_name' => $validated['last_name'],
-            'email' => $validated['email'],
-            'password' => Hash::make($validated['password']),
-            'role' => 'USER', // Must be one of: 'USER', 'ADMIN', or 'INSTRUCTOR'
-            'is_active' => true,
-        ]);
+            $user = User::create([
+                'first_name' => $validated['first_name'],
+                'last_name' => $validated['last_name'],
+                'email' => $validated['email'],
+                'password' => Hash::make($validated['password']),
+                'role' => 'USER', // Must be one of: 'USER', 'ADMIN', or 'INSTRUCTOR'
+                'is_active' => true,
+            ]);
 
-        event(new Registered($user));
+            event(new Registered($user));
+            Auth::login($user);
 
-        Auth::login($user);
-
-        $locale = $request->route('locale') ?? app()->getLocale();
-        return response()->json(['redirect' => route('dashboard', ['locale' => $locale])]);
+            $locale = $request->route('locale') ?? app()->getLocale();
+            return response()->json(['redirect' => route('dashboard', ['locale' => $locale])]);
+            
+        } catch (\Illuminate\Validation\ValidationException $e) {
+            return response()->json([
+                'errors' => $e->errors(),
+                'message' => 'The given data was invalid.'
+            ], 422);
+        }
     }
 }

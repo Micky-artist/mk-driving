@@ -51,6 +51,7 @@ return [
         'password' => 'Ijambo ry\'ibanga',
         'confirm_password' => 'Emeza ijambo ry\'ibanga',
         'language' => 'Ururimi ukunda',
+    'creating_account' => 'Biri gukorwa...',
         'register_button' => 'Kora Konti',
         'have_account' => 'Ubu ufite konte?',
         'sign_in' => 'Injira'
@@ -59,9 +60,27 @@ return [
     // Errors
     'errors' => [
         'invalid_credentials' => 'Imeri cyangwa ijambo ry\'ibanga ntabwo aribyo',
-        'email_exists' => 'Konti ifite iyi imeri isanzwe iriho',
+        'email_exists' => 'Konti isanzweho. Mujye aho binjirira.',
         'password_mismatch' => 'Amajambo y\'ibanga ntabwo arahuje',
         'weak_password' => 'Ijambo ry\'ibanga kagomba kuba inyuguti 6 byibura',
         'invalid_email' => 'Andika imeri yemewe'
+    ],
+    
+    // Password validation messages
+    'password_requirements' => [
+        'title' => 'Ijambo ry\'ibanga kagomba kuba rifite:',
+        'length' => 'Inyuguti 8 byibura',
+        'uppercase' => 'Inyuguti nkuru imwe byibura',
+        'lowercase' => 'Inyuguti nto imwe byibura',
+        'number' => 'Umubare umwe byibura',
+        'special' => 'Inyuguti idasanzwe imwe (!@#$%^&*) byibura',
+        'strength' => [
+            'weak' => 'Ntarengwa',
+            'medium' => 'Iragerageza',
+            'strong' => 'Ikomeye',
+            'very_strong' => 'Ikomeye cyane'
+        ],
+        'match' => 'Amajambo y\'ibanga arahuje',
+        'mismatch' => 'Amajambo y\'ibanga ntabwo arahuje'
     ],
 ];

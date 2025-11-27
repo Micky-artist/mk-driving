@@ -47,6 +47,7 @@ return [
         'first_name' => 'First Name',
         'last_name' => 'Last Name',
         'email' => 'Email',
+        'creating_account' => 'Creating account...',
         'phone' => 'Phone Number',
         'password' => 'Password',
         'confirm_password' => 'Confirm Password',
@@ -59,9 +60,27 @@ return [
     // Errors
     'errors' => [
         'invalid_credentials' => 'Invalid email or password',
-        'email_exists' => 'An account with this email already exists',
+        'email_exists' => 'An account with this email already exists. Please log in instead.',
         'password_mismatch' => 'Passwords do not match',
         'weak_password' => 'Password must be at least 6 characters',
         'invalid_email' => 'Please enter a valid email address'
+    ],
+    
+    // Password validation messages
+    'password_requirements' => [
+        'title' => 'Password must contain:',
+        'length' => 'At least 8 characters',
+        'uppercase' => 'At least 1 uppercase letter',
+        'lowercase' => 'At least 1 lowercase letter',
+        'number' => 'At least 1 number',
+        'special' => 'At least 1 special character (!@#$%^&*)',
+        'strength' => [
+            'weak' => 'Weak',
+            'medium' => 'Medium',
+            'strong' => 'Strong',
+            'very_strong' => 'Very Strong'
+        ],
+        'match' => 'Passwords match',
+        'mismatch' => 'Passwords do not match'
     ],
 ];
