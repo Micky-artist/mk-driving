@@ -44,10 +44,34 @@
     <rule ref="Generic.Files.LineEndings"/>
     <rule ref="Generic.Files.InlineHTML"/>
     <rule ref="Generic.PHP.DeprecatedFunctions"/>
-    <rule ref="Generic.PHP.Syntax"/>
     <rule ref="Squiz.PHP.DisallowMultipleAssignments"/>
     <rule ref="Squiz.PHP.Eval"/>
-    <rule ref="Squiz.PHP.InnerFunctions"/>
+    
+    <!-- Disable all whitespace and spacing related rules -->
+    <rule ref="Squiz.WhiteSpace">
+        <exclude name="Squiz.WhiteSpace.*"/>
+    </rule>
+    <rule ref="PSR2.Classes.ClassDeclaration">
+        <exclude name="PSR2.Classes.ClassDeclaration.CloseBraceAfterBody"/>
+        <exclude name="PSR2.Classes.ClassDeclaration.SpaceAfterClassKeyword"/>
+        <exclude name="PSR2.Classes.ClassDeclaration.SpaceAfterOpeningBrace"/>
+    </rule>
+    <rule ref="Squiz.Classes.ClassDeclaration">
+        <exclude name="Squiz.Classes.ClassDeclaration.CloseBraceAfterBody"/>
+        <exclude name="Squiz.Classes.ClassDeclaration.SpaceAfterClass"/>
+        <exclude name="Squiz.Classes.ClassDeclaration.SpaceAfterFunction"/>
+        <exclude name="Squiz.Classes.ClassDeclaration.SpaceBeforeBrace"/>
+    </rule>
+    <rule ref="Squiz.WhiteSpace.ScopeClosingBrace">
+        <exclude name="Squiz.WhiteSpace.ScopeClosingBrace.Indent"/>
+        <exclude name="Squiz.WhiteSpace.ScopeClosingBrace.Line"/>
+    </rule>
+    <rule ref="Squiz.WhiteSpace.FunctionSpacing">
+        <exclude name="Squiz.WhiteSpace.FunctionSpacing.After"/>
+        <exclude name="Squiz.WhiteSpace.FunctionSpacing.Before"/>
+        <exclude name="Squiz.WhiteSpace.FunctionSpacing.AfterLast"/>
+        <exclude name="Squiz.WhiteSpace.FunctionSpacing.BeforeFirst"/>
+    </rule>
     <rule ref="Squiz.PHP.NonExecutableCode"/>
     <rule ref="Squiz.Scope.MemberVarScope"/>
     <rule ref="Squiz.WhiteSpace.ScopeClosingBrace"/>

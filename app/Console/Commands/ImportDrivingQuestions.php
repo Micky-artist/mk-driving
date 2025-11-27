@@ -9,6 +9,7 @@ use App\Models\User;
 use Illuminate\Console\Command;
 use Illuminate\Support\Facades\File;
 use Illuminate\Support\Facades\DB;
+use Illuminate\Support\Facades\Log;
 
 class ImportDrivingQuestions extends Command
 {
@@ -17,202 +18,228 @@ class ImportDrivingQuestions extends Command
 
     public function handle()
     {
-        $filePath = __DIR__ . '/Questions.json';
-        
-        if (!File::exists($filePath)) {
-            $this->error("The file {$filePath} does not exist.");
-            return 1;
-        }
-
-        $jsonContent = File::get($filePath);
-        $quizzes = json_decode($jsonContent, true);
-        
-        if (json_last_error() !== JSON_ERROR_NONE) {
-            $this->error('JSON decode error: ' . json_last_error_msg());
-            return 1;
-        }
-
-        if (empty($quizzes)) {
-            $this->error('The questions array is empty');
-            return 1;
-        }
-
-        // If we only have one quiz in the JSON, create 5 guest quizzes from it
-        if (count($quizzes) === 1) {
-            $firstQuiz = $quizzes[0];
-            for ($i = 1; $i < 5; $i++) {
-                $quizzes[] = $firstQuiz; // Duplicate the first quiz 4 more times
-            }
-        }
-        
-        $this->info(sprintf('Will create %d quizzes (5 guest quizzes, %d regular)', 
-            count($quizzes), 
-            max(0, count($quizzes) - 5)
-        ));
-        
-        // Debug: Show structure of first quiz and its first question
-        if (!empty($quizzes[0])) {
-            $this->info('First quiz structure: ' . json_encode(array_keys($quizzes[0])));
-            if (is_array($quizzes[0]) && !empty($quizzes[0][0])) {
-                $this->info('First question in first quiz: ' . json_encode(array_keys($quizzes[0][0])));
-            }
-        }
-
-        // Start database transaction
-        DB::beginTransaction();
-
         try {
-            // Clear existing data
-            Option::query()->delete();
-            Question::query()->delete();
-            Quiz::query()->delete();
-
-            // Get or create admin user
-            $adminUser = User::where('email', 'admin@example.com')->first();
-            if (!$adminUser) {
-                $adminUser = User::create([
-                    'name' => 'Admin',
-                    'email' => 'admin@example.com',
-                    'password' => bcrypt('password'),
-                    'is_admin' => true
-                ]);
+            $filePath = __DIR__ . '/Questions.json';
+            
+            if (!File::exists($filePath)) {
+                $this->error("The file {$filePath} does not exist.");
+                return 1;
             }
 
-            // Process each quiz in the JSON
-            foreach ($quizzes as $quizIndex => $quizQuestions) {
-                if (!is_array($quizQuestions)) {
-                    $this->warn("Quiz at index {$quizIndex} is not an array, skipping...");
-                    continue;
-                }
-                
-                $quizNumber = $quizIndex + 1;
-                $this->info("Processing quiz {$quizNumber} with " . count($quizQuestions) . " questions");
+            $jsonContent = File::get($filePath);
+            $quizzes = json_decode($jsonContent, true);
+            
+            if (json_last_error() !== JSON_ERROR_NONE) {
+                $this->error('JSON decode error: ' . json_last_error_msg());
+                return 1;
+            }
 
-                // Get a valid subscription plan
-                $subscriptionPlan = \App\Models\SubscriptionPlan::first();
-                
-                if (!$subscriptionPlan) {
-                    $this->error('No subscription plan found. Please run the subscription plan seeder first.');
-                    return 1;
-                }
-                
-                $this->info("Creating quiz with subscription plan ID: " . $subscriptionPlan->id);
-                
-                // First 5 quizzes will be guest quizzes, rest will be non-guest
-                $isGuestQuiz = $quizIndex < 5;
-                
-                // Create the quiz with auto-incrementing ID
-                $quiz = new Quiz([
-                    'title' => $isGuestQuiz 
-                        ? ['rw' => "Umwitozo bwa mbere {$quizNumber}", 'en' => "Practice Quiz {$quizNumber}"]
-                        : ['rw' => "Umwitozo {$quizNumber}", 'en' => "Quiz {$quizNumber}"],
-                    'description' => $isGuestQuiz
-                        ? ['rw' => "Igikorwa cy'umuhanda cya mbere {$quizNumber}", 'en' => "Practice driving test questions set {$quizNumber}"]
-                        : ['rw' => "Igikorwa cy'umuhanda {$quizNumber}", 'en' => "Driving test questions set {$quizNumber}"],
-                    'time_limit_minutes' => 20,
-                    'is_active' => true,
-                    'is_guest_quiz' => $isGuestQuiz,
-                    'creator_id' => $adminUser->id,
-                    'subscription_plan_slug' => $subscriptionPlan->slug,
-                ]);
-                
-                if (!$quiz->save()) {
-                    $this->error('Failed to save quiz');
-                    if ($quiz->errors) {
-                        $this->error(json_encode($quiz->errors));
-                    }
-                    continue;
-                }
-                
-                $this->info("Created quiz with ID: " . $quiz->id);
+            if (empty($quizzes)) {
+                $this->error('The questions array is empty');
+                return 1;
+            }
 
-                // Process each question
-                foreach ($quizQuestions as $qIndex => $questionData) {
-                    if (!is_array($questionData) || !isset($questionData['question'])) {
-                        $this->warn("Question at index {$qIndex} is not in the expected format, skipping...");
-                        continue;
-                    }
+            // Disable foreign key checks
+            DB::statement('SET FOREIGN_KEY_CHECKS=0');
+            
+            // Start transaction
+            DB::beginTransaction();
+            
+            try {
+                // Clear existing data
+                $this->info('Clearing existing data...');
+                Option::truncate();
+                Question::truncate();
+                Quiz::truncate();
+                
+                $this->info('Existing data cleared successfully.');
+
+                // Process quizzes
+                $guestQuizIndex = 10; // 0-based index for quiz 11
+                $this->info(sprintf(
+                    'Will create %d quizzes (1 guest quiz at position %d, %d regular)',
+                    count($quizzes),
+                    $guestQuizIndex + 1,
+                    count($quizzes) - 1
+                ));
+
+                $adminUser = $this->getOrCreateAdminUser();
+                $subscriptionPlan = $this->getSubscriptionPlan();
+
+                // Process each quiz
+                foreach ($quizzes as $quizIndex => $quizQuestions) {
+                    $this->processQuiz($quizIndex, $quizQuestions, $adminUser, $subscriptionPlan);
+                }
+
+                // Commit the transaction if we got this far
+                DB::commit();
+                $this->info('Successfully imported all quizzes and questions!');
+                return 0;
+            } catch (\Exception $e) {
+                // Rollback the transaction on error
+                if (DB::transactionLevel() > 0) {
+                    DB::rollBack();
+                }
+                throw $e; // Re-throw to be caught by the outer catch
+            } finally {
+                // Re-enable foreign key checks
+                DB::statement('SET FOREIGN_KEY_CHECKS=1');
+            }
+        } catch (\Exception $e) {
+            $this->logError($e);
+            return 1;
+        }
+    }
+
+    private function getOrCreateAdminUser()
+    {
+        $adminUser = User::where('email', 'admin@example.com')->first();
+        if (!$adminUser) {
+            $adminUser = User::create([
+                'name' => 'Admin',
+                'email' => 'admin@example.com',
+                'password' => bcrypt('password'),
+                'is_admin' => true
+            ]);
+        }
+        return $adminUser;
+    }
+
+    private function getSubscriptionPlan()
+    {
+        $subscriptionPlan = \App\Models\SubscriptionPlan::first();
+        if (!$subscriptionPlan) {
+            throw new \RuntimeException('No subscription plan found. Please run the subscription plan seeder first.');
+        }
+        return $subscriptionPlan;
+    }
+
+    private function processQuiz($quizIndex, $quizQuestions, $adminUser, $subscriptionPlan)
+    {
+        if (!is_array($quizQuestions)) {
+            $this->warn("Quiz at index {$quizIndex} is not an array, skipping...");
+            return;
+        }
+        
+        $quizNumber = $quizIndex + 1;
+        $this->info("Processing quiz {$quizNumber} with " . count($quizQuestions) . " questions");
+        
+        $isGuestQuiz = $quizIndex === 10; // 0-based index, so 10 is the 11th quiz
+        
+        $quiz = Quiz::create([
+            'title' => $isGuestQuiz 
+                ? ['rw' => "Umwitozo bwa mbere", 'en' => "Practice Quiz"]
+                : ['rw' => "Umwitozo {$quizNumber}", 'en' => "Quiz {$quizNumber}"],
+            'description' => $isGuestQuiz
+                ? ['rw' => "Igikorwa cy'umuhanda cya mbere", 'en' => "Practice driving test questions set for guests"]
+                : ['rw' => "Igikorwa cy'umuhanda {$quizNumber}", 'en' => "Driving test questions set {$quizNumber}"],
+            'time_limit_minutes' => 20,
+            'is_active' => true,
+            'is_guest_quiz' => $isGuestQuiz,
+            'creator_id' => $adminUser->id,
+            'subscription_plan_slug' => $subscriptionPlan->slug,
+        ]);
+        
+        $this->info("Created quiz with ID: " . $quiz->id);
+        
+        foreach ($quizQuestions as $qIndex => $questionData) {
+            $this->processQuestion($qIndex, $questionData, $quiz);
+        }
+    }
+                
+    private function processQuestion($qIndex, $questionData, $quiz)
+    {
+        if (!is_array($questionData) || !isset($questionData['question'])) {
+            $this->warn("Question at index {$qIndex} is not in the expected format, skipping...");
+            return;
+        }
+        
+        try {
+            // Skip if question data is not in expected format
+            if (!isset($questionData['question']) || !isset($questionData['choices']) || !isset($questionData['correct'])) {
+                $this->warn("Skipping malformed question at index {$qIndex}");
+                return;
+            }
+
+            // Extract image path from imgpath if it exists
+            $imageUrl = null;
+            if (!empty($questionData['imgpath']) && 
+                is_string($questionData['imgpath']) &&
+                preg_match('/src=[\'"]([^\'"]+)[\'"]/', $questionData['imgpath'], $matches)) {
+                $imageUrl = basename($matches[1]);
+            }
+
+            // Create the question
+            $this->info("Creating question: " . substr(trim($questionData['question']), 0, 50) . "...");
+            
+            $question = new Question([
+                'quiz_id' => $quiz->id,
+                'text' => ['rw' => trim($questionData['question'])],
+                'type' => 'multiple_choice',
+                'points' => 1,
+                'is_active' => true,
+                'image_url' => $imageUrl,
+            ]);
+            
+            if (!$question->save()) {
+                throw new \RuntimeException('Failed to save question: ' . json_encode($question->getErrors() ?? []));
+            }
+
+            // Create options
+            $options = [];
+            foreach ($questionData['choices'] as $choiceIndex => $choice) {
+                if (!empty(trim($choice))) { // Skip empty choices
+                    $isCorrect = ($choiceIndex + 1) == $questionData['correct'];
+                    $option = Option::create([
+                        'question_id' => $question->id,
+                        'option_text' => ['rw' => trim($choice)],
+                        'is_correct' => $isCorrect,
+                        'order' => $choiceIndex,
+                    ]);
                     
-                    try {
-                        // Skip if question data is not in expected format
-                        if (!isset($questionData['question']) || !isset($questionData['choices']) || !isset($questionData['correct'])) {
-                            $this->warn("Skipping malformed question at index {$qIndex}");
-                            continue;
-                        }
-
-                        // Extract image path from imgpath if it exists
-                        $imageUrl = null;
-                        if (!empty($questionData['imgpath']) && 
-                            is_string($questionData['imgpath']) &&
-                            preg_match('/src=[\'"]([^\'"]+)[\'"]/', $questionData['imgpath'], $matches)) {
-                            $imageUrl = basename($matches[1]);
-                        }
-
-                        // Create the question
-                        $this->info("Creating question: " . substr(trim($questionData['question']), 0, 50) . "...");
-                        
-                        $question = new Question([
-                            'quiz_id' => $quiz->id,
-                            'text' => ['rw' => trim($questionData['question'])],
-                            'type' => 'multiple_choice',
-                            'points' => 1,
-                            'is_active' => true,
-                            'image_url' => $imageUrl,
-                        ]);
-                        
-                        if (!$question->save()) {
-                            $this->error('Failed to save question: ' . json_encode($question->getErrors()));
-                            continue;
-                        }
-
-                        // Create options
-                        $options = [];
-                        foreach ($questionData['choices'] as $choiceIndex => $choice) {
-                            if (!empty(trim($choice))) { // Skip empty choices
-                                $isCorrect = ($choiceIndex + 1) == $questionData['correct'];
-                                $option = new Option([
-                                    'question_id' => $question->id,
-                                    'option_text' => ['rw' => trim($choice)],
-                                    'is_correct' => $isCorrect,
-                                    'order' => $choiceIndex,
-                                ]);
-                                $option->save();
-                                
-                                if (!$option) {
-                                    throw new \Exception("Failed to save option for question");
-                                }
-                                $options[] = $option;
-                            }
-                        }
-
-                        // Set the correct answer (correct is 1-based in the data)
-                        $correctIndex = (int)$questionData['correct'] - 1;
-                        if (isset($options[$correctIndex])) {
-                            $question->correct_option_id = $options[$correctIndex]->id;
-                            if (!$question->save()) {
-                                throw new \Exception("Failed to update question with correct option");
-                            }
-                        } else {
-                            $this->warn("Invalid correct answer index for question: {$question->id}");
-                        }
-
-                    } catch (\Exception $e) {
-                        $this->error("Error processing question: " . $e->getMessage());
-                        DB::rollBack();
-                        return 1;
+                    if (!$option) {
+                        throw new \RuntimeException("Failed to save option for question");
                     }
+                    $options[] = $option;
                 }
             }
 
-            DB::commit();
-            $this->info('Successfully imported all quizzes and questions!');
-            return 0;
+            // Set the correct answer (correct is 1-based in the data)
+            $correctIndex = (int)$questionData['correct'] - 1;
+            if (isset($options[$correctIndex])) {
+                $question->correct_option_id = $options[$correctIndex]->id;
+                if (!$question->save()) {
+                    throw new \RuntimeException("Failed to update question with correct option");
+                }
+            } else {
+                $this->warn("Invalid correct answer index for question: {$question->id}");
+            }
 
         } catch (\Exception $e) {
-            DB::rollBack();
-            $this->error('Error importing questions: ' . $e->getMessage());
-            $this->error($e->getTraceAsString());
-            return 1;
+            $errorMsg = sprintf(
+                "Error processing question %d in quiz %d: %s\nFile: %s:%d",
+                $qIndex + 1,
+                $quiz->id,
+                $e->getMessage(),
+                $e->getFile(),
+                $e->getLine()
+            );
+            $this->error($errorMsg);
+            throw $e;
         }
+    }
+    
+    private function logError(\Exception $e)
+    {
+        $errorMessage = 'Error importing questions: ' . $e->getMessage() . 
+                      ' in ' . $e->getFile() . ':' . $e->getLine();
+        
+        $this->error($errorMessage);
+        
+        // Log the full error for debugging
+        Log::error($errorMessage, [
+            'exception' => (string) $e,
+            'trace' => $e->getTraceAsString()
+        ]);
     }
 }

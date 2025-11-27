@@ -1,10 +1,28 @@
 @php
-    // For the guest quiz section, we'll show a simple CTA
-    $question = [
-        'text' => __('quiz.guestQuiz.testYourKnowledge'),
-        'options' => []
-    ];
-    $options = [];
+    // Get the current locale
+    $locale = app()->getLocale();
+    
+    // Get the first question and its options
+    $question = $guestQuiz['questions'][0] ?? null;
+    $options = $question ? $question->options : [];
+    
+    // If no question is provided, show a default message
+    if (!$question) {
+        $questionText = __('quiz.guestQuiz.testYourKnowledge');
+        $options = [];
+    } else {
+        // Get the localized question text
+        $questionText = $question->getTranslation('question_text', $locale) ?? $question->question_text;
+        
+        // Ensure options are properly localized
+        $options = $options->map(function($option) use ($locale) {
+            return [
+                'id' => $option->id,
+                'text' => $option->getTranslation('option_text', $locale) ?? $option->option_text,
+                'is_correct' => $option->is_correct
+            ];
+        })->toArray();
+    }
     
     // Plan colors mapping
     $planColors = [
@@ -100,7 +118,7 @@
         }
         return this.selected === option.id;
     }
-}" class="bg-white dark:bg-gray-800 rounded-xl shadow-lg border border-gray-100 dark:border-gray-700 overflow-hidden relative">
+}" class="relative">
     <!-- Plan Badge -->
     <div class="absolute top-3 right-3 bg-gradient-to-r {{ $colorClass }} text-white text-xs font-bold px-3 py-1 rounded-full shadow-md z-10">
         {{ strtoupper($planName) }}
@@ -140,10 +158,10 @@
     </div>
     
     @if($question)
-        <div class="p-5">
+        <div class="p-0">
             <!-- Question -->
-            <p class="text-gray-800 dark:text-gray-200 font-medium mb-4 leading-tight">
-                {{ $question['text'] }}
+            <p class="text-white font-medium mb-4 leading-tight">
+                {{ $questionText }}
             </p>
             
             <!-- Feedback Message -->
@@ -155,23 +173,25 @@
             <!-- Answer Grid -->
             <div class="grid grid-cols-1 sm:grid-cols-2 gap-3 mb-5">
                 @foreach($options as $option)
-                    <div class="relative group">
-                        <div @click="selectAnswer('{{ $option['id'] }}')"
-                             class="block p-3 rounded-lg border cursor-pointer transition-colors duration-150"
-                             :class="getOptionClasses({{ json_encode($option) }})">
-                            <div class="flex items-start">
-                                <div class="flex-shrink-0 mt-0.5">
-                                    <div class="w-5 h-5 rounded-full border-2 flex items-center justify-center"
-                                         :class="getCheckboxClasses({{ json_encode($option) }})">
-                                        <svg x-show="shouldShowCheck({{ json_encode($option) }})" 
-                                             class="w-3 h-3 text-white" fill="currentColor" viewBox="0 0 20 20">
-                                            <path fill-rule="evenodd" d="M16.707 5.293a1 1 0 010 1.414l-8 8a1 1 0 01-1.414 0l-4-4a1 1 0 011.414-1.414L8 12.586l7.293-7.293a1 1 0 011.414 0z" clip-rule="evenodd" />
-                                        </svg>
-                                    </div>
-                                </div>
-                                <span class="ml-2 text-sm text-gray-800 dark:text-gray-200">{{ $option['text'] }}</span>
+                    <div class="mb-3">
+                        <label class="flex items-center p-3 border rounded-lg cursor-pointer transition-colors duration-200"
+                               :class="getOptionClasses({{ json_encode($option) }})"
+                               @click="selectAnswer({{ $option['id'] }})">
+                            <div class="flex items-center h-5">
+                                <input type="radio" 
+                                       name="answer" 
+                                       :value="{{ $option['id'] }}"
+                                       class="h-4 w-4 border-gray-300 focus:ring-2 focus:ring-blue-500"
+                                       :class="getCheckboxClasses({{ json_encode($option) }})"
+                                       :checked="selected === {{ $option['id'] }}"
+                                       :disabled="showAnswer">
                             </div>
-                        </div>
+                            <div class="ms-3 text-sm">
+                                <p class="font-medium text-gray-700 dark:text-gray-200">
+                                    {{ $option['text'] }}
+                                </p>
+                            </div>
+                        </label>
                     </div>
                 @endforeach
             </div>
@@ -216,7 +236,7 @@
             </div>
         </div>
     @else
-        <div class="p-5 text-center text-gray-500 dark:text-gray-400">
+        <div class="p-0 text-center text-blue-100">
             {{ __('quiz.guestQuiz.noQuizAvailable') }}
         </div>
     @endif

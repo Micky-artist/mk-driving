@@ -442,5 +442,3558 @@
         "Umuhanda ufite ibice bine"
       ]
     }
+  ],
+  [
+    {
+      "imgpath": "<img src=../examMedia/427.jpg alt=></img>",
+      "question": "Ni ikihe icyapa gisobanura umuhanda w'icyerekezo kimwe:",
+      "correct": 2,
+      "choices": [
+        " Icyapa D1a",
+        " Icyapa E13a",
+        " Icyapa C19",
+        " Icyapa C1"
+      ]
+    },
+    {
+      "imgpath": "<img src=../examMedia/ifungana.jpg alt=></img>",
+      "question": "Iki cyapa gisobanura iki ?",
+      "correct": 4,
+      "choices": [
+        " Aho imihanda ihurira",
+        " Inkomane y’aho  umuhanda umwe urasukira iburyo",
+        " Umuhanda udakomeza",
+        " Nta gisubizo kirimo"
+      ]
+    },
+    {
+      "imgpath": "<img src=../examMedia/iherezo urombereje.jpg alt=></img>",
+      "question": "Iki cyapa gisobanura iki ?",
+      "correct": 1,
+      "choices": [
+        " Iherezo ry’ umuhanda urombeje w’ibice byinshi ",
+        " Birabujijwe kunyura mu mu muhanda w’ ikindi cyerekezo",
+        " Birabujijwe kunyuranaho",
+        " Birabujijwe guhagara ku iteme"
+      ]
+    },
+    {
+      "imgpath": "<img src=../examMedia/324.jpg alt=></img>",
+      "question": "Iki kimenyetso kiri mu muhanda kivuze iki ?",
+      "correct": 2,
+      "choices": [
+        " Biremewe kunyuranaho",
+        " Umuyobozi abujijwe kukirenga",
+        " Wegereye icyapa cyo  guhagarara umwanya muto",
+        " Umuhanda ufunganye"
+      ]
+    },
+    {
+      "imgpath": "<img src=../examMedia/ucagaguye2.jpg alt=></img>",
+      "question": "Iki kimenyetso kiri mu muhanda kivuze iki ?",
+      "correct": 1,
+      "choices": [
+        " Umuyobozi abujijwe kurenga umurongo wera ucagaguye  cyeretse mugihe bitateza icyago",
+        " Birabujijwe kunyuranaho",
+        " Biremewe kunyuranaho ariko nturenge umurongo wera ucagaguye",
+        " Birabujijwe gusubira inyuma"
+      ]
+    },
+    {
+      "imgpath": "<img src=../examMedia/432.jpg alt=></img>",
+      "question": "Mu gihe  utwaye ikinyabiziga uva kuri A ugana kuri B,  Iki kimenyetso kiri mu muhanda kivuze iki ?",
+      "correct": 4,
+      "choices": [
+        " Umuyobozi ashobora kurenga umurongo wera udacagaguye mugihe  cyo guhindukira gusa",
+        " Umuyobozi w’ikinyabiziga abujijwe kunyuranaho, uretse gusa abayobozi b’ibinyamitende nibo bashobora kurenga umurongo wera udacagaguye",
+        " Umuyobozi w’ikinyabiziga abujijwe kunyuranaho arenze umurongo wera udacagaguye ",
+        " Umuyobozi w’ikinyabiziga ashobora kunyuranaho mu gihe bitateza icyago"
+      ]
+    },
+    {
+      "imgpath": "<img src=../examMedia/433.jpg alt=></img>",
+      "question": "Mu gihe  utwaye ikinyabiziga uva kuri A ugana kuri B,  Iki kimenyetso kiri mu muhanda kivuze iki ?",
+      "correct": 2,
+      "choices": [
+        " Umuyobozi w’ikinyabiziga ashobora kunyuranaho arenze umurongo wera udacagaguye",
+        " Umuyobozi w’ikinyabiziga abujijwe kunyuranaho arenze imirongo yera",
+        " Umuyobozi w’ikinyabiziga yemerewe kunyuranaho",
+        " Abayobozi b’ibinyamitende gusa bemerewe kunyuranaho barenze umurongo wera udacagaguye"
+      ]
+    },
+    {
+      "imgpath": null,
+      "question": "Kunyuranaho mw’ikoni :",
+      "correct": 2,
+      "choices": [
+        " biremewe ",
+        " ntibyemewe",
+        " biremewe ukoranye ubwitonzi ",
+        " ibisubizo byose ni ukuri "
+      ]
+    },
+    {
+      "imgpath": null,
+      "question": "Umuyobozi w’ikinyabiziga igihe atwaye ikinyabiziga  akagira umunaniro utuma  yasinzira yakora iki ?",
+      "correct": 2,
+      "choices": [
+        " Gufungura ikirahure cy’ikinyabiziga cyangwa gushyira ubukonje mu modoka  kugirango umwuka mwiza winjire mu kinyabiziga ",
+        " Guhagarara akaruhuka  harimo no kugendagenda niba bishoboka ",
+        " Kunanura amaboko no gufunga amaso mugihe gito ",
+        " Kongera ubushyuhe mu kinyabiziga    "
+      ]
+    },
+    {
+      "imgpath": null,
+      "question": "Niki umuyobozi w’ikinyabiziga yakora igihe atwaye ikinyabiziga mugihe cy’ibihu,imvura nyinshi, umwuzure  cyangwa umukungugu mwinshi ?",
+      "correct": 2,
+      "choices": [
+        " Kugendera mu tuyira turi kumpande zu muhanda, ucunga ibimenyetso  bigarura urumuri ",
+        " Kugabanya umuvuduko hanyuma ugakoresha amatara magufi ",
+        " Gucana amatara  maremare  hanyuma ukagenda gahoro ",
+        " Kugendera mu murongo ugabanya umuhanda mo kabiri unareba ibimenyestso by’umuhanda bigarura urumuri "
+      ]
+    },
+    {
+      "imgpath": "<img src=../examMedia/agacuri.jpg alt=></img>",
+      "question": "Iki cyapa gisobanura iki ?",
+      "correct": 2,
+      "choices": [
+        " Umuhanda utaringaniye i buryo",
+        " Akamanuko gashobora gutera ibyago",
+        " Ahantu umuhanda umeze nabi",
+        " Uguhinguka ku mwaro cyangwa ku nkombe"
+      ]
+    },
+    {
+      "imgpath": "<img src=../examMedia/akazamuko.jpg alt=></img>",
+      "question": "Iki cyapa gisobanura iki ?",
+      "correct": 1,
+      "choices": [
+        " Akazamuko gashinze cyane",
+        " Umuhanda utaringaniye i bumoso",
+        " Ahantu umuhanda umeze nabi",
+        " Ahegereye utununga"
+      ]
+    },
+    {
+      "imgpath": "<img src=../examMedia/unyerera.jpg alt=></img>",
+      "question": "Iki cyapa gisobanura iki ?",
+      "correct": 4,
+      "choices": [
+        " Akazamuko gashinze cyane",
+        " Umuyaga w’intambike",
+        " Uruhererekane rw’amakoni",
+        " Umuhanda unyerera"
+      ]
+    },
+    {
+      "imgpath": "<img src=../examMedia/abana.jpg alt=></img>",
+      "question": "Iki cyapa gisobanura iki ?",
+      "correct": 1,
+      "choices": [
+        " Abana",
+        " Inzira y’abanyamaguru – Itegure guhagarara",
+        " Ikibuga cy’imikino cy’abana",
+        " Ikibuga cy’ imyidagaduro"
+      ]
+    },
+    {
+      "imgpath": "<img src=../examMedia/amatungo.jpg alt=></img>",
+      "question": "Iki cyapa gisobanura iki ?",
+      "correct": 4,
+      "choices": [
+        " Isoko ry’amatungo",
+        " Ivuriro ry’amatungo",
+        " Uruzitiro rw’amatungo",
+        " Akayira k’amatungo"
+      ]
+    },
+    {
+      "imgpath": "<img src=../examMedia/422.jpg alt=></img>",
+      "question": "Mu byapa bikurikira , ni ikihe cyerekana  umuhanda  udakomeza:",
+      "correct": 2,
+      "choices": [
+        " Icyapa  C1",
+        " Icyapa E14",
+        " Icyapa C2a",
+        " Icyapa B2a"
+      ]
+    },
+    {
+      "imgpath": "<img src=../examMedia/tanga.jpg alt=></img>",
+      "question": "Iki cyapa gisobanura iki?",
+      "correct": 1,
+      "choices": [
+        " Tanga inzira",
+        " Icyago",
+        " Icyerekezo kimwe",
+        " Ntihanyurwa"
+      ]
+    },
+    {
+      "imgpath": "<img src=../examMedia/424.jpg alt=></img>",
+      "question": "Muri ibi byapa bikurikira ni ikihe cyerekana ko umuyobozi ukibonye yemerewe gutambuka mbere y'abaturutse aho agana mu nzira ifunganye:",
+      "correct": 1,
+      "choices": [
+        " Icyapa B6",
+        " Icyapa A19",
+        " Icyapa B3",
+        " Icyapa A22a"
+      ]
+    },
+    {
+      "imgpath": "<img src=../examMedia/kuzenguruka.jpg alt=></img>",
+      "question": "Iki cyapa:",
+      "correct": 1,
+      "choices": [
+        " Aho banyura bazengurutse",
+        " Cyerekana umuhanda w'ibisate bitatu",
+        " Cyerekana ahegereye inkomane",
+        " Ntagisuzo cy’ukuri kirimo"
+      ]
+    },
+    {
+      "imgpath": "<img src=../examMedia/ntihanyurwa.jpg alt=></img>",
+      "question": "Iki cyapa gisobanura iki ?",
+      "correct": 2,
+      "choices": [
+        " Hanyurwa mu cyerekezo kimwe",
+        " Ntihanyurwa",
+        " Umuhanda udakomeza",
+        " Ntagisuzo cy’ukuri kirimo"
+      ]
+    }
+  ],
+  [
+    {
+            "imgpath": "<img src=../examMedia/iburyo2.jpg alt=></img>",
+            "question": "Iki cyapa gisobanura iki ?",
+            "correct": 3,
+            "choices": [
+        " Kunyuranaho bikorerwa i buryo gusa",
+        " Umuhanda uyoborejwe i buryo",
+        " Kata i buryo gusa",
+        " Umuhanda munini urasukira i bumoso"
+            ]
+    },
+    {
+            "imgpath": "<img src=../examMedia/iburyo.jpg alt=></img>",
+            "question": "Iki cyapa gisobanura iki ?",
+            "correct": 1,
+            "choices": [
+        " Birabujijwe gukata i buryo",
+        " Tanga inzira ku bindi binyabiziga bigenda mu gihe ugiye gukatira iburyo",
+        " Kata i buryo mu gihe nta bindi binyabiziga biturutse mu kindi cyerekezo",
+        " Nta nkengero y’umuhanda yegutse iri i buryo"
+            ]
+    },
+    {
+            "imgpath": "<img src=../examMedia/ibumoso.jpg alt=></img>",
+            "question": "Iki cyapa gisobanura iki ?",
+            "correct": 4,
+            "choices": [
+        " Ntihasohokerwa i bumoso mu nzira banyuramo bazengurutse ",
+        " Umuhanda udakomeza ibumoso",
+        " Nta nkengero y’umuhanda yegutse iri ibumoso",
+        " Birabujijwe gukata ibumoso"
+            ]
+    },
+    {
+            "imgpath": "<img src=../examMedia/guhindukira.jpg alt=></img>",
+            "question": "Iki cyapa gisobanura iki ?",
+            "correct": 1,
+            "choices": [
+        " Birabujijwe guhindukira",
+        " Birabijijwe gusubira inyuma ",
+        " Umuhanda unyerera imbere",
+        " Ntibyemewe kugendera mu byerekezo byombi"
+            ]
+    },
+    {
+            "imgpath": "<img src=../examMedia/ntu50.jpg alt=></img>",
+            "question": "Iki cyapa gisobanura iki ?",
+            "correct": 4,
+            "choices": [
+        " Umuhanda urombereje w’ibice byinshi ku birometero 50",
+        " Intera nto ntarengwa ya metero 50 hagati y’ibinyabiziga  ",
+        " Umuvuduko urenga ibirometero 50 mu isaha",
+        " Umuvuduko ntarengwa ugarukira ku birometero 50 mu isaha "
+            ]
+    },
+    {
+            "imgpath": "<img src=../examMedia/bir umunini2.jpg alt=></img>",
+            "question": "Iki cyapa gisobanura iki ?",
+            "correct": 2,
+            "choices": [
+        " Birabujijwe  ku binyabiziga bitwara abakozi ba leta",
+        " Birabujijwe guhagara umwanya munini",
+        " Birabujijwe ku binyabiziga by’abikorera ki giti cyabo",
+        " Parikingi"
+            ]
+    },
+    {
+            "imgpath": "<img src=../examMedia/inzir yibiny namaguru.jpg alt=></img>",
+            "question": "Iki cyapa gisobanura iki ?",
+            "correct": 3,
+            "choices": [
+        " Aho guhagararwamo  n’abanyamagare imbere",
+        " Aho abana bagenewe kwiga gutwara amagare ",
+        " Inzira y’iminyamitende n’abanyamaguru itegetswe",
+        " Abanyamagare bagomba kuva ku igare  bakagendesha amaguru"
+            ]
+    },
+    {
+            "imgpath": "<img src=../examMedia/ntih byubucuruzi.jpg alt=></img>",
+            "question": "Iki cyapa gisobanura iki ?",
+            "correct": 2,
+            "choices": [
+        " Uburemere ntarengwa bwemewe bwa toni 3",
+        " Ntihanyurwa n’ibinyabiziga bigenewe gutwara ibicuruzwa",
+        " Ntihanyurwa n’ibinyabiziga bifite imitambiko itatu",
+        " Hanyurwa n’ibinyabiziga  bifite imitambiko itatu gusa"
+            ]
+    },
+    {
+            "imgpath": "<img src=../examMedia/kuzenguruka bitegetswe.jpg alt=></img>",
+            "question": "Iki cyapa gisobanura iki ?",
+            "correct": 1,
+            "choices": [
+        " Inkomane banyuramo bazengurutse",
+        " Biremewe guhindukira",
+        " Inzira y’icyerekezo kimwe imbere",
+        " Birabujijwe guhindukira "
+            ]
+    },
+    {
+            "imgpath": "<img src=../examMedia/kubisikana.jpg alt=></img>",
+            "question": "Iki cyapa gisobanura iki ?",
+            "correct": 4,
+            "choices": [
+        " Umuhanda ugabanijwemo ibisate bibiri ",
+        " Umuhanda ugabanijwemo ibisate bine",
+        " Inzira y’icyerekezo kimwe",
+        " Ukugendera mu muhanda ubisikanirwamo"
+            ]
+    },
+    {
+            "imgpath": "<img src=../examMedia/398.jpg alt=></img>",
+            "question": "Mfite uburenganzira bwo gutambuka muri iri sangano ?",
+            "correct": 3,
+            "choices": [
+        " yego, niba ukata ibumoso ",
+        " Oya niba ukata iburyo",
+        " yego , bitewe noho ngana ",
+        " ntagisubizo cy’ukuri kirimo "
+            ]
+    },
+    {
+            "imgpath": "<img src=../examMedia/399.jpg alt=></img>",
+            "question": "Ndi kumuvuduko wa 20km/h. nshobora gukomeza muri iri sangano ry’umuhanda?",
+            "correct": 1,
+            "choices": [
+        " oya",
+        " yago, nshobora gukata iburyo",
+        " yego, nshobora guta ibumoso cyangwa iburyo",
+        " yego, nshobora gukata ibumoso gusa "
+            ]
+    },
+    {
+            "imgpath": "<img src=../examMedia/400.jpg alt=></img>",
+            "question": "Umuyobozi wikinyabiziga aritegura kunyuraho ibumoso :",
+            "correct": 3,
+            "choices": [
+        " nshobora kumunyuraho nyuze iburyo",
+        " sinshobora kumunyura",
+        " nshobora kumunyura nciye ibumoso  ariko mbonye ko mfite umwanya uhagije ",
+        " Ntagisubizo cy’ukuri kirimo "
+            ]
+    },
+    {
+            "imgpath": "<img src=../examMedia/401.jpg alt=></img>",
+            "question": "Uhereye kuri ibi byapa habujijwe :",
+            "correct": 1,
+            "choices": [
+        " Kunyuranaho kubinyabiziga bikururwa nibinyabiziga birengeje imitende ibiri ibumoso no kugendera kumuvuduko urengeje 70 km/h",
+        " Kunyuranaho kubinyabiziga bikururwa cyangwa ibinyabiziga birengeje imitende ibiri ibumoso",
+        " kugendera hejuru ya 70 km/h",
+        " ntagisubizo cy’ukuri "
+            ]
+    },
+    {
+            "imgpath": "<img src=../examMedia/402.jpg alt=></img>",
+            "question": "Ndashaka gupariki ikinyabiga iburyo kunzira y’abanyamaguru",
+            "correct": 1,
+            "choices": [
+        " biremewe munsi yicyi cyapa",
+        " biremewe imbere y’icyi cyapa ",
+        " birabujijwe imbere n’inyuma yicyi cyapa",
+        " nta gisubizo cy’ukuri kirimo"
+            ]
+    },
+    {
+            "imgpath": "<img src=../examMedia/stop.jpg alt=></img>",
+            "question": "Iki cyapa gisobanura iki ?",
+            "correct": 2,
+            "choices": [
+        " Guhagarara, aho abanyeshuri bambukira",
+        " Hagarara akanya gato",
+        " Ibindi binyabiziga bigomba kuguha inzira",
+        " Gutanga umwanya ku bindi binyabiziga i buryo bwawe"
+            ]
+    },
+    {
+            "imgpath": "<img src=../examMedia/tanga.jpg alt=></img>",
+            "question": "Iki cyapa gisobanura iki mu nkomane ?",
+            "correct": 3,
+            "choices": [
+        " Tanga inzira ku binyabiziga binini",
+        " Gabanya umuvuduko uhe inzira abanyamaguru.",
+        " Tanga inzira ku binyabiziga bigenda mu muhanda munini wegera",
+        " Tanga inzira ku ibinyabiziga biturutse iburyo bwawe"
+            ]
+    },
+    {
+            "imgpath": "<img src=../examMedia/tanga.jpg alt=></img>",
+            "question": "Iki cyapa gisobanura iki aho banyura bazengurutse ?",
+            "correct": 2,
+            "choices": [
+        " Tanga inzira ku binyabiziga biri mu muhanda munini",
+        " Tanga inzira ku binyabiziga biturutse i bumoso ",
+        " Tanga inzira ku ma kamyo na za otobisi",
+        " Ibinyabiziga byose uretse amapikipiki bigomba gutanga inzira"
+            ]
+    },
+    {
+            "imgpath": "<img src=../examMedia/imbere2.jpg alt=></img>",
+            "question": "Iki cyapa gisobanura iki ?   ",
+            "correct": 1,
+            "choices": [
+        " Komeza imbere gusa ",
+        " Aho kunyuranaho imbere",
+        " Aho guhagarara umwanya munini",
+        " anInzira y’ icyerekezo kimwes1"
+            ]
+    },
+    {
+            "imgpath": "<img src=../examMedia/ibumoso2.jpg alt=></img>",
+            "question": "Iki cyapa gisobanura iki ?",
+            "correct": 4,
+            "choices": [
+        " Umuhanda urombereje  w’ibice byinshi ibumoso",
+        " Umuhanda uyoborejwe i bumoso",
+        " Ibinyabiziga biturutse iburyo bifite uburenganzira bwo gutambuka mbere",
+        " Kata i bumoso gusa"
+            ]
+          }
+        ],
+  [
+    {
+            "imgpath": null,
+            "question": "Icyapa kivuga “icyerekezo gitegetswe”kigizwe n’ikirango cy’ibara :",
+            "correct": 3,
+            "choices": [
+        " umweru",
+        " umutuku",
+        " ubururu n’ikirango cy’umweru ",
+        " umukara"
+            ]
+    },
+    {
+            "imgpath": "<img src=../examMedia/387.jpg alt=></img>",
+            "question": " Iki kimenyetso gitanzwe n’umukozi ubifitiye ububasha cyo guhagarara :",
+            "correct": 2,
+            "choices": [
+        " ku bakoresha umuhanda ba muturutse imbere ",
+        " ku bakoresha umuhanda bose bamuturutse imbere n’inyuma ",
+        " kubakoresha umuhanda bose bamuturutse inyuma ",
+        " nta gisubizo cy’ukuri kirimo "
+            ]
+    },
+    {
+            "imgpath": "<img src=../examMedia/388.jpg alt=></img>",
+            "question": "Ibi byapa byo mu muhanda birambuza kunyuranaho ibumoso ?",
+            "correct": 1,
+            "choices": [
+        " yego",
+        " yego, iyo ufite umuvuduo wa 90km/h ",
+        " oya",
+        " ntagisubizo cy’ukuri"
+            ]
+    },
+    {
+            "imgpath": "<img src=../examMedia/391.jpg alt=></img>",
+            "question": "K’umuyobozi w’ivatiri, iki cyapa kivuze iki ? ",
+            "correct": 3,
+            "choices": [
+        " kirambuza gutwara ku muvuduko utarengeje 5km/h ",
+        " ntaburenganzira kimpa, mugihe gikurikizwa ku binyabiziga bifite hejuru y atoni 5",
+        " ntacyo bindebaho  mugihe bireba gusa zipima tone 5 no kurengaho.",
+        " Ntagisubizo cy’ukuri kirimo "
+            ]
+    },
+    {
+            "imgpath": "<img src=../examMedia/392.jpg alt=></img>",
+            "question": "Ndashaka gukata iburyo. Biremewe ?",
+            "correct": 3,
+            "choices": [
+        " yego",
+        " yego, ariko nyuma yo guhagarara ",
+        " ntabwo byemewe",
+        " ntagisubizo cyukuri kirimo "
+            ]
+    },
+    {
+            "imgpath": "<img src=../examMedia/393.jpg alt=></img>",
+            "question": "Umuhanda wambukiranya inzira ya gariyamoshi ",
+            "correct": 2,
+            "choices": [
+        " nshobora gukomeza nkambuka umuhanda kubera ko uruzitiro rufunguye ",
+        " ngomba guhagarara munsi yitara ry’umutuku rimyatsa ",
+        " ntabwo nakomeza urugendo rwanjye. Ngomba gihita mpagarara ",
+        " ntagisubizo cy’ukuri "
+            ]
+    },
+    {
+            "imgpath": "<img src=../examMedia/394.jpg alt=></img>",
+            "question": "Kuri iki cyapa  cyo mu muhanda cyambere  kintegeka ?",
+            "correct": 3,
+            "choices": [
+        " Kugendera k’umuvuduko  uri hejuru ya 30km/h",
+        " Kutarenza umuvuduko wa 30km/h",
+        " birabujijwe kugendera kumuvuduko uri hejuru ya 30km/h",
+        " nta gisubizo cyukuri  "
+            ]
+    },
+    {
+            "imgpath": "<img src=../examMedia/395.jpg alt=></img>",
+            "question": "Mpagaze mu murongo  wo guhagarara umwanya muto ",
+            "correct": 2,
+            "choices": [
+        " Nshobora gukata iburyo",
+        " Nshobora gukata ibumoso",
+        " Nshobora gukata ibumoso  cyangwa iburyo ",
+        " Ntagisubizo cy’ukuri kirimo "
+            ]
+    },
+    {
+            "imgpath": "<img src=../examMedia/396.jpg alt=></img>",
+            "question": "Ngomba :",
+            "correct": 2,
+            "choices": [
+        " guhagarara igihe gito kuri icyi cyapa cy’umuhanda ",
+        " guhagarara ngatanga inzira kuri metero 100 ntaragera kuri icyi cyapa ",
+        " gutanga inzira nkanahagarara  iyo ari ngombwa muri m100 ntaragera kuri icyi cyapa ",
+        " ntagisubizo cy’ukuri   "
+            ]
+    },
+    {
+            "imgpath": "<img src=../examMedia/397.jpg alt=></img>",
+            "question": "Ndashaka kugata ibumoso. Imodoka y’icyatsi yaje irahagarara. Ninde ufite uburenganzira bwo gutambuka mbere?",
+            "correct": 2,
+            "choices": [
+        " mfite uburenganzira bwo gutambuka mbere  ",
+        " imodoka y’icyatsi ifite uburenganzira bwo gutambuka mbere ",
+        " twembi ntaburenganzira bwo gutambuka mbere gusa tugomba gutambukana ubwitonzi ",
+        " ntagisubizo nakimwe kirimo "
+            ]
+    },
+    {
+            "imgpath": "<img src=../examMedia/310.jpg alt=></img>",
+            "question": "Muri ibi binyabiziga n’ikihe gihagaze nabi?",
+            "correct": 1,
+            "choices": [
+        " Ibinyabiziga byombi",
+        " Ikinyabiziga cy’icyatsi",
+        " Ikinyabiziga cy’umutuku",
+        " Nta n’imwe"
+            ]
+    },
+    {
+            "imgpath": "<img src=../examMedia/311.jpg alt=></img>",
+            "question": "Ni gute umuyobozi w’ikinyabiziga yanyura kumunyegare hano?",
+            "correct": 3,
+            "choices": [
+        " Aha umuyobozi w’ikinyabiziga ntashobora kumunyuraho",
+        " Atarenze umurongo wera ucagaguye",
+        " Arenze umurongo wera ucagaguye",
+        " Nta kurenga iyi mirongo yombi"
+            ]
+    },
+    {
+            "imgpath": "<img src=../examMedia/312.jpg alt=></img>",
+            "question": "N’iki umuyobozi w’ikinyabiziga yakora aramutse ahumishijwe n’urumuri rw’amatara yikinyabiziga giturutse mu kindi cyerekezo?",
+            "correct": 2,
+            "choices": [
+        " humisha ikinyabiziga giturutse mu kindi cyerekezo ucana  amatara maremare",
+        " Egera kunkombe y’iburyo bw’umuhanda nibinashobioka ugabanye umuvuduko.",
+        " Canira amatara ikinyabiziga kiva mukindi cyerekezo",
+        " Ongera umuvuduko kugira ngo usohoke mururwo rumuri vuba bishoboka"
+            ]
+    },
+    {
+            "imgpath": "<img src=../examMedia/313.jpg alt=></img>",
+            "question": "Niki ugomba gukora igihe wegereye ikimenyetso kimurika kiva mucyatsi kijya mumuhondo?",
+            "correct": 3,
+            "choices": [
+        " Ongera umuvuduko kugirango usoze ikoni",
+        " Komeza kuko itara ry’icyatsi rigiye kwaka",
+        " Hagarara niba utateza ibyago",
+        " Komeza ubwitonzi witegura guhagarara mugihe itara rihindutse umutuku"
+            ]
+    },
+    {
+            "imgpath": "<img src=../examMedia/314.jpg alt=></img>",
+            "question": "Niki umuyobozi w’ ikinyabiziga akwiriye kumenya mugihe akurikiye umuyobozi wikinyamitende ibiri kandi imodoka y’ umweru iri gusubira inyuma ijya mumuhanda?",
+            "correct": 4,
+            "choices": [
+        " Umuyobozi wikinyabiziga gisubira inyuma azahagarara nabona umuyobozi w’ ikinyabimitende ibiri",
+        " Umuyobozi w’ ikinyamitende ibiri ashobora gusaba umuyobozi w’ ikinyabiziga gisubira inyuma guhagarara",
+        " Amatara yoguhagarara ashobora kuzima  ikinyabiziga gikomeza gusubira inyuma",
+        " Umuyobozi w’ ikinyamitende ashobora guhagarara bitunguranye"
+            ]
+    },
+    {
+            "imgpath": "<img src=../examMedia/315.jpg alt=></img>",
+            "question": "Aha niki umuyobozi w’ ikinyabiziga yakora mugihe  ashaka kujya iburyo?",
+            "correct": 3,
+            "choices": [
+        " Gukomeza hagati y’ abanyamaguru babiri",
+        " kuvuza ihoni akongera umuvuduko ",
+        " Guhagarara akareka abanyamaguru bakambuka",
+        " Reka umunyamaguru umwe atambuke ubone umwanya wogutambuka"
+            ]
+    },
+    {
+            "imgpath": "<img src=../examMedia/316.jpg alt=></img>",
+            "question": "Aha umuyobozi w’ ikinyabiziga  ashobora kunyura kuri aba abanyamagare?",
+            "correct": 1,
+            "choices": [
+        " Oya, umuyobozi ntashobora kureba imbere neza",
+        " Yego, kuko umurongo wera ucagaguye udashobora kuba udacagaguye",
+        " Yego, abanyamagare bazumva imodoka bave munzira",
+        " Yego, kuko buri kinyabiziga kiva mukindi cyerekezo gishobora kuguha inzira"
+            ]
+    },
+    {
+            "imgpath": "<img src=../examMedia/317.jpg alt=></img>",
+            "question": "Aha niki umuyobozi w’ ikinyabiziga yakora?",
+            "correct": 1,
+            "choices": [
+        " Kwemerera abanyamaguru kwambuka umuhanda",
+        " Kuvuza ihoni agakomeza",
+        " Tengereza munzira y’ abanyamaguru kugeza imidoka izimye",
+        " Kongera umuvuduko mbere yuko abanyamaguru bambuka "
+            ]
+    },
+    {
+            "imgpath": "<img src=../examMedia/318.jpg alt=></img>",
+            "question": "Muri ibi binyabiziga bine ni ikihe kiri mu buryo bwiza bwo gukata ikoni ry’iburyo kiva mu muhanda munini kijya mu muto?",
+            "correct": 1,
+            "choices": [
+        " Ikinyabiziga cya mbere kiri mu buryo bwiza bwo gukata ikoni ry’iburyo",
+        " Ikinyabiziga cya kabiri  kiri mu buryo bwiza bwo gukata ikoni ry’iburyo",
+        " Ikinyabiziga cya gatatu kiri mu buryo bwiza bwo gukata ikoni ry’iburyo",
+        " Ikinyabiziga cya kane kiri mu buryo bwiza bwo gukata ikoni ry’iburyo"
+            ]
+    },
+    {
+            "imgpath": null,
+            "question": "Niki umuyobozi w’ikinyabiziga yakora mu gihe abonye icyapa kiburira cya mpande eshatu gitukura mu muhanda?",
+            "correct": 2,
+            "choices": [
+        " Hagarara utegereze amabwiriza",
+        " Umuyobozi w’ikinyabiziga agomba kugabanya umuvuduko ateganya icyago imbere ye",
+        " Kukireka, ukagumana umuvuduko ufite ugakomeza",
+        " Hagarara kuri icyo cyapa cya mpande eshatu mbere yo gukomeza"
+            ]
+    }
+  ],
+  [
+    {
+            "imgpath": "<img src=../examMedia/303.jpg alt=></img>",
+            "question": "N’iyihe myifatire myiza wagira ugeze aho abana bari hafi y’inzira nyabagendwa?",
+            "correct": 1,
+            "choices": [
+        " Itonde , witegereze ni biba ngongwa ubaburire unitegura kuba wahagarara.",
+        " Ihute urenge aho abo bana bari",
+        " Komeza ugume ku muvuduko munini",
+        " Komeza ugendere kuruhande rw’iburyo"
+            ]
+    },
+    {
+            "imgpath": "<img src=../examMedia/304.jpg alt=></img>",
+            "question": "Umuyobozi w’ikinyabiziga yegereye aho umwana w’umuhungu utwaye akagare k’abana asezera ku nshuti ye . N’iyihe myifatire myiza  wagira imbere yabo?",
+            "correct": 2,
+            "choices": [
+        " Ikomereze nkaho ataragera munzira nyabagendwa",
+        " Itegure kureka uwo mwana w’umuhungu atambuke, kuko yajya mu muhanda atitaye ku kinyabiziga cyawe",
+        " Gabanya umuvuduko ubwire uwo mwana yambuke ukoresheje ibimenyetso",
+        " Komeza nkaho uwo mwana akiri munzira y’abanyamaguru"
+            ]
+    },
+    {
+            "imgpath": "<img src=../examMedia/305.jpg alt=></img>",
+            "question": "Nk’umuyobozi w’ikinyabiziga, n’iyihe myitwarire wagira?",
+            "correct": 1,
+            "choices": [
+        " Umuyobozi w’ikinyabiziga agomba gukomeza",
+        " Umuyobozi w’ikinyabiziga agomba kuguma mu ruhande rw’iburyo kugira ngo ahe inzira umumotari",
+        " Umuyobozi w’ikinyabiziga agomba gutegereza",
+        " Umuyobozi w’ikinyabiziga agomba gutanga  inzira ayiha umu motari "
+            ]
+    },
+    {
+            "imgpath": "<img src=../examMedia/306.jpg alt=></img>",
+            "question": "Umuyobozi w’ikinyabiziga ageze hafi y’inzira y’abanyamaguru yakwitwara ate?",
+            "correct": 1,
+            "choices": [
+        " Kugabanya umuvuduko mu gihe cyiza, ukitegura guhagarara",
+        " Gukomeza agendera ku muvuduko uri hejuru, mu gihe umunyamaguru ategereje",
+        " Kuguma ku muvuduko yari afite mu gihe umunyamaguru atarambuka",
+        " Kuvuza ihoni akaguma ku muvuduko yaho "
+            ]
+    },
+    {
+            "imgpath": "<img src=../examMedia/307.jpg alt=></img>",
+            "question": "Umuyobozi w’ikinyabiziga akurikiye ibinyabiziga bibiri, yifuza kubinyuraho. N’iki yashingiraho mbere yo kubanyuraho?",
+            "correct": 2,
+            "choices": [
+        " Ugomba kuzinyuraho zombi",
+        " Sibyiza ko yazinyuraho atabasha kureba neza imbere ye",
+        " Ibyapa by’aho ageze ntibimwemerera kunyuranaho",
+        " Imbere har’inzira y’abanyamaguru"
+            ]
+    },
+    {
+            "imgpath": "<img src=../examMedia/308.jpg alt=></img>",
+            "question": "N’iki umuyobozi w’ikinyabiziga yakora ashaka gukatira iburyo?",
+            "correct": 3,
+            "choices": [
+        " Vuza ihoni umenyesha umunyegare ko ushaka gukatira iburyo",
+        " Kata ikoni mbere y’umunyegare",
+        " Emerera umunyegare akomeze inzira ye",
+        " Ongera umuvuuko kugira ngo umutange gukata mbere ye"
+            ]
+    },
+    {
+            "imgpath": "<img src=../examMedia/309.jpg alt=></img>",
+            "question": "N’ayahe matara umuyobozi w’ikinyabiziga agomba gukoresha mugihe cy’ibihu?",
+            "correct": 1,
+            "choices": [
+        " Amatara kamena bihu y’imbere n’ay’inyuma hamwe n’amatara magufi",
+        " Amatara kamenabihu y’imbere n’ay’inyuma",
+        " Amatara magufi",
+        " Urumuri rusanzwe"
+            ]
+    },
+    {
+            "imgpath": null,
+            "question": "Mbere yo kunyura ku kindi kinyabiziga, ni ngombwa kumenya ko:",
+            "correct": 2,
+            "choices": [
+        " Nta kindi kinyabiziga kinturutse inyuma",
+        " Umuhanda ubona neza, no kwitondera kunyuranaho",
+        " Ikinyabiziga kinturutse imbere gishaka gukatira I buumoso",
+        " Nta gisubizo cy’ukuri"
+            ]
+    },
+    {
+            "imgpath": null,
+            "question": "Gutwara uzungazunga mu muhanda:",
+            "correct": 2,
+            "choices": [
+        " Ni bibi ku kinyabiziga cy’imitende ibiri",
+        " Ni bibi igihe cyose",
+        " Ni bibi ku kinyabiziga cy’imitende ine",
+        " Nta gisubizo cy’ukuri"
+            ]
+    },
+    {
+            "imgpath": null,
+            "question": "Telephone ngendanwa ntigomba gukoreshwa:",
+            "correct": 4,
+            "choices": [
+        " Ahari ibimenyetso bimurika",
+        " Igihe utwaye ikinyabiziga Ku muvuduko wa 20km/h",
+        " A na B ni ibisubizo by’ukuri",
+        " Nta gisubizo cy’ukuri"
+            ]
+    },
+    {
+            "imgpath": "<img src=../examMedia/utubuye dutaruka.jpg alt=></img>",
+            "question": "Iki cyapa gisobanura :",
+            "correct": 1,
+            "choices": [
+        " utubuye dutaruka mu muhanda ",
+        " umuhanda urimo amazi ",
+        " umuhanda unyerera ",
+        " a na b ni bisubizo by’ukuri  "
+            ]
+    },
+    {
+            "imgpath": "<img src=../examMedia/ingofero Scene.jpg alt=></img>",
+            "question": "Uri umuyobozi wa  velomoteri, uhuye n’umwe munshuti zawe agusaba ko wa mutwara ukamusiga ku’wundi muhanda. ufite imyaka 18 ariko nta  ngofero  yindi yabigenewe ufite. wamutwara?",
+            "correct": 4,
+            "choices": [
+        " yego ",
+        " yego usibye urugendo rurerure ",
+        " yego usibye urugendo rugufi",
+        " Oya "
+            ]
+    },
+    {
+            "imgpath": "<img src=../examMedia/283.jpg alt=></img>",
+            "question": "Ni ikihe cyapa cy’inyemerera gutambuka mbere mu masangano y’umuhanda?",
+            "correct": 1,
+            "choices": [
+        " Icyapa B3",
+        " Icyapa A22 a",
+        " Icyapa A 20",
+        " Ibisubizo byose ni ukuri "
+            ]
+    },
+    {
+            "imgpath": "<img src=../examMedia/284.jpg alt=></img>",
+            "question": "Mbere yo kunyura kumuyobozi w’ikinyabiziga cy’imitende ibiri, ngomba gucana akaranga cyerekezo k’ibumoso?",
+            "correct": 1,
+            "choices": [
+        " Yego buri gihe ",
+        " Yego igihe hari  ikinyabiziga kinkurikiye ",
+        " Yego iyo nkurikiwe nibindi binyabiziga by’imitende ibiri  ",
+        " Oya nta na rimwe kunyura kubinyabiziga by’imitende ibiri "
+            ]
+    },
+    {
+            "imgpath": "<img src=../examMedia/285.jpg alt=></img>",
+            "question": "Nshobora kunyuraho umuyobozi w’ikinyabiziga wahagaze imbere y’inzira yabanyamaguru?",
+            "correct": 4,
+            "choices": [
+        " yego",
+        " yego nyuma yo kuvuza ihoni",
+        " yego mu gihe nkurikiwe n’ibindi binyabiziga ",
+        " Oya "
+            ]
+    },
+    {
+            "imgpath": "<img src=../examMedia/akanunga.jpg alt=></img>",
+            "question": "Hejuru y’aka kanunga:",
+            "correct": 3,
+            "choices": [
+        " Nshobora kunyura ku kinyabiziga  icyo aricyose  mu gihe nagabanyije umuvuduko",
+        " nshobora kunyura gusa kubinyabiziga by’imitende ibiri ",
+        " kunyuranaho ibumoso birabujijwe ",
+        " a na b ni ibisubizo by’ukuri "
+            ]
+    },
+    {
+            "imgpath": "<img src=../examMedia/287.jpg alt=></img>",
+            "question": "Mu gihe cy’impanuka mu muhanda n’ubundi bushotoranyi ni yihe nimero ya telefone y’ubutabazi wahamagara :",
+            "correct": 3,
+            "choices": [
+        " 911",
+        " 100",
+        " 112",
+        " 131"
+            ]
+    },
+    {
+            "imgpath": "<img src=../examMedia/288.jpg alt=></img>",
+            "question": "Ugeze bwa mbere ahabereye impanuka yo mu muhanda harimo inkomere wakora iki ? ",
+            "correct": 3,
+            "choices": [
+        " gusohora inkomere mu kinyabiziga ",
+        " kubaha icyo kunywa ",
+        " ku menyesha impanuka no guhamagara ubutabazi ",
+        " nta gisubizo cy’ukuri kirimo "
+            ]
+    },
+    {
+            "imgpath": null,
+            "question": "Mugihe ikinyabiziga cyacu bakinyuzeho",
+            "correct": 1,
+            "choices": [
+        " Tugomba kugabanya umuvuduko",
+        " Tugomba kongera umuvuduko",
+        " Tugomba kongera umuvuduko n’ubwitonzi",
+        " Nta gisubizo cy’ ukuri kirimo"
+            ]
+    },
+    {
+            "imgpath": null,
+            "question": "Ntibyemewe gukoresha telephone",
+            "correct": 3,
+            "choices": [
+        " Mu biro bya leta",
+        " Mu biro bya Polisi",
+        " Igihe utwaye ikinyabiziga",
+        " Ibisubizo byose ni ukuri"
+            ]
+    }
+  ],
+  [
+    {
+            "imgpath": "<img src=../examMedia/gutambukaMbere.jpg alt=></img>",
+            "question": "Iki cyapa gisobanura ",
+            "correct": 1,
+            "choices": [
+        " uburenganzira bwo gutambuka mbere ",
+        " uburenganzira bwo gutambuka mbere mu yandi masangano  y’umuhanda akwegereye ",
+        " ibyago imbere mu masangano y’umuhanda ukwegereye ",
+        " a na b ni ibisubizo by’ukuri "
+            ]
+    },
+    {
+            "imgpath": "<img src=../examMedia/ntih amaguru.jpg alt=></img>",
+            "question": "Iki cyapa gisobanura:",
+            "correct": 1,
+            "choices": [
+        " Ntihanyurwa n’abanyamaguru ",
+        " Akayira kabanyamaguru ",
+        " Aho abanayamaguru bambukira ",
+        " B na c ni ibisubizo by’ukuri "
+            ]
+    },
+    {
+            "imgpath": "<img src=../examMedia/ihere Scene.jpg alt=></img>",
+            "question": "Urenze munsisiro ,ukahasanga ibyapa bibiri iburyo bwawe  bimenyesha ko irangira ry’imirimo bitewe nicyo ibyo byapa bemenyesha  wagendera kuwuhe muvuduko ?",
+            "correct": 4,
+            "choices": [
+        " 70 km/h",
+        " 50 km/h",
+        " 40 km/h",
+        " 80 km/h"
+            ]
+    },
+    {
+            "imgpath": "<img src=../examMedia/hospital.jpg alt=></img>",
+            "question": "Iki cyapa gisobanura iki?",
+            "correct": 2,
+            "choices": [
+        " Hoteli",
+        " Ibitaro",
+        " Ahagenewe kugwa kajugujugu",
+        " B na c ni ibisubizo by’ukuri "
+            ]
+    },
+    {
+            "imgpath": "<img src=../examMedia/275.jpg alt=></img>",
+            "question": "igice kinzira nyabagendwa gikikijwe n’imirongo ibiri y’umweru iciyemo uduce kandi iteganye :",
+            "correct": 3,
+            "choices": [
+        " ahagenewe guhagarara umwanya munini n’umuto ",
+        " ahagenewe abanayamaguru ",
+        " ahagenewe inzira y’ibinyamitende ",
+        " a na b ni ibisubizo by’ukuri "
+            ]
+    },
+    {
+            "imgpath": "<img src=../examMedia/ntakunyuranaho.jpg alt=></img>",
+            "question": "iki cyapa kibuza abayobozi bibinyabiziga kunyuranaho :",
+            "correct": 2,
+            "choices": [
+        " iburyo",
+        " ibumoso",
+        " iburyo n’ibumoso",
+        " nta gisubizo cy’ukuri kirimo"
+            ]
+    },
+    {
+            "imgpath": "<img src=../examMedia/red scene.jpg alt=></img>",
+            "question": "iki kimenyetso cyaka kinyemerera gukomeza:",
+            "correct": 4,
+            "choices": [
+        " yego",
+        " yego ariko utanga inzira kubanyamaguru ",
+        " yego utanga inzira kubandi bayobozi b’ibinyabizaga baturutse mukindi cyerekezo ",
+        " oya"
+            ]
+    },
+    {
+            "imgpath": "<img src=../examMedia/ntakunyuranaho.jpg alt=></img>",
+            "question": "Iki  cyapa kibuza kunyuranaho ibumoso  ku binyabiziga bikurikira :",
+            "correct": 3,
+            "choices": [
+        " ku binyabiziga byose ",
+        " ku binyabiziga byose bifite moteri",
+        " kubinyabiziga byose uretse ibinyamitende  ibiri n’amapikipiki adafite akanyabiziga ko k’uruhande ",
+        " nta gisubizo cy’ukuri kirimo "
+            ]
+    },
+    {
+            "imgpath": "<img src=../examMedia/ikoni ibumoso.jpg alt=></img>",
+            "question": "Mu muhanda ufite uruhererekane rw’amakoni, feri y’urugendo ikoreshwa ryari?",
+            "correct": 1,
+            "choices": [
+        " Mbere ya buri koni ",
+        " Muri buri koni",
+        " Nyuma ya buri koni",
+        " Nta gisubizo cy’ukuri kirimo"
+            ]
+    },
+    {
+            "imgpath": "<img src=../examMedia/280.jpg alt=></img>",
+            "question": "Ni ikihe  cyapa muri ibi kintegeka gutanga inzira:",
+            "correct": 2,
+            "choices": [
+        " Icyapa A19",
+        " Icyapa B5",
+        " Icyapa B6",
+        " Ntagisubizo cy’ukuri kirimo"
+            ]
+    },
+    {
+            "imgpath": "<img src=../examMedia/iher30.jpg alt=></img>",
+            "question": "Iki cyapa cyivuga iki?",
+            "correct": 2,
+            "choices": [
+        " Umuvuduko ntarengwa 30 km/h",
+        " Iherezo ry’umuvuduko  muke ntarengwa utegetswe",
+        " Iherezo ry’Umuvuduko muto utegetswe ",
+        " Umuvuduko uri hejuru 30 km/h"
+            ]
+    },
+    {
+            "imgpath": "<img src=../examMedia/birUmunini.jpg alt=></img>",
+            "question": "Icyapa gikurikira  kivuze iki?",
+            "correct": 2,
+            "choices": [
+        " Ntihanyurwa ",
+        " Birabujijwe guhagarara umwanya munini",
+        " Umuvuduko utarengeje ",
+        " Inzira yabanyeshuli "
+            ]
+    },
+    {
+            "imgpath": "<img src=../examMedia/ibisate2.jpg alt=></img>",
+            "question": "Inzira nyabagendwa ifite ibyerekezo  bibiri, uruhande rw’ibumoso rudufasha iki ?",
+            "correct": 3,
+            "choices": [
+        " Kunyuranaho gusa,  ntugaruke  iburyo bwawe ",
+        " Hemerewe kugenda imodoka zihuta gusa ",
+        " Kunyuranaho cyangwa ugakatira ibumoso ",
+        " Gukatira iburyo gusa utanyuranyeho"
+            ]
+    },
+    {
+            "imgpath": "<img src=../examMedia/ihere ibibuzwa.jpg alt=></img>",
+            "question": "Iki cyapa gisobanura iki ?",
+            "correct": 1,
+            "choices": [
+        " Iherezo ry’ibibuzwa byose mu karere  ku binyabiziga bigenda",
+        " Ntihemerewe kuhahagarara",
+        " Umuvuduko ntarengwa wemewe",
+        " Nta gisubizo cy’ukuri kirimo"
+            ]
+    },
+    {
+            "imgpath": "<img src=../examMedia/ntakunyuranaho.jpg alt=></img>",
+            "question": "iki cyapa gisobanura iki  ?",
+            "correct": 4,
+            "choices": [
+        " Uburenganzira bwo gutambuka mbere ",
+        " Nta kinyabiziga kigendeshwa na  moteri  ",
+        " ibyerekezo bibiri by’umuhanda ",
+        " Birabujijwe kunyuranaho "
+            ]
+    },
+    {
+            "imgpath": "<img src=../examMedia/birUmuyUmun.jpg alt=></img>",
+            "question": "Imbere yawe  iki cyapa kikubwiye iki ?",
+            "correct": 3,
+            "choices": [
+        " Umuvuduko ntarengwa wemewe ",
+        " Iherezo ry’ibyo wabuzwaga ",
+        " Guhagarara umwanya munini n’umwanya moto ntibyemewe ",
+        " Birabujijwe kuhinjira "
+            ]
+    },
+    {
+            "imgpath": "<img src=../examMedia/kuzenguruka.jpg alt=></img>",
+            "question": "Iki cyapa gisobanura iki?",
+            "correct": 3,
+            "choices": [
+        " Umuhanda uzenguruka ",
+        " Igice cy’umuhanda uzenguruka ",
+        " Aho banyura bazengurutse ",
+        " Ibisubizo byose nibyo "
+            ]
+    },
+    {
+            "imgpath": "<img src=../examMedia/utaringaniye.jpg alt=></img>",
+            "question": "Iki cyapa gisubanura iki?",
+            "correct": 2,
+            "choices": [
+        " Iteme ridahoraho",
+        " Umuhanda utaringaniye ",
+        " Umuhanda w’injira mu kuzimu ",
+        " Ubutaka bworoshye "
+            ]
+    },
+    {
+            "imgpath": "<img src=../examMedia/umuyaga.jpg alt=></img>",
+            "question": "Iki cyapa gisobanura iki?",
+            "correct": 1,
+            "choices": [
+        " Umuyaga w’intambike",
+        " Urusaku rwo mu muhanda ",
+        " Ikibuga cy’indege ",
+        " Ibisubizko byose nibyo "
+            ]
+    },
+    {
+            "imgpath": "<img src=../examMedia/iherezo urombereje.jpg alt=></img>",
+            "question": "Iki Cyapa Gisobanura Iki?",
+            "correct": 2,
+            "choices": [
+        " Iherezo Ry’inzira Y’abanyamaguru  ",
+        " Iherezo Ry’umuhanda Urombereje W’ibice Byinshi",
+        " A Na B Ni Ibisubizo By’ukuri ",
+        " Nta nzira ihari "
+            ]
+          }
+        ],
+  [
+    {
+            "imgpath": "<img src=../examMedia/stop scene.jpg alt=></img>",
+            "question": "Muri iri sangano ry’umuhanda  hari icyapa gisobanura “guhagarara” n’umurongo wera urombereje munzira. Niyihe mpamvu hari iki cyapa cyo “guhagarara” hano?",
+            "correct": 1,
+            "choices": [
+        " Biragoye kubona neza mu muhanda munini ",
+        " Umuvuduko mu muhanda munini wavanyweho ",
+        " Ni mwisangano ry’umuhanda rikoreshwa cyane",
+        " Hari imirongo iburira ibyago bitunguranye"
+            ]
+    },
+    {
+            "imgpath": "<img src=../examMedia/icyagoScene.jpg alt=></img>",
+            "question": "Uhuye n’ingorane utwaye ikinyabiziga , mu muhanda ufite ibyerekezo bibiri, ufite ikimenyetso kiburira cya mpandeshatu . wagishyira mu ntera ingana iki uvuye aho ikinyabiziga   cyahagaze",
+            "correct": 3,
+            "choices": [
+        " Metero 5",
+        " Metero 45",
+        " Metero 25",
+        " Metero 100"
+            ]
+    },
+    {
+            "imgpath": "<img src=../examMedia/ipikipikiScene.jpg alt=></img>",
+            "question": "Umuyobozi usunika ipikipiki agomba gufatwa nka: ",
+            "correct": 2,
+            "choices": [
+        " Umunyamaguru ",
+        " Umuyobozi w’ikinyabiziga",
+        " Umugenzi ",
+        " A na b ni ibisubizo by’ukuri "
+            ]
+    },
+    {
+            "imgpath": "<img src=../examMedia/tanga red.jpg alt=></img>",
+            "question": "Icyapa gikoze mw’ishusho ya mpandeshatu kimenyesha:",
+            "correct": 1,
+            "choices": [
+        " ibyago",
+        " ibibujijwe ",
+        " ibitegetswe ",
+        " Ntagisubizo cy’ukuri kirimo "
+            ]
+    },
+    {
+            "imgpath": null,
+            "question": "Ni ryari  ushobora kwakiriza icyarimwe  amatara  yose ndangacyerekezo y’ikinyabiziga ?",
+            "correct": 3,
+            "choices": [
+        " Mu gihe ushaka kuburira abandi  bakoresha umuhanda ",
+        " Mu gihe ikinyabiziga cyawe gishobora guteza ibyago",
+        " A na b ni ibisubizo by’ukuri ",
+        " Ntagisubizo cy’ukuri "
+            ]
+    },
+    {
+            "imgpath": null,
+            "question": "Ikinyabiziga gishya gikenerwa gusuzumwa bwambere nyuma y’igihe kingana iki ?",
+            "correct": 2,
+            "choices": [
+        " Nyuma y’umwaka umwe ",
+        " Nyuma y’imyaka ibiri ",
+        " A na b ni ibisubizo by’ukuri ",
+        " Nta gisubizo cy’ukuri "
+            ]
+    },
+    {
+            "imgpath": null,
+            "question": "Icyapa gitanga uburenganzira bwo gutambuka mbere kigira iyihe shusho?",
+            "correct": 4,
+            "choices": [
+                "<img class=ansImage src=../examMedia/triangle dark.jpg alt=></img>",
+                "<img class=ansImage src=../examMedia/circle red.jpg alt=></img>",
+                "<img class=ansImage src=../examMedia/tege red.jpg alt=></img>",
+                "<img class=ansImage src=../examMedia/tanga.jpg alt=></img>"
+            ]
+    },
+    {
+            "imgpath": null,
+            "question": "Uri hafi kunyura k’umuyobozi  w’ikinyamitende. Muri ibi byapa bikurikira nikihe wakwitondera?",
+            "correct": 3,
+            "choices": [
+                "<img class=ansImage src=../examMedia/umuyaga.jpg alt=></img>",
+                "<img class=ansImage src=../examMedia/ibumoso.jpg alt=></img>",
+                "<img class=ansImage src=../examMedia/imbere.jpg alt=></img>",
+                "<img class=ansImage src=../examMedia/bir umut umun.jpg alt=></img>"
+            ]
+    },
+    {
+            "imgpath": null,
+            "question": "Ibyapa  bitegeka bikozwe muyihe shusho?",
+            "correct": 3,
+            "choices": [
+                "<img class=ansImage src=../examMedia/deviation.jpg alt=></img>",
+                "<img class=ansImage src=../examMedia/triangle dark.jpg alt=></img>",
+                "<img class=ansImage src=../examMedia/circleDark.jpg alt=></img>",
+                "<img class=ansImage src=../examMedia/rectangleDark.jpg alt=></img>"
+            ]
+    },
+    {
+            "imgpath": null,
+            "question": "Nikihe cyapa cyerekena ko nta kinyabiziga gifite moteri cyemerewe kuhanyura?",
+            "correct": 2,
+            "choices": [
+                "<img class=ansImage src=../examMedia/bir umut umun.jpg alt=></img>",
+                "<img class=ansImage src=../examMedia/ntihMoteri.jpg alt=></img>",
+                "<img class=ansImage src=../examMedia/ihere ibibuzwa.jpg alt=></img>",
+                "<img class=ansImage src=../examMedia/ntakunyuranaho.jpg alt=></img>"
+            ]
+    },
+    {
+            "imgpath": null,
+            "question": "Ahatari mu nsisiro ibyapa biburira n’ibyapa byo gutambuka mbere bigomba gushyirwa mu ntera ikurikira y’ahantu habyerekana:",
+            "correct": 1,
+            "choices": [
+        " metero 150 kugeza kuri 200",
+        " metero 100 kugeza kuri 150",
+        " metero 50 kugeza kuri  100",
+        " nta gisubizo cy’ukuri kirimo"
+            ]
+    },
+    {
+            "imgpath": null,
+            "question": "Inkombe z’inzira nyabagendwa cyangwa z’umuhanda zishobora kugaragazwa n’ibikoresho ngarurarumuri. Ibyo bikoresho bigomba gushyirwaho ku buryo abagenzi babibona ku buryo bukurikira:",
+            "correct": 3,
+            "choices": [
+        " babona iburyo bwabo ibyibara ritukura cyangwa ibisa n’icunga rihishije",
+        " ibumoso babona iby’ibara ryera",
+        " A na B ni ibisubizo by’uk",
+        " nta gisubizo cy’ukuri kirimo"
+            ]
+    },
+    {
+            "imgpath": null,
+            "question": "Ahatari mu nsisiro, umuyobozi wese ugenza ikinyabiziga kimwe cyangwa ibinyabiziga bikomatanye bifite uburemere ntarengwa bwemewe burenga ibiro 3500 cyangwa bifite uburebure bwite burenga metero 10 agomba, keretse iyo anyuze cyangwa agiye kunyura ku bindi binyabiziga, gusiga hagati y’ikinyabiziga cye n’iki muri imbere umwanya uhagije kugirango ibinyabiziga bimuhiseho bishobore kuhigobeka bidateje impanuka igihe bibaye ngombwa ariko ibyo ntibikurikizwa mu bihe bikurikira:",
+            "correct": 1,
+            "choices": [
+        " mu gihe ibigendera mu muhanda ari byinshi kimwe no mu duce tw'inzira nyabagendwa aho kunyuranaho bibujijwe",
+        " igihe ibigendera mu muhanda ari byinshi",
+        " mu duce tw’inzira nyabagendwa aho kunyuranaho bibujijwe",
+        " nta gisubizo cy’ukuri kirimo"
+            ]
+    },
+    {
+            "imgpath": null,
+            "question": "Ibiziga by’ibinyabiziga bigendeshwa na moteri n’ibya velomoteri kimwe n’ibya romoruki zabyo bigomba kuba byambaye inziga zihagwa zifite amano n’ubujyakuzimu butari munsi ya milimetero imwe ku migongo yabyo yose nubudodo bwabyo ntibugire ahantu na hamwe bugaragara kandi ntibugire aho byacitse bikomeye mu mpande zabyo ariko ibyo ntibikurikizwa ku binyabiziga bikurikira:",
+            "correct": 1,
+            "choices": [
+        " ibinyabiziga bidapakiye kandi bitajya birenza umuvuduko wa km 25 mu isaha ahateganye",
+        " ibinyabiziga bya police bijya ahatarenga km 25 uvuye aho biba",
+        " A na B ni ibisubizo by’ukuri",
+        " nta gisubizo cy’ukuri kirimo"
+            ]
+    },
+    {
+            "imgpath": null,
+            "question": "Amatara ndangacyerekezo agomba kuba agizwe n’ibintu bifashe ku rumuri rumyasa, biringaniye ku buryo bigira umubare utari igiharwe ku mpande z’imbere n’inyuma z’ikinyabiziga ayo matara aba afite amabara akurikira:",
+            "correct": 3,
+            "choices": [
+        " amatara y’imbere aba yera cyangwa ari umuhondo",
+        " ayinyuma aba atukura cyangwa asa n’icunga rihishije",
+        " A na B ni ibisubizo by’ukuri",
+        " ayinyuma aba asa n’icunga rihishije"
+            ]
+    },
+    {
+            "imgpath": null,
+            "question": "Amahoni y’ibinyabiziga bigendeshwa na moteri agomba kohereza ijwi ry’injyana imwe rikomeza kandi ridacengera amatwi ariko ibinyabiziga bikurikira bishobora kugira ihoni ridasanzwe ridahuye n’ibivuzwe haruguru:",
+            "correct": 4,
+            "choices": [
+        " ibinyabiziga ndakumirwa",
+        " ibinyabiziga bikora ku mihanda",
+        " ibinyabiziga bifite ubugari burenze m 2.10",
+        " A na B ni ibisubizo by’ukuri"
+            ]
+    },
+    {
+            "imgpath": null,
+            "question": "Icyapa kibuza kunyura kubindi binyabiziga byose uretse ibinyamitende ibiri n’amapikipiki adafite akanyabiziga ku ruhande gifite ibimenyetso by’amabara akurikira:",
+            "correct": 2,
+            "choices": [
+        " umweru n’umukara",
+        " umutuku n’umukara",
+        " ubururu",
+        " A na B ni ibisubizo by’ukuri"
+            ]
+    },
+    {
+            "imgpath": null,
+            "question": "Icyapa kivuga ko hatanyurwa mu byerekezo byombi kirangwa n’ubuso bw’ibara rikurikira:",
+            "correct": 2,
+            "choices": [
+        " umukara",
+        " umweru     ",
+        " ubururu     ",
+        " umutuku"
+            ]
+    },
+    {
+            "imgpath": null,
+            "question": "Ibinyabiziga bikurikira bigomba kugira ibikoresho by’ihoni byumvikanira mu ntera ya m 20:",
+            "correct": 2,
+            "choices": [
+        " amapikipiki",
+        " velomoteri",
+        " ibinyabiziga bigendeshwa na moteri bidapakiye",
+        " nta gisubizo cy’ukuri kirimo"
+            ]
+    },
+    {
+            "imgpath": null,
+            "question": "Imirongo y’ingabo z’igihugu zigendera kuri gahunda n’utundi dutsiko twose tw’abanyamaguru nk’imperekerane cyangwa udutsiko tw’abanyeshuri iyo bitagishoboka kubona neza muri m200, bagaragazwa  ni itara ryera imbere naho inyuma ni itara ry’umutuku ariko iyo uburebure bwiyo mirongo cyangwa bw’utwo dutsiko burenga m6 impande zatwo cyangwa zayo zigaragazwa ku buryo bukurikira:",
+            "correct": 4,
+            "choices": [
+        " itara rimwe cyangwa menshi yera",
+        " amatara menshi y’umuhondo",
+        " amatara menshi asa n’icunga rihishije",
+        " ibisubizo byose nibyo"
+            ]
+          }
+        ],
+  [
+    {
+            "imgpath": "<img src=../examMedia/395.jpg alt=></img>",
+            "question": "Mpagaze mu murongo  wo guhagarara umwanya muto:",
+            "correct": 2,
+            "choices": [
+        " Nshobora gukata iburyo",
+        " Nshobora gukata ibumoso",
+        " Nshobora gukata ibumoso  cyangwa iburyo ",
+        " Ntagisubizo cy’ukuri kirimo "
+            ]
+    },
+    {
+            "imgpath": null,
+            "question": "Ikinyabiziga cyose cyangwa ibinyabiziga bigenda bigomba kugira:",
+            "correct": 1,
+            "choices": [
+        " Umuyobozi",
+        " Umuherekeza",
+        " A na B ni ibisubizo by’ukuri",
+        " Nta gisubizo cy’ukuri kirimo"
+            ]
+    },
+    {
+            "imgpath": null,
+            "question": "Ijambo “akayira” bivuga inzira nyabagendwa ifunganye yagenewe gusa:",
+            "correct": 3,
+            "choices": [
+        " Abanyamaguru",
+        " Ibinyabiziga bigendera ku biziga bibiri ",
+        " A na B ni ibisubizo by’ukuri",
+        " Nta gisubizo cy’ukuri kirimo"
+            ]
+    },
+    {
+            "imgpath": null,
+            "question": "Umurongo uciyemo uduce umenyesha ahegereye umurongo ushobora kuzuzwa n’uturanga gukata tw’ibara ryera utwo turanga cyerekezo tumenyesha : ",
+            "correct": 3,
+            "choices": [
+        " Igisate cy’umuhanda abayobozi bagomba gukurikira",
+        " Ahegereye umurongo ukomeje",
+        " Igabanurwa ry’umubare w’ibisate by’umuhanda mu cyerekezo bajyamo ",
+        " A na C nibyo"
+            ]
+    },
+    {
+            "imgpath": null,
+            "question": "Ahantu ho kugendera mu muhanda herekanwa n’ibimenyetso bimurika ibinyabiziga ntibishobora kuhagenda :",
+            "correct": 4,
+            "choices": [
+        " Biteganye",
+        " Ku murongo umwe",
+        " A na B nibyo",
+        " Nta gisubizo cy’ukuri kirimo"
+            ]
+    },
+    {
+            "imgpath": null,
+            "question": "Ibinyabiziga bikurikira bigomba gukorerwa isuzumwa buri mwaka:",
+            "correct": 4,
+            "choices": [
+        " Ibinyabiziga bigenewe gutwara abagenzi muri rusange",
+        " Ibinyabiziga bigenewe gutwara ibintu birengeje toni 3.5",
+        " Ibinyabiziga bigenewe kwigisha gutwara ",
+        " Nta gisubizo cy’ukuri kirimo"
+            ]
+    },
+    {
+            "imgpath": null,
+            "question": "Ubugari bwa romoruki ikuruwe n’ikinyamitende itatu ntibugomba kurenza ibipimo bikurikira:",
+            "correct": 4,
+            "choices": [
+        " cm75",
+        " cm125",
+        " cm265",
+        " Nta gisubizo cy’ukuri"
+            ]
+    },
+    {
+            "imgpath": null,
+            "question": "Uburebure bw’ibinyabiziga bikurikira ntibugomba kurenga metero 11 :",
+            "correct": 4,
+            "choices": [
+        " Ibifite umutambiko umwe uhuza imipira",
+        " Ibifite imitambiko ibiri ikurikiranye mu bugari bwayo",
+        " Makuzungu",
+        " Nta gisubizo cy’ukuri"
+            ]
+    },
+    {
+            "imgpath": null,
+            "question": "Ikinyabiziga kibujijwe guhagarara akanya kanini aha hakurikira :",
+            "correct": 4,
+            "choices": [
+        " Ahatarengeje  metero 1 imbere cyangwa inyuma y’ikinyabiziga gihagaze akanya gato cyangwa kanini",
+        " Ahantu hari ibimenyetso bibuza byabugenewe",
+        " Aho abanyamaguru banyura mu muhanda ngo bakikire inkomyi",
+        " Ibisubizo byose nibyo"
+            ]
+    },
+    {
+            "imgpath": null,
+            "question": "Kunyuranaho bikorerwa:",
+            "correct": 4,
+            "choices": [
+        " Mu ruhande rw’iburyo gusa",
+        " Igihe cyose ni ibumoso",
+        " Iburyo iyo unyura ku nyamaswa",
+        " Nta gisubizo cy’ukuri kirimo"
+            ]
+    },
+    {
+            "imgpath": null,
+            "question": "Icyapa cyerekana umuvuduko ntarengwa ikinyabiziga kitagomba kurenza gishyirwa gusa ku binyabiziga bifite uburemere ntarengwa bukurikira:",
+            "correct": 4,
+            "choices": [
+        " Burenga toni 1",
+        " Burenga toni 2",
+        " Burenga toni 24",
+        " Nta gisubizo cy’ukuri kirimo"
+            ]
+    },
+    {
+            "imgpath": null,
+            "question": "Ahatari mu nsisiro umuvuduko ntarengwa mu isaha wa velomoteri ni: ",
+            "correct": 1,
+            "choices": [
+        " Km50",
+        " Km40",
+        " Km30",
+        " Nta gisubizo cy’ukuri"
+            ]
+    },
+    {
+            "imgpath": null,
+            "question": "Umuyobozi ugenda mu muhanda igihe ubugari bwawo budatuma anyuranaho nta nkomyi ashobora kunyura mu kayira k’abanyamaguru ariko amaze kureba ibi bikurikira:",
+            "correct": 4,
+            "choices": [
+        " Umuvuduko w’abanyamaguru",
+        " Ubugari bw’umuhanda",
+        " Umubare w’abanyamaguru",
+        " Nta gisubizo cy’ukuri kirimo"
+            ]
+    },
+    {
+            "imgpath": null,
+            "question": "Ku byerekeye kwerekana ibinyabiziga n’ukumurika kwabyo ndetse no kwerekana ihindura ry’ibyerekezo byabyo. Birabujijwe gukora andi matara cyangwa utugarurarumuri uretse ibitegetswe ariko ntibireba amatara akurikira: ",
+            "correct": 2,
+            "choices": [
+        " Amatara ndanga ",
+        " Amatara ari imbere mu modoka ",
+        " Amatara ndangaburambarare",
+        " Ibisubizo byose nibyo"
+            ]
+    },
+    {
+            "imgpath": null,
+            "question": "Iyo nta mategeko awugabanya by’umwihariko umuvuduko ntarengwa w’amapikipiki mu isaha ni:",
+            "correct": 4,
+            "choices": [
+        " Km25",
+        " Km70",
+        " Km40",
+        " Nta gisubizo cy’ukuri kirimo"
+            ]
+    },
+    {
+            "imgpath": null,
+            "question": "Uburyo bukoreshwa kugirango ikinyabiziga kigende gahoro igihe feri idakora neza babwita:",
+            "correct": 3,
+            "choices": [
+        " Feri y’urugendo",
+        " Feri yo guhagarara umwanya munini",
+        " Feri yo gutabara",
+        " Nta gisubizo cy’ukuri kirimo"
+            ]
+    },
+    {
+            "imgpath": null,
+            "question": "Nibura ikinyabiziga gitegetswe kugira uduhanagurakirahure tungahe:",
+            "correct": 3,
+            "choices": [
+        " 2",
+        " 3",
+        " 1",
+        " Nta gisubizo cy’ukuri kirimo"
+            ]
+    },
+    {
+            "imgpath": null,
+            "question": "Amatara maremare y’ikinyabiziga agomba kuzimwa mu bihe bikurikira:",
+            "correct": 2,
+            "choices": [
+        " Iyo umuhanda umurikiye umuyobozi abasha kureba muri metero 20",
+        " Iyo ikinyabiziga kigiye kubisikana n’ibindi",
+        " Iyo ari mu nsisiro",
+        " Ibisubizo byose ni ukuri"
+            ]
+    },
+    {
+            "imgpath": null,
+            "question": "Ikinyabiziga ntigishobora kugira amatara arenga abiri y’ubwoko bumwe keretse kubyerekeye amatara akurikira:",
+            "correct": 4,
+            "choices": [
+        " Itara ndangamubyimba",
+        " Itara ryerekana icyerekezo",
+        " Itara ndangaburumbarare",
+        " Ibisubizo byose ni ukuri"
+            ]
+    },
+    {
+            "imgpath": null,
+            "question": "Ubugari bwa romoruki ikuruwe n’igare cyangwa velomoteri ntiburenza ibipimo bikurikira:",
+            "correct": 4,
+            "choices": [
+        " cm25",
+        " cm125",
+        " cm45",
+        " Nta gisubizo cy’ukuri kirimo"
+            ]
+    }
+  ],
+  [
+    {
+            "imgpath": null,
+            "question": "Ibinyabiziga bikoreshwa nka tagisi, bitegerereza abantu mu nzira nyabagendwa, bishobora gushyirwaho itara ryerekana ko ikinyabiziga kitakodeshejwe. Iryo tara rishyirwaho ku buryo bukurikira:",
+            "correct": 1,
+            "choices": [
+        " Ni itara ry’icyatsi rishyirwa imbere ku kinyabiziga",
+        " Ni itara ry’icyatsi rishyirwa ibumoso",
+        " Ni itara ry’umuhondo rishyirwa inyuma",
+        " A na C ni ibisubizo by’ukuri"
+            ]
+    },
+    {
+            "imgpath": null,
+            "question": "Za otobisi zagenewe gutwara abanyeshuri zishobora gushyirwaho amatara abiri asa n’icunga rihishije amyasa kugirango yerekane ko zihagaze no kwerekana ko bagomba kwitonda, ayo matara ashyirwaho ku buryo bukurikira :",
+            "correct": 3,
+            "choices": [
+        " Amatara abiri ashyirwa inyuma",
+        " Amatara abiri ashyirwa imbere",
+        " Rimwe rishyirwa imbere irindi inyuma ",
+        " b na c ni ibisubizo by’ukuri"
+            ]
+    },
+    {
+            "imgpath": null,
+            "question": "Itara ryo guhagarara ry’ibara ritukura rigomba kugaragara igihe ijuru rikeye nibura mu ntera ikurikira:",
+            "correct": 4,
+            "choices": [
+        " Metero 100 ku manywa na metero 20 mu ijoro",
+        " Metero 150 ku manywa na metero50 mu ijoro",
+        " Metero 200 ku manywa na metero100 mu ijoro",
+        " Nta gisubizo cy’ukuri kirimo"
+            ]
+    },
+    {
+            "imgpath": null,
+            "question": "Iyo umuvuduko w’ibinyabiziga bidapakiye ushobora kurenga km50 mu isaha ahategamye, bigomba kuba bifite ibikoresho by’ihoni byumvikanira mu ntera: ",
+            "correct": 3,
+            "choices": [
+        " Metero 100",
+        " Metero 200",
+        " Metero 50",
+        " Metero 150 "
+            ]
+    },
+    {
+            "imgpath": null,
+            "question": "Birabujijwe kugenza ibinyabiziga bigendeshwa na moteri naza romoruki zikururwa nabyo, iyo ibiziga byambaye inziga zidahagwa cyangwa inziga zikururuka zifite umubyimba uri hasi ya cm 4.  Ariko ibyo ntibikurikizwa kubinyabiziga bikurikira:",
+            "correct": 4,
+            "choices": [
+        " Ku binyabiziga by’ingabo bijya ahatarenga km25",
+        " Ibinyabiziga bihinga",
+        " Ibinyabiziga bya police",
+        " Nta gisubizo cy’ukuri kirimo "
+            ]
+    },
+    {
+            "imgpath": null,
+            "question": "Igice cy'inzira nyabagendwa kigarukira ku mirongo ibiri yera icagaguye ibangikanye kandi gifite ubugari budahagije kugira ngo imodoka zitambuke neza, kiba ari: ",
+            "correct": 3,
+            "choices": [
+        " Ahanyurwa n’amagare na velomoteri",
+        " Ahanyurwa n’ingorofani",
+        " Ahanyurwa n’ibinyamitende",
+        " Nta gisubizo cy’ukuri kirimo"
+            ]
+    },
+    {
+            "imgpath": null,
+            "question": "Ubugari bwa romoruki ntiburenza ubugari bw’ikinyabiziga kiyikurura iyo ikuruwe n’ibinyabiziga bikurikira:",
+            "correct": 3,
+            "choices": [
+        " Igare",
+        " Velomoteri",
+        " Ipikipiki ifite akanyabiziga kometse kuruhande rwayo",
+        " Nta gisubizo cy’ukuri kirimo"
+            ]
+    },
+    {
+            "imgpath": null,
+            "question": "Ubugari bwa romoruki ntiburenza ubugari bw’ikinyabiziga kiyikurura iyo ikuruwe n’ibinyabiziga bikurikira:",
+            "correct": 3,
+            "choices": [
+        " Igare",
+        " Velomoteri",
+        " Ipikipiki ifite akanyabiziga kometse kuruhande rwayo",
+        " Nta gisubizo cy’ukuri kirimo"
+            ]
+    },
+    {
+            "imgpath": null,
+            "question": "Iyo hatarimo indi myanya birabujijwe gutwara ku ntebe y’imbere y’imodoka abana badafite imyaka:",
+            "correct": 2,
+            "choices": [
+        " Imyaka 10",
+        " Imyaka 12",
+        " Imyaka 7",
+        " Ntagisubizo cy’ukuri kirimo"
+            ]
+    },
+    {
+            "imgpath": null,
+            "question": "Icyapa kivuga gutambuka mbere y’ibinyabiziga biturutse imbere gifite amabara akurikira:",
+            "correct": 4,
+            "choices": [
+        " Ubuso ni umweru",
+        " Ikirango ni umutuku n’umukara",
+        " Ikirango ni umweru n’umukara",
+        " Nta gisubizo cy’ukuri kirimo"
+            ]
+    },
+    {
+            "imgpath": null,
+            "question": "Ni ryari itegeko  rigenga gutambuka mbere kw’iburyo rikurikizwa mu masangano:",
+            "correct": 3,
+            "choices": [
+        " Iyo nta cyapa cyo gutambuka mbere gihari",
+        " Iyo ikimenyetso kimurika cyagenewe ibinyabiziga kidakora",
+        " A na B ni ibisubizo by’ukuri",
+        " Nta gisubizo cy’ukuri"
+            ]
+    },
+    {
+            "imgpath": null,
+            "question": "Ibimenyetso bimurika byerekana uburyo bwo kugendera mu muhanda kw'ibinyabiziga bishyirwa iburyo bw'umuhanda. Ariko bishobora no gushyirwa ibumoso cyangwa hejuru y’umuhanda:",
+            "correct": 3,
+            "choices": [
+        " Hakurikijwe icyerekezo abagenzi bireba baganamo",
+        " Hakurikijwe icyo ibyo bimenyetso bigamije kwerekana",
+        " Kugirango birusheho kugaragara neza",
+        " Ibisubizo byose ni ukuri"
+            ]
+    },
+    {
+            "imgpath": null,
+            "question": "Iyo itara ry’umuhondo rimyatsa rikoreshejwe mu masangano y’amayira ahwanyije agaciro rishyirwa ahagana he:",
+            "correct": 4,
+            "choices": [
+        " Kuri buri nzira",
+        " Hagati y’amasangano",
+        " Iburyo bw’amasangano",
+        " a na b ni ibisubizo by’ ukuri"
+            ]
+    },
+    {
+            "imgpath": null,
+            "question": "Inkombe z’inzira nyabagendwa cyangwa z’umuhanda zishobora kugaragazwa n’ibikoresho ngarurarumuri. Ibyo bikoresho bigomba gushyirwaho ku buryo abagenzi babibona :",
+            "correct": 4,
+            "choices": [
+        " Babona gusa ibumoso bwabo iby’ibara ritukura",
+        " Iburyo babona iby’ibara risa n’icunga rihishije gusa",
+        " Babona iby’ibara ry’umuhondo ibumoso",
+        " Nta gisubizo cy’ukuri kirimo"
+            ]
+    },
+    {
+            "imgpath": null,
+            "question": "Ibinyabiziga bikurikira bigomba gukorerwa isuzumwa rimwe mu mezi 6:",
+            "correct": 4,
+            "choices": [
+        " Ibinyabiziga bitwara abagenzi muri rusange",
+        " Ibinyabiziga bigenewe gutwara ibintu birengeje toni 3.5",
+        " Ibinyabiziga bigenewe kwigisha gutwara",
+        " Ibisubizo byose ni ukuri "
+            ]
+    },
+    {
+            "imgpath": null,
+            "question": "Iyo kuyobya umuhanda ari ngombwa bigaragazwa kuva aho uhera no kuburebure bwawo n’icyapa gifite ubuso bw’amabara akurikira:",
+            "correct": 1,
+            "choices": [
+        " Ubururu ",
+        " Umweru",
+        " Umutuku",
+        " Nta gisubizo cy’ukuri "
+            ]
+    },
+    {
+            "imgpath": null,
+            "question": "Ku mihanda ibyapa bikurikira bigomba kugaragazwa ku buryo bumwe:",
+            "correct": 3,
+            "choices": [
+        " Ibyapa biyobora n’ibitegeka ",
+        " Ibyapa biburira n’ibitegeka",
+        " Ibyapa bibuza n’ibitegeka",
+        " Nta gisubizo cy’ukuri kirimo "
+            ]
+    },
+    {
+            "imgpath": null,
+            "question": "Ni iyihe feri ituma imodoka igenda buhoro kandi igahagarara ku buryo bwizewe bubangutse kandi nyabwo, uko imodoka yaba yikoreye kose yaba igeze ahacuramye cyangwa ahaterera:",
+            "correct": 1,
+            "choices": [
+        " Feri y’urugendo",
+        " Feri yo gutabara",
+        " Feri yo guhagarara umwanya munini",
+        " Nta gisubizo cy’ukuri kirimo"
+            ]
+    },
+    {
+            "imgpath": null,
+            "question": "Ibizirikisho by’iminyururu cyangwa by’insinga kimwe n’ibindi by’ingoboka bikoreshwa gusa igihe nta kundi umuntu yabigenza kandi nta kindi bigiriwe uretse gusa kugirango ikinyabiziga kigere aho kigomba gukorerwa kandi nturenze na rimwe km 20 mu isaha, ibyo bizirikisho bigaragazwa ku buryo bukurikira:",
+            "correct": 4,
+            "choices": [
+        " Agatambaro gatukura kuri cm 50 z’umuhanda",
+        " Ikimenyetso cy’itara risa n’icunga rihishije ",
+        " Icyapa cyera cya mpande enye zingana gifite cm 20 kuri buri ruhande",
+        " Nta gisubizo cy’ukuri kirimo"
+            ]
+    },
+    {
+            "imgpath": null,
+            "question": "Uretse mu mujyi, ku yindi mihanda yajyenwe na minisitiri ushinzwe gutwara abantu n’ibintu, uburemere ntarengwa ku binyabiziga bifite imitambiko itatu cyangwa irenga hatarimo makuzungu ni :",
+            "correct": 3,
+            "choices": [
+        " Toni 10",
+        " Toni 12",
+        " Toni 16",
+        " Toni 24"
+            ]
+    }
+  ],
+  [
+    {
+            "imgpath": null,
+            "question": "Ubugari bw’imizigo yikorewe n’ibinyamitende itatu n’ubwiyikorewe n’ibinyamitende 4 bifite cyangwa bidafite moteri kimwe n’ubw’iyikorewe na romuruki zikuruwe n’ibyo binyabiziga ntibushobora kurenga ibipimo bikurikira:",
+            "correct": 3,
+            "choices": [
+        " cm 30 ku bugari bw’icyo kinyabiziga kidapakiye ",
+        " Ubugari ntarengwa budakuka ni metero 2 na sentimetero 50",
+        " A na B ni ibisubizo by’ukuri",
+        " Nta gisubizo cy’ukuri kirimo"
+            ]
+    },
+    {
+            "imgpath": null,
+            "question": "Kunyura ku binyabiziga bindi, uretse icy’ibiziga bibiri, bibujijwe aha hakurikira:",
+            "correct": 4,
+            "choices": [
+        " Hafi y’iteme iyo hari umuhanda ufunganye",
+        " Hafi y’aho abanyamaguru banyura",
+        " Hafi y’ibice by’umuhanda bimeze nabi",
+        " Ibi bisubizo byose ni ukuri"
+            ]
+    },
+    {
+            "imgpath": null,
+            "question": "Iyo nta mategeko awugabanya by’umwihariko, umuvuduko ntarengwa ku modoka zitwara abagenzi mu buryo bwa rusange ni:",
+            "correct": 1,
+            "choices": [
+        " Km 60 mu isaha",
+        " Km 40 mu isaha",
+        " Km 25 mu isaha ",
+        " Km20 mu isaha"
+            ]
+    },
+    {
+            "imgpath": null,
+            "question": "Iyo nta mategeko awugabanya by’umwihariko, umuvuduko ntarengwa ku modoka zikoreshwa nk’amavatiri y’ifasi cyangwa amatagisi zifite uburemere bwemewe butarenga kilogarama 3500 ni:",
+            "correct": 3,
+            "choices": [
+        " Km 60 mu isaha ",
+        " Km 40 mu isaha ",
+        " Km 75 mu isaha",
+        " Km20 mu isaha"
+            ]
+    },
+    {
+            "imgpath": null,
+            "question": "Ikinyabiziga kibujijwe guhagarara akanya kanini aha hakurikira :",
+            "correct": 3,
+            "choices": [
+        " Imbere y’ahantu hinjirwa hakasohokerwa n’abantu benshi",
+        " Mu muhanda aho ugabanyijemo ibisate bigaragazwa n’imirongo idacagaguye ",
+        " A na B ni ibisubizo by’ukuri",
+        " Nta gisubizo cy’ukuri kirimo"
+            ]
+    },
+    {
+            "imgpath": null,
+            "question": "Iyo bwije kugeza bukeye cyangwa bitewe n’uko ibihe bimeze nk’igihe cy’ibihu cyangwa cy’imvura bitagishoboka kubona neza muri m 200, udutsiko twose tw’abanyamaguru nk’imperekerane cyangwa udutsiko tw’abanyeshuri bari ku murongo bayobowe n’umwarimu, iyo bagenda mu muhanda ku isonga hakaba hari abantu barenze umwe bagomba kugaragazwa kuburyo bukurikira :",
+            "correct": 4,
+            "choices": [
+        " Imbere ni itara ry’umuhondo ritwariwe ibumoso",
+        " Inyuma ni itara ryera ritwariwe ibumoso n’umuntu uri ku murongo w’inyuma hafi y’umurongo ugabanya umuhanda mo kabiri",
+        " A na B ni ibisubizo by’ukuri",
+        " Nta gisubizo cy’ukuri kirimo"
+            ]
+    },
+    {
+            "imgpath": null,
+            "question": "Utuyira turi ku mpande z’umuhanda n’ inkengero zigiye hejuru biharirwa abanyamaguru mu bihe bikurikira:",
+            "correct": 3,
+            "choices": [
+        " Iyo hari amategeko yihariye yerekanwa n’ibimenyetso",
+        " Iyo badatatanye kandi bayobowe n’umwarimu",
+        " Iyo hatari amategeko yihariye yerekanwa n’ibimenyetso",
+        " Ibisubizo byose ni ukuri"
+            ]
+    },
+    {
+            "imgpath": null,
+            "question": "Imburira zimurika zemerewe gukoreshwa kugirango bamenyeshe umuyobozi ko bagiye kumunyuraho aha hakurikira:",
+            "correct": 4,
+            "choices": [
+        " Mu nsisiro gusa",
+        " Ahegereye inyamaswa zikurura",
+        " Hafi y’amatungo ",
+        " Nta gisubizo cy’ukuri kirimo"
+            ]
+    },
+    {
+            "imgpath": null,
+            "question": "Uburemere ntarengwa bwemewe ntibushobora kurenga ½ cy’uburemere bw’ikinyabiziga gikurura nubw’umuyobozi kuri romoruki zikurikira :",
+            "correct": 2,
+            "choices": [
+        " Romoruki ifite feri y’urugendo",
+        " Romoruki idafite feri y’urugendo",
+        " Romoruki itarenza kg 750",
+        " Nta gisubizo cy’ukuri kirimo"
+            ]
+    },
+    {
+            "imgpath": null,
+            "question": "Ibinyabiziga bifite ubugari bufite ibipimo bikurikira bigomba kugira amatara ndangaburumbarare :",
+            "correct": 1,
+            "choices": [
+        " Metero 2 na cm 10",
+        " Metero 2 na cm 50",
+        " Metero 3",
+        " Metero 2"
+            ]
+    },
+    {
+            "imgpath": null,
+            "question": "Ku binyabiziga cyangwa ibinyabiziga bikururana igice kirenga ku biziga ntigishobora kurenga ibipimo bikurikira:",
+            "correct": 4,
+            "choices": [
+        "a. iby’inyuma m 3.40",
+        "b. iby’imbere m 2.50",
+        "c. A na B ni ibisubizo by’ukuri",
+        "d. nta gisubizo cy’ukuri kirimo"
+            ]
+    },
+    {
+            "imgpath": null,
+            "question": "Mu migi no ku yindi mihanda y’igihugu igenwa na minisitiri ushinzwe gutwara abantu n’ibintu uburebure ntarengwa kuri buri mitambiko 3 ifungwaho ibiziga bine ni:",
+            "correct": 1,
+            "choices": [
+        "a. toni 24",
+        "b. toni 10",
+        "c. toni 16",
+        "d. toni 53"
+            ]
+    },
+    {
+            "imgpath": null,
+            "question": "Iyo hagati y’uruhande rw’imbere rwa romoruki n’uruhande rw’inyuma rw’ikinyabiziga kiyikurura hari umwanya urenze m 3 ikibizirikanyije kigomba kugaragazwa ku buryo bukurikira iyo amatara y’ikinyabiziga agomba gucanwa:",
+            "correct": 2,
+            "choices": [
+        "a. agatambaro gatukura gafite nibura cm 50 z’uruhande",
+        "b. itara risa n’icunga rihishije rigaragara mu mbavu igihe ikibizirikanyije kimuritswe",
+        "c. A na B  ni ibisubizo by’ukuri",
+        "d. nta gisubizo cy’ukuri kirimo"
+            ]
+    },
+    {
+            "imgpath": null,
+            "question": "Itara ryo guhagarara ry’ibara ritukura rigomba kuba ridahumisha, kandi rigomba kugaragarira mu ntera ikurikira:",
+            "correct": 4,
+            "choices": [
+        "a. nijoro igihe ijuru rikeye nibura muri m 200",
+        "b. ku manywa igihe cy’umucyo  nibura muri m50 ",
+        "c. nijoro nibura muri m 100 igihe ijuru rikeye ",
+        "d. nta gisubizo cy’ukuri kirimo"
+            ]
+    },
+    {
+            "imgpath": null,
+            "question": "Icyapa cyerekana umuvuduko ntarengwa ikinyabiziga kitagomba kurenza gishyirwa ku binyabiziga bifite uburebure ntarengwa bukurikira:",
+            "correct": 4,
+            "choices": [
+        "a. burenga toni 1",
+        "b. burenga toni 2",
+        "c. burenga toni 24",
+        "d. nta gisubizo cy’ukuri kirimo"
+            ]
+    },
+    {
+            "imgpath": null,
+            "question": "Iyo nta mategeko awugabanya by’umwihariko, umuvuduko ntarengwa w’amapikipiki mu isaha ni:",
+            "correct": 4,
+            "choices": [
+        "a. km 25",
+        "b. km 70",
+        "c. km 40",
+        "d. nta gisubizo cy’ukuri kirimo"
+            ]
+    },
+    {
+            "imgpath": null,
+            "question": "Ahatari mu nsisiro umuvuduko ntarengwa wa velomoteri mu isaha ni:",
+            "correct": 1,
+            "choices": [
+        "a. km 50",
+        "b. km 40",
+        "c. km 30",
+        "d. nta gisubizo cy’ukuri kirimo"
+            ]
+    },
+    {
+            "imgpath": null,
+            "question": "Birabujijwe guhagarara akanya kanini aha hakurikira:",
+            "correct": 3,
+            "choices": [
+        "a. mu duhanda tw’abanyamagare",
+        "b. mu duhanda twagenewe velomoteri",
+        "c. A na B ni ibisubizo by’ukuri",
+        "d. nta gisubizo cy’ukuri kirimo"
+            ]
+    },
+    {
+            "imgpath": null,
+            "question": "Amatara maremare y’ikinyabiziga agomba kutamurika mu bihe bikurikira:",
+            "correct": 2,
+            "choices": [
+        "a. iyo umuhanda umurikiwe umuyobozi abasha kureba muri m 200",
+        "b. iyo ikinyabiziga kigiye kubisikana nikindi",
+        "c. iyo ari mu nsisiro",
+        "d. ibisubizo byose nibyo"
+            ]
+    },
+
+    {
+            "imgpath": null,
+            "question": "Ibyapa byerekana icyago cyidahoraho kandi bigenewe kwerekana aho bagana cyangwa aho berekeza  umuhanda nk’igihe cy’impanuka cyangwa hari imirimo ikorwa mu muhanda birangwa n’amabara akurikira:",
+            "correct": 4,
+            "choices": [
+        "a. umweru n’umukara",
+        "b. umweru n’umuhondo",
+        "c. ubuso bw’umweru gusa",
+        "d. nta gisubizo cy’ukuri kirimo"
+            ]
+    }
+  ],
+  [
+    {
+            "imgpath": null,
+            "question": "Nta tara na rimwe cyangwa akagarurarumuri bishobora kuba bifunze ku buryo igice cyabyo cyo hasi cyane kimurika kitaba kiri hasi y’ibipimo bikurikira kuva ku butaka igihe ikinyabiziga kidapakiye :",
+            "correct": 2,
+            "choices": [
+        " Cm 30",
+        " Cm 40",
+        " Cm 50",
+        " Metero 1 na cm 55"
+            ]
+    },
+    {
+            "imgpath": null,
+            "question": "Iyo ikinyabiziga gifite amatara abiri cyangwa menshi y’ubwoko bumwe ayo matara agomba kugira ibara rimwe n’ingufu zingana kandi akagomba gushyirwaho ku buryo buteganye uhereye ku murongo ugabanya ikinyabizigamo kabiri mu burebure bwacyo. Ariko ibi ntibikurikizwa ku matara akurikira:",
+            "correct": 3,
+            "choices": [
+        " itara ndangamubyimba",
+        " itara ndangaburumbarare",
+        " itara ribonesha icyapa kiranga numero y’ikinyabiziga inyuma",
+        " A na B byose nibyo "
+            ]
+    },
+    {
+            "imgpath": null,
+            "question": "Ahari hejuru cyane y’ubuso bumurika h’amatara ndangambere na ndanganyuma ntihashobora kuba aharenze ibipimo bikurikira hejuru y’ubutaka iyo ikinyabiziga kidapakiye:",
+            "correct": 3,
+            "choices": [
+        " m1 na cm 50 ",
+        " m1 na cm 75",
+        " m1 na cm 90",
+        " m2 na cm 10"
+            ]
+    },
+    {
+            "imgpath": null,
+            "question": "Ni ryari ikinyabiziga gishobora kugenda mu muhanda moteri itaka cyangwa vitesi idakora:",
+            "correct": 2,
+            "choices": [
+        " igihe kigenda ahamanuka",
+        " igihe gikuruwe n’ikindi kinyabiziga",
+        " igihe gifite feri y’urugendo",
+        " ibisubizo byose ni byo"
+            ]
+    },
+    {
+            "imgpath": null,
+            "question": "Umurongo mugari wera udacagaguye ushobora gucibwa ku muhanda kugirango ugaragaze ibi bikurikira:",
+            "correct": 1,
+            "choices": [
+        " inkombe mpimbano z’umuhanda",
+        " ahahagararwa umwanya muto n’umunini",
+        " ahanyura abayobozi b’amagare",
+        " nta gisubizo cy’ukuri kirimo"
+            ]
+    },
+    {
+            "imgpath": null,
+            "question": "Buri modoka cyangwa buri romoruki ikuruwe n’iyo modoka bishobora kugira itara risa n’icyatsi kibisi bituma umuyobozi yerekana ko yabonye ikimenyetso cy’uwitegura kumunyuraho. Iryo tara rigomba gushyirwa aha hakurikira:",
+            "correct": 4,
+            "choices": [
+        " hafi y’inguni y’ibumoso bw’ikinyabiziga",
+        " inyuma hafi y’impera y’iburyo bw’ikinyabiziga",
+        " inyuma ahegereye inguni y’iburyo",
+        " nta gisubizo cy’ukuri kirimo "
+            ]
+    },
+    {
+            "imgpath": null,
+            "question": "Ibinyabiziga bikurikira bigomba kugira icyerekana umuvuduko kiri aho umuyobozi areba neza kandi kigahora kitabwaho kugirango kigume gukora neza:",
+            "correct": 2,
+            "choices": [
+        " ibinyabiziga bifite umuvuduko nibura wa km 60 mu isaha",
+        " ibinyabiziga bishobora kurenza km 40 mu isaha",
+        " ibinyabiziga bishobora kurenza km 30 mu isaha ",
+        " ibinyabiziga bishobora kurenza km 25 mu isaha"
+            ]
+    },
+    {
+            "imgpath": null,
+            "question": "Ubugari bw’imizigo yikorewe n’ipikipiki idafite akanyabiziga ko kuruhande kimwe n’ubwa romoruki ikuruwe na bene icyo kinyabiziga ntibushobora kurenza ibipimo bikurikira:",
+            "correct": 1,
+            "choices": [
+        " m 1.25",
+        " cm 30",
+        " cm 75",
+        " nta gisubizo cy’ukuri kirimo"
+            ]
+    },
+    {
+            "imgpath": null,
+            "question": "Ibinyabiziga bikurikira bigomba kugira itara ry’ubururu rimyatsa riboneka mu mpande zose:",
+            "correct": 3,
+            "choices": [
+        " ibinyabiziga bifite ubugari burenga m 2 na cm 10",
+        " ibinyabiziga bya police y’igihugu ",
+        " ibinyabiziga ndakumirwa",
+        " ibisubizo byose ni ukuri"
+            ]
+    },
+    {
+            "imgpath": null,
+            "question": "Ibinyabiziga bihinga n’ibindi bikoresho byihariye bikoreshwa n’ibigo bipatana imirimo, iyo bigenda mu nzira nyabagendwa igihe cya nijoro cyangwa bitewe n’uko ibihe bimeze bitagishoboka kubona neza muri m 200 bishobora kugaragazwa inyuma n’amatara 2 atukura, bipfa kuba bitarenza ibipimo bikurikira:",
+            "correct": 4,
+            "choices": [
+        " kutarenza umuvuduko wa km20 mu isaha ",
+        " uburebure bwabyo habariwemo ibyo bitwaye bukaba butarengeje m6",
+        " uburebure ntarengwa ntiburenga m8",
+        " A na B nibyo bisubizo by’ukuri"
+            ]
+    },
+    {
+            "imgpath": null,
+            "question": "Iyo romoruki iziritse ku kinyamitende, velomoteri n’amapikipiki bidafite akanyabiziga ko kuruhande uretse ikinyamitende na velomoteri bidafite umuyobozi, iyo uburumbarare bwayo cyangwa bw’ibyo yikoreye bituma itara ry’ikinyabiziga gikurura ritagaragara igihe bitagishoboka kubona neza muri m 200 bigomba kugaragazwa ku buryo bukurikira:",
+            "correct": 1,
+            "choices": [
+        " itara ryera cyangwa ry’umuhondo cyangwa risa n’icunga rihishije riri kuri rumoruki inyuma",
+        " itara ry’icyatsi cyangwa ry’umuhondo cyangwa risa n’icunga rihishije riri kuri rumoruki inyuma",
+        " A na B ni ibisubizo by’ukuri",
+        " nta gisubizo cy’ukuri kirimo"
+            ]
+    },
+    {
+            "imgpath": null,
+            "question": "Ku kinyabiziga cyangwa ibinyabiziga bikururana igice kirenga ku biziga ntikigomba kurenga ibipimo bikurikira:",
+            "correct": 1,
+            "choices": [
+        " inyuma ni m 3 na cm 50",
+        " imbere ni m 1  na cm 70",
+        " A na B ni ibisubizo by’ukuri",
+        " nta gisubizo cy’ukuri kirimo"
+            ]
+    },
+    {
+            "imgpath": null,
+            "question": "Iyo amatara y’ikinyabiziga agomba gucanwa kandi igihe imizigo isumba impera y’ikinyabiziga ho metero irenga igice gihera cy’imizigo kigaragazwa ku buryo bukurikira:",
+            "correct": 4,
+            "choices": [
+        " itara ritukura cyangwa akagarurarumuri ku mutuku ku manywa",
+        " agatambaro gatukura gafite nibura cm 50 z’uruhande mu ijoro",
+        " itara ry’umuhondo cyangwa akagarurarumuri k’umuhondo",
+        " nta gisubizo cy’ukuri kirimo"
+            ]
+    },
+    {
+            "imgpath": null,
+            "question": "Iyo imizigo igizwe n’ibinyampeke, ikawa, ipamba idatonoye, ibishara, ibyatsi, ibishami cyangwa ubwatsi bw’amatungo bidahambiriye uretse amapaki afunze, ubugari bwayo bushobora kugera ku bipimo bikurikira:",
+            "correct": 2,
+            "choices": [
+        " m 2.50",
+        " m 2.75",
+        " m 3",
+        " nta gisubizo cy’ukuri kirimo"
+            ]
+    },
+    {
+            "imgpath": null,
+            "question": "Uretse mu mijyi kuyindi mihanda yagenywe na minisiteri ushinzwe gutwara ibintu n’abantu, uburemere ntarengwa bwemewe ku binyabiziga bifatanye bifite imitambiko itatu ni:",
+            "correct": 3,
+            "choices": [
+        " toni 20",
+        " toni 16",
+        " toni 12",
+        " toni 10"
+            ]
+    },
+    {
+            "imgpath": null,
+            "question": "Buri modoka cyangwa buri romoruki ikuruwe n’iyo modoka bishobora kugira itara rituma umuyobozi yerekana ko yabonye ikimenyetso cy’uwitegura kumunyuraho. Iryo tara rifite amabara akurikira: ",
+            "correct": 2,
+            "choices": [
+        " umuhondo",
+        " icyatsi kibisi",
+        " umweru",
+        " umutuku"
+            ]
+    },
+    {
+            "imgpath": null,
+            "question": "Ikinyabiziga cyangwa ibinyabiziga bikururana bifite imitambiko ibiri ikurikiranye mu bugari bwayo ni ukuvuga imitambiko yihindukiza kucyo ifungiyeho, uburebure bwabyo ntibugomba kurenza ibipimo bikurikira:",
+            "correct": 3,
+            "choices": [
+        " m11",
+        " m10",
+        " m7",
+        " nta gisubizo cy’ukuri kirimo"
+            ]
+    },
+    {
+            "imgpath": null,
+            "question": "Bumwe muri ubu bwoko bwa feri ituma imodoka iguma aho iri uko yaba yikoreye kose ku muzamuko cyangwa ku gacuri bya 16%, imyanya ya feri igomba gufata igakomeza kwegera kuburyo bw’ibyuma niyo umuyobozi yaba atarimo:",
+            "correct": 1,
+            "choices": [
+        " feri yo guhagarara umwanya munini",
+        " feri y’urugendo",
+        " feri yo gutabara",
+        " nta gisubizo cy’ukuri kirimo"
+            ]
+    },
+    {
+            "imgpath": null,
+            "question": "Utugarurarumuri turi mu mbavu z’ikinyabiziga tugomba kugira ibara rikurikira:",
+            "correct": 2,
+            "choices": [
+        " umweru",
+        " umuhondo",
+        " umutuku",
+        " Nta gisubizo cy’ukuri kirimo"
+            ]
+    },
+    {
+            "imgpath": null,
+            "question": "Romoruki zifite ubugari ntarengwa bwa cm 80 zishobora gushyirwaho akagarurarumuri kamwe gusa iyo zikuruwe n’ibinyabiziga bikurikira:",
+            "correct": 2,
+            "choices": [
+        " velomoteri",
+        " ipikipiki idafite akanyabiziga ku ruhande",
+        " amavatiri y’ifasi",
+        " nta gisubizo cy’ukuri kirimo"
+            ]
+          }
+        ],
+  [
+    {
+            "imgpath": null,
+            "question": "Amatara maremare y’ibara ryera cyangwa ry’umuhondo agomba, nijoro igihe ijuru rikeye, kumurika mu muhanda mu ntera ya m 100 nibura imbere y’ikinyabiziga, ariko ku binyabiziga bifite moteri itarengeje za sentimetero kibe 125 iyo ntera igira ibipimo bikurikira:",
+            "correct": 4,
+            "choices": [
+        " m200      ",
+        " m100       ",
+        " m85        ",
+        " nta gisubizo cy’ukuri kirimo"
+            ]
+    },
+    {
+            "imgpath": null,
+            "question": "Iyo banyuze iruhande rw’inkomyi abanyamaguru bagomba gukikira banyuze mu muhanda, abayobozi bagomba gusiga umwanya ufite ubugari bwa m 1 nibura hagati yabo nayo. Iyo ibyo bidashobora kubahirizwa kandi umunyamaguru akaba anyura hafi yiyo nkomyi, umuyobozi agomba kuyikikira afite umuvuduko utarengeje ibipimo bikurikira: ",
+            "correct": 4,
+            "choices": [
+        " km 10 mu isaha",
+        " km 20 mu isaha",
+        " km 30 mu isaha",
+        " nta gisubizo cy’ukuri kirimo"
+            ]
+    },
+    {
+            "imgpath": null,
+            "question": "Guhagarara akanya gato no guhagarara akanya kanini bibujijwe cyane cyane aha hakurikira:",
+            "correct": 2,
+            "choices": [
+        " ku mihanda y’icyerekezo kimwe hose",
+        " mu ruhande ruteganye n’urwo ikindi kinyabiziga gihagazemo akanya gato cyangwa kanini",
+        " ku mihanda ibisikanirwamo, iyo ubugari bw’umwanya w’ibinyabiziga ugomba gutuma bibisikana butagifite m12",
+        " ibisubizo byose nibyo"
+            ]
+    },
+    {
+            "imgpath": null,
+            "question": "Amatara ndangambere n’aya ndanganyuma y’imodoka zitarengeje m 6 z’uburebure na m 2 z’ubugari habariwemo imitwaro kdi nta kinyabiziga kindi kiziritseho ashobora gusimburwa n’amatara akurikira, iyo ibyo binyabiziga bihagaze umwanya muto cyangwa munini mu nsisiro bibangikanye ku ruhande rw’umuhanda:",
+            "correct": 3,
+            "choices": [
+        " amatara magufi",
+        " amatara ndangaburumbarare",
+        " amatara yo guhagarara umwanya munini",
+        " nta gisubizo cy’ukuri kirimo"
+            ]
+    },
+    {
+            "imgpath": null,
+            "question": "Iyo kuva bwije kugeza bukeye cyangwa bitewe nuko ibihe bimeze nk’igihe cy’igihu cyangwa cy’imvura bitagishoboka kubona neza muri m 200, imirongo y’ingabo z’igihugu zigendera kuri gahunda n’utundi dutsiko twose tw’abanyamaguru nk’imperekerane cyangwa udutsiko tw’abanyeshuri bari ku murongo bayobowe na mwarimu, iyo bagenda mu muhanda ku isonga hakaba hari abantu barenze umwe, bagaragzwa ku buryo bukurikira:",
+            "correct": 1,
+            "choices": [
+        " imbere ni itara ryera ritwariwe ku ruhande rw’ibumoso n’umuntu uri ku murongo w’imbere hafi y’umurongo ugabanya umuhanda mo kabiri",
+        " inyuma ni itara umuhondo ritwariwe ku ruhande rw’ibumoso n’umuntu uri ku murongo w’inyuma hafi y’umurongo ugabanya umuhanda mo kabiri",
+        " A na B ni ibisubizo by’ukuri",
+        " nta gisubizo cy’ukuri kirimo"
+            ]
+    },
+    {
+            "imgpath": null,
+            "question": "Imizigo yikorewe n’amagare, velomoteri, amapikipiki, ibinyamitende by’ibiziga bitatu nibyo ibiziga bine bifite cyangwa bidafite moteri inyuma ntishobora kurenza ibipimo bikurikira:",
+            "correct": 3,
+            "choices": [
+        " cm 20",
+        " cm 30",
+        " cm 50          ",
+        " cm 60"
+            ]
+    },
+    {
+            "imgpath": null,
+            "question": "Itara ndanganyuma rigomba gushyirwa aha hakurikira:",
+            "correct": 1,
+            "choices": [
+        " ahagereye inguni y’ibumoso y’ikinyabiziga",
+        " ahagereye inguni y’iburyo bw’ikinyabiziga",
+        " inyuma kandi y’impera y’ibumoso bw’ikinyabiziga",
+        " nta gisubizo cy’ukuri kirimo "
+            ]
+    },
+    {
+            "imgpath": null,
+            "question": "Nta tara na rimwe cyangwa utugarurarumuri bishobora kuba bifunze kuburyo igice cyabyo cyo hasi cyane kimurika kitaba kiri hasi ya cm 40 kuva ku butaka igihe ikinyabiziga kidapakiye ariko ibyo ntibikurikizwa ku matara akurikira:",
+            "correct": 3,
+            "choices": [
+        " amatara kamenabihu",
+        " amatara yo gusubira inyuma",
+        " A na B ni ibisubizo by’ukuri",
+        " nta gisubizo cy’ukuri kirimo"
+            ]
+    },
+    {
+            "imgpath": null,
+            "question": "Iyo tumuritswe n’amatara y’urugendo y’i kinyabiziga utugarurarumuri tugomba n’ijoro, igihe ijuru rikeye kubonwa n’umuyobozi w’ikinyabiziga kiri mu ntera ikurikira:",
+            "correct": 2,
+            "choices": [
+        " metero 100    ",
+        " metero 150    ",
+        " metero 200        ",
+        " nta gisubizo cy’ukuri kirimo"
+            ]
+    },
+    {
+            "imgpath": null,
+            "question": "Ibinyabiziga bigendeshwa na moteri, hatarimo velomoteri n’ibinyabiziga bidapakiye umuvuduko wabyo udashobora kurenga km 50 mu isaha ahateganye bigomba kuba bifite ibikoresho by’ihoni byumvikanira mu ntera ikurikira:",
+            "correct": 3,
+            "choices": [
+        " metero 200",
+        " metero 150",
+        " metero 100",
+        " metero 50"
+            ]
+    },
+    {
+            "imgpath": null,
+            "question": "Amatara ndangambere na ndanganyuma y’imodoka zitarengeje m 6 z’uburebure na m 2 z’ubugari habariwemo imitwaro kandi nta kindi kinyabiziga kiziritseho ashobora gusimburwa n’amatara yo guhagarara umwanya munini iyo ibyo binyabiziga bihagaze umwanya muto cyangwa munini mu nsisiro bibangikanye ku ruhande rw’umuhanda. Ayo matara arangwa n’amabara akurikira:",
+            "correct": 3,
+            "choices": [
+        "a. umweru cyangwa umuhondo imbere",
+        "b. umutuku cyangwa umuhondo inyuma",
+        "c. A na B ni ibisubizo by’ukuri ",
+        "d. nta gisubizo cy’ukuri kirimo"
+            ]
+    },
+    {
+            "imgpath": null,
+            "question": "Amatara ndangaburumbarare agomba kubonwa nijoro igihe ijuru rikeye n’umuyobozi w’ikinyabiziga kiri mu ntera ya :",
+            "correct": 4,
+            "choices": [
+        "a. m 50 nibura",
+        "b. m 100",
+        "c. m 150",
+        "d. m 200 nibura"
+            ]
+    },
+    {
+            "imgpath": null,
+            "question": "Uretse ku byerekeye imihanda iromboreje y’ibisate byinshi n’imihanda yimodoka igice cy’umuhanda kiri hakurya y’umurongo mugari wera ucibwa ku muhanda ngo ugaragaze inkombe mpimbano zawo kigenewe ibi bikurikira:",
+            "correct": 3,
+            "choices": [
+        "a. guhagararwamo umwanya muto gusa",
+        "b. guhagararwamo umwanya munini gusa",
+        "c. guhagararwamo umwanya muto n’umunini",
+        "d. nta gisubizo cy’ukuri kirimo"
+            ]
+    },
+    {
+            "imgpath": null,
+            "question": "Ibimenyetso by’agateganyo bigizwe n’imitemeri y’ibara risa n’icunga rihishije bishobora gusimbura ibi bikurikira:",
+            "correct": 2,
+            "choices": [
+        "a. imirongo yera irombereje idacagaguye gusa",
+        "b. imirongo yera irombereje idacagaguye n’icagaguye",
+        "c. imirongo icagaguye n’idacagaguye ibangikanye",
+        "d. nta gisubizo cy’ukuri kirimo"
+            ]
+    },
+    {
+            "imgpath": null,
+            "question": "Iyo bitagishoboka kubona muri m 200 imodoka zikuruwe n’inyamaswa, ingorofani, inyamaswa zitwaye imizigo cyangwa zigenderwamo kimwe n’amatungo bigomba kurangwa na :",
+            "correct": 4,
+            "choices": [
+        "a. imbere ni itara ryera",
+        "b. imbere ni itara ry’umuhondo cyangwa risa n’icunga rihishije",
+        "c. inyuma ni itara rimwe ritukura",
+        "d. ibisubizo byose ni ukuri"
+            ]
+    },
+    {
+            "imgpath": null,
+            "question": "Uretse igihe hari amategeko yihariye akurikizwa muri ako karere ikinyabiziga cyose gihagaze umwanya muto cyangwa munini, iyo gihagaze mu mwanya wo kuruhande wagenewe abanyamaguru, kugirango bashobore kugenda batagombye kunyura mu muhanda, umuyobozi agombye kubasigira akayira gafite byibura ibipimo bikurikira by’ubugari:",
+            "correct": 1,
+            "choices": [
+        "a. m 1",
+        "b. m 2",
+        "c. m 0.5",
+        "d. nta gisubizo cy’ukuri kirimo"
+            ]
+    },
+    {
+            "imgpath": null,
+            "question": "Icyapa cyerekana ahantu hagenewe guhagararwamo n’imodoka nini zagenewe gutwara abantu cyirangwa n’ubuso bw’amabara akurikira:",
+            "correct": 4,
+            "choices": [
+        "a. ubururu",
+        "b. umweru",
+        "c. umutuku",
+        "d. nta gisubizo cy’ukuri kirimo"
+            ]
+    },
+    {
+            "imgpath": null,
+            "question": "Icyapa cyerekana ko inzira giteyeho mu ntangiriro idakomeza kigaragazwa n’ikirango (ikimenyetso) cy’amabara akurikira:",
+            "correct": 3,
+            "choices": [
+        "a. umukara n’umutuku",
+        "b. umukara n’umweru",
+        "c. umweru n’umutuku",
+        "d. nta gisubizo cy’ukuri kirimo"
+            ]
+    },
+    {
+            "imgpath": null,
+            "question": "Buri modoka yagenewe gutwara abantu, ariko umubare wabo ntarengwa ukaba munsi ya 6 umuyobozi abariwemo igomba kugira imikandara yo kurinda ibyago igenewe aba bakurikira:",
+            "correct": 4,
+            "choices": [
+        "a. umuyobozi",
+        "b. umugenzi wicaye ku ntebe y’imbere",
+        "c. ishobora no kugira imikandara kuzindi ntebe z’inyuma",
+        "d. ibisubizo byose ni ukuri"
+            ]
+    },
+    {
+            "imgpath": null,
+            "question": "Usibye ibinyabiziga by'ingabo z'Igihugu, Ikinyabiziga kigendeshwa na moteri kiriho ibyuma ntamenwa cyangwa ikindi cyose gituma gikoreshwa mu gutera cyangwa mu kwitabara ntigishobora kugenda mu nzira nyabagendwa kidafite uruhushya rwihariye. Urwo ruhushya rutangwa naba bakurikira:",
+            "correct": 2,
+            "choices": [
+        "a. police y’igihugu",
+        "b. minisitiri ushinzwe gutwara abantu n’ibintu",
+        "c. minisitiri w’ingabo",
+        "d. ikigo cy’igihugu gishinzwe imisoro n’amahoro."
+            ]
+          }
+        ],
+  [
+    {
+            "imgpath": null,
+            "question": "Iyo umukumbi ugizwe n’amatungo maremare arenze ane cyangwa amatungo magufi arenze atandatu mu nzira nyabagendwa iyo hatakibona neza kuburyo umuyobozi abona muri m 200 ugomba kugaragazwa kuburyo bukurikira:",
+            "correct": 4,
+            "choices": [
+        "a. itara ry’urumuri rwera cyangwa rusa n’icunga rihishije imbere y’umukumbi",
+        "b. itara ry’urumuri rutukura cyangwaumuhondo ritwawe inyuma y’umukumbi",
+        "c. A na B ni ibisubizo by’ukuri",
+        "d. nta gisubizo cy’ukuri kirimo"
+            ]
+    },
+    {
+            "imgpath": null,
+            "question": "Ibinyabiziga biherekeranyije mu butumwa ntibishobora gutonda uburebure burenga umurongo wa m 500. Iyi bibaye bityo ibinyabiziga biherekeranye mu butumwa bishobora kugabanwamo amatsinda atonze umurongo atarengeje m 50 z’uburebure kdi hagati yayo hakaba byibura m 50 ariko ibyo ntibikurikizwa kubinyabiziga bikurikira:",
+            "correct": 2,
+            "choices": [
+        "a. ibinyabiziga bya police biherekeranyije",
+        "b. ibinyabiziga by’abasirikare biherekeranyije mu nsisiro",
+        "c. A na B ni ibisubizo by’ukuri",
+        "d. nta gisubizo cy’ukuri kirimo"
+            ]
+    },
+    {
+            "imgpath": null,
+            "question": "Iyo ikinyabiziga gikururwa n’inyamaswa nacyo gikuruye ikindi uburebure bw’ibikururwa bukaba burenga m 18 hatabariwemo icyo kinyabiziga cya mbere kiziritseho hagomba ibi bikurikira:",
+            "correct": 1,
+            "choices": [
+        "a. umuherekeza w’ikinyabiziga cya kabiri",
+        "b. abaherekeza babiri",
+        "c. A na B ni ibisubizo by’ukuri",
+        "d. nta gisubizo cy’ukuri kirimo"
+            ]
+    },
+    {
+            "imgpath": null,
+            "question": "Ibinyabiziga bikurikira ntibitegetswe kugira ibimenyetso bibyerekana iyo byambukiranya umuhanda cyangwa bigenda ku ruhande rwawo:",
+            "correct": 3,
+            "choices": [
+        "a. ibinyabiziga bigendwamo n’abana",
+        "b. ibinyabiziga bigendwamo n’abamugaye",
+        "c. A na B ni ibisubizo by’ukuri",
+        "d. nta gisubizo cy’ukuri kirimo"
+            ]
+    },
+    {
+            "imgpath": null,
+            "question": "Icyapa cy’inyongera kigaragaza ikibanza cy’ingando cyangwa cy’abantu benshi bagendera ku nyamaswa kirangwa n’amabara akurikira:",
+            "correct": 1,
+            "choices": [
+        "a. ubururu, umweru n’umukara",
+        "b. umukara umweru n’umuhondo",
+        "c. icyatsi kibisi, umuhondo n’ikirango cy’umukara",
+        "d. nta gisubizo cy’ukuri kirimo"
+            ]
+    },
+    {
+            "imgpath": null,
+            "question": "Icyapa cyerekana ahantu  amategeko y’ Umuhanda urombeje w’ibice byinshi atangirira gukurikizwa,  kirangwa n’ibirango (ibimenyetso) by’amabara akurikira:",
+            "correct": 4,
+            "choices": [
+        "a. umweru n’umukara",
+        "b. umweru n’umutuku",
+        "c. umweru n’umuhondo",
+        "d. nta gisubizo cy’ukuri kirimo"
+            ]
+    },
+    {
+            "imgpath": null,
+            "question": "Igihe ikorwa ry’imirimo ribangamiye cyane cyangwa buke uburyo bwo kugenda mu nzira nyabagendwa, ahakorerwa imirimo hagaragazwa ku buryo bukurikira:",
+            "correct": 4,
+            "choices": [
+        "a. icyapa cyera cya mpande enye, zingana zifite uruhande rwa metero 0.30",
+        "b. uruzitiro ruri ku mpera y’iburyo",
+        "c. A na B ni ibisubizo by’ukuri",
+        "d. nta gisubizo cy’ukuri kirimo"
+            ]
+    },
+    {
+            "imgpath": null,
+            "question": "Iyo mu muhanda, imirimo yihariye ubugari butuma abayobozi bagomba kuva mu mwanya wabo usanzwe kugirango bakomeze urugendo, ahategetswe kunyurwa hagaragazwa n’ikimenyetso gishyirwa aho imirimo irangirira mu ruhande rugenderwamo. Icyo kimenyetso kirangwa n’amabara akurikira:",
+            "correct": 1,
+            "choices": [
+        "a. ubuso bw’ubururu ikirango cy’umweru",
+        "b. umuzenguruko w’umutuku, ubuso umweru n’ikirango cy’umukara",
+        "c. umuzenguruko w’umutuku, ubuso mu ibara ryera, ikirango mu ibara ry’umutuku n’umukara",
+        "d. nta gisubizo cy’ukuri kirimo"
+            ]
+    },
+    {
+            "imgpath": null,
+            "question": "Icyapa cyerekana ko hari amabwiriza yihariye mu buryo bwo kugendera mu cyambu cyangwa ku kibuga cy’indege giteye ku buryo bukurikira:",
+            "correct": 2,
+            "choices": [
+        "a. ishusho mpandeshatu, ubuso mu ibara ryera, ikirango mu ibara ry’umukara",
+        "b. ishusho mpandenye, ubuso mu ibara ry’ubururu n’ikirango kiri mu ibara ryera",
+        "c. ishusho y’uruziga mu ibara ry’ubururu ni ikirango kiri mu ibara ryera ",
+        "d. nta gisubizo cy’ukuri kirimo"
+            ]
+    },
+    {
+            "imgpath": null,
+            "question": "Nijoro igihe ijuru rikeye, itara ribonesha icyapa kiranga numero y’ikinyabiziga rigomba gutuma izo numero zisomerwa nibura mu ntera ikurikira:",
+            "correct": 3,
+            "choices": [
+        "a. m150",
+        "b. m50",
+        "c. m20",
+        "d. m10"
+            ]
+    },
+    {
+            "imgpath": null,
+            "question": "Ibyapa byerekana icyago cyidahoraho kandi bigenewe kwerekana aho bagana cyangwa aho berekeza  umuhanda nk’igihe cy’impanuka cyangwa hari imirimo ikorwa mu muhanda birangwa n’amabara akurikira:",
+            "correct": 4,
+            "choices": [
+        "a. umweru n’umukara",
+        "b. umweru n’umuhondo",
+        "c. ubuso bw’umweru gusa",
+        "d. nta gisubizo cy’ukuri kirimo"
+            ]
+    },
+    {
+            "imgpath": null,
+            "question": "Birabujijwe kubangamira imigendere isanzwe y’ibindi binyabiziga kubera ibi bikurikira:",
+            "correct": 3,
+            "choices": [
+        "a. kugabanya umuvuduko kuburyo budasanzwe",
+        "b. gukacira feri bidatewe no kwirinda ibyago",
+        "c. A na B ni ibisubizo by’ukuri",
+        "d. nta gisubizo cy’ukuri kirimo"
+            ]
+    },
+    {
+            "imgpath": null,
+            "question": "Iyo kuva bwije kugeza bukeye cyangwa bitewe n’uko ibihe bimeze bitagishoboka kubona neza muri m 200, mu nzira nyabagendwa, romoruki iziritse kuri velomoteri cyangwa ipikipiki idafite akanyabiziga ku ruhande, uretse velomoteri idafite umuyobozi, kandi uburumbarare bwayo, cyangwa bw’ibyo yikoreye bukaba butuma itara ry’ikinyabiziga biyikurura ritagaragara, iyo romoruki igaragazwa ku buryo bukurikira:",
+            "correct": 4,
+            "choices": [
+        "a. itara ryera riri kuri romoruki inyuma",
+        "b. itara ry’umuhondo riri kuri romoruki inyuma ",
+        "c. itara risa n’icunga riri kuri romoruki inyuma ",
+        "d. ibi bisubizo byose nibyo"
+            ]
+    },
+    {
+            "imgpath": null,
+            "question": "Amatara maremare y’ikinyabiziga agomba kuzimwa mu bihe bikurikira:",
+            "correct": 3,
+            "choices": [
+        "a. iyo umuhanda umurikiwe hose kandi umuyobozi ashobora kubona nibura mu ntera ingana na metero 200 ",
+        "b. iyo ikinyabiziga gikurikiye mu ntambwe zitagera muri m100 keretse iyo umuyobozi wacyo ashaka kunyura kucyo akurikiye acana azimya vuba vuba amatara maremare",
+        "c. A na B ni ibisubizo by’ukuri",
+        "d. nta gisubizo cy’ukuri kirimo"
+            ]
+    },
+    {
+            "imgpath": null,
+            "question": "Iyo akanyabiziga gasunikwa cyangwa ibyo gatwaye bidatuma umuyobozi abona neza imbere ye, uwo muyobozi agomba gukora ibi bikurikira: ",
+            "correct": 2,
+            "choices": [
+        "a. gushaka umuherekeza",
+        "b. gukurura ikinyabiziga cye",
+        "c. A na B ni ibisubizo by’ukuri",
+        "d. nta gisubizo cy’ukuri kirimo"
+            ]
+    },
+    {
+            "imgpath": null,
+            "question": "QuesUretse igihe hari amategeko yihariye akurikizwa muri ako karere cyangwa imitunganyirize bwite y’aho, ikinyabiziga cyose cyangwa inyamaswa ihagaze umwanya muto cyangwa munini igomba kuba iri aha hakurikira:tion",
+            "correct": 3,
+            "choices": [
+        "a. mu kaboko k’iburyo hakurikijwe aho yaganaga uretse igihe ari mu muhanda w’icyerekezo kimwe",
+        "b. ahegereye bishobotse akayira k’abanyamaguru iyo umuhanda ugafite ariko umwanya w’ibiziga n’akayira ntube urenga santimetero 50",
+        "c. A na B ni ibisubizo by’ukuri",
+        "d. nta gisubizo cy’ukuri kirimo"
+            ]
+    },
+    {
+            "imgpath": null,
+            "question": "Iyo ikinyabiziga gihagaritswe n’ijoro ku buryo abayobozi bakigana badashobora kumenya ko kibabereye imbogamizi, kigomba kurangirwa kure n’ikimenyetso cyabigenewe kiri ahantu hagaragara kugirango kiburire hakiri kare abandi bayobozi baza bagisanga, ariko ntibireba ibinyabiziga bikurikira:",
+            "correct": 3,
+            "choices": [
+        "a. velomoteri",
+        "b. ipikipiki idafite akanyabiziga ku ruhande",
+        "c. A na B ni ibisubizo by’ukuri",
+        "d. nta gisubizo cy’ukuri kirimo"
+            ]
+    },
+    {
+            "imgpath": null,
+            "question": "Abanyamaguru batatanye cyangwa bagize udutsiko tudafatanyije gahunda kdi batanayobowe n’umwarimu bategetswe kunyura mu tuyira turi ku mpande z’umuhanda no ku nkengero zigiye hejuru uretse ubutaka butsindagiye butandukanya imihanda ibiri bwo kunyurwamo gusa n’aba bakurikira:",
+            "correct": 1,
+            "choices": [
+        "a. abanyamaguru bashaka guhagarara akanya gato igihe bambukiranya umuhanda",
+        "b. abanyamaguru bagize udutsiko tw’abantu benshi",
+        "c. A na B ni ibisubizo by’ukuri",
+        "d. nta gisubizo cy’ukuri kirimo"
+            ]
+    },
+    {
+            "imgpath": null,
+            "question": "Ibinyabiziga biherekeranyije mu butumwa ntibishobora gutonda uburebure burenga umurongo wa m 500, iyo bibaye bityo ibinyabiziga biherekeranyije mu butumwa bishobora kugabanywamo amatsinda atonze umurongo utarengeje ibipimo bikurikira:",
+            "correct": 1,
+            "choices": [
+        "a. utarengeje m50",
+        "b. utarengeje m100",
+        "c. utarengeje 150",
+        "d. nta gisubizo cy’ukuri kirimo"
+            ]
+    },
+    {
+            "imgpath": null,
+            "question": "Ibyapa byereka inkomane y’inzira nyabagendwa n’inzira ya gariyamoshi bigomba iteka kumurikwa cyangwa kugarura urumuri ku buryo bigaragarira nibura mu ntera ikurikira igihe ijuru rikeye:",
+            "correct": 4,
+            "choices": [
+        "a. m200",
+        "b. m 250",
+        "c. m300",
+        "d. nta gisubizo cy’ukuri kirimo"
+            ]
+          }
+        ],
+  [
+    {
+            "imgpath": null,
+            "question": "Imbibi ziri ku mpera z’ubwihugiko bw’abanyamaguru kandi ziri mu muhanda kimwe n’imbibi n’ibindi bikoresho bigenewe gutuma bagenda mu muhanda nta muvundo zisigwa irangi ry’ibara rikurikira:",
+            "correct": 1,
+            "choices": [
+        "a. irangi ry’umuhondo ngarurarumuri",
+        "b. irangi ry’umweru ngarurarumuri",
+        "c. irangi risa n’icunga rihishije ngarurarumuri",
+        "d. nta gisubizo cy’ukuri kirimo"
+            ]
+    },
+    {
+            "imgpath": null,
+            "question": "Kugirango ikinyabiziga kive ahantu hari urwondo cyangwa hanyerera bidasanzwe hashobora gukoreshwa uburyo bukurikira:",
+            "correct": 2,
+            "choices": [
+        "a. inziga zishobora gushyirwaho udushyundu",
+        "b. inziga zishobora gushyirwaho iminyururu irwanya ubunyerere",
+        "c. A na B ni ibisubizo by’ukuri",
+        "d. nta gisubizo cy’ukuri kirimo"
+            ]
+    },
+    {
+            "imgpath": null,
+            "question": "Iyo imizigo igizwe n’ibinyampeke, ikawa, amakara, ubwatsi bw’amatungo bidahambiriye, ubugari bwayo bushobora kugera kuri m2 na cm75 ariko iyo iyo mizigo ijyanwa mu karere katarenga km25 uvuye aho yapakiriwe, usibye mu nsisiro, ubugari bwayo bushobora kugera ku bipimo bikurikira:",
+            "correct": 3,
+            "choices": [
+        "a. m4",
+        "b. m3 na cm50",
+        "c. m3",
+        "d. nta gisubizo cy’ukuri kirimo"
+            ]
+    },
+    {
+            "imgpath": null,
+            "question": "Mu mujyi no ku mihanda y’igihugu igenwa na minisitiri ushinzwe gutwara abantu n’ibintu, ubwikorere ntarengwa ku ikamyo iyo ariyo yose ntibushobora kurenga ibipimo bikurikira:",
+            "correct": 4,
+            "choices": [
+        "a. toni 10",
+        "b. toni 16",
+        "c. toni 24",
+        "d. nta gisubizo cy’ukuri kirimo"
+            ]
+    },
+    {
+            "imgpath": null,
+            "question": "Iyo bitewe n’imiterere y’ahantu intera itandukanya icyapa n’ahantu habi iri munsi ya m150 ku buryo bugaragara, iyo ntera yerekanishwa icyapa cy’inyongera giteye ku buryo bukurikira:",
+            "correct": 2,
+            "choices": [
+        "a. kare ifite ubuso bw’ibara ryera",
+        "b. urukiramende rufite ubuso bw’ibara ryera",
+        "c. mpandeshatu ifite umuzenguruko utukura",
+        "d. nta gisubizo cy’ukuri kirimo"
+            ]
+    },
+    {
+            "imgpath": null,
+            "question": "Nijoro, amatara yo kubisikana y’ibara ryera cyangwa y’umuhondo agomba, igihe ijoro rikeye kumurika mu muhanda nibura mu ntera ikurikira:",
+            "correct": 3,
+            "choices": [
+        "a. m100",
+        "b. m50",
+        "c. m40",
+        "d. nta gisubizo cy’ukuri kirimo"
+            ]
+    },
+    {
+            "imgpath": null,
+            "question": "Ikintu cyose cyatuma hahindurwa ibyanditse bireba nyirikarita cyangwa ibiranga ikinyabiziga kigomba kumenyeshwa ibiro by’umusoro haba mu magambo cyangwa mu ibaruwa ishinganye ibyo bikorwa mu gihe kingana gute:",
+            "correct": 4,
+            "choices": [
+        "a. mu mezi 2",
+        "b. mu kwezi kumwe",
+        "c. mu minsi cumi n’itanu",
+        "d. nta gisubizo cy’ukuri kirimo"
+            ]
+    },
+    {
+            "imgpath": null,
+            "question": "Kugirango berekane ahantu habi cyane, hakoreshwa ikimenyetso cy’itara ry’umuhondo rimyasa,  rivuga uburenganzira bwo gutambuka icyo kimenyetso barushijeho kwitonda. Ese icyo kimenyetso gihindura iki ku mategeko agenga gutambuka mbere:",
+            "correct": 1,
+            "choices": [
+        "a. ntacyo gihindura",
+        "b. abo rireba nibo batambuka mbere",
+        "c. abatwaye ibinyabiziga binini nibo batambuka mbere",
+        "d. nta gisubizo cy’ukuri kirimo"
+            ]
+    },
+    {
+            "imgpath": null,
+            "question": "Romoruki zifite ubugari ntarengwa bwa sentimetero 80 zishobora gushyirwaho akagarurarumuri kamwe gusa iyo zikuruwe n’ibinyabiziga bikurikira:",
+            "correct": 4,
+            "choices": [
+        "a. velomoteri",
+        "b. ipikipiki ifite akanyabiziga kuruhande",
+        "c. igare",
+        "d. nta gisubizo cy’ukuri kirimo"
+            ]
+    },
+    {
+            "imgpath": null,
+            "question": "Amatara maremare y’ibara ryera cyangwa ry’umuhondo agomba nijoro igihe ijuru rikeye kumurika mu ntera ikurikira ku binyabiziga bifite moteri itarengeje ingufu zigera kuri sentimetero kibe 125",
+            "correct": 2,
+            "choices": [
+        "a. m100",
+        "b. m75",
+        "c. m25",
+        "d. nta gisubizo cy’ukuri kirimo"
+            ]
+    },
+    {
+            "imgpath": null,
+            "question": "Iyo kuva bwije kugeza bukeye cyangwa bitewe n’uko ibintu bimeze bitagishoboka kubona muri m 200, ibinyabiziga cyangwa imitwaro bifite ubugari burenga m 2.50 iyo bigenda mu nzira nyabagendwa bigaragazwa ku buryo bukurikira:",
+            "correct": 3,
+            "choices": [
+        "a. inyuma ni amatara abiri atukura",
+        "b. iyo bibaye ngombwa no ku mpera y’amabondo y’ikinyabiziga cyangwa y’imitwaro ni itara ndangaburumbarare risa n’icunga rihishije cyangwa ry’umuhondo",
+        "c. A na B ni ibisubizo by’ukuri",
+        "d. nta gisubizo cy’ukuri kirimo"
+            ]
+    },
+    {
+            "imgpath": null,
+            "question": "Igice cy’umuhanda kiri hakurya y’umurongo mugari wera udacagaguye ugaragaza inkombe mpimbano y’umuhanda kiba kigenewe ibi bikurikira:",
+            "correct": 4,
+            "choices": [
+        "a. guhagararwamo umwanya muto gusa",
+        "b. guhagararwamo umwanya muto n’umunini ndetse no kumihanda irombereje y’ibisate byinshi n’imihanda y’imodoka",
+        "c. A na B ni ibisubizo by’ukuri",
+        "d. nta gisubizo cy’ukuri kirimo"
+            ]
+    },
+    {
+            "imgpath": null,
+            "question": "Iminyururu n’ibindi byuma bifashisha bishobora kuvanwaho cyangwa binagana, hatabariwemo ibimenyetso byerekana ibyerekezo bigomba gutungurwa ku kinyabiziga ku buryo igihe byizunguza bitarenga impande zihera uburumbarare bw’ikinyabiziga kandi ibyo byuma bifashisha ntibigomba gukururuka ku butaka ariko ibyo ntibibujijwe ku binyabiziga bikurikira:",
+            "correct": 1,
+            "choices": [
+        "a. imashini zihinga",
+        "b. ibinyabiziga bitwaye ibintu bidashobora gufata inkongi",
+        "c. A na B ni ibisubizo by’ukuri",
+        "d. nta gisubizo cy’ukuri kirimo"
+            ]
+    },
+    {
+            "imgpath": null,
+            "question": "Ku binyabiziga cyangwa ibinyabiziga bikururana igice kirenga ku biziga ntigishobora kurenga ibipimo bikurikira:",
+            "correct": 2,
+            "choices": [
+        "a. iby’inyuma : m3",
+        "b. iby’imbere: m2.70",
+        "c. A na B ni ibisubizo by’ukuri",
+        "d. nta gisubizo cy’ukuri kirimo"
+            ]
+    },
+    {
+            "imgpath": null,
+            "question": "Uretse bibonewe uruhushya, ubundi birabujijwe gushyira no gukomeza kugendesha imodoka cyangwa romoruki mu nzira nyabagendwa iyo uburemere bw’ibyikorewe burenze uburemere ntarengwa bwemewe n’ikarita iranga ikinyabiziga ariko ibyo ntibikurikizwa ku binyabiziga bikurikira:",
+            "correct": 3,
+            "choices": [
+        "a. ibinyabiziga bya police",
+        "b. ibinyabiziga bihinga",
+        "c. imashini zikoreshwa mu kubaka imihanda",
+        "d. ibisubizo byose ni ukuri"
+            ]
+    },
+    {
+            "imgpath": null,
+            "question": "Gushyira mu muhanda ku buryo budasanzwe ibinyabiziga bikururana birenze bitatu bigomba gutangirwa uruhusa, uretse imashini ihinga iyo zigenda uregendo rutarenze km 25, ibinyabiziga bikururana bitwaye ibyamamazwa n’ibindi biteganwa n’iri teka ariko igiteranyo cy’uburebure bw’ibyo binyabiziga bikururana ntigishobora kurenga ibipimo bikurikira:",
+            "correct": 3,
+            "choices": [
+        "a. m50",
+        "b. m35",
+        "c. m25",
+        "d. nta gisubizo cy’ukuri kirimo"
+            ]
+    },
+    {
+            "imgpath": null,
+            "question": "Ibinyamitende itatu bifite moteri bigomba kugira amatara akurikira:",
+            "correct": 3,
+            "choices": [
+        "a. amatara abiri ndangambere n’amatara abiri ndanganyuma yerekana ko ikinyabiziga gihagaze",
+        "b. utugarurarumuri tubiri",
+        "c. A na B ni ibisubizo by’ukuri",
+        "d. nta gisubizo cy’ukuri kirimo"
+            ]
+    },
+    {
+            "imgpath": null,
+            "question": "Ibyapa bibuza n’ibitegeka bikurikizwa gusa aha hakurikira:",
+            "correct": 2,
+            "choices": [
+        "a. mu masangano",
+        "b. mu gice cy’inzira nyabagendwa kiri hagati yaho bishinze n’inkomane ikurikiyeho ku ruhande rw’inzira bishinzeho",
+        "c. ibyo byapa bishyirwaho hakurikijwe intera ibitandukanya",
+        "d. B na C ni ibisubizo by’ukuri"
+            ]
+    },
+    {
+            "imgpath": null,
+            "question": "Icyapa cy’inyongera kerekana aho bagobokera ibinyabiziga kirangwa n’amabara akurikira:",
+            "correct": 2,
+            "choices": [
+        "a. ubururu, umweru, umutuku",
+        "b. umweru, umukara, ubururu",
+        "c. umutuku, umweru n’umukara",
+        "d. nta gisubizo cy’ukuri kirimo"
+            ]
+    },
+    {
+            "imgpath": null,
+            "question": "Icyapa cyerekana uburebure bw’igice cyatera ibyago cyangwa bw’ahantu amabwiriza y’icyo cyapa agomba gukurikizwa kirangwa n’ubuso n’ibimenyetso bikurikira:",
+            "correct": 2,
+            "choices": [
+        "a. ubuso umweru, ikimenyetso ubururu",
+        "b. ubuso ubururu, ikimenyetso umweru ",
+        "c. ubuso ubururu, ikimenyetso umweru n’umukara",
+        "d. nta gisubizo cy’ukuri kirimo"
+            ]
+          }
+        ],
+  [
+    {
+            "imgpath": null,
+            "question": "Umurongo w’umuhondo ucagaguye uciye ku nkombe nyayo y’umuhanda, umusezero w’inzira y’abanyamaguru cyangwa w’inkengero y’umuhanda yegutse uvuga ibi bikurikira:",
+            "correct": 4,
+            "choices": [
+        "a. guhagarara umwanya muto birabujijwe ku burebure bw’uwo murongo",
+        "b. guhagarara umwanya muto n’umunini birabujijwe ku burebure bw’uwo murongo",
+        "c. aho bahagarara umwanya munini cyangwa muto",
+        "d. nta gisubizo cy’ukuri kirimo"
+            ]
+    },
+    {
+            "imgpath": null,
+            "question": "Ku binyabiziga cyangwa ibinyabiziga bikururana igice kirenga ku biziga ntigishobora kurenga ibipimo bikurikira:",
+            "correct": 4,
+            "choices": [
+        "a. iby’inyuma m 3.40",
+        "b. iby’imbere m 2.50",
+        "c. A na B ni ibisubizo by’ukuri",
+        "d. nta gisubizo cy’ukuri kirimo"
+            ]
+    },
+    {
+            "imgpath": null,
+            "question": "Mu migi no ku yindi mihanda y’igihugu igenwa na minisitiri ushinzwe gutwara abantu n’ibintu uburebure ntarengwa kuri buri mitambiko 3 ifungwaho ibiziga bine ni:",
+            "correct": 1,
+            "choices": [
+        "a. toni 24",
+        "b. toni 10",
+        "c. toni 16",
+        "d. toni 53"
+            ]
+    },
+    {
+            "imgpath": null,
+            "question": "Iyo hagati y’uruhande rw’imbere rwa romoruki n’uruhande rw’inyuma rw’ikinyabiziga kiyikurura hari umwanya urenze m 3 ikibizirikanyije kigomba kugaragazwa ku buryo bukurikira iyo amatara y’ikinyabiziga agomba gucanwa:",
+            "correct": 2,
+            "choices": [
+        "a. agatambaro gatukura gafite nibura cm 50 z’uruhande",
+        "b. itara risa n’icunga rihishije rigaragara mu mbavu igihe ikibizirikanyije kimuritswe",
+        "c. A na B  ni ibisubizo by’ukuri",
+        "d. nta gisubizo cy’ukuri kirimo"
+            ]
+    },
+    {
+            "imgpath": null,
+            "question": "Itara ryo guhagarara ry’ibara ritukura rigomba kuba ridahumisha, kandi rigomba kugaragarira mu ntera ikurikira:",
+            "correct": 4,
+            "choices": [
+        "a. nijoro igihe ijuru rikeye nibura muri m 200",
+        "b. ku manywa igihe cy’umucyo  nibura muri m50 ",
+        "c. nijoro nibura muri m 100 igihe ijuru rikeye ",
+        "d. nta gisubizo cy’ukuri kirimo"
+            ]
+    },
+    {
+            "imgpath": null,
+            "question": "Birabujijwe kongera ku mpande z’ikinyabiziga kigendeshwa na moteri cyangwa velomoteri ibi bikurikira:",
+            "correct": 3,
+            "choices": [
+        "a. imitako",
+        "b. ibintu bifite imigongo cyangwa ibirenga ku mubyimba kandi bishobora gutera ibyago abandi bagenzi ",
+        "c. A na B ni ibisubizo by’ukuri",
+        "d. nta gisubizo cy’ukuri kirimo"
+            ]
+    },
+    {
+            "imgpath": null,
+            "question": "Ikintu cyose cyatuma hahindurwa ibyanditswe bireba nyirikarita cyangwa ibiranga ikinyabiziga kigomba kumenyeshwa ibiro by’imisoro haba mu magambo cyangwa mu ibaruwa ishinganye. Ibyo bikorwa mu gihe kingana gute:",
+            "correct": 2,
+            "choices": [
+        "a. mu minsi 5",
+        "b. mu minsi 8",
+        "c. mu minsi 15",
+        "d. nta gisubizo cy’ukuri kirimo"
+            ]
+    },
+    {
+            "imgpath": null,
+            "question": "Kunyuranaho bikorerwa:",
+            "correct": 4,
+            "choices": [
+        "a. mu ruhande rw’iburyo gusans1",
+        "b. igihe cyose ni ibumoso",
+        "c. iburyo iyo unyura ku nyamaswa",
+        "d. nta gisubizo cy’ukuri kirimo"
+            ]
+    },
+    {
+            "imgpath": null,
+            "question": "Iyo ubugari bw’inzira nyabagendwa igenderwamo n’ibinyabiziga budahagije kugirango bibisikane nta nkomyi abagenzi bategetswe:",
+            "correct": 3,
+            "choices": [
+        "a. kunyura mu nzira z’impande z’abanyamaguru",
+        "b. guhagarara aho bageze",
+        "c. koroherana",
+        "d. gukuraho inkomyi"
+            ]
+    },
+    {
+            "imgpath": null,
+            "question": "Umuyobozi ugenda mu muhanda igihe ubugari bwawo budatuma anyuranaho nta nkomyi ashobora kunyura mu kayira k’abanyamaguru ariko amaze kureba ibi bikurikira:",
+            "correct": 4,
+            "choices": [
+        "a. umuvuduko w’abanyamaguru",
+        "b. ubugari bw’umuhanda",
+        "c. umubare w’abanyamaguru",
+        "d. nta gisubizo cy’ukuri kirimo"
+            ]
+    },
+    {
+            "imgpath": null,
+            "question": "Icyapa cyerekana umuvuduko ntarengwa ikinyabiziga kitagomba kurenza gishyirwa ku binyabiziga bifite uburebure ntarengwa bukurikira:",
+            "correct": 4,
+            "choices": [
+        "a. burenga toni 1",
+        "b. burenga toni 2",
+        "c. burenga toni 24",
+        "d. nta gisubizo cy’ukuri kirimo"
+            ]
+    },
+    {
+            "imgpath": null,
+            "question": "Iyo nta mategeko awugabanya by’umwihariko, umuvuduko ntarengwa w’amapikipiki mu isaha ni:",
+            "correct": 4,
+            "choices": [
+        "a. km 25",
+        "b. km 70",
+        "c. km 40",
+        "d. nta gisubizo cy’ukuri kirimo"
+            ]
+    },
+    {
+            "imgpath": null,
+            "question": "Ahatari mu nsisiro umuvuduko ntarengwa wa velomoteri mu isaha ni:",
+            "correct": 1,
+            "choices": [
+        "a. km 50",
+        "b. km 40",
+        "c. km 30",
+        "d. nta gisubizo cy’ukuri kirimo"
+            ]
+    },
+    {
+            "imgpath": null,
+            "question": "Birabujijwe guhagarara akanya kanini aha hakurikira:",
+            "correct": 3,
+            "choices": [
+        "a. mu duhanda tw’abanyamagare",
+        "b. mu duhanda twagenewe velomoteri",
+        "c. A na B ni ibisubizo by’ukuri",
+        "d. nta gisubizo cy’ukuri kirimo"
+            ]
+    },
+    {
+            "imgpath": null,
+            "question": "Amatara maremare y’ikinyabiziga agomba kutamurika mu bihe bikurikira:",
+            "correct": 2,
+            "choices": [
+        "a. iyo umuhanda umurikiwe umuyobozi abasha kureba muri m 200",
+        "b. iyo ikinyabiziga kigiye kubisikana nikindi",
+        "c. iyo ari mu nsisiro",
+        "d. ibisubizo byose nibyo"
+            ]
+    },
+    {
+            "imgpath": null,
+            "question": "QueUbugari bwa romoruki ikuruwe n’igare cyangwa velomoteri ntiburenza ibipimo bikurikira:stion",
+            "correct": 4,
+            "choices": [
+        "a. cm 25",
+        "b. cm 125",
+        "c. cm 45",
+        "d. nta gisubizo cy’ukuri kirimo"
+            ]
+    },
+    {
+            "imgpath": null,
+            "question": "Uburyo bukoreshwa kugirango ikinyabiziga kigende gahoro igihe feri idakora neza bwitwa:",
+            "correct": 3,
+            "choices": [
+        "a. feri y’urugendo",
+        "b. feri yo guhagarara",
+        "c. feri yo gutabara",
+        "d. Nta gisubizo cy’ukuri kirimo"
+            ]
+    },
+    {
+            "imgpath": null,
+            "question": "Nta mwanya n’umwe feri ifungiraho ushobora kurekurana n’ibiziga keretse:",
+            "correct": 4,
+            "choices": [
+        "a. iyo bireba feri y’urugendo",
+        "b. iyo kurekurana ari ibyakanya gato",
+        "c. iyo bireba feri yo guhagarara umwanya munini, ubwo kurekurana bikaba bidashoboka bidakozwe n'umuyobozi",
+        "d. byose ni ibisubizo by’ukuri"
+            ]
+    },
+    {
+            "imgpath": null,
+            "question": "Ikinyabiziga ntigishobora kugira amatara arenze abiri y’ubwoko bumwe keretse kubyerekeye amatara akurikira:",
+            "correct": 2,
+            "choices": [
+        "a. itara ndangamubyimba",
+        "b. itara ryerekana icyerekezo",
+        "c. itara ndangaburumbarare",
+        "d. ibisubizo byose ni ukuri"
+            ]
+    },
+    {
+            "imgpath": null,
+            "question": "Itara ndanganyuma rigomba gushyirwa aha hakurikira:",
+            "correct": 3,
+            "choices": [
+        "a. ku nguni y’iburyo y’ikinyabiziga",
+        "b. ku gice cy’inyuma ku kinyabiziga",
+        "c. ahegereye inguni y’ibumoso y’ikinyabiziga",
+        "d. ibisubizo byose ni ukuri"
+            ]
+          }
+        ],
+  [
+    {
+            "imgpath": null,
+            "question": "Nibura ikinyabiziga gitegetswe kugira uduhanagurabirahuri dukurikira:",
+            "correct": 3,
+            "choices": [
+        "a. 2",
+        "b. 3",
+        "c. 1",
+        "d. nta gisubizo cy’ukuri kirimo"
+            ]
+    },
+    {
+            "imgpath": null,
+            "question": "Ibiziga by’ibinyabiziga bigendeshwa na moteri n’ibya velomoteri kimwe n’ibya romoruki zabyo bigomba kuba byambaye inziga zihagwa zifite amano n’ubujyakuzimu butari munsi ya milimetero imwe ku migongo yabyo yose, n’ubudodo bwabyo ntibugire ahantu na hamwe bugaragara kdi ntibigire aho byacitse bikomeye mu mpande zabyo. Ariko ibyo ntibikurikizwa ku binyabiziga bikurikira:",
+            "correct": 1,
+            "choices": [
+        "a. ibinyabiziga bidapakiye kdi bitajya birenza umuvuduko  wa km 25 mu isaha ahateganye",
+        "b. ibinyabiziga bya police bijya ahatarenga km 25 uvuye aho biba",
+        "c. A na B ni ibisubizo by’ukuri",
+        "d. nta gisubizo cy’ukuri kirimo"
+            ]
+    },
+    {
+            "imgpath": null,
+            "question": "Birabujijwe kugenza ibinyabiziga bigendeshwa na moteri na za romoruki zikururwa nabyo, iyo ibiziga byambaye inziga zidahagwa cyangwa inziga zikururuka zifite umubyimba uri hasi ya cm 4. Ariko ibyo ntibikurikizwa ku binyabiziga bikurikira:",
+            "correct": 2,
+            "choices": [
+        "a. ku binyabiziga by’ingabo ",
+        "b. ibinyabiziga bihinga iyo bigendeshwa mu karere katarenga km 25 uvuye aho ziba",
+        "c. ibinyabiziga bya police",
+        "d. nta gisubizo cy’ukuri kirimo"
+            ]
+    },
+    {
+            "imgpath": null,
+            "question": "Imirongo yera iteganye n’umurongo ugabanya umuhanda mo kabiri mu burebure bwawo ugaragaza: ",
+            "correct": 3,
+            "choices": [
+        "a. ahanyurwa n’amagare na velomoteri",
+        "b. ahanyurwa n’ingorofani n’ibinyamitende",
+        "c. ahanyurwa n’abanyamaguru",
+        "d. nta gisubizo cy’ukuri kirimo"
+            ]
+    },
+    {
+            "imgpath": null,
+            "question": "Iyo harimo indi myanya birabujijwe gutwara ku ntebe y’imbere y’imodoka abana badafite imyaka ikurikira: ",
+            "correct": 2,
+            "choices": [
+        "a. imyaka 10",
+        "b. imyaka 12",
+        "c. imyaka 7",
+        "d. nta gisubizocy’ukuri kirimo"
+            ]
+    },
+    {
+            "imgpath": null,    
+            "question": "Iyo ikinyabiziga kitagikora cyangwa cyoherejwe mu mahanga burundu ibyapa ndanga bigomba gukurwaho bikoherezwa mu biro by’imisoro, ibyo bikorwa mu gihe kingana gute:",
+            "correct": 2,
+            "choices": [
+        "a. ibyumweru bibiri",
+        "b. amezi abiri",
+        "c. ukwezi kumwe",
+        "d. nta gisubizo cy’ukuri kirimo"
+            ]
+    },
+    {
+            "imgpath": null,
+            "question": "Iyo kuyobya umuhanda ari ngombwa bigaragazwa kuva aho uhera no kuburebure bwawo n’icyapa gifite ubuso bw’amabara akurikira:",
+            "correct": 4,
+            "choices": [
+        "a. umukara ",
+        "b. umweru ",
+        "c. umutuku",
+        "d. nta gisubizo cy’ukuri kirimo"
+            ]
+    },
+    {
+            "imgpath": null,
+            "question": "Inkombe z’inzira nyabagendwa cyangwa z’umuhanda zishobora kugaragazwa n’ibikoresho ngarurarumuri ibyo bikoresho bigomba gushyirwaho ku buryo abagenzi babibona ku buryo bukurikira:",
+            "correct": 3,
+            "choices": [
+        "a. babona gusa ibumoso bwabo ibyibara ryera",
+        "b. iburyo babona iby’ibara ritukura cyangwa risa n’icunga rihishije gusa",
+        "c. A na B ni ibisubizo by’ukuri",
+        "d. nta gisubizo cy’ukuri kirimo"
+            ]
+    },
+    {
+            "imgpath": null,
+            "question": "Ku mihanda yagenwe na minisitiri ubifite mu nshingano ibyapa biburira n’ibyapa byerekana bigomba kugaragazwa kuva bwije kugera bukeye n’urumuri rwihariye cyangwa amatara ku mihanda cyangwa ibintu ngarurarumuri. Igihe ijuru rikeye intera y’ahagaragara igomba kuba nibura:",
+            "correct": 4,
+            "choices": [
+        "a. m50",
+        "b. m120",
+        "c. m150",
+        "d. nta gisubizo cy’ukuri kirimo"
+            ]
+    },
+    {
+            "imgpath": null,
+            "question": "Ibizirikisho by’iminyururu cyangwa by’insinga kimwe n’ibindi by’ingoboka bikoreshwa gusa igihe nta kundi umuntu yabigenza kandi nta kindi bigiriwe uretse gusa kugirango ikinyabiziga kigere aho kigomba gukorerwa kandi nturenze na rimwe km 20 mu isaha, ibyo bizirikisho bigaragazwa ku buryo bukurikira:",
+            "correct": 3,
+            "choices": [
+        "a. agatambaro gatukura kuri cm 50 z’umuhanda ",
+        "b. ikimenyetso cy’itara risa n’icunga rihishije ",
+        "c. icyapa cyera cya mpande enye zingana gifite cm 30 kuri buri ruhande",
+        "d. nta gisubizo cy’ukuri kirimo"
+            ]
+    },
+    {
+            "imgpath": null,
+            "question": "Uretse mu mijyi, kuyindi mihanda yagenywe na minisiteri ushinzwe gutwara ibintu n’abantu, uburemere ntarengwa bwemewe ku binyabiziga bifatanye bifite imitambiko itatu ni:",
+            "correct": 1,
+            "choices": [
+        "a. toni 12",
+        "b. toni 16",
+        "c. toni 10",
+        "d. nta gisubizo cy’ukuri kirimo"
+            ]
+    },
+    {
+            "imgpath": null,
+            "question": "Uretse mu mujyi kuyindi mihanda yajyenwe na minisitiri ushinzwe gutwara abantu n’ibintu, uburemere ntarengwa ku binyabiziga bifite imitambiko itatu cyangwa irenga hatarimo mukuzungu ni :",
+            "correct": 4,
+            "choices": [
+        "a. toni 10",
+        "b. toni 12",
+        "c. toni 15",
+        "d. nta gisubizo cy’ukuri kirimo"
+            ]
+    },
+    {
+            "imgpath": null,
+            "question": "Iyo nta mategeko awugabanya by’umwihariko umuvuduko ntarengwa ku modoka zidafite ibizibuza kwiceka kuberako ariko zakozwe ni:",
+            "correct": 3,
+            "choices": [
+        "a. km 70 mu isaha",
+        "b. km 40 mu isaha",
+        "c. km 25 mu isaha",
+        "d. km20 mu isaha"
+            ]
+    },
+    {
+            "imgpath": null,
+            "question": "Iyo nta mategeko awugabanya by’umwihariko umuvuduko ntarengwa ku modoka zidafite ibizibuza kwiceka kuberako ariko zakozwe ni:",
+            "correct": 4,
+            "choices": [
+        "a. km 20 mu isaha",
+        "b. km 40 mu isaha",
+        "c. km 35 mu isaha",
+        "d. nta gisubizo cy’ukuri kirimo"
+            ]
+    },
+    {
+            "imgpath": null,
+            "question": "Ikinyabiziga kibujijwe guhagarara akanya kanini aha hakurikira :",
+            "correct": 1,
+            "choices": [
+        "a. imbere y’ahantu nyabagendwa hinjirwa n’ahasohokerwa n’abantu benshi",
+        "b. mu muhanda aho ugabanyijemo ibisate bigaragazwa n’imirongo icagaguye",
+        "c. A na B ni ibisubizo by’ukuri",
+        "d. nta gisubizo cy’ukuri kirimo"
+            ]
+    },
+    {
+            "imgpath": null,
+            "question": "Iyo kuva bwije kugeza bukeye cyangwa bitewe n’uko ibihe bimeze nk’igihe cy’ibihu cyangwa cy’imvura bitagishoboka kubona neza muri m 200, udutsiko twose tw’abanyamaguru nk’imperekerane cyangwa udutsiko tw’abanyeshuri bari ku murongo bayobowe n’umwarimu, iyo bagenda mu muhanda ku isonga hakaba hari abantu barenze umwe bagomba kugaragazwa kuburyo bukurikira:",
+            "correct": 2,
+            "choices": [
+        "a. imbere ni itara ry’umuhondo ritwariwe ibumoso",
+        "b. inyuma ni itara ryumutuku ritwariwe ibumoso n’umuntu uri ku murongo w’inyuma hafi y’umurongo ugabanya umuhanda mo kabiri",
+        "c. A na B ni ibisubizo by’ukuri",
+        "d. nta gisubizo cy’ukuri kirimo"
+            ]
+    },
+    {
+            "imgpath": null,
+            "question": "Imburira zimurika zemerewe gukoreshwa kugirango bamenyeshe umuyobozi ko bagiye kumunyuraho aha hakurikira:",
+            "correct": 1,
+            "choices": [
+        "a. mu nsisiro cyangwa ahandi hose",
+        "b. ahegereye inyamaswa zikurura",
+        "c. hafi y’amatungo",
+        "d. nta gisubizo cy’ukuri kirimo"
+            ]
+    },
+    {
+            "imgpath": null,
+            "question": "Ibinyabiziga bifite ubugari bufite ibipimo bikurikira bigomba kugira amatara ndangaburumbarare",
+            "correct": 4,
+            "choices": [
+        "a. metero 3",
+        "b. metero 2 na cm 50",
+        "c. metero 1 na cm 10",
+        "d. nta gisubizo cy’ukuri kirimo"
+            ]
+    },
+    {
+            "imgpath": null,
+            "question": "Nta tara na rimwe cyangwa akagarurarumuri bishobora kuba bifunze kuburyo igice cyabyo cyo hasi cyane kimurika kiba kiri hasi y’ibipimo bikurikira kuva ku butaka igihe ikinyabiziga kidapakiye:",
+            "correct": 4,
+            "choices": [
+        "a. cm 30",
+        "b. cm 20",
+        "c. cm 50",
+        "d. nta gisubizo cy’ukuri kirimo"
+            ]
+    },
+    {
+            "imgpath": null,
+            "question": "Ahari hejuru cyane y’ubuso bumurika h’amatara ndangambere na ndanganyuma ntihashobora kuba aharenze ibipimo bikurikira hejuru y’ubutaka iyo ikinyabiziga kidapakiye:",
+            "correct": 4,
+            "choices": [
+        "a. m1 na cm 50 ",
+        "b. m1 na cm 75",
+        "c. m 1 na cm 80",
+        "d. nta gisubizo cy’ukuri kirimo"
+            ]
+          }
+        ],
+  [
+    {
+            "imgpath": null,
+            "question": "Buri modoka cyangwa buri romoruki ikuruwe n’iyo modoka bishobora kugira itara risa n’icyatsi kibisi bituma umuyobozi yerekana ko yabonye ikimenyetso cy’uwitegura kumunyuraho. Iryo tara rigomba gushyirwa aha hakurikira:",
+            "correct": 2,
+            "choices": [
+        "a. hafi y’inguni y’ibumoso bw’ikinyabiziga",
+        "b. inyuma hafi y’impera y’ibumoso bw’ikinyabiziga",
+        "c. inyuma ahegereye inguni y’iburyo",
+        "d. nta gisubizo cy’ukuri kirimo "
+            ]
+    },
+    {
+            "imgpath": null,
+            "question": "Ubugari bw’imizigo yikorewe n’ipikipiki ifite akanyabiziga ko kuruhande kimwe n’ubwa romoruki ikuruwe na bene icyo kinyabiziga ntibushobora kurenza ibipimo bikurikira ku bugari bw’icyo kinyabiziga kidapakiye:",
+            "correct": 2,
+            "choices": [
+        "a. m 1.25",
+        "b. cm 30",
+        "c. cm 75",
+        "d. nta gisubizo cy’ukuri kirimo"
+            ]
+    },
+    {
+            "imgpath": null,
+            "question": "Mu gihe telefone yawe ihamagawe utwaye imodoka   wakora iki?",
+            "correct": 3,
+            "choices": [
+        "a. Kwitaba cyangwa guhagarara ako kanya ",
+        "b. kutayitaba ",
+        "c. Gushyira imodoka iruhande ukayitaba ",
+        "d. B na c ni ibisubizo byukuri"
+            ]
+    },
+    {
+            "imgpath": null,
+            "question": "Mu gihe telefone yawe ihamagawe utwaye imodoka   wakora iki?",
+            "correct": 3,
+            "choices": [
+        "a. Kwitaba cyangwa guhagarara  ako kanya ",
+        "b. kutayitaba ",
+        "c. Gushyira  imodoka iruhande  ukayitaba ",
+        "d. B na c ni ibisubizo byukuri "
+            ]
+    },
+    {
+            "imgpath": null,
+            "question": "Niki wakora mbere y’uko uhindura icyerekezo?",
+            "correct": 3,
+            "choices": [
+        "a. Gutanga ikimenyetso cy’ukuboko no gukoresha amatara ndangacyerekezo.",
+        "b. Itegereze neza niba icyapa kikwemerera guhindura icyerekezo.",
+        "c. A na B n’ibisubizo by’ukuri",
+        "d. Nta gisubizo cy’ukuri kirimo"
+            ]
+    },
+    {
+            "imgpath": null,
+            "question": "Niki muribi wakwirinda mugihe ushaka kunyuranaho?",
+            "correct": 1,
+            "choices": [
+        "a. Nyuma y’ikona ugategereza kubona uburyo bwo kunyuranaho.",
+        "b. Mumuhanda w’icyerekezo kimwe",
+        "c. Aho utagomba kurenza ibirometero 30 mu isaha.",
+        "d. Ugeze mumuhanda utaringaniye neza"
+            ]
+    },
+    {
+            "imgpath": null,
+            "question": "Niki wakora mugihe usanze mu bimenyetso bimurika harimo ibara ry’umuhondo.",
+            "correct": 3,
+            "choices": [
+        "a. Kongera umuvuduko",
+        "c. Kugumana umuvuduko wari uriho.",
+        "b. Kwitegura guhagarara.",
+        "d. Gufata feri cyane."
+            ]
+    },
+    {
+            "imgpath": null,
+            "question": "Mugihe ukurikiranye na romoruki,n’ukubera iki ugomba gusiga umwanya uhagije hagati yawe nayo?",
+            "correct": 2,
+            "choices": [
+        "a. Bituma ubasha gukata ikorosi vuba.",
+        "b. Bifasha umuyobozi wa romoruki kukurebera mundorerwamo.",
+        "c. Bifasha romoruki guhagarara byoroshye.  ",
+        "d. Bikurinda umuyaga."
+            ]
+    },
+    {
+            "imgpath": null,
+            "question": "Utegereje gukata iburyo kwiherezo ry’umuhanda.ukingirijwe nimodoka ihagaze.niki wakora?",
+            "correct": 1,
+            "choices": [
+        "a. Guhagarara hanyuma ukagenda gake gake witonze kugezaho ureba neza.",
+        "b. Kwihuta wegera imbere aho ushobora kureba ugafunga ikindi cyerekezo.",
+        "c. Gutegereza abanyamaguru bakakumenyesha ko ntakibazo wakata.",
+        "d. Guhindukiza imodoka vuba kugirango ushake indi nzira wakoresha."
+            ]
+    },
+    {
+            "imgpath": null,
+            "question": "217. Mugihe uri murugendo rurerure mumuhanda urombereje w'ibice byinshi. Niki wakora mugihe wumva utangiye kugira ibitotsi?",
+            "correct": 3,
+            "choices": [
+        "a. Gucuranga umuziki cyane.",
+        "b. Kwihuta cyane kugirango usoze urugendo vuba.",
+        "c. Kuva mumuhanda urombereje w’ibice byinshi, ugahagarara ahantu hatekanye.",
+        "d. Ntagisubizo cy’ukuri kirimo."
+            ]
+    },
+    {
+            "imgpath": null,
+            "question": "Uburyo bukoreshwa kugirango ikinyabiziga kigende gahoro igihe feri idakora neza babwita:",
+            "correct": 3,
+            "choices": [
+        " Feri y’urugendo",
+        " Feri yo guhagarara umwanya munini",
+        " Feri yo gutabara",
+        " Nta gisubizo cy’ukuri kirimo"
+            ]
+    },
+    {
+            "imgpath": null,
+            "question": "Nibura ikinyabiziga gitegetswe kugira uduhanagurakirahure tungahe:",
+            "correct": 3,
+            "choices": [
+        " 2",
+        " 3",
+        " 1",
+        " Nta gisubizo cy’ukuri kirimo"
+            ]
+    },
+    {
+            "imgpath": null,
+            "question": "Amatara maremare y’ikinyabiziga agomba kuzimwa mu bihe bikurikira:",
+            "correct": 2,
+            "choices": [
+        " Iyo umuhanda umurikiye umuyobozi abasha kureba muri metero 20",
+        " Iyo ikinyabiziga kigiye kubisikana n’ibindi",
+        " Iyo ari mu nsisiro",
+        " Ibisubizo byose ni ukuri"
+            ]
+    },
+    {
+            "imgpath": null,
+            "question": "Ikinyabiziga ntigishobora kugira amatara arenga abiri y’ubwoko bumwe keretse kubyerekeye amatara akurikira:",
+            "correct": 4,
+            "choices": [
+        " Itara ndangamubyimba",
+        " Itara ryerekana icyerekezo",
+        " Itara ndangaburumbarare",
+        " Ibisubizo byose ni ukuri"
+            ]
+    },
+    {
+            "imgpath": null,
+            "question": "Ubugari bwa romoruki ikuruwe n’igare cyangwa velomoteri ntiburenza ibipimo bikurikira:",
+            "correct": 4,
+            "choices": [
+        " cm25",
+        " cm125",
+        " cm45",
+        " Nta gisubizo cy’ukuri kirimo"
+            ]
+    },
+    {
+            "imgpath": null,
+            "question": "Iyo hatarimo indi myanya birabujijwe gutwara ku ntebe y’imbere y’imodoka abana badafite imyaka:",
+            "correct": 2,
+            "choices": [
+        " Imyaka 10",
+        " Imyaka 12",
+        " Imyaka 7",
+        " Ntagisubizo cy’ukuri kirimo"
+            ]
+    },
+    {
+            "imgpath": null,
+            "question": "Icyapa kivuga gutambuka mbere y’ibinyabiziga biturutse imbere gifite amabara akurikira:",
+            "correct": 4,
+            "choices": [
+        " Ubuso ni umweru",
+        " Ikirango ni umutuku n’umukara",
+        " Ikirango ni umweru n’umukara",
+        " Nta gisubizo cy’ukuri kirimo"
+            ]
+    },
+    {
+            "imgpath": null,
+            "question": "Ni ryari itegeko  rigenga gutambuka mbere kw’iburyo rikurikizwa mu masangano:",
+            "correct": 3,
+            "choices": [
+        " Iyo nta cyapa cyo gutambuka mbere gihari",
+        " Iyo ikimenyetso kimurika cyagenewe ibinyabiziga kidakora",
+        " A na B ni ibisubizo by’ukuri",
+        " Nta gisubizo cy’ukuri"
+            ]
+    },
+    {
+            "imgpath": null,
+            "question": "Ibimenyetso bimurika byerekana uburyo bwo kugendera mu muhanda kw'ibinyabiziga bishyirwa iburyo bw'umuhanda. Ariko bishobora no gushyirwa ibumoso cyangwa hejuru y’umuhanda:",
+            "correct": 3,
+            "choices": [
+        " Hakurikijwe icyerekezo abagenzi bireba baganamo",
+        " Hakurikijwe icyo ibyo bimenyetso bigamije kwerekana",
+        " Kugirango birusheho kugaragara neza",
+        " Ibisubizo byose ni ukuri"
+            ]
+    },
+    {
+            "imgpath": null,
+            "question": "Iyo itara ry’umuhondo rimyatsa rikoreshejwe mu masangano y’amayira ahwanyije agaciro rishyirwa ahagana he:",
+            "correct": 4,
+            "choices": [
+        " Kuri buri nzira",
+        " Hagati y’amasangano",
+        " Iburyo bw’amasangano",
+        " a na b ni ibisubizo by’ ukuri"
+            ]
+    }
   ]
 ]

@@ -1,38 +1,37 @@
 @extends('layouts.app')
 
 @section('content')
+    <div class="flex flex-col min-h-screen">
+        @php
+            // Get all quizzes including the guest quiz
+            $guestQuiz = $quizzes->firstWhere('is_guest_quiz', true);
+            $otherQuizzes = $quizzes->where('is_guest_quiz', false)->take(3);
+        @endphp
 
-    <!-- Car Animation Component -->
-    <x-home.car-animation 
-        title="Start Your Driving Journey"
-        subtitle="Join thousands of successful drivers who passed with our help"
-        ctaText="Get Started Now"
-    />
+        <!-- Top Hero with Car Animation and Guest Quiz -->
+        <div class="flex-none">
+            <x-home.top-hero 
+                :title="__('home.car_animation.title')"
+                :subtitle="__('home.car_animation.subtitle')"
+                :ctaText="__('home.car_animation.cta')"
+                :ctaUrl="route('register', app()->getLocale())"
+                :quizzes="$quizzes" />
+        </div>
 
-    <!-- Hero Section (No Overlay) -->
-    <div class="relative z-20">
-        @include('components.home.hero')
-    </div>
-    
-    <!-- Main Content with Overlay -->
-    <div class="relative bg-white/90 dark:bg-gray-900/90">
-        <div class="relative z-10 px-4 sm:px-6 lg:px-8">
+        <!-- Main Content Area -->
+        <div class="flex-grow">
+            <!-- Plan Tests Section -->
+            <x-home.plan-tests :quizzes="$otherQuizzes" />
 
-        <div class="my-8 sm:my-12 lg:my-16 fade-in delay-200">
-            <h2 class="text-2xl sm:text-3xl font-bold text-center mb-6 sm:mb-8 px-4 fade-in delay-300">
-                {{ __('home.guestQuizSection.tryOurFreeGuestQuiz') }}
-            </h2>
-            <div class="w-full fade-in delay-400">
-                @include('components.home.guest-quiz-carousel', [
-                    'quizzes' => $quizzes,
-                    'guestQuiz' => $guestQuiz ?? null
-                ])
+            <!-- Main Content -->
+            <div class="relative bg-white/90 dark:bg-gray-900/90">
+                <div class="relative z-10 px-4 sm:px-6 lg:px-8">
+                    @include('components.home.hero')
+                    @include('components.home.subscription-plans')
+                    @include('components.home.offers')
+                    @include('components.home.blogs')
+                </div>
             </div>
         </div>
-        
-        @include('components.home.subscription-plans')
-        @include('components.home.offers')
-        @include('components.home.blogs')
-        </div> <!-- Close relative z-10 -->
-    </div> <!-- Close main content with overlay -->
+    </div>
 @endsection

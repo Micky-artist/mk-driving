@@ -166,39 +166,40 @@ Route::prefix('{locale}')
                 \Illuminate\Support\Facades\DB::connection()->getPdo();
                 \Illuminate\Support\Facades\Log::debug('Database connection successful');
                 
-                // Get active guest quizzes with plan data and all active questions
-                $quizzes = \App\Models\Quiz::where('is_guest_quiz', true)
-        ->where('is_active', true)
-        ->withCount('questions')
-        ->with(['questions' => function($query) {
-            $query->where('is_active', true)
-                  ->with(['options' => function($q) {
-                      $q->where('is_active', true)
-                        ->orderBy('order');
-                  }]);
-            $query->orderBy('order');
-        }])
-        ->orderBy('created_at', 'desc')
-        ->take(3)
-        ->get();
+                // Get guest quiz (max 1) and plan-based quizzes (up to 3)
+                $guestQuiz = \App\Models\Quiz::where('is_guest_quiz', true)
+                    ->where('is_active', true)
+                    ->withCount('questions')
+                    ->with(['questions' => function($query) {
+                        $query->where('is_active', true)
+                              ->with(['options'])
+                              ->inRandomOrder();
+                    }])
+                    ->orderBy('created_at', 'desc')
+                    ->first();
 
-// Fallback to any active quizzes if no guest quizzes found
-if ($quizzes->isEmpty()) {
-    $quizzes = \App\Models\Quiz::where('is_active', true)
-        ->with(['questions' => function ($query) {
-            $query->where('is_active', true)
-                  ->with(['options' => function ($q) {
-                      $q->where('is_active', true);
-                  }]);
-        }])
-        ->withCount(['questions' => function ($query) {
-            $query->where('is_active', true);
-        }])
-        ->orderBy('created_at', 'desc')
-        ->take(3)
-        ->get();
-}
-                    
+                // Get plan-based quizzes (non-guest quizzes)
+                $planQuizzes = \App\Models\Quiz::where('is_active', true)
+                    ->where('is_guest_quiz', false)  // Only non-guest quizzes
+                    ->with(['questions' => function ($query) {
+                        $query->where('is_active', true)
+                              ->with(['options'])
+                              ->inRandomOrder();
+                    }])
+                    ->withCount(['questions' => function ($query) {
+                        $query->where('is_active', true);
+                    }])
+                    ->orderBy('created_at', 'desc')
+                    ->take(4)  // Get up to 4 plan-based quizzes
+                    ->get();
+
+                // Combine guest quiz (if exists) with plan quizzes
+                $quizzes = collect();
+                if ($guestQuiz) {
+                    $quizzes->push($guestQuiz);
+                }
+                $quizzes = $quizzes->merge($planQuizzes);
+
                 // Log the actual number of questions loaded for each quiz
                 foreach ($quizzes as $quiz) {
                     \Illuminate\Support\Facades\Log::debug('Quiz questions loaded', [
@@ -267,176 +268,7 @@ if ($quizzes->isEmpty()) {
                     ->name('subscribe');
             });
         });
-    Route::get('', function ($locale) {
-        \Illuminate\Support\Facades\Log::info('Home route accessed', ['locale' => $locale]);
-        
-        // Set the application locale
-        app()->setLocale($locale);
-        \Illuminate\Support\Facades\Log::debug('Locale set to: ' . app()->getLocale());
-        
-        // Get active subscription plans with all language data
-        $plans = SubscriptionPlan::where('is_active', true)
-            ->orderBy('price')
-            ->get()
-            ->map(function ($plan) use ($locale) {
-                // Handle name (string or array)
-                $name = $plan->name;
-                if (is_string($name)) {
-                    $name = json_decode($name, true) ?: [];
-                }
-                $displayName = $name[$locale] ?? $name[config('app.fallback_locale', 'en')] ?? 'Unnamed Plan';
-
-                // Handle description (string or array)
-                $description = $plan->description;
-                if (is_string($description)) {
-                    $description = json_decode($description, true) ?: [];
-                }
-                $displayDescription = $description[$locale] ?? $description[config('app.fallback_locale', 'en')] ?? '';
-
-                // Handle features (string, array, or JSON string)
-                $features = $plan->features;
-                if (is_string($features)) {
-                    $features = json_decode($features, true) ?: [];
-                }
-                
-                // Ensure features is an array and process it
-                $features = is_array($features) ? $features : [];
-                if (isset($features[$locale])) {
-                    $features = (array)$features[$locale];
-                } elseif (isset($features[config('app.fallback_locale', 'en')])) {
-                    $features = (array)$features[config('app.fallback_locale', 'en')];
-                }
-                $features = array_map('strval', $features);
-                
-                return [
-                    'id' => $plan->id,
-                    'slug' => $plan->slug,
-                    'name' => $name,
-                    'display_name' => $name[$locale] ?? $name['en'] ?? 'Unnamed Plan',
-                    'description' => $description,
-                    'display_description' => $description[$locale] ?? $description['en'] ?? '',
-                    'price' => $plan->price,
-                    'duration' => $plan->duration,
-                    'features' => $features,
-                    'display_features' => $features,
-                    'color' => $plan->color,
-                    'max_quizzes' => $plan->max_quizzes
-                ];
-            });
-
-        // Get latest blog posts
-        $blogs = Blog::where('is_published', true)
-            ->with('author')
-            ->orderBy('published_at', 'desc')
-            ->take(3)
-            ->get()
-            ->map(function ($post) use ($locale) {
-                $title = $post->title;
-                $content = $post->content;
-                
-                return [
-                    'id' => $post->id,
-                    'title' => $title[$locale] ?? $title['en'] ?? 'No title',
-                    'excerpt' => \Illuminate\Support\Str::limit(strip_tags($content[$locale] ?? $content['en'] ?? ''), 100),
-                    'image' => $post->featured_image,
-                    'date' => $post->published_at->format('M d, Y'),
-                    'read_time' => ceil(str_word_count(strip_tags($content[$locale] ?? $content['en'] ?? '')) / 200) . ' min read',
-                    'slug' => $post->slug
-                ];
-            });
-
-        $quizzes = collect();
-        
-        try {
-            // First try to get guest quizzes
-            $quizzes = \App\Models\Quiz::where('is_active', true)
-    ->where('is_guest_quiz', true)
-    ->with(['questions' => function ($query) {
-        $query->where('is_active', true);
-    }])
-    ->withCount(['questions' => function ($query) {
-        $query->where('is_active', true);
-    }])
-    ->orderBy('created_at', 'desc')
-    ->take(3)
-    ->get();
-                
-            // If no guest quizzes found, get any active quizzes
-            if ($quizzes->isEmpty()) {
-                $quizzes = \App\Models\Quiz::where('is_active', true)
-                    ->withCount(['questions' => function ($query) {
-                        $query->where('is_active', true);
-                    }])
-                    ->orderBy('created_at', 'desc')
-                    ->take(3)
-                    ->get();
-            }
-            
-            // Format the quizzes data
-            $quizzes = $quizzes->map(function ($quiz) use ($locale) {
-    try {
-        $quiz->title = is_array($quiz->title) 
-            ? ($quiz->title[$locale] ?? $quiz->title['en'] ?? 'Untitled Quiz')
-            : $quiz->title;
-            
-        $quiz->description = is_array($quiz->description)
-            ? ($quiz->description[$locale] ?? $quiz->description['en'] ?? '')
-            : $quiz->description;
-            
-        return $quiz;
-    } catch (\Exception $e) {
-        \Illuminate\Support\Facades\Log::error('Error formatting quiz data: ' . $e->getMessage(), [
-            'quiz_id' => $quiz->id ?? null,
-            'error' => $e->getTraceAsString()
-        ]);
-        return null;
-    }
-})->filter(); // Remove any null entries from the collection
-        } catch (\Exception $e) {
-            \Illuminate\Support\Facades\Log::error('Error in quizzes query: ' . $e->getMessage(), [
-                'exception' => get_class($e),
-                'file' => $e->getFile(),
-                'line' => $e->getLine(),
-                'trace' => $e->getTraceAsString()
-            ]);
-            $quizzes = collect(); // Return empty collection on error
-        }
-            
-        \Illuminate\Support\Facades\Log::debug('Final quiz data prepared for homepage', [
-    'quizzes_count' => $quizzes->count(),
-    'quizzes' => $quizzes->map(function($quiz) {
-        return [
-            'id' => $quiz->id,
-            'title' => $quiz->title,
-            'questions_count' => $quiz->questions_count,
-            'is_guest_quiz' => $quiz->is_guest_quiz,
-            'subscription_plan_slug' => $quiz->subscription_plan_slug,
-            'created_at' => $quiz->created_at,
-            'questions' => $quiz->questions->map(function($question) {
-                return [
-                    'id' => $question->id,
-                    'text' => $question->text,
-                    'options' => $question->options->map(function($option) {
-                        return [
-                            'id' => $option->id,
-                            'option_text' => $option->option_text,
-                            'is_correct' => $option->is_correct
-                        ];
-                    })
-                ];
-            })
-        ];
-    })
-]);
-            
-        return view('home', [
-            'plans' => $plans,
-            'blogs' => $blogs,
-            'quizzes' => $quizzes,
-            'currentLocale' => $locale
-        ]);
-    })->name('home');
-    
+   
     // Alias for home
     Route::get('home', function ($locale) {
         return redirect()->route('home', ['locale' => $locale]);

@@ -4,7 +4,7 @@ return [
     // Main heading and subheading
     'be_our_guest' => 'Be Our Guest',
     'title' => 'Pass on the first try! You practice exactly like you will be tested',
-    'driving_test' => 'DMV test',
+    'driving_test' => 'Provisional test',
     'first_try' => 'on your first try. For real.',
     'subtitle_short' => 'Skip the stress. Practice with 650+ real state-specific, exam‑like questions and clear explanations. 97% pass rate or your money back.',
     'subtitle' => 'Practice with our comprehensive test questions and get ready to pass your driving test on the first try.',
@@ -31,7 +31,7 @@ return [
     // Trust indicators
     'verified_pass_rate' => '97% verified pass rate',
     'pass_guarantee' => 'Pass Guarantee',
-    'trusted_by' => 'Trusted by DMVs',
+    'trusted_by' => 'Trusted',
     'and_libraries' => 'and 10+ libraries',
     'dmv_approved' => 'Trusted',
     'success_guaranteed' => 'Success Guaranteed',
