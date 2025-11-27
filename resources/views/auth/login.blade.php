@@ -277,7 +277,7 @@
 
                                     <div class="text-right">
                                         <a 
-                                            href="{{ route('password.email', app()->getLocale()) }}" 
+                                            href="{{ route('password.request', ['locale' => app()->getLocale()]) }}" 
                                             class="text-sm font-semibold text-[#0369a1] hover:text-[#0c4a6e] hover:underline transition-colors"
                                         >
                                             {{ __('auth.login.forgot_password') }}

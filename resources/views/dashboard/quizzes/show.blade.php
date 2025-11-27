@@ -250,7 +250,7 @@
                     <div class="w-full">
                         <div class="flex justify-between items-center text-sm text-gray-600 mb-1 flex-wrap gap-2">
                             <div class="flex items-center gap-3">
-                                <span>Question <span id="currentQuestion">1</span> of {{ $quiz->questions->count() }}</span>
+                                <span>{{ __('quiz.question') }} <span id="currentQuestion">1</span> {{ __('quiz.of') }} {{ $quiz->questions->count() }}</span>
                                 <span class="score-badge">
                                     <span class="score-correct">✓ <span id="correctCount">0</span></span>
                                     <span class="text-gray-400">|</span>
@@ -756,7 +756,7 @@
         
         // Reset the quiz
         function resetQuiz() {
-            if (!confirm('Are you sure you want to reset the quiz? All your progress will be lost.')) {
+            if (!confirm('{{ __("quiz.resetConfirmation") }}')) {
                 return;
             }
             
@@ -1030,7 +1030,7 @@
         // Update progress bar
         function updateProgressBar() {
             const progress = ((currentQuestionIndex + 1) / questionContainers.length) * 100;
-            progressBar.style.width = progress + '%';
+            progressBar.style.width = `${progress}%`;
         }
         
         // Update score display
@@ -1094,7 +1094,7 @@
                     isQuizCompleted = true;
                     
                     // Auto-submit the quiz when time runs out
-                    alert('Time\'s up! Submitting your answers...');
+                    alert('{{ __("quiz.timeUp") }}');
                     submitQuizForm(true);
                 }
             }, 1000);
@@ -1102,12 +1102,12 @@
         
         // Update the timer display
         function updateTimerDisplay() {
-            const minutes = Math.floor(timeLeft / 60);
-            const seconds = timeLeft % 60;
+            const timeMinutes = Math.floor(timeLeft / 60);
+            const timeSeconds = timeLeft % 60;
             const timerEl = document.getElementById('timer');
             if (!timerEl) return;
             
-            timerEl.textContent = String(minutes).padStart(2, '0') + ':' + String(seconds).padStart(2, '0');
+            timerEl.textContent = `${timeMinutes} {{ __('quiz.minutesShort') }}, ${timeSeconds} {{ __('quiz.secondsShort') }}`;
             
             // Change color when time is running low
             if (timeLeft <= 60) {
@@ -1150,8 +1150,8 @@
             console.log('Showing results:', { correctAnswers: correctAnswers, percentage: percentage, passed: passed });
             
             // Update results modal
-            resultsScore.textContent = percentage + '%';
-            correctAnswersEl.textContent = correctAnswers;
+            resultsScore.textContent = `${correctAnswers} / ${questionContainers.length}`;
+            correctAnswersEl.textContent = `{{ __("quiz.correctAnswers") }}: ${correctAnswers} / ${questionContainers.length} (${percentage}%)`;
             statCorrectEl.textContent = correctAnswers;
             statIncorrectEl.textContent = quizResults.incorrect;
             statTimeTakenEl.textContent = formatTime(timeTaken);
@@ -1165,11 +1165,11 @@
                 if (passed) {
                     passBadge.classList.add('bg-green-100', 'text-green-800');
                     passBadge.classList.remove('bg-red-100', 'text-red-800');
-                    passText.textContent = 'Passed!';
+                    passText.textContent = '{{ __("quiz.passed") }}';
                 } else {
                     passBadge.classList.add('bg-red-100', 'text-red-800');
                     passBadge.classList.remove('bg-green-100', 'text-green-800');
-                    passText.textContent = 'Need ' + passingScore + '% to pass';
+                    passText.textContent = `{{ __("quiz.needToPass") }} ${passingScore}%`;
                 }
             }
             
@@ -1192,16 +1192,16 @@
                     
                     // Show achievement if improved
                     if (improvement > 0) {
-                        showAchievement('Personal Best!', 'You improved by ' + improvement + '%!');
+                        showAchievement('{{ __("quiz.personalBest") }}', `{{ __("quiz.improvedBy") }} ${improvement}%`);
                     }
                 }
             }
             
             // Check for other achievements
             if (percentage === 100) {
-                showAchievement('Perfect Score!', 'You answered all questions correctly!');
+                showAchievement('{{ __("quiz.perfectScore") }}', '{{ __("quiz.allQuestionsCorrect") }}');
             } else if (percentage >= 90) {
-                showAchievement('Excellent!', 'You scored above 90%!');
+                showAchievement('{{ __("quiz.excellent") }}', '{{ __("quiz.scoredAbove90") }}');
             }
             
             // Show modal
@@ -1327,7 +1327,7 @@ function submitQuizForm(isTimeUp = false) {
     .then(response => {
         if (!response.ok) {
             return response.json().then(err => {
-                throw new Error(err.message || 'Failed to submit quiz');
+                throw new Error(err.message || '{{ __("quiz.failedToSubmit") }}');
             });
         }
         return response.json();
@@ -1339,14 +1339,14 @@ function submitQuizForm(isTimeUp = false) {
         if (data.streak) {
             const streakBadge = document.querySelector('.streak-badge');
             if (streakBadge) {
-                streakBadge.innerHTML = '🔥 ' + data.streak + ' day streak';
+                streakBadge.innerHTML = '🔥 ' + data.streak + ' {{ __("quiz.dayStreak") }}';
             }
         }
     })
     .catch(error => {
         console.error('Error submitting quiz:', error);
         // Optionally show error to user
-        alert('Failed to submit quiz: ' + error.message);
+        alert('{{ __("quiz.failedToSubmit") }}: ' + error.message);
     });
 }
         
@@ -1415,6 +1415,8 @@ function submitQuizForm(isTimeUp = false) {
                         window.autoAdvanceTimeout = setTimeout(function() {
                             console.log('Auto-advance executing. State check:', autoNextEnabled);
                             
+                            const isLastQuestion = currentQuestionIndex === questionContainers.length - 1;
+                            submitButton.textContent = isLastQuestion ? '{{ __("quiz.submitQuiz") }}' : '{{ __("quiz.nextQuestion") }}';
                             if (autoNextEnabled && currentQuestionIndex < questionContainers.length - 1) {
                                 showQuestion(currentQuestionIndex + 1);
                             } else {

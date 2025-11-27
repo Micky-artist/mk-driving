@@ -9,9 +9,14 @@
     
     // Get the first question if available
     $firstQuestion = $quiz->questions->first();
-    $questionText = $firstQuestion ? 
-        ($firstQuestion->getTranslation('text', $locale, false) ?: $firstQuestion->text) : 
-        null;
+    $questionText = null;
+    if ($firstQuestion) {
+        $translated = $firstQuestion->getTranslation('text', $locale, false);
+        // Ensure we have a string value
+        $questionText = is_string($translated) ? $translated : 
+                      (is_array($translated) ? json_encode($translated) : 
+                      (is_string($firstQuestion->text) ? $firstQuestion->text : ''));
+    }
     
     // Plan information
     $isFree = !$quiz->subscription_plan_slug;
@@ -106,7 +111,11 @@
                     {{ __('dashboard.quizzes.sample_question') }}:
                 </h4>
                 <p class="text-slate-800 dark:text-slate-200 text-sm">
-                    {{ Str::limit(strip_tags($questionText), 120) }}
+                    @if(is_string($questionText))
+                        {{ Str::limit(strip_tags($questionText), 120) }}
+                    @else
+                        {{ __('dashboard.quizzes.sample_question_text') }}
+                    @endif
                 </p>
             </div>
         @else

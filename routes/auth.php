@@ -7,6 +7,7 @@ use App\Http\Controllers\Auth\PasswordResetLinkController;
 use App\Http\Controllers\Auth\RegisteredUserController;
 use App\Http\Controllers\Auth\VerifyEmailController;
 use Illuminate\Support\Facades\Route;
+use Illuminate\Http\Request;
 
 // Group auth routes with locale prefix
 Route::prefix('{locale}')->where(['locale' => '[a-zA-Z]{2}'])->group(function () {
@@ -28,6 +29,12 @@ Route::prefix('{locale}')->where(['locale' => '[a-zA-Z]{2}'])->group(function ()
         ->middleware('guest')
         ->name('login');
 
+    // Display forgot password form
+    Route::get('/forgot-password', [PasswordResetLinkController::class, 'create'])
+        ->middleware('guest')
+        ->name('password.request');
+
+    // Handle forgot password form submission
     Route::post('/forgot-password', [PasswordResetLinkController::class, 'store'])
         ->middleware('guest')
         ->name('password.email');

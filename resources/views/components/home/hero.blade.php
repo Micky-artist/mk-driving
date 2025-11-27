@@ -62,33 +62,31 @@
 
                 <!-- CTA Buttons - Stacked on mobile -->
                 <div class="flex flex-col sm:flex-row gap-4 sm:gap-5 justify-center lg:justify-start mb-6 sm:mb-8 fade-in delay-400">
-                    @if($guestQuiz ?? false)
                         <a href="{{ route('guest-quiz.show', ['locale' => app()->getLocale(), 'quiz' => $guestQuiz->id]) }}"
                            class="group relative inline-flex items-center justify-center gap-2 bg-gradient-to-r from-cyan-500 to-blue-600 hover:from-cyan-600 hover:to-blue-700 rounded-full text-sm sm:text-base lg:text-lg px-7 py-3.5 sm:px-9 sm:py-4 text-white font-semibold transition-all duration-300 transform hover:scale-105 shadow-lg hover:shadow-xl hover:shadow-cyan-500/30">
-                            <span class="relative z-10">{{ __('hero.try_free_quiz', ['default' => 'Try 5 Free Questions']) }}</span>
+                            <span class="relative z-10">{{ __('hero.sign_up_free', ['default' => 'Sign Up Free']) }}</span>
                             <svg class="w-4 h-4 sm:w-5 sm:h-5 transform group-hover:translate-x-1 transition-transform relative z-10" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                                 <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2.5" d="M13 7l5 5m0 0l-5 5m5-5H6"/>
                             </svg>
                             <span class="absolute inset-0 rounded-full bg-gradient-to-r from-cyan-400/20 to-blue-500/20 opacity-0 group-hover:opacity-100 transition-opacity duration-300"></span>
                         </a>
-                    @endif
-                    
-                    <a href="{{ route('register', app()->getLocale()) }}"
-                       class="group relative inline-flex items-center justify-center gap-2 bg-white dark:bg-gray-800 hover:bg-gray-200 dark:hover:bg-gray-700 rounded-full text-sm sm:text-base lg:text-lg px-7 py-3.5 sm:px-9 sm:py-4 text-[#023047] dark:text-white font-semibold border-2 border-transparent bg-clip-padding before:absolute before:inset-0 before:rounded-full before:bg-gradient-to-r before:from-cyan-400 before:to-blue-500 before:opacity-0 hover:before:opacity-100 before:transition-opacity before:duration-300 before:-z-10 overflow-hidden">
-                        <span class="relative z-10 group-hover:text-white transition-colors duration-300">{{ __('hero.sign_up_free', ['default' => 'Sign Up Free']) }}</span>
-                        <span class="absolute inset-0 bg-gradient-to-r from-cyan-500 to-blue-600 opacity-0 group-hover:opacity-100 transition-opacity duration-300 -z-10"></span>
-                    </a>
                 </div>
 
                 <!-- Compact Trust Indicators -->
                 <div class="flex flex-col sm:flex-row items-center justify-center lg:justify-start gap-3 sm:gap-4 fade-in delay-500">
                     <div class="flex items-center gap-2">
                         <div class="flex -space-x-2">
-                            @foreach(['a9-min.jpg', '73x73-min.jpg', 'OTUwMjkuanBn-min.jpg', '6ZhaVrf-min.jpg'] as $avatar)
+                            @foreach([
+                                'https://images.pexels.com/photos/762080/pexels-photo-762080.jpeg?auto=compress&cs=tinysrgb&w=80&h=80&dpr=2',
+                                'https://images.pexels.com/photos/733872/pexels-photo-733872.jpeg?auto=compress&cs=tinysrgb&w=80&h=80&dpr=2',
+                                'https://images.pexels.com/photos/3764119/pexels-photo-3764119.jpeg?auto=compress&cs=tinysrgb&w=80&h=80&dpr=2',
+                                'https://images.pexels.com/photos/1239291/pexels-photo-1239291.jpeg?auto=compress&cs=tinysrgb&w=80&h=80&dpr=2'
+                            ] as $avatar)
                                 <img 
-                                    src="https://driving-tests.org/wp-content/uploads/2021/05/{{ $avatar }}" 
+                                    src="{{ $avatar }}" 
                                     alt="Student" 
-                                    class="w-8 h-8 rounded-full border-2 border-white dark:border-gray-800"
+                                    class="w-8 h-8 rounded-full border-2 border-white dark:border-gray-800 object-cover"
+                                    loading="lazy"
                                 />
                             @endforeach
                         </div>

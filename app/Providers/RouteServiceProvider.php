@@ -106,6 +106,10 @@ class RouteServiceProvider extends ServiceProvider
                     Route::prefix($locale)
                         ->group(base_path('routes/web.php'));
                         
+                    // Load auth routes with locale prefix
+                    Route::prefix($locale)
+                        ->group(base_path('routes/auth.php'));
+                        
                     // Dashboard routes with localization
                     Route::prefix($locale . '/dashboard')
                         ->name('dashboard.')

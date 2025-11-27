@@ -47,6 +47,7 @@ return [
         'first_name' => 'Izina ribanza',
         'last_name' => 'Izina rya nyina',
         'email' => 'Imeri',
+        'sign_up' => 'Iyandikishe',
         'phone' => 'Numero ya telefone',
         'password' => 'Ijambo ry\'ibanga',
         'confirm_password' => 'Emeza ijambo ry\'ibanga',
@@ -82,5 +83,16 @@ return [
         ],
         'match' => 'Amajambo y\'ibanga arahuje',
         'mismatch' => 'Amajambo y\'ibanga ntabwo arahuje'
+    ],
+
+    // Forgot Password page
+    'forgot_password_page' => [
+        'title' => 'Hindura ijambo ry\'ibanga',
+        'subtitle' => 'Andika imeri ifasha mu guhindura ijambo ry\'ibanga.',
+        'email_placeholder' => 'Imeri',
+        'submit_button' => 'Ohereza',
+        'back_to_login' => 'Subira kwinjira',
+        'success_message' => 'Twohereje imeri ifite umurongo wo guhinduriraho ijambo ry\'ibanga!',
+        'error_message' => 'Ntago tubona konti ifite iyo imeri.'
     ],
 ];

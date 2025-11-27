@@ -48,21 +48,34 @@ class Question extends Model
     public function getTranslation(string $field, ?string $locale = null, bool $useFallback = true): ?string
     {
         $locale = $locale ?: app()->getLocale();
-        $translations = $this->getAttribute($field);
+        $value = $this->getAttribute($field);
         
-        if (!is_array($translations)) {
-            return $this->getAttribute($field);
+        // If the value is not an array, return it directly
+        if (!is_array($value)) {
+            return $value;
         }
         
-        if (isset($translations[$locale])) {
-            return $translations[$locale];
+        // If the value is an array, try to get the translation for the current locale
+        if (isset($value[$locale]) && is_string($value[$locale])) {
+            return $value[$locale];
         }
         
+        // If no translation found and fallback is enabled, try the fallback locale
         if ($useFallback) {
             $fallbackLocale = config('app.fallback_locale', 'en');
-            return $translations[$fallbackLocale] ?? $this->getAttribute($field);
+            if (isset($value[$fallbackLocale]) && is_string($value[$fallbackLocale])) {
+                return $value[$fallbackLocale];
+            }
+            
+            // If no fallback translation, return the first available string value
+            foreach ($value as $translation) {
+                if (is_string($translation)) {
+                    return $translation;
+                }
+            }
         }
         
-        return $this->getAttribute($field);
+        // If all else fails, return null
+        return null;
     }
 }

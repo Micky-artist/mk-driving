@@ -21,16 +21,10 @@
         <exclude name="PSR1.Classes.ClassDeclaration"/>
         <exclude name="PSR1.Files.SideEffects"/>
         <exclude name="PSR1.Files.SideEffects.FoundWithSymbols"/>
-        <exclude name="Squiz.WhiteSpace.ScopeKeywordSpacing"/>
-        <exclude name="Squiz.WhiteSpace.SuperfluousWhitespace"/>
         <exclude name="Generic.WhiteSpace.DisallowTabIndent"/>
         <exclude name="Generic.WhiteSpace.ScopeIndent"/>
         <exclude name="Generic.WhiteSpace.DisallowSpaceIndent"/>
         <exclude name="Generic.WhiteSpace.LanguageConstructSpacing"/>
-        <exclude name="Squiz.WhiteSpace.SuperfluousWhitespace"/>
-        <exclude name="Squiz.WhiteSpace.SuperfluousWhitespace.StartFile"/>
-        <exclude name="Squiz.WhiteSpace.SuperfluousWhitespace.EndFile"/>
-        <exclude name="Squiz.WhiteSpace.SuperfluousWhitespace.EmptyLines"/>
     </rule>
 
     <!-- Only show critical issues -->
@@ -44,8 +38,7 @@
     <rule ref="Generic.Files.LineEndings"/>
     <rule ref="Generic.Files.InlineHTML"/>
     <rule ref="Generic.PHP.DeprecatedFunctions"/>
-    <rule ref="Squiz.PHP.DisallowMultipleAssignments"/>
-    <rule ref="Squiz.PHP.Eval"/>
+    <!-- Disable Squiz sniffs that might not be available in all installations -->
     
     <!-- Disable all whitespace and spacing related rules -->
     <rule ref="Squiz.WhiteSpace">

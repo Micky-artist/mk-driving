@@ -11,6 +11,16 @@ use Illuminate\Validation\ValidationException;
 class PasswordResetLinkController extends Controller
 {
     /**
+     * Display the password reset link request view.
+     *
+     * @return \Illuminate\View\View
+     */
+    public function create()
+    {
+        return view('auth.forgot-password');
+    }
+
+    /**
      * Handle an incoming password reset link request.
      *
      * @throws \Illuminate\Validation\ValidationException

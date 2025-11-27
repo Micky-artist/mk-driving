@@ -37,6 +37,7 @@ return [
         'completed' => 'Completed',
         'in_progress' => 'In Progress',
         'new' => 'New Quizzes',
+        'new_quizzes' => 'New Quizzes',
         'premium_quizzes' => 'Premium Quizzes',
         'upgrade_now' => 'Upgrade Now',
         'upgrade_to_access' => 'Upgrade to Access',

@@ -121,5 +121,25 @@ return [
     'errorLoadingQuiz' => 'Error loading quiz. Please try again.',
     'sessionExpired' => 'Your quiz session has expired. Please start again.',
     'connectionError' => 'Connection error. Please check your internet connection.',
-    'serverError' => 'Server error. Please try again later.'
+    'serverError' => 'Server error. Please try again later.',
+    
+    // Quiz taking UI
+    'resetQuiz' => 'Reset Quiz',
+    'resetConfirmation' => 'Are you sure you want to reset the quiz? Your progress will be lost and you\'ll start over.',
+    'quizCompleted' => 'Quiz Completed',
+    'quizInProgress' => 'Quiz In Progress',
+    'selectAnswer' => 'Select an answer',
+    'answerSaved' => 'Your answer has been saved',
+    'saving' => 'Saving...',
+    'allQuestionsAnswered' => 'All questions answered!',
+    'someQuestionsUnanswered' => 'You have some unanswered questions. Are you sure you want to submit anyway?',
+    'submitAnyway' => 'Yes, submit anyway',
+    'returnToQuiz' => 'Return to Quiz',
+    'correctAnswers' => 'Correct Answers',
+    'incorrectAnswers' => 'Incorrect Answers',
+    'skippedQuestions' => 'Skipped Questions',
+    'timeSpent' => 'Time Spent',
+    'minutesShort' => 'min',
+    'secondsShort' => 'sec',
+    'questionNumber' => 'Question :current of :total'
 ];

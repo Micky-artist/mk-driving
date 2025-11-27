@@ -47,6 +47,7 @@ return [
         'first_name' => 'First Name',
         'last_name' => 'Last Name',
         'email' => 'Email',
+        'sign_up' => 'Sign up',
         'creating_account' => 'Creating account...',
         'phone' => 'Phone Number',
         'password' => 'Password',
@@ -82,5 +83,16 @@ return [
         ],
         'match' => 'Passwords match',
         'mismatch' => 'Passwords do not match'
+    ],
+
+    // Forgot Password page
+    'forgot_password_page' => [
+        'title' => 'Reset Your Password',
+        'subtitle' => 'Enter your email address and we\'ll send you a link to reset your password.',
+        'email_placeholder' => 'Email address',
+        'submit_button' => 'Send Reset Link',
+        'back_to_login' => 'Back to login',
+        'success_message' => 'We have emailed your password reset link!',
+        'error_message' => 'We can\'t find a user with that email address.'
     ],
 ];

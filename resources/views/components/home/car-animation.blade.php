@@ -14,7 +14,7 @@
             </div>
 
             <!-- Bike Animation Container -->
-            <div id="bike-animation-container" class="absolute bottom-0 right-0 -mb-6 md:-mb-10 -mr-10 z-20 w-[300px] md:w-[500px] h-auto">
+            <div id="bike-animation-container" class="absolute bottom-0 right-0 -mb-6 md:-mb-10 md:-mr-10 z-20 w-[300px] md:w-[500px] h-auto">
                 <div id="bike-animation" class="w-full h-full">
                     <!-- Bike shadow -->
                     <div
