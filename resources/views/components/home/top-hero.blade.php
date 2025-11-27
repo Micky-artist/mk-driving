@@ -44,7 +44,7 @@
                     <x-home.car-animation />
 
                     <!-- CTA Button -->
-                    <div class="relative inline-block group ml-4 mt-40 md:mt-60">
+                    <div class="relative inline-block group ml-8 md:ml-4 mt-40 md:mt-60">
                         <div
                             class="absolute -inset-1 bg-gradient-to-r from-cyan-400 to-blue-500 rounded-full blur opacity-75 group-hover:opacity-100 transition-all duration-300 group-hover:animate-pulse">
                         </div>
