@@ -414,46 +414,65 @@
     </div>
 
     <!-- New Quizzes -->
-    @if($newQuizzes->count() > 0)
-        <div class="bg-white rounded-lg shadow overflow-hidden">
-            <div class="p-4 sm:p-6">
-                <div class="flex items-center justify-between mb-4">
-                    <h2 class="text-lg font-medium text-gray-900">{{ __('dashboard.quizzes.new') }}</h2>
-                    @if(Route::has('quizzes.index'))
-                        <a href="{{ route('dashboard.quizzes.index', ['locale' => app()->getLocale()]) }}" class="text-sm font-medium text-blue-600 hover:text-blue-500">{{ __('dashboard.quizzes.view_all') }}</a>
-                    @endif
-                </div>
-                <div class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-4">
-                    @foreach($newQuizzes as $quiz)
-                        <div class="border rounded-lg overflow-hidden hover:shadow-md transition-shadow">
-                            <div class="p-4">
-                                <div class="flex justify-between items-start">
-                                    <h3 class="font-medium text-gray-900">{{ $quiz->title }}</h3>
-                                    @if($quiz->subscription_plan_id)
-                                        <span class="inline-flex items-center px-2.5 py-0.5 rounded-full text-xs font-medium bg-yellow-100 text-yellow-800">
-                                            {{ $quiz->subscriptionPlan->name }}
-                                        </span>
-                                    @endif
-                                </div>
-                                <p class="mt-1 text-sm text-gray-500">{{ $quiz->description }}</p>
-                                <div class="mt-4 flex items-center justify-between">
-                                    <div class="flex items-center text-sm text-gray-500">
-                                        <svg xmlns="http://www.w3.org/2000/svg" class="h-4 w-4 mr-1" fill="none" viewBox="0 0 24 24" stroke="currentColor">
-                                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 8v4l3 3m6-3a9 9 0 11-18 0 9 9 0 0118 0z" />
-                                        </svg>
-                                        {{ $quiz->time_limit_minutes }} {{ __('dashboard.quizzes.min') }}
-                                    </div>
-                                    <a href="{{ route('dashboard.quizzes.show', ['locale' => app()->getLocale(), 'quiz' => $quiz]) }}" class="inline-flex items-center px-3 py-1.5 border border-transparent text-xs font-medium rounded shadow-sm text-white bg-blue-600 hover:bg-blue-700 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-blue-500">
-                                        {{ __('dashboard.quizzes.start_quiz') }}
-                                    </a>
-                                </div>
-                            </div>
-                        </div>
-                    @endforeach
-                </div>
-            </div>
+    <!-- New Quizzes Section -->
+    <div class="space-y-6">
+        <div class="flex items-center justify-between">
+            <h2 class="text-2xl font-bold text-gray-900">
+                @if($currentSubscriptions->isEmpty())
+                    {{ __('dashboard.quizzes.premium_quizzes') }}
+                @else
+                    {{ __('dashboard.quizzes.new_quizzes') }}
+                @endif
+            </h2>
+            @if(Route::has('quizzes.index'))
+                <a href="{{ route('dashboard.quizzes.index', ['locale' => app()->getLocale()]) }}" class="inline-flex items-center text-blue-600 hover:text-blue-800 font-medium text-sm transition-colors">
+                    {{ $currentSubscriptions->isEmpty() ? __('dashboard.quizzes.view_all_plans') : __('dashboard.quizzes.view_all_quizzes') }}
+                    <svg xmlns="http://www.w3.org/2000/svg" class="h-4 w-4 ml-1" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 5l7 7-7 7" />
+                    </svg>
+                </a>
+            @endif
         </div>
-    @endif
+
+        @if($newQuizzes->count() > 0)
+            <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
+                @foreach($newQuizzes as $quiz)
+                    <x-quiz.quiz-card :quiz="$quiz" />
+                @endforeach
+            </div>
+            
+            @if($currentSubscriptions->isEmpty())
+                <div class="mt-6 text-center">
+                    <a href="{{ route('plans', ['locale' => app()->getLocale()]) }}" 
+                       class="inline-flex items-center justify-center px-6 py-3 border border-transparent text-base font-medium rounded-md text-white bg-gradient-to-r from-blue-600 to-blue-700 hover:from-blue-700 hover:to-blue-800 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-blue-500 shadow-lg hover:shadow-xl transition-all duration-300 transform hover:-translate-y-0.5">
+                        {{ __('dashboard.quizzes.unlock_all_quizzes') }}
+                        <svg xmlns="http://www.w3.org/2000/svg" class="h-5 w-5 ml-2" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M14 5l7 7m0 0l-7 7m7-7H3" />
+                        </svg>
+                    </a>
+                </div>
+            @endif
+        @else
+            <div class="bg-white rounded-xl shadow-sm p-8 text-center border-2 border-dashed border-gray-200">
+                <svg xmlns="http://www.w3.org/2000/svg" class="h-12 w-12 mx-auto text-gray-400" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="1.5" d="M9.663 17h4.673M12 3v1m6.364 1.636l-.707.707M21 12h-1M4 12H3m3.343-5.657l-.707-.707m2.828 9.9a5 5 0 117.072 0l-.548.547A3.374 3.374 0 0014 18.469V19a2 2 0 11-4 0v-.531c0-.895-.356-1.754-.988-2.386l-.548-.547z" />
+                </svg>
+                <h3 class="mt-2 text-lg font-medium text-gray-900">
+                    {{ __('dashboard.quizzes.no_new_quizzes_title') }}
+                </h3>
+                <p class="mt-1 text-sm text-gray-500">
+                    {{ __('dashboard.quizzes.no_new_quizzes_description') }}
+                </p>
+                @if($currentSubscriptions->isEmpty())
+                    <div class="mt-6">
+                        <a href="{{ route('plans', ['locale' => app()->getLocale()]) }}" class="inline-flex items-center px-4 py-2 border border-transparent text-sm font-medium rounded-md shadow-sm text-white bg-blue-600 hover:bg-blue-700 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-blue-500">
+                            {{ __('dashboard.quizzes.browse_plans') }}
+                        </a>
+                    </div>
+                @endif
+            </div>
+        @endif
+    </div>
 
     <!-- In Progress Quizzes -->
     @if($inProgressQuizzes->count() > 0)

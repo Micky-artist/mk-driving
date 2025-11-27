@@ -70,17 +70,48 @@ class DashboardController extends Controller
             $averageScore = $completedAttempts->avg('score');
         }
         
-        // Get new quizzes (not attempted by user)
+        // Get new quizzes - show a mix of free and premium quizzes
         $attemptedQuizIds = $user->quizAttempts()->pluck('quiz_id');
+        $hasActiveSubscription = !$currentSubscriptions->isEmpty();
+        
+        // Get 3 newest quizzes (both free and premium) that user hasn't attempted
         $newQuizzes = Quiz::where('is_active', true)
             ->whereNotIn('id', $attemptedQuizIds)
-            ->where(function($query) use ($currentSubscriptions) {
-                $query->whereNull('subscription_plan_id')
-                    ->orWhereIn('subscription_plan_id', $currentSubscriptions->pluck('subscription_plan_id'));
-            })
+            ->with('subscriptionPlan') // Eager load subscription plan
             ->orderBy('created_at', 'desc')
-            ->take(3)
-            ->get();
+            ->take(6) // Get a few more than needed in case we need to filter
+            ->get()
+            ->map(function($quiz) use ($hasActiveSubscription, $currentSubscriptions) {
+                // Check if quiz is locked based on subscription status
+                $quiz->is_locked = $quiz->subscription_plan_slug && 
+                                 ($hasActiveSubscription ? 
+                                     !$currentSubscriptions->contains('subscription_plan_slug', $quiz->subscription_plan_slug) : 
+                                     true);
+                return $quiz;
+            });
+            
+        // If user has no active subscription, make sure we have some premium quizzes to show
+        if (!$hasActiveSubscription) {
+            $premiumQuizzes = $newQuizzes->where('subscription_plan_slug', '!==', null);
+            if ($premiumQuizzes->count() === 0) {
+                // If no premium quizzes in the initial fetch, get some
+                $additionalPremium = Quiz::where('is_active', true)
+                    ->whereNotNull('subscription_plan_slug')
+                    ->whereNotIn('id', $attemptedQuizIds)
+                    ->with('subscriptionPlan')
+                    ->orderBy('created_at', 'desc')
+                    ->take(3)
+                    ->get()
+                    ->map(function($quiz) {
+                        $quiz->is_locked = true;
+                        return $quiz;
+                    });
+                $newQuizzes = $newQuizzes->concat($additionalPremium);
+            }
+        }
+        
+        // Take only the 3 newest quizzes
+        $newQuizzes = $newQuizzes->sortByDesc('created_at')->take(3);
             
         // Get in-progress quizzes (started but not completed)
         $inProgressQuizzes = $user->quizAttempts()

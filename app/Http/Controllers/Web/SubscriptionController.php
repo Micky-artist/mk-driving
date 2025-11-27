@@ -21,8 +21,9 @@ class SubscriptionController extends Controller
             ->orderBy('price')
             ->get()
             ->map(function($plan) use ($currentLocale, $user) {
-                $name = json_decode($plan->name, true) ?? [];
-                $description = json_decode($plan->description, true) ?? [];
+                // These are already arrays due to the model's $casts
+                $name = $plan->name ?? [];
+                $description = $plan->description ?? [];
                 
                 return [
                     'id' => $plan->id,
