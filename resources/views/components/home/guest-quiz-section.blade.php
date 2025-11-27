@@ -138,14 +138,14 @@
             </svg>
         </div>
         <h3 class="text-xl font-bold mb-2">
-            {{ __(':planName Quiz Locked', ['planName' => $planName]) }}
+            {{ __('home.guestQuiz.quiz_locked', ['planName' => $planName]) }}
         </h3>
         <p class="text-blue-100 mb-6">
-            {{ __('Subscribe to our :planName plan to unlock this and all other :planName quizzes!', ['planName' => $planName]) }}
+            {{ __('home.guestQuiz.subscribe_to_unlock', ['planName' => $planName]) }}
         </p>
         <a href="{{ route('register', app()->getLocale()) }}" 
            class="bg-orange-500 hover:bg-orange-600 text-white font-bold py-3 px-6 rounded-lg shadow-lg hover:shadow-xl transition-all duration-300 transform hover:scale-105">
-            {{ __('Sign Up to Unlock') }}
+            {{ __('home.guestQuiz.sign_up_to_unlock') }}
         </a>
     </div>
     @endif
@@ -153,16 +153,17 @@
     <!-- Question Header -->
     <div class="bg-gradient-to-r from-blue-600 to-blue-700 px-6 py-4">
         <h3 class="text-xl font-bold text-white">
-            {{ __('Practice Here. Now.') }}
+            {{ __('home.guestQuiz.practice_here') }}
         </h3>
     </div>
     
     @if($question)
-        <div class="p-0">
+        <div class="pt-2">
             <!-- Question -->
-            <p class="text-white font-medium mb-4 leading-tight">
-                {{ $questionText }}
-            </p>
+            <!-- Question -->
+<p class="text-gray-700 dark:text-gray-200 font-medium mb-4 leading-tight">
+    {!! $question->getTranslation('text', app()->getLocale()) ?? ($question->text['en'] ?? 'Question text not available') !!}
+</p>
             
             <!-- Feedback Message -->
             <div x-show="showAnswer" x-transition class="mb-4 p-3 rounded-lg" 
@@ -212,12 +213,12 @@
                     <div class="space-y-3">
                         <div x-show="isCorrect" class="animate-bounce">
                             <p class="text-green-600 dark:text-green-400 font-medium mb-2">
-                                🎉 {{ __('Great job! Ready for more?') }}
+                                🎉 {{ __('home.guestQuiz.great_job') }}
                             </p>
                         </div>
                         <a href="{{ route('guest-quiz.show', ['locale' => app()->getLocale(), 'quiz' => $guestQuiz['id']]) }}"
                            class="inline-flex items-center justify-center w-full bg-gradient-to-r from-orange-500 to-orange-600 hover:from-orange-600 hover:to-orange-700 text-white font-medium py-3 px-6 rounded-lg shadow-lg hover:shadow-xl transition-all duration-300 transform hover:scale-105">
-                            <span x-text="isCorrect ? '🚀 ' + '{{ __("Continue Your Winning Streak!") }}' : '💪 ' + '{{ __("Challenge Yourself with More!") }}'"></span>
+                            <span x-text="isCorrect ? '🚀 ' + '{{ __("home.guestQuiz.continue_streak") }}' : '💪 ' + '{{ __("home.guestQuiz.challenge_yourself") }}'"></span>
                             <svg class="w-5 h-5 ml-2 animate-pulse" fill="none" stroke="currentColor" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg">
                                 <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M13 7l5 5m0 0l-5 5m5-5H6"></path>
                             </svg>
@@ -227,10 +228,10 @@
                 
                 <p class="mt-3 text-xs text-gray-500 dark:text-gray-400 relative z-10">
                     <span x-show="!showAnswer">
-                        {{ $guestQuiz['question_count'] ?? 0 }} {{ __('challenging questions') }} • {{ __('No registration needed') }}
+                        {{ trans_choice('home.guestQuiz.challenging_questions', $guestQuiz['question_count'] ?? 0, ['count' => $guestQuiz['question_count'] ?? 0]) }} • {{ __('home.guestQuiz.no_registration') }}
                     </span>
                     <span x-show="showAnswer" class="text-blue-500 font-medium">
-                        {{ __('Unlock all questions and track your progress!') }}
+                        {{ __('home.guestQuiz.unlock_questions') }}
                     </span>
                 </p>
             </div>

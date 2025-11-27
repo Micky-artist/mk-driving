@@ -61,20 +61,22 @@
                 </div>
 
                 <!-- CTA Buttons - Stacked on mobile -->
-                <div class="flex flex-col sm:flex-row gap-3 sm:gap-4 justify-center lg:justify-start mb-6 sm:mb-8 fade-in delay-400">
+                <div class="flex flex-col sm:flex-row gap-4 sm:gap-5 justify-center lg:justify-start mb-6 sm:mb-8 fade-in delay-400">
                     @if($guestQuiz ?? false)
                         <a href="{{ route('guest-quiz.show', ['locale' => app()->getLocale(), 'quiz' => $guestQuiz->id]) }}"
-                           class="group relative inline-flex items-center justify-center gap-2 bg-[#023047] hover:bg-[#023047]/90 rounded-full text-sm sm:text-base lg:text-lg px-6 py-3 sm:px-8 sm:py-4 text-white font-semibold transition-all duration-300 transform hover:scale-105 shadow-lg hover:shadow-xl">
-                            <span>{{ __('hero.try_free_quiz', ['default' => 'Try 5 Free Questions']) }}</span>
-                            <svg class="w-4 h-4 sm:w-5 sm:h-5 transform group-hover:translate-x-1 transition-transform" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M13 7l5 5m0 0l-5 5m5-5H6"/>
+                           class="group relative inline-flex items-center justify-center gap-2 bg-gradient-to-r from-cyan-500 to-blue-600 hover:from-cyan-600 hover:to-blue-700 rounded-full text-sm sm:text-base lg:text-lg px-7 py-3.5 sm:px-9 sm:py-4 text-white font-semibold transition-all duration-300 transform hover:scale-105 shadow-lg hover:shadow-xl hover:shadow-cyan-500/30">
+                            <span class="relative z-10">{{ __('hero.try_free_quiz', ['default' => 'Try 5 Free Questions']) }}</span>
+                            <svg class="w-4 h-4 sm:w-5 sm:h-5 transform group-hover:translate-x-1 transition-transform relative z-10" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2.5" d="M13 7l5 5m0 0l-5 5m5-5H6"/>
                             </svg>
+                            <span class="absolute inset-0 rounded-full bg-gradient-to-r from-cyan-400/20 to-blue-500/20 opacity-0 group-hover:opacity-100 transition-opacity duration-300"></span>
                         </a>
                     @endif
                     
                     <a href="{{ route('register', app()->getLocale()) }}"
-                       class="inline-flex items-center justify-center gap-2 bg-white dark:bg-gray-800 hover:bg-gray-50 dark:hover:bg-gray-700 rounded-full text-sm sm:text-base lg:text-lg px-6 py-3 sm:px-8 sm:py-4 text-[#023047] dark:text-white font-semibold border-2 border-[#023047] dark:border-white transition-all duration-300 transform hover:scale-105 shadow-md hover:shadow-lg">
-                        <span>{{ __('hero.sign_up_free', ['default' => 'Sign Up Free']) }}</span>
+                       class="group relative inline-flex items-center justify-center gap-2 bg-white dark:bg-gray-800 hover:bg-gray-200 dark:hover:bg-gray-700 rounded-full text-sm sm:text-base lg:text-lg px-7 py-3.5 sm:px-9 sm:py-4 text-[#023047] dark:text-white font-semibold border-2 border-transparent bg-clip-padding before:absolute before:inset-0 before:rounded-full before:bg-gradient-to-r before:from-cyan-400 before:to-blue-500 before:opacity-0 hover:before:opacity-100 before:transition-opacity before:duration-300 before:-z-10 overflow-hidden">
+                        <span class="relative z-10 group-hover:text-white transition-colors duration-300">{{ __('hero.sign_up_free', ['default' => 'Sign Up Free']) }}</span>
+                        <span class="absolute inset-0 bg-gradient-to-r from-cyan-500 to-blue-600 opacity-0 group-hover:opacity-100 transition-opacity duration-300 -z-10"></span>
                     </a>
                 </div>
 
@@ -138,7 +140,7 @@
 
                         <!-- Start Test Button - Bottom Right -->
                         @if($guestQuiz ?? false)
-                            
+                            <a
                                 href="{{ route('guest-quiz.show', ['locale' => app()->getLocale(), 'quiz' => $guestQuiz->id]) }}"
                                 class="absolute bottom-2 right-2 sm:bottom-4 sm:right-4 group rounded-xl sm:rounded-2xl border-2 border-white/80 px-3 py-2 sm:px-5 sm:py-3 bg-gradient-to-r from-[#FF7B00] to-[#ff9a3c] hover:from-[#ff9a3c] hover:to-[#FF7B00] backdrop-blur-xl text-white transition-all duration-300 transform hover:scale-110 shadow-xl fade-in delay-400"
                             >
@@ -172,7 +174,7 @@
                                 <svg class="w-3 h-3 sm:w-4 sm:h-4 text-white" fill="currentColor" viewBox="0 0 20 20">
                                     <path fill-rule="evenodd" d="M6.267 3.455a3.066 3.066 0 001.745-.723 3.066 3.066 0 013.976 0 3.066 3.066 0 001.745.723 3.066 3.066 0 012.812 2.812c.051.643.304 1.254.723 1.745a3.066 3.066 0 010 3.976 3.066 3.066 0 00-.723 1.745 3.066 3.066 0 01-2.812 2.812 3.066 3.066 0 00-1.745.723 3.066 3.066 0 01-3.976 0 3.066 3.066 0 00-1.745-.723 3.066 3.066 0 01-2.812-2.812 3.066 3.066 0 00-.723-1.745 3.066 3.066 0 010-3.976 3.066 3.066 0 00.723-1.745 3.066 3.066 0 012.812-2.812zm7.44 5.252a1 1 0 00-1.414-1.414L9 10.586 7.707 9.293a1 1 0 00-1.414 1.414l2 2a1 1 0 001.414 0l4-4z" clip-rule="evenodd"/>
                                 </svg>
-                                <span class="text-white font-semibold text-[10px] sm:text-xs">{{ __('hero.dmv_approved', ['default' => 'Approved']) }}</span>
+                                <span class="text-white font-semibold text-[10px] sm:text-xs">{{ __('hero.dmv_approved', ['default' => 'DMV Approved']) }}</span>
                             </div>
                         </div>
                     </div>

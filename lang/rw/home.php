@@ -104,6 +104,29 @@ return [
         'no_sign_up' => 'Ntibisaba kwiyandikisha!',
     ],
 
+    'planTests' => [
+        'more_tests' => 'Indi Myitozo',
+        'subtitle' => 'Ongera ifatabuguzi na Mobile Money.',
+        'questions_count' => '{0} Nta kibazo|{1} :count Ikibazo|[2,*] :count Ibibazo',
+        'plan' => 'Ifatabuguzi',
+        'unlock_access' => 'Tangira Ifatabuguzi',
+        'pay_with_mobile_money' => 'Kwishyura kuri Mobile Money',
+        'view_all_plans' => 'Reba Amafatabuguzi',
+        'browse_all_quizzes' => 'Reba Imyitozo Yose',
+    ],
+    
+    'guestQuiz' => [
+        'practice_here' => 'Itoze Hano.',
+        'great_job' => 'Ukoze neza! Witeguye kongera?',
+        'continue_streak' => 'Komeza Gutsinda!',
+        'challenge_yourself' => 'Komerezaho!',
+        'challenging_questions' => '{0} Nta kibazo|{1} :count ikibazo gikomeye|[2,*] :count ibibazo bikomeye',
+        'no_registration' => 'Ntukeneye kwiyandikisha',
+        'unlock_questions' => 'Fungura ibibazo byose wongere ubumenyi!',
+        'sign_up_to_unlock' => 'Iyandikishe Kugirango Ukomeze',
+        'quiz_locked' => 'Imyitozo ya :planName Irafunze',
+        'subscribe_to_unlock' => 'Iyandikishe kuri :planName kugirango ufungure iyi n\'indi myitozo yose ya :planName!',
+    ],
     'footer' => [
         'tagline' => 'Umufatanyabikorwa wizewe mu kwiga amategeko y\'umuhanda. Dukugufasha kwitegura ikizamini cyawe hakoreshejwe ibikoresho n\'ubujyanama bw\'abahanga.',
         'contact' => 'Twandikire',

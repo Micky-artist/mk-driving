@@ -161,12 +161,39 @@ class ImportDrivingQuestions extends Command
                 return;
             }
 
+            // Track image count for basic plan (quiz ID 1-15)
+            static $basicPlanImageCount = 0;
+            $isBasicPlan = $quiz->id <= 15;
+            
             // Extract image path from imgpath if it exists
             $imageUrl = null;
-            if (!empty($questionData['imgpath']) && 
-                is_string($questionData['imgpath']) &&
-                preg_match('/src=[\'"]([^\'"]+)[\'"]/', $questionData['imgpath'], $matches)) {
-                $imageUrl = basename($matches[1]);
+            if (!empty($questionData['imgpath']) && is_string($questionData['imgpath'])) {
+                // Extract the image path using a more flexible regex
+                if (preg_match('/src=[\"\']?([^\s\"\'>]+)/i', $questionData['imgpath'], $matches)) {
+                    $imgPath = $matches[1];
+                    // Remove any '../' prefix and get just the filename
+                    $imageName = basename(str_replace('../', '', $imgPath));
+                    
+                    // Only process .jpg files from examMedia directory
+                    if (str_ends_with(strtolower($imageName), '.jpg') && str_contains(strtolower($imgPath), 'exammedia/')) {
+                        // For basic plan, only allow the first 15 images
+                        if ($isBasicPlan) {
+                            if ($basicPlanImageCount < 15) {
+                                $imageUrl = 'examMedia/' . $imageName;  // Keep the directory structure
+                                $basicPlanImageCount++;
+                                $this->info("Assigned image to basic plan (count: {$basicPlanImageCount}/15): " . $imageName);
+                            } else {
+                                $this->info("Skipping image for basic plan (limit reached): " . $imageName);
+                            }
+                        } else {
+                            // For other plans, allow all images
+                            $imageUrl = 'examMedia/' . $imageName;  // Keep the directory structure
+                            $this->info("Assigned image to premium plan: " . $imageName);
+                        }
+                    } else {
+                        $this->info("Skipping non-jpg file or file not in examMedia directory: " . $imageName);
+                    }
+                }
             }
 
             // Create the question

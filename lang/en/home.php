@@ -104,6 +104,29 @@ return [
         'no_sign_up' => 'No Sign up!',
     ],
 
+    'planTests' => [
+        'more_tests' => 'More Tests',
+        'subtitle' => 'Access premium driving tests and quizzes to prepare for your exam',
+        'questions_count' => '{0} No questions|{1} :count Question|[2,*] :count Questions',
+        'plan' => 'Plan',
+        'unlock_access' => 'Unlock full access to this test',
+        'pay_with_mobile_money' => 'Pay with Mobile Money',
+        'view_all_plans' => 'View All Plans',
+        'browse_all_quizzes' => 'Browse All Quizzes',
+    ],
+    
+    'guestQuiz' => [
+        'practice_here' => 'Practice Here. Now.',
+        'great_job' => 'Great job! Ready for more?',
+        'continue_streak' => 'Continue Your Winning Streak!',
+        'challenge_yourself' => 'Challenge Yourself with More!',
+        'challenging_questions' => '{0} No questions|{1} :count challenging question|[2,*] :count challenging questions',
+        'no_registration' => 'No registration needed',
+        'unlock_questions' => 'Unlock all questions and track your progress!',
+        'sign_up_to_unlock' => 'Sign Up to Unlock',
+        'quiz_locked' => ':planName Quiz Locked',
+        'subscribe_to_unlock' => 'Subscribe to our :planName plan to unlock this and all other :planName quizzes!',
+    ],
     'footer' => [
         'tagline' => 'Your trusted partner in driving education. We help you prepare for your driving test with comprehensive resources and expert guidance.',
         'contact' => 'Contact',
