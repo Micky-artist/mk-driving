@@ -152,10 +152,76 @@
     .back-to-login:hover svg {
         transform: translateX(-4px);
     }
+    
+    /* Confirmation Dialog Styles */
+    .confirmation-dialog {
+        display: none;
+        position: fixed;
+        top: 0;
+        left: 0;
+        right: 0;
+        bottom: 0;
+        background-color: rgba(0, 0, 0, 0.5);
+        z-index: 50;
+        justify-content: center;
+        align-items: center;
+    }
+    
+    .confirmation-dialog.active {
+        display: flex;
+    }
+    
+    .confirmation-content {
+        background: var(--card-bg);
+        border-radius: 1rem;
+        padding: 2rem;
+        max-width: 28rem;
+        width: 90%;
+        box-shadow: var(--card-shadow);
+        border: 1px solid var(--card-border);
+        text-align: center;
+    }
+    
+    .confirmation-icon {
+        width: 4rem;
+        height: 4rem;
+        margin: 0 auto 1.5rem;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        border-radius: 50%;
+        background-color: rgba(16, 185, 129, 0.1);
+    }
+    
+    .confirmation-icon svg {
+        width: 2.5rem;
+        height: 2.5rem;
+        color: #10b981;
+    }
 </style>
 @endpush
 
 @section('content')
+<!-- Confirmation Dialog -->
+<div id="confirmationDialog" class="confirmation-dialog">
+    <div class="confirmation-content">
+        <div class="confirmation-icon">
+            <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M5 13l4 4L19 7" />
+            </svg>
+        </div>
+        <h3 class="text-xl font-bold text-gray-900 dark:text-white mb-2">
+            {{ __('auth.forgot_password_page.dialog_title') }}
+        </h3>
+        <p class="text-gray-600 dark:text-gray-300 mb-6">
+            {{ __('auth.forgot_password_page.dialog_message') }} <span id="sentEmail" class="font-medium text-primary-600 dark:text-primary-400"></span>
+        </p>
+        <button onclick="closeConfirmationDialog()" class="btn-primary w-auto px-8">
+            {{ __('auth.forgot_password_page.dialog_button') }}
+        </button>
+    </div>
+</div>
+
 <div class="w-full min-h-screen flex flex-col relative overflow-hidden gradient-bg">
     <!-- Background Animation Component -->
     <x-background-animation />
@@ -189,7 +255,7 @@
                     </div>
                 @endif
 
-                <form method="POST" action="{{ route('password.email', app()->getLocale()) }}" class="space-y-4">
+                <form id="forgotPasswordForm" method="POST" action="{{ route('password.email', app()->getLocale()) }}" class="space-y-4">
                     @csrf
 
                     <!-- Email -->
@@ -239,4 +305,114 @@
         </div>
     </div>
 </div>
+@push('scripts')
+<script>
+    function showConfirmationDialog(email) {
+        const dialog = document.getElementById('confirmationDialog');
+        if (!dialog) return;
+        
+        // Update dialog content with localized strings
+        const titleElement = dialog.querySelector('h3');
+        const messageElement = dialog.querySelector('p');
+        const buttonElement = dialog.querySelector('button');
+        
+        if (titleElement) {
+            titleElement.textContent = '{{ __("auth.forgot_password_page.dialog_title") }}';
+        }
+        
+        if (messageElement) {
+            messageElement.innerHTML = '{{ __("auth.forgot_password_page.dialog_message") }} ' + 
+                '<span id="sentEmail" class="font-medium text-primary-600 dark:text-primary-400">' + 
+                email + 
+                '</span>';
+        }
+        
+        if (buttonElement) {
+            buttonElement.textContent = '{{ __("auth.forgot_password_page.dialog_button") }}';
+        }
+        
+        // Show the dialog
+        dialog.classList.add('active');
+    }
+    
+    function closeConfirmationDialog() {
+        document.getElementById('confirmationDialog').classList.remove('active');
+    }
+    
+    document.addEventListener('DOMContentLoaded', function() {
+        const form = document.getElementById('forgotPasswordForm');
+        
+        if (form) {
+            form.addEventListener('submit', async function(e) {
+                e.preventDefault();
+                
+                const formData = new FormData(form);
+                const submitButton = form.querySelector('button[type="submit"]');
+                const originalButtonText = submitButton.innerHTML;
+                
+                try {
+                    // Show loading state
+                    submitButton.disabled = true;
+                    submitButton.innerHTML = `
+                        <svg class="animate-spin -ml-1 mr-2 h-5 w-5 text-white" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24">
+                            <circle class="opacity-25" cx="12" cy="12" r="10" stroke="currentColor" stroke-width="4"></circle>
+                            <path class="opacity-75" fill="currentColor" d="M4 12a8 8 0 018-8V0C5.373 0 0 5.373 0 12h4zm2 5.291A7.962 7.962 0 014 12H0c0 3.042 1.135 5.824 3 7.938l3-2.647z"></path>
+                        </svg>
+                        {{ __('auth.forgot_password_page.sending') }}
+                    `;
+                    
+                    const response = await fetch(form.action, {
+                        method: 'POST',
+                        headers: {
+                            'Accept': 'application/json',
+                            'X-CSRF-TOKEN': document.querySelector('meta[name="csrf-token"]').content,
+                            'X-Requested-With': 'XMLHttpRequest'
+                        },
+                        body: formData
+                    });
+                    
+                    const data = await response.json();
+                    
+                    if (response.ok) {
+                        // Show success dialog with localized messages
+                        showConfirmationDialog(formData.get('email'));
+                    } else {
+                        // Handle errors
+                        if (data.errors) {
+                            // Clear previous errors
+                            const errorElements = form.querySelectorAll('.error-message');
+                            errorElements.forEach(el => el.remove());
+                            
+                            // Show new errors
+                            for (const [field, messages] of Object.entries(data.errors)) {
+                                const input = form.querySelector(`[name="${field}"]`);
+                                if (input) {
+                                    const errorDiv = document.createElement('p');
+                                    errorDiv.className = 'mt-1 text-sm text-red-600 dark:text-red-400 error-message';
+                                    errorDiv.textContent = messages[0];
+                                    input.parentNode.insertBefore(errorDiv, input.nextSibling);
+                                }
+                            }
+                        }
+                    }
+                } catch (error) {
+                    console.error('Error:', error);
+                    // Fall back to normal form submission if AJAX fails
+                    form.submit();
+                } finally {
+                    // Reset button state
+                    submitButton.disabled = false;
+                    submitButton.innerHTML = originalButtonText;
+                }
+            });
+        }
+        
+        // Check if we have a success status and show the dialog (for non-AJAX submissions)
+        @if(session('status') === 'passwords.sent' && session('email'))
+            showConfirmationDialog('{{ session('email') }}');
+        @endif
+    });
+</script>
+@endpush
+
 @endsection

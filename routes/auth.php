@@ -39,6 +39,12 @@ Route::prefix('{locale}')->where(['locale' => '[a-zA-Z]{2}'])->group(function ()
         ->middleware('guest')
         ->name('password.email');
 
+    // Display reset password form
+    Route::get('/reset-password/{token}', [NewPasswordController::class, 'create'])
+        ->middleware('guest')
+        ->name('password.reset');
+
+    // Handle reset password form submission
     Route::post('/reset-password', [NewPasswordController::class, 'store'])
         ->middleware('guest')
         ->name('password.store');

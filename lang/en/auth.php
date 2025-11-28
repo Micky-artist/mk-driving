@@ -41,6 +41,44 @@ return [
     'sign_in' => 'Sign in',
     
     // Register page
+    // Forgot Password Page
+    'forgot_password_page' => [
+        'title' => 'Reset Your Password',
+        'subtitle' => 'Enter your email and we\'ll send you a link to reset your password.',
+        'email_placeholder' => 'Enter your email address',
+        'submit_button' => 'Send Reset Link',
+        'back_to_login' => 'Back to Login',
+        'success_message' => 'We have emailed your password reset link!',
+        'sending' => 'Sending...',
+        'dialog_title' => 'Check Your Email',
+        'dialog_message' => 'We\'ve sent a password reset link to',
+        'dialog_button' => 'Got it',
+    ],
+
+    // Reset Password Page
+    'reset_password_page' => [
+        'title' => 'Create New Password',
+        'subtitle' => 'Create a new password for your account.',
+        'email_placeholder' => 'Your email address',
+        'new_password_placeholder' => 'Enter new password',
+        'confirm_password_placeholder' => 'Confirm new password',
+        'submit_button' => 'Reset Password',
+        'back_to_login' => 'Back to Login',
+        'success_message' => 'Your password has been reset!',
+    ],
+
+    // Password Reset Email
+    'reset_password_email' => [
+        'title' => 'Reset Your Password',
+        'subtitle' => 'You requested to reset your password',
+        'you_are_receiving' => 'You are receiving this email because we received a password reset request for your account.',
+        'reset_button' => 'Reset Password',
+        'expiry_notice' => 'This password reset link will expire in :count minutes.',
+        'ignore_if_not_requested' => 'If you did not request a password reset, no further action is required.',
+        'contact_support' => 'If you did not make this request, please contact our support team at :email.',
+        'trouble_with_button' => 'If you\'re having trouble clicking the "Reset Password" button, copy and paste the URL below into your web browser:',
+    ],
+
     'register' => [
         'title' => 'Create Your Account',
         'subtitle' => 'Join MK Scholars Driving School today!',

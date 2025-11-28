@@ -11,7 +11,7 @@ return [
     'cvv' => 'CVV',
     'copy' => 'Gukoporora',
     'name_on_card' => 'Izina kuri ikarita',
-    'processing' => 'Irakora...',
+    'processing' => 'Biri gukorwa...',
     'payment_success' => 'Kwishyura byagenze neza!',
     'payment_failed' => 'Kwishyura byanze',
     'receipt' => 'Inyemezabuguzi',

@@ -10,10 +10,10 @@ use App\Http\Controllers\Web\Admin\GuestQuizController;
 use App\Http\Controllers\Web\Admin\ForumController;
 use Illuminate\Support\Facades\Route;
 
-// Admin routes group - middleware and prefix are applied in web.php
+// Admin routes group - middleware, prefix and name are applied in web.php
 Route::group([], function () {
-        // Admin Dashboard
-        Route::get('/', [AdminController::class, 'dashboard'])->name('dashboard');
+        // Admin Portal
+        Route::get('/', [AdminController::class, 'dashboard'])->name('portal'); // This will be 'admin.portal' due to the route group prefix
 
         // Profile Management
         Route::prefix('profile')->name('profile.')->group(function () {
@@ -24,6 +24,11 @@ Route::group([], function () {
 
         // User Management
         Route::resource('users', UserController::class)->names('users');
+        Route::post('users/{user}/suspend', [UserController::class, 'suspend'])
+            ->name('users.suspend');
+        // User Activation
+        Route::patch('users/{user}/activate', [UserController::class, 'activate'])
+            ->name('users.activate');
         Route::post('users/{user}/change-password', [UserController::class, 'changePassword'])
             ->name('users.change-password');
 

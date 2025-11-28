@@ -1,80 +1,88 @@
 @php
-    // Helper functions to determine plan styling
+    // Helper functions to determine plan styling based on slug
     $getPlanType = function ($plan) {
-        // First try to get the slug directly
-        $slug = null;
+        // Get the slug from array or object
+        $slug = is_array($plan) 
+            ? ($plan['slug'] ?? null)
+            : (is_object($plan) ? $plan->slug : null);
 
-        if (is_array($plan)) {
-            $slug = $plan['slug'] ?? ($plan['id'] ?? null);
-        } elseif (is_object($plan)) {
-            $slug = $plan->slug ?? ($plan->id ?? null);
+        if (empty($slug)) {
+            return 'basic';
         }
 
-        // If we have a slug, use it directly
-        if (!empty($slug)) {
-            $slug = strtolower(trim($slug));
+        $slug = strtolower(trim($slug));
 
-            // Return the slug as the plan type if it matches our expected values
-            if (in_array($slug, ['gold-unlimited', 'premium', 'standard', 'basic'])) {
-                return $slug;
-            }
-        }
-
-        // Fallback to old behavior if no valid slug found
-        $planName = is_array($plan)
-            ? $plan['display_name'] ??
-                (is_array($plan['name'] ?? null) ? $plan['name']['en'] ?? '' : $plan['name'] ?? '')
-            : (is_object($plan)
-                ? $plan->display_name ?? (is_object($plan->name ?? null) ? $plan->name->en ?? '' : $plan->name ?? '')
-                : '');
-
-        $planName = strtolower($planName);
-
-        if (str_contains($planName, 'gold-unlimited')) {
+        // Match the plan type based on slug
+        if (str_contains($slug, 'gold-unlimited') || $slug === 'gold-unlimited-plan') {
             return 'gold-unlimited';
         }
-        if (str_contains($planName, 'premium')) {
+        if (str_contains($slug, 'premium') || $slug === 'premium-plan') {
             return 'premium';
         }
-        if (str_contains($planName, 'standard') || str_contains($planName, 'std')) {
+        if (str_contains($slug, 'standard') || $slug === 'standard-plan') {
             return 'standard';
         }
+        if (str_contains($slug, 'basic') || $slug === 'basic-plan') {
+            return 'basic';
+        }
+        
+        // Default fallback
         return 'basic';
     };
 
+    // Enhanced styling functions for different plan types with more vibrant colors
     $getGradientClass = function ($planType) {
         return match ($planType) {
-            'gold-unlimited' => 'from-amber-500 to-amber-600',
-            'premium' => 'from-blue-800 to-blue-900',
-            'standard' => 'from-blue-600 to-blue-700',
-            default => 'from-blue-100 to-blue-200',
+            'gold-unlimited' => 'from-amber-400 to-yellow-600',  // More vibrant gold gradient
+            'premium' => 'from-blue-500 to-indigo-700',
+            'standard' => 'from-blue-400 to-blue-600',
+            default => 'from-blue-300 to-blue-500',
         };
     };
 
     $getTextClass = function ($planType) {
         return match ($planType) {
-            'gold-unlimited' => 'text-amber-700 dark:text-amber-300',
-            'premium' => 'text-blue-900 dark:text-blue-200',
-            'standard' => 'text-blue-800 dark:text-blue-200',
-            default => 'text-blue-700 dark:text-blue-300',
+            'gold-unlimited' => 'text-yellow-800 dark:text-yellow-100',
+            'premium' => 'text-blue-900 dark:text-blue-100',
+            'standard' => 'text-blue-800 dark:text-blue-100',
+            default => 'text-blue-700 dark:text-blue-200',
         };
     };
 
     $getBadgeClass = function ($planType) {
         return match ($planType) {
-            'gold-unlimited' => 'from-amber-500 to-amber-600',
-            'premium' => 'from-blue-800 to-blue-900',
-            'standard' => 'from-blue-600 to-blue-700',
-            default => 'from-blue-400 to-blue-500',
+            'gold-unlimited' => 'from-amber-400 to-yellow-600 shadow-lg shadow-yellow-500/20',
+            'premium' => 'from-blue-500 to-indigo-700 shadow-lg shadow-blue-500/20',
+            'standard' => 'from-blue-400 to-blue-600 shadow-lg shadow-blue-400/20',
+            default => 'from-blue-300 to-blue-500 shadow-lg shadow-blue-300/20',
         };
     };
 
     $getCardBgClass = function ($planType) {
         return match ($planType) {
-            'gold-unlimited' => 'bg-amber-50 dark:bg-amber-900/20',
-            'premium' => 'bg-blue-50 dark:bg-blue-900/20',
-            'standard' => 'bg-blue-50 dark:bg-blue-800/20',
-            default => 'bg-blue-50 dark:bg-blue-700/20',
+            'gold-unlimited' => 'bg-gradient-to-br from-yellow-50 to-amber-100 dark:from-yellow-900/40 dark:to-amber-900/30 border-2 border-yellow-100 dark:border-yellow-700/60 shadow-lg shadow-yellow-100/30 dark:shadow-yellow-900/10',
+            'premium' => 'bg-gradient-to-br from-blue-50 to-indigo-100 dark:from-blue-900/40 dark:to-indigo-900/30 border-2 border-blue-100 dark:border-blue-700/60 shadow-lg shadow-blue-100/30 dark:shadow-blue-900/10',
+            'standard' => 'bg-gradient-to-br from-blue-50 to-blue-100 dark:from-blue-900/40 dark:to-blue-800/30 border-2 border-blue-100 dark:border-blue-700/50 shadow-lg shadow-blue-100/20 dark:shadow-blue-900/10',
+            default => 'bg-gradient-to-br from-gray-50 to-gray-100 dark:from-gray-800/40 dark:to-gray-900/30 border-2 border-gray-100 dark:border-gray-600/50 shadow-lg shadow-gray-100/20 dark:shadow-gray-900/10',
+        };
+    };
+
+    // Button styling functions
+    $getButtonGlow = function($planType) {
+        return match($planType) {
+            'gold-unlimited' => 'from-yellow-400 to-amber-500',
+            'premium' => 'from-blue-500 to-indigo-600',
+            'standard' => 'from-blue-400 to-blue-600',
+            default => 'from-blue-300 to-blue-500',
+        };
+    };
+
+    $getButtonGradient = function($planType) {
+        return match($planType) {
+            'gold-unlimited' => 'from-yellow-600 to-amber-600 hover:from-amber-500 hover:to-yellow-600',
+            'premium' => 'from-blue-600 to-indigo-700 hover:from-blue-700 hover:to-indigo-800',
+            'standard' => 'from-blue-500 to-blue-700 hover:from-blue-600 hover:to-blue-800',
+            default => 'from-blue-400 to-blue-600 hover:from-blue-500 hover:to-blue-700',
         };
     };
 
@@ -146,38 +154,52 @@
     };
 @endphp
 
-<div class="my-16">
-    <div class="text-center mb-10 fade-in">
-        <h2 class="text-2xl sm:text-3xl font-bold text-gray-900 dark:text-white mb-4">{{ __('home.subscriptionPlans.title') }}</h2>
-        <p class="text-gray-600 dark:text-gray-300 max-w-2xl mx-auto fade-in delay-100">
+<div class="relative py-4 bg-gradient-to-br from-blue-50 to-indigo-50 dark:from-gray-900 dark:to-gray-800">
+    <div class="relative max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+        <!-- Premium billboard header -->
+<div class="text-center mb-8 fade-in">
+    <div class="inline-block bg-gradient-to-r from-blue-600 to-blue-700 dark:from-blue-800 dark:to-blue-900 rounded-xl px-8 py-6 shadow-lg">
+        <h2 class="text-3xl sm:text-4xl font-bold text-white mb-2">
+            {{ __('home.subscriptionPlans.title') }}
+        </h2>
+        <div class="w-16 h-1 bg-blue-400/50 mx-auto my-3 rounded-full"></div>
+        <p class="text-blue-100 dark:text-blue-200 max-w-2xl mx-auto text-sm sm:text-base">
             {{ __('home.subscriptionPlans.subtitle') }}
         </p>
     </div>
+</div>
+        <div class="mt-4">
 
-    <div class="grid md:grid-cols-2 lg:grid-cols-4 gap-6 max-w-6xl mx-auto px-4">
+        <div class="grid md:grid-cols-2 lg:grid-cols-4 gap-6">
         @foreach ($plans ?? [] as $plan)
             @php
                 $planType = $getPlanType($plan);
                 $isPopular = $planType === 'premium';
-                $features = $processFeatures($plan['features'] ?? []);
-                $isCurrentPlan = $plan['is_current'] ?? false
+                // Use display_features which is already processed for the current locale
+                $features = is_array($plan['display_features'] ?? null) ? $plan['display_features'] : [];
+                // Check if current plan (call the closure if it's a closure)
+                $isCurrentPlan = is_callable($plan['is_current'] ?? null) ? $plan['is_current']() : ($plan['is_current'] ?? false);
             @endphp
 
             <div
-                class="relative pt-8 h-full rounded-xl overflow-visible shadow-md hover:shadow-lg transition-all duration-300 transform hover:-translate-y-1 {{ $getCardBgClass($planType) }} fade-in"
+                class="group relative pt-6 h-full rounded-2xl overflow-visible shadow-lg hover:shadow-2xl transition-all duration-300 transform hover:-translate-y-2 {{ $getCardBgClass($planType) }} fade-in"
                 style="animation-delay: {{ $loop->index * 0.1 }}s;">
                 @if ($isPopular)
                     <div
-                        class="absolute -top-3 left-1/2 -translate-x-1/2 bg-gradient-to-r {{ $getBadgeClass($planType) }} text-white text-xs font-bold px-4 py-1 rounded-full shadow-lg z-50 whitespace-nowrap">
+                        class="absolute -top-4 left-1/2 -translate-x-1/2 bg-gradient-to-r {{ $getBadgeClass($planType) }} text-white text-sm font-extrabold px-6 py-1.5 rounded-full shadow-lg z-50 whitespace-nowrap transform group-hover:scale-105 transition-transform duration-300">
                         {{ __('home.subscriptionPlans.mostPopular') }}
                     </div>
                 @endif
 
                 <div class="h-full flex flex-col">
-                    <div class="p-6 pb-0 fade-in delay-100">
-                        <h3 class="text-xl font-bold {{ $getTextClass($planType) }} mb-2">
-                            {{ $plan['display_name'] ?? ($plan['name']['en'] ?? 'Unnamed Plan') }}</h3>
-                        <p class="text-3xl font-bold {{ $getTextClass($planType) }}">
+                    <div class="p-4 pb-2 fade-in delay-100">
+                        <div class="mb-2">
+                            <h3 class="text-2xl font-extrabold {{ $getTextClass($planType) }} mb-1">
+                                {{ $plan['display_name'] }}
+                            </h3>
+                            <div class="h-1 w-12 rounded-full bg-gradient-to-r {{ $getGradientClass($planType) }} mb-2"></div>
+                        </div>
+                        <p class="text-4xl font-black {{ $getTextClass($planType) }} mb-1">
                             {{ __('home.subscriptionPlans.billing.currency', ['amount' => number_format($plan['price'])]) }}
                         </p>
                         <p class="text-base font-normal text-gray-600 dark:text-gray-300 mb-4">
@@ -228,33 +250,76 @@
 
                     <div class="p-6 pt-0 mt-auto fade-in delay-300">
                         @if ($isCurrentPlan)
-                            <button
-                                class="w-full text-center bg-gray-400 text-white font-medium py-2 px-4 rounded-lg cursor-not-allowed"
-                                disabled>
-                                {{ __('home.subscriptionPlans.currentPlan') }}
-                            </button>
+                            <div class="relative group">
+                                <div class="absolute -inset-0.5 bg-gradient-to-r from-gray-400 to-gray-300 dark:from-gray-600 dark:to-gray-700 rounded-lg opacity-70 group-hover:opacity-100 blur transition duration-1000 group-hover:duration-300"></div>
+                                <button
+                                    class="relative w-full text-center bg-gray-300 dark:bg-gray-700 text-gray-800 dark:text-gray-200 font-semibold py-3 px-6 rounded-lg border-2 border-white/20 shadow-md transition-all duration-300 transform hover:scale-[1.02]"
+                                    disabled>
+                                    <span class="flex items-center justify-center">
+                                        <svg class="w-5 h-5 mr-2" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M5 13l4 4L19 7" />
+                                        </svg>
+                                        {{ __('home.subscriptionPlans.currentPlan') }}
+                                    </span>
+                                </button>
+                            </div>
                         @else
                             <div class="w-full">
                                 @auth
-                                    <button x-data="{}"
-                                        @click="
-                                            $dispatch('open-payment-modal', { 
+                                    @php
+                                        $planName = addslashes($plan['display_name'] ?? ($plan['name']['en'] ?? 'Unnamed Plan'));
+                                        $price = number_format($plan['price']);
+                                        $duration = $plan['duration'] ?? 1;
+                                        $durationText = '';
+                                        
+                                        if (isset($plan['duration']) && $plan['duration'] > 1) {
+                                            $durationText = "/ {$plan['duration']} " . __('home.subscriptionPlans.months');
+                                        } elseif (isset($plan['duration_in_days']) && $plan['duration_in_days'] > 0) {
+                                            $durationText = "/ {$plan['duration_in_days']} " . __('home.subscriptionPlans.days');
+                                        }
+                                    @endphp
+                                    <div class="relative group">
+                                        <div class="absolute -inset-0.5 bg-gradient-to-r {{ $getButtonGlow($planType) }} rounded-lg opacity-70 group-hover:opacity-100 blur transition duration-1000 group-hover:duration-300"></div>
+                                        <button 
+                                            x-data="{}"
+                                            @click="$dispatch('open-payment-modal', { 
                                                 planId: '{{ $plan['id'] }}',
-                                                planName: '{{ addslashes($plan['display_name'] ?? ($plan['name']['en'] ?? 'Unnamed Plan')) }}',
+                                                planName: '{{ $planName }}',
+                                                price: '{{ $price }} RWF{{ $durationText }}',
                                                 amount: {{ $plan['price'] }},
                                                 currency: 'RWF',
-                                                duration: {{ $plan['duration'] ?? 1 }}
-                                            });
-                                        "
-                                        class="w-full text-center {{ $planType === 'gold' ? 'bg-yellow-500 hover:bg-yellow-600' : 'bg-teal-600 hover:bg-teal-700' }} text-white font-medium py-2 px-4 rounded-lg transition-colors">
-                                        <span>{{ __('home.subscriptionPlans.subscribe') }}</span>
-                                    </button>
+                                                duration: {{ $duration }}
+                                            })"
+                                            class="relative w-full text-center bg-gradient-to-r {{ $getButtonGradient($planType) }} text-white font-semibold py-3 px-6 rounded-lg border-2 border-white/20 shadow-lg transform transition-all duration-300 hover:scale-[1.02]"
+                                        >
+                                            <span class="flex items-center justify-center">
+                                                <svg class="w-5 h-5 mr-2 text-white" fill="none" stroke="currentColor" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg">
+                                                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M16 11V7a4 4 0 00-8 0v4M5 9h14l1 12H4L5 9z"></path>
+                                                </svg>
+                                                {{ __('home.subscriptionPlans.subscribe') }}
+                                                <svg class="w-4 h-4 ml-2 -mr-1" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M14 5l7 7m0 0l-7 7m7-7H3" />
+                                                </svg>
+                                            </span>
+                                        </button>
+                                    </div>
                                 @else
-                                    <a href="{{ route('login') }}" 
-                                       onclick="localStorage.setItem('intended_url', window.location.href);"
-                                       class="block w-full text-center {{ $planType === 'gold' ? 'bg-yellow-500 hover:bg-yellow-600' : 'bg-teal-600 hover:bg-teal-700' }} text-white font-medium py-2 px-4 rounded-lg transition-colors">
-                                        {{ __('home.subscriptionPlans.subscribe') }}
-                                    </a>
+                                    <div class="relative group">
+                                        <div class="absolute -inset-0.5 bg-gradient-to-r {{ $getButtonGlow($planType) }} rounded-lg opacity-70 group-hover:opacity-100 blur transition duration-1000 group-hover:duration-300"></div>
+                                        <a href="{{ route('login') }}" 
+                                           onclick="localStorage.setItem('intended_url', window.location.href);"
+                                           class="relative block w-full text-center bg-gradient-to-r {{ $getButtonGradient($planType) }} text-white font-semibold py-3 px-6 rounded-lg border-2 border-white/20 shadow-lg transform transition-all duration-300 hover:scale-[1.02]">
+                                            <span class="flex items-center justify-center">
+                                                <svg class="w-5 h-5 mr-2 text-white" fill="none" stroke="currentColor" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg">
+                                                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M16 11V7a4 4 0 00-8 0v4M5 9h14l1 12H4L5 9z"></path>
+                                                </svg>
+                                                {{ __('home.subscriptionPlans.subscribe') }}
+                                                <svg class="w-4 h-4 ml-2 -mr-1" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M14 5l7 7m0 0l-7 7m7-7H3" />
+                                                </svg>
+                                            </span>
+                                        </a>
+                                    </div>
                                 @endauth
                             </div>
                         @endif
@@ -262,13 +327,19 @@
                 </div>
             </div>
         @endforeach
-    </div>
-
-    <div class="mt-10 text-center fade-in delay-400">
-        <p class="text-gray-600 dark:text-gray-300 mb-4">{{ __('home.subscriptionPlans.needHelp') }}</p>
-        <a href="{{ route('home', ['#subscription-plans']) }}" class="text-teal-600 dark:text-teal-400 font-medium hover:underline transition-colors duration-200 hover:text-teal-700 dark:hover:text-teal-300">
-            {{ __('home.subscriptionPlans.contact_us') }}
-        </a>
+            <!-- Closing div for cards grid -->
+        </div>
+        
+        <!-- Help section -->
+        <div class="mt-12 text-center fade-in delay-400">
+            <p class="text-gray-600 dark:text-gray-300 mb-3">{{ __('home.subscriptionPlans.needHelp') }}</p>
+            <a href="{{ route('home', ['#subscription-plans']) }}" class="inline-flex items-center text-blue-600 dark:text-blue-400 font-medium hover:text-blue-800 dark:hover:text-blue-300 transition-colors duration-200 group">
+                <span>{{ __('home.subscriptionPlans.contact_us') }}</span>
+                <svg class="w-4 h-4 ml-1 transform group-hover:translate-x-1 transition-transform duration-200" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M14 5l7 7m0 0l-7 7m7-7H3" />
+                </svg>
+            </a>
+        </div>
     </div>
 </div>
 

@@ -116,7 +116,7 @@ return [
     'subscription' => [
         'no_active' => 'Nta fatabuguzi mufite',
         'subscribe_now' => 'Kwiyandikisha Nonaha',
-        'active' => 'Irakora',
+        'active' => 'Wakwitoza',
     ],
     'subscription_plans' => [
         'available_plans' => 'Amahugurwa y\'abiyandikishe',

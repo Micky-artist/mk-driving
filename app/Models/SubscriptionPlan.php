@@ -53,30 +53,38 @@ class SubscriptionPlan extends Model
      */
     public function getFeaturesAttribute($value)
     {
-        // If value is already an array, use it directly
-        if (is_array($value)) {
-            $features = $value;
-        } else {
-            // Try to decode JSON string
-            $decoded = json_decode($value, true);
-            $features = json_last_error() === JSON_ERROR_NONE ? $decoded : [];
-        }
+        // If value is already an array, use it directly, otherwise try to decode JSON
+        $features = is_array($value) ? $value : (json_decode($value, true) ?: []);
         
         $locale = app()->getLocale();
         $fallback = config('app.fallback_locale', 'en');
         
-        // Ensure $features is an array before mapping
-        if (!is_array($features)) {
+        // If features is empty or not an array, return empty array
+        if (!is_array($features) || empty($features)) {
             return [];
         }
         
-        return array_map(function($feature) use ($locale, $fallback) {
-            if (is_array($feature)) {
-                return $feature[$locale] ?? $feature[$fallback] ?? '';
-            }
-            // If feature is a string, return it as is
-            return $feature;
-        }, $features);
+        // Check if features is a simple array (no language codes)
+        if (array_values($features) === $features) {
+            return array_values($features);
+        }
+        
+        // If features has language codes as keys (e.g., 'en' => [...], 'rw' => [...])
+        if (isset($features[$locale]) && is_array($features[$locale])) {
+            return array_values($features[$locale]);
+        }
+        
+        if (isset($features[$fallback]) && is_array($features[$fallback])) {
+            return array_values($features[$fallback]);
+        }
+        
+        // If we have a single feature that's a string, return it as an array
+        if (is_string($features)) {
+            return [$features];
+        }
+        
+        // Last resort: return the features as-is, but ensure it's an array
+        return is_array($features) ? array_values($features) : [];
     }
 
     /**

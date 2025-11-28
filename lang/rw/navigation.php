@@ -17,6 +17,7 @@ return [
     'forum' => 'Ikiganiro',
     'settings' => 'Igenamiterere',
     'search' => 'Gushakisha',
+    'admin_portal' => 'Kuri Admin',
     'quick_links' => 'Aho wahera',
     'pricing_plans' => 'Ifatabuguzi',
     'about_us' => 'Dusobanukirwe',

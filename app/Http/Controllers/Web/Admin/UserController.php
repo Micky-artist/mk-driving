@@ -201,6 +201,51 @@ class UserController extends Controller
     }
 
     /**
+     * Suspend the specified user.
+     *
+     * @param  \App\Models\User  $user
+     * @return \Illuminate\Http\RedirectResponse
+     */
+    public function suspend(User $user)
+    {
+        try {
+            // Prevent suspending self
+            if ($user->id === auth()->id()) {
+                return back()->with('error', 'You cannot suspend your own account.');
+            }
+
+            $user->update([
+                'status' => 'suspended',
+                'suspended_at' => now(),
+            ]);
+
+            return back()->with('success', 'User has been suspended successfully.');
+        } catch (\Exception $e) {
+            return back()->with('error', 'Failed to suspend user: ' . $e->getMessage());
+        }
+    }
+
+    /**
+     * Activate the specified user.
+     *
+     * @param  \App\Models\User  $user
+     * @return \Illuminate\Http\RedirectResponse
+     */
+    public function activate(User $user)
+    {
+        try {
+            $user->update([
+                'status' => 'active',
+                'suspended_at' => null,
+            ]);
+
+            return back()->with('success', 'User has been activated successfully.');
+        } catch (\Exception $e) {
+            return back()->with('error', 'Failed to activate user: ' . $e->getMessage());
+        }
+    }
+
+    /**
      * Update the specified user's status.
      *
      * @param  \Illuminate\Http\Request  $request

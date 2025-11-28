@@ -8,12 +8,6 @@ return [
         'getStarted' => 'Get started',
         'learnMore' => 'Learn more',
     ],
-    'guestQuizSection' => [
-        'tryOurFreeGuestQuiz' => 'Try Our Free Guest Quiz',
-        'testYourKnowledge' => 'Test your knowledge with our free driving quiz',
-        'startQuiz' => 'Start Quiz',
-        'noQuizAvailable' => 'No guest quiz available at the moment',
-    ],
     'offers' => [
         'title' => 'What We Offer',
         'subtitle' => 'Comprehensive driving education for all levels',
@@ -104,6 +98,30 @@ return [
         'no_sign_up' => 'No Sign up!',
     ],
 
+    'billboard' => [
+        'freeTrial' => 'Free Trial',
+        'practiceAnytime' => 'Practice Anytime',
+        'momoPay' => 'Momo Pay',
+    ],
+
+    'trafficLight' => [
+        'title' => 'Know!',
+        'lights' => [
+            'red' => [
+                'en' => 'STOP',
+                'rw' => 'Hagarara'
+            ],
+            'yellow' => [
+                'en' => 'SLOW',
+                'rw' => 'Genda buhoro'
+            ],
+            'green' => [
+                'en' => 'GO',
+                'rw' => 'Genda'
+            ]
+        ]
+    ],
+
     'planTests' => [
         'more_tests' => 'More Tests',
         'subtitle' => 'Access premium driving tests and quizzes to prepare for your exam',
@@ -122,10 +140,18 @@ return [
         'challenge_yourself' => 'Challenge Yourself with More!',
         'challenging_questions' => '{0} No questions|{1} :count challenging question|[2,*] :count challenging questions',
         'no_registration' => 'No registration needed',
-        'unlock_questions' => 'Unlock all questions and track your progress!',
+        'unlock_questions' => 'Unlock more questions and track your progress!',
         'sign_up_to_unlock' => 'Sign Up to Unlock',
         'quiz_locked' => ':planName Quiz Locked',
         'subscribe_to_unlock' => 'Subscribe to our :planName plan to unlock this and all other :planName quizzes!',
+        'tryOurFreeGuestQuiz' => 'Try Our Free Guest Quiz',
+        'testYourKnowledge' => 'Test your knowledge with our free driving quiz',
+        'startQuiz' => 'Start Quiz',
+        'noQuizAvailable' => 'No guest quiz available at the moment',
+        'save_your_progress' => 'Save Your Progress',
+        'sign_up_to_save' => 'Sign up to save your quiz results and track your learning journey',
+        'sign_up_now' => 'Sign Up Now',
+        'continue_as_guest' => 'Continue as Guest',
     ],
     'footer' => [
         'tagline' => 'Your trusted partner in driving education. We help you prepare for your driving test with comprehensive resources and expert guidance.',

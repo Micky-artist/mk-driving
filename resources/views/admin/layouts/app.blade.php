@@ -156,12 +156,12 @@
                 
                 <!-- Navigation -->
                 <nav class="flex-1 px-2 py-4 space-y-1">
-                    <!-- Dashboard Link -->
-                    <a href="{{ route('admin.dashboard') }}" class="group flex items-center px-4 py-3 text-sm font-medium rounded-md {{ request()->routeIs('admin.dashboard') ? 'bg-blue-700 text-white' : 'text-blue-100 hover:bg-blue-700 hover:text-white' }}">
+                    <!-- Admin Portal Link -->
+                    <a href="{{ route('admin.portal') }}" class="group flex items-center px-4 py-3 text-sm font-medium rounded-md {{ request()->routeIs('admin.portal') ? 'bg-blue-700 text-white' : 'text-blue-100 hover:bg-blue-700 hover:text-white' }}">
                         <svg class="mr-3 h-6 w-6" fill="none" stroke="currentColor" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg">
-                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M3 12l2-2m0 0l7-7 7 7M5 10v10a1 1 0 001 1h3m10-11l2 2m-2-2v10a1 1 0 01-1 1h-3m-6 0a1 1 0 001-1v-4a1 1 0 011-1h2a1 1 0 011 1v4a1 1 0 001 1m-6 0h6"></path>
+                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 21V5a2 2 0 00-2-2H7a2 2 0 00-2 2v16m14 0h2m-2 0h-5m-9 0H3m2 0h5M9 7h1m-1 4h1m4-4h1m-1 4h1m-5 10v-5a1 1 0 011-1h2a1 1 0 011 1v5m-4 0h4"></path>
                         </svg>
-                        {{ __('navigation.dashboard') }}
+                        {{ __('navigation.admin_portal') }}
                     </a>
 
                     <!-- Subscriptions Dropdown -->
@@ -249,7 +249,7 @@
                     <div class="flex">
                         <!-- Logo -->
                         <div class="shrink-0 flex items-center">
-                            <a href="{{ route('admin.dashboard', ['locale' => app()->getLocale()]) }}" class="text-xl font-bold text-indigo-600">
+                            <a href="{{ route('admin.portal', ['locale' => app()->getLocale()]) }}" class="text-xl font-bold text-indigo-600">
                                 Management
                             </a>
                         </div>
@@ -303,8 +303,8 @@
             <!-- Mobile menu, show/hide based on menu state. -->
             <div x-show="mobileMenuOpen" class="sm:hidden" id="mobile-menu">
                 <div class="pt-2 pb-3 space-y-1">
-                    <a href="{{ route('admin.dashboard', ['locale' => app()->getLocale()]) }}" class="block pl-3 pr-4 py-2 border-l-4 {{ request()->routeIs('admin.dashboard') ? 'bg-indigo-50 border-indigo-500 text-indigo-700' : 'border-transparent text-gray-600 hover:bg-gray-50 hover:border-gray-300 hover:text-gray-800' }} text-base font-medium">
-                        {{ __('navigation.dashboard') }}
+                    <a href="{{ route('admin.portal', ['locale' => app()->getLocale()]) }}" class="block pl-3 pr-4 py-2 border-l-4 {{ request()->routeIs('admin.portal') ? 'bg-indigo-50 border-indigo-500 text-indigo-700' : 'border-transparent text-gray-600 hover:bg-gray-50 hover:border-gray-300 hover:text-gray-800' }} text-base font-medium">
+                        {{ __('navigation.admin_portal') }}
                     </a>
                     <a href="{{ route('admin.subscriptions.pending', ['locale' => app()->getLocale()]) }}" class="block pl-3 pr-4 py-2 border-l-4 {{ request()->routeIs('admin.subscriptions.pending') ? 'bg-indigo-50 border-indigo-500 text-indigo-700' : 'border-transparent text-gray-600 hover:bg-gray-50 hover:border-gray-300 hover:text-gray-800' }} text-base font-medium pl-10">
                         • Pending Subscriptions
@@ -401,7 +401,7 @@
                             <span class="text-xl font-bold text-white">MK Driving Admin</span>
                         </div>
                         <nav class="mt-5 px-2 space-y-1">
-                            <a href="{{ route('admin.dashboard') }}" class="group flex items-center px-2 py-2 text-base font-medium rounded-md text-white bg-blue-700">
+                            <a href="{{ route('admin.portal', ['locale' => app()->getLocale()]) }}" class="group flex items-center px-2 py-2 text-base font-medium rounded-md text-white bg-blue-700">
                                 <svg class="mr-4 h-6 w-6" fill="none" stroke="currentColor" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg">
                                     <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M3 12l2-2m0 0l7-7 7 7M5 10v10a1 1 0 001 1h3m10-11l2 2m-2-2v10a1 1 0 01-1 1h-3m-6 0a1 1 0 001-1v-4a1 1 0 011-1h2a1 1 0 011 1v4a1 1 0 001 1m-6 0h6"></path>
                                 </svg>

@@ -6,7 +6,7 @@ return [
     'my_subscriptions' => 'Ifatabuguzi ryanjye',
     'active_subscriptions' => 'Ifatabuguzi nishyuye',
     'popular_choice' => 'Irakunzwe',
-    'active' => 'Irakora',
+    'active' => 'Iriho',
     'inactive' => 'Ntirikora',
     'expired' => 'Byarangiye',
     'renew' => 'Kongera kwishyura',

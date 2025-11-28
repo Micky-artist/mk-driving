@@ -16,6 +16,7 @@ return [
     'forum' => 'Forum',
     'search' => 'Search',
     'settings' => 'Settings',
+    'admin_portal' => 'Admin Portal',
     'quick_links' => 'Quick Links',
     'pricing_plans' => 'Subscription Plans',
     'about_us' => 'About Us',

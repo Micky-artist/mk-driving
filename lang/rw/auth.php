@@ -41,6 +41,44 @@ return [
     'sign_in' => 'Injira',
     
     // Register page
+    // Forgot Password Page
+    'forgot_password_page' => [
+        'title' => 'Guhindura ijambo ry\'ibanga',
+        'subtitle' => 'Andika imeri twoherezaho uburyo bwo guhindura ijambo ry\'ibanga.',
+        'email_placeholder' => 'Andika imeri yawe',
+        'submit_button' => 'Hindura ijambo ry\'ibanga',
+        'back_to_login' => 'Subira kwinjira',
+        'success_message' => 'Twohereje imeri y\'uburyo bwo guhindura ijambo ry\'ibanga!',
+        'sending' => 'Biri gukorwa...',
+        'dialog_title' => 'Reba Imeri Yawe',
+        'dialog_message' => 'Twohereje ihuza ryo guhindura ijambo ry\'ibanga kuri:',
+        'dialog_button' => 'Nayibonye',
+    ],
+
+    // Password Reset Email
+    'reset_password_email' => [
+        'title' => 'Guhindura ijambo ry\'ibanga',
+        'subtitle' => 'Mwasabye guhindura ijambo ry\'ibanga rya konti yanyu',
+        'you_are_receiving' => 'Muri kubona iyi imeri kuko twakiriye gahunda yo kuhindura ijambo ry\'ibanga kuri konte yanyu.',
+        'reset_button' => 'Hindura ijambo ry\'ibanga',
+        'expiry_notice' => 'Iyi mbuga yo kuhindura ijambo ry\'ibanga irarangira mu minota :count.',
+        'ignore_if_not_requested' => 'Niba mutigeze musaba ko mwahindura ijambo ry\'ibanga, mwakwirengagiza ubu butumwa.',
+        'contact_support' => 'Niba mufite ikibazo cy\'uko mwakiriye ubu butumwa, nyamuneka twandikire kuri :email.',
+        'trouble_with_button' => 'Nugira ikibazo cyo gukoresha buto ya \"Hindura ijambo ry\'ibanga\", kopiya iri huza mu urubuga rwawe.',
+    ],
+
+    // Reset Password Page
+    'reset_password_page' => [
+        'title' => 'Shyiraho ijambo ry\'ibanga rishya',
+        'subtitle' => 'Shyiraho ijambo ry\'ibanga rishya kuri konte yawe.',
+        'email_placeholder' => 'Imeri yawe',
+        'new_password_placeholder' => 'Andika ijambo ry\'ibanga rishya',
+        'confirm_password_placeholder' => 'Emeza ijambo ry\'ibanga rishya',
+        'submit_button' => 'Hindura ijambo ry\'ibanga',
+        'back_to_login' => 'Subira kwinjira',
+        'success_message' => 'Ijambo ry\'ibanga ryawe ryahinduwe neza!',
+    ],
+
     'register' => [
         'title' => 'Kora Konti Yawe',
         'subtitle' => 'Injira muri MK Scholars Driving School uyu munsi!',

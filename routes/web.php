@@ -2,6 +2,7 @@
 
 use Illuminate\Support\Facades\Route;
 use Illuminate\Support\Facades\Log;
+use Illuminate\Support\Facades\Auth;
 use App\Http\Controllers\Web\NewsController;
 use App\Http\Controllers\Web\NewsDetailController;
 use App\Http\Controllers\LanguageController;
@@ -350,51 +351,67 @@ Route::prefix('{locale}')
     // Plans Page
     Route::get('plans', function (LocaleService $localeService) {
         $locale = $localeService->getLocale();
+        $fallbackLocale = config('app.fallback_locale', 'en');
         
         $plans = SubscriptionPlan::where('is_active', true)
             ->orderBy('price')
             ->get()
-            ->map(function ($plan) use ($locale) {
+            ->map(function ($plan) use ($locale, $fallbackLocale) {
+                // Ensure we have the slug
+                $slug = $plan->slug;
+                
                 // Handle name (string or array)
                 $name = $plan->name;
                 if (is_string($name)) {
                     $name = json_decode($name, true) ?: [];
                 }
-                $displayName = $name[$locale] ?? $name[config('app.fallback_locale', 'en')] ?? 'Unnamed Plan';
+                $displayName = $name[$locale] ?? $name[$fallbackLocale] ?? 'Unnamed Plan';
 
-                // Handle description (string or array)
+                // Handle description
                 $description = $plan->description;
                 if (is_string($description)) {
                     $description = json_decode($description, true) ?: [];
                 }
-                $displayDescription = $description[$locale] ?? $description[config('app.fallback_locale', 'en')] ?? '';
+                $displayDescription = $description[$locale] ?? $description[$fallbackLocale] ?? '';
 
-                // Handle features (string, array, or JSON string)
+                // Handle features - ensure we always return an array for the current locale
                 $features = $plan->features;
                 if (is_string($features)) {
                     $features = json_decode($features, true) ?: [];
                 }
                 
-                // Ensure features is an array and process it
-                $features = is_array($features) ? $features : [];
-                if (isset($features[$locale])) {
-                    $features = (array)$features[$locale];
-                } elseif (isset($features[config('app.fallback_locale', 'en')])) {
-                    $features = (array)$features[config('app.fallback_locale', 'en')];
+                // Get features for current locale or fallback
+                $displayFeatures = [];
+                if (isset($features[$locale]) && is_array($features[$locale])) {
+                    $displayFeatures = $features[$locale];
+                } elseif (isset($features[$fallbackLocale]) && is_array($features[$fallbackLocale])) {
+                    $displayFeatures = $features[$fallbackLocale];
+                } elseif (is_array($features) && !isset($features[$locale]) && !isset($features[$fallbackLocale])) {
+                    // If features is a simple array without locale keys
+                    $displayFeatures = array_values($features);
                 }
-                $features = array_map('strval', $features);
                 
                 return [
                     'id' => $plan->id,
-                    'slug' => $plan->slug,
-                    'name' => $name,
+                    'slug' => $slug,
+                    'name' => $name, // Keep full name object for the component to handle
                     'display_name' => $displayName,
-                    'description' => $description,
+                    'description' => $description, // Keep full description object
                     'display_description' => $displayDescription,
                     'price' => $plan->price,
                     'duration' => $plan->duration,
-                    'features' => $features,
+                    'duration_in_days' => $plan->duration_in_days ?? 0,
+                    'max_quizzes' => $plan->max_quizzes,
+                    'is_active' => $plan->is_active,
                     'color' => $plan->color,
+                    'features' => $features, // Keep full features object
+                    'display_features' => $displayFeatures, // Add pre-formatted features for current locale
+                    'is_current' => function() use ($plan) {
+                        if (!\Illuminate\Support\Facades\Auth::check()) {
+                            return false;
+                        }
+                        return \Illuminate\Support\Facades\Auth::user()->subscription_plan_id === $plan->id;
+                    }
                 ];
             });
             

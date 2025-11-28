@@ -8,12 +8,6 @@ return [
         'getStarted' => 'Tangira',
         'learnMore' => 'Menya byinshi',
     ],
-    'guestQuizSection' => [
-        'tryOurFreeGuestQuiz' => 'Biroroshye kwimenyereza utishyuye!',
-        'testYourKnowledge' => 'Gerageza ubumenyi bwawe ukoresheje ibarura ryacu ry\'ubuntu',
-        'startQuiz' => 'Tangira Ibarura',
-        'noQuizAvailable' => 'Ntacyo mubarura ubu',
-    ],
     'offers' => [
         'title' => 'Tukorohereza Kwitegura',
         'subtitle' => 'Amasomo yose yo kwiga kugendera imodoka',
@@ -104,6 +98,30 @@ return [
         'no_sign_up' => 'Ntibisaba kwiyandikisha!',
     ],
 
+    'billboard' => [
+        'freeTrial' => 'Gerageza k\'ubuntu',
+        'practiceAnytime' => 'Igihe cyose wakwiga',
+        'momoPay' => 'Ishyura na Momo',
+    ],
+
+    'trafficLight' => [
+        'title' => 'Menya!',
+        'lights' => [
+            'red' => [
+                'en' => 'STOP',
+                'rw' => 'Hagarara'
+            ],
+            'yellow' => [
+                'en' => 'SLOW',
+                'rw' => 'Genda buhoro'
+            ],
+            'green' => [
+                'en' => 'GO',
+                'rw' => 'Genda'
+            ]
+        ]
+    ],
+
     'planTests' => [
         'more_tests' => 'Indi Myitozo',
         'subtitle' => 'Ongera ifatabuguzi na Mobile Money.',
@@ -118,14 +136,22 @@ return [
     'guestQuiz' => [
         'practice_here' => 'Itoze Hano.',
         'great_job' => 'Ukoze neza! Witeguye kongera?',
-        'continue_streak' => 'Komeza Gutsinda!',
-        'challenge_yourself' => 'Komerezaho!',
         'challenging_questions' => '{0} Nta kibazo|{1} :count ikibazo gikomeye|[2,*] :count ibibazo bikomeye',
         'no_registration' => 'Ntukeneye kwiyandikisha',
         'unlock_questions' => 'Fungura ibibazo byose wongere ubumenyi!',
         'sign_up_to_unlock' => 'Iyandikishe Kugirango Ukomeze',
         'quiz_locked' => 'Imyitozo ya :planName Irafunze',
         'subscribe_to_unlock' => 'Iyandikishe kuri :planName kugirango ufungure iyi n\'indi myitozo yose ya :planName!',
+        'tryOurFreeGuestQuiz' => 'Biroroshye kwimenyereza utishyuye!',
+        'testYourKnowledge' => 'Gerageza ubumenyi bwawe',
+        'startQuiz' => 'Tangira Ibarura',
+        'noQuizAvailable' => 'Ntacyo mubarura ubu',
+        'continue_streak' => 'Komeza Gukora Imyitozo',
+        'challenge_yourself' => 'Reba n\'ibindi',
+        'save_your_progress' => 'Menya aho ugeze',
+        'sign_up_to_save' => 'Iyandikishe ubike aho ugeze kandi ukurikirane uko wiyongera',
+        'sign_up_now' => 'Iyandikishe Nonaha!',
+        'continue_as_guest' => 'Komeza nk\'umushyitsi',
     ],
     'footer' => [
         'tagline' => 'Umufatanyabikorwa wizewe mu kwiga amategeko y\'umuhanda. Dukugufasha kwitegura ikizamini cyawe hakoreshejwe ibikoresho n\'ubujyanama bw\'abahanga.',
