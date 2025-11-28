@@ -778,8 +778,8 @@
                     </p>
                     ${questionContainer.querySelector('.explanation') ? 
                         `<div class="mt-1 text-sm">
-                                ${questionContainer.querySelector('.explanation').innerHTML}
-                            </div>` : ''
+                                    ${questionContainer.querySelector('.explanation').innerHTML}
+                                </div>` : ''
                     }
                 </div>
             </div>

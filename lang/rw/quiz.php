@@ -48,6 +48,8 @@ return [
     'percentage' => '(:percentage%)',
     'correctAnswer' => 'Igisubizo cy\'ukuri',
     'yourAnswer' => 'Igisubizo cyawe',
+    'correctAnswerFeedback' => 'Nibyiza! Wagikoze.',
+    'incorrectAnswerFeedback' => 'Wakishe. Igisubizo cy\'ukuri ni:',
     
     // Guest Quiz Carousel
     'guestQuiz' => [

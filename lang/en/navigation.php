@@ -26,4 +26,6 @@ return [
     'subscription_plans' => 'Subscription Plans',
     'subscriptions' => 'Subscriptions',
     'manage_account' => 'Manage Account',
+    'sign_in' => 'Sign In',
+    'sign_out' => 'Sign Out',
 ];

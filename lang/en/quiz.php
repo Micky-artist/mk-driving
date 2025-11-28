@@ -48,6 +48,8 @@ return [
     'percentage' => '(:percentage%)',
     'correctAnswer' => 'Correct Answer',
     'yourAnswer' => 'Your Answer',
+    'correctAnswerFeedback' => 'Correct! Well done.',
+    'incorrectAnswerFeedback' => 'Not quite. The correct answer is:',
     
     // Guest Quiz Carousel
     'guestQuiz' => [

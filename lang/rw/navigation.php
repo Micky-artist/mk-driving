@@ -27,5 +27,7 @@ return [
     'users' => 'Abakoresha',
     'subscription_plans' => 'Amabwiriza yo kwiyandikisha',
     'subscriptions' => 'Ibyiyandikisho',
-    'manage_account' => 'Gucunga konti'
+    'manage_account' => 'Gucunga konti',
+    'sign_in' => 'Injira',
+    'sign_out' => 'Sohoka'
 ];

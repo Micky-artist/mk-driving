@@ -64,7 +64,7 @@
                         <div class="p-6 pb-4 flex-1 flex flex-col">
                             <!-- Question Title -->
                             <h3 class="text-xl font-bold text-gray-900 dark:text-white mb-3 group-hover:text-blue-600 dark:group-hover:text-blue-400 transition-colors">
-                                <a href="{{ route('forum.show', ['locale' => app()->getLocale(), 'question' => $question['id']]) }}" class="focus:outline-none">
+                                <a href="{{ route('forum.show', ['locale' => app()->getLocale(), 'id' => $question['id']]) }}" class="focus:outline-none">
                                     <span class="absolute inset-0" aria-hidden="true"></span>
                                     {{ $question['title'] }}
                                 </a>

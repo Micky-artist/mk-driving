@@ -74,8 +74,8 @@
         if (!this.showAnswer) return '';
         const correctOption = {{ json_encode($options) }}.find(opt => opt.is_correct);
         return this.isCorrect ?
-            '{{ __('Correct! Well done.') }}' :
-            '{{ __('Not quite. The correct answer is:') }} ' + (correctOption?.text || '');
+            '{{ __('quiz.correctAnswerFeedback') }}' :
+            '{{ __('quiz.incorrectAnswerFeedback') }} ' + (correctOption?.text || '');
     },
 
     getOptionClasses(option) {

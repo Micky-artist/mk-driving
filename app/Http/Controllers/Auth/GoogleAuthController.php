@@ -29,7 +29,6 @@ class GoogleAuthController extends Controller
             
             // Check if user already exists
             $user = User::where('email', $googleUser->email)->first();
-            Log::info('User lookup result', ['exists' => $user ? 'yes' : 'no']);
 
             if (!$user) {
                 Log::info('Creating new user');
