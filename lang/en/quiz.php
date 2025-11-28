@@ -152,6 +152,7 @@ return [
         'signUpFree' => 'Sign Up Free',
         'haveAccount' => 'I Already Have an Account',
         'continueAsGuest' => 'Continue as Guest',
+        'backHomepage' => 'Back to Homepage',
         'close' => 'Close'
     ],
     

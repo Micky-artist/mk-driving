@@ -22,69 +22,35 @@
 @endsection
 
 @section('dashboard-content')
-    <div class="space-y-4 sm:space-y-6">
-        <!-- Welcome Header -->
-        <div class="bg-gradient-to-r from-blue-600 to-purple-600 rounded-lg p-4 sm:p-6 text-white">
-            <h1 class="text-xl sm:text-2xl font-bold mb-2">{{ Auth::user()->first_name }},
-                {{ __('dashboard.welcome_back') }}!</h1>
-            <p class="text-blue-100 text-sm sm:text-base">{{ __('dashboard.welcome_message') }}</p>
-        </div>
-
-        @can('isAdmin')
-            <!-- Admin Panel Button -->
-            <div class="bg-white rounded-lg shadow overflow-hidden">
-                <div class="p-6 text-center">
-                    <a href="{{ route('admin.portal') }}"
-                        class="inline-flex items-center justify-center px-6 py-4 border border-transparent text-base font-medium rounded-md text-white bg-yellow-500 hover:bg-yellow-600 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-yellow-500 transition-colors duration-200 shadow-sm">
-                        <svg class="w-6 h-6 mr-2" fill="none" stroke="currentColor" viewBox="0 0 24 24"
-                            xmlns="http://www.w3.org/2000/svg">
-                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
-                                d="M10.325 4.317c.426-1.756 2.924-1.756 3.35 0a1.724 1.724 0 002.573 1.066c1.543-.94 3.31.826 2.37 2.37a1.724 1.724 0 001.065 2.572c1.756.426 1.756 2.924 0 3.35a1.724 1.724 0 00-1.066 2.573c.94 1.543-.826 3.31-2.37 2.37a1.724 1.724 0 00-2.572 1.065c-.426 1.756-2.924 1.756-3.35 0a1.724 1.724 0 00-2.573-1.066c-1.543.94-3.31-.826-2.37-2.37a1.724 1.724 0 00-1.065-2.572c-1.756-.426-1.756-2.924 0-3.35a1.724 1.724 0 001.066-2.573c-.94-1.543.826-3.31 2.37-2.37.996.608 2.296.07 2.572-1.065z">
-                            </path>
-                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
-                                d="M15 12a3 3 0 11-6 0 3 3 0 016 0z"></path>
-                        </svg>
-                        {{ __('Go to Admin Panel') }}
-                    </a>
-                </div>
-            </div>
-        @endcan
-
+    <div class="space-y-4 sm:space-y-2">
         <!-- Current Subscription -->
         <div class="space-y-4">
-            <div class="bg-gradient-to-r from-blue-600 to-blue-700 rounded-lg p-4 sm:p-6 text-white">
-                <div class="flex flex-col sm:flex-row sm:items-center sm:justify-between gap-4">
-                    <div class="space-y-1">
-                        <div class="flex items-center gap-3">
-                            <div class="p-2 bg-white/20 rounded-lg">
-                                <svg xmlns="http://www.w3.org/2000/svg" class="h-6 w-6" fill="none" viewBox="0 0 24 24"
-                                    stroke="currentColor">
-                                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
-                                        d="M20 7l-8-4-8 4m16 0l-8 4m8-4v10l-8 4m0-10L4 7m8 4v10M4 7v10l8 4" />
-                                </svg>
-                            </div>
-                            <div>
-                                <h2 class="text-2xl font-bold">{{ __('dashboard.current_subscription') }}</h2>
-                                @if ($currentSubscriptions->count() > 0)
-                                    @php
-                                        $totalQuizzes = $currentSubscriptions->sum('quizzes_count');
-                                    @endphp
-                                    <p class="text-blue-100 text-sm">
-                                        {{ __('dashboard.quizzes_available', ['count' => $totalQuizzes]) }}
-                                    </p>
-                                @endif
+            <div class="bg-white dark:bg-gray-800 rounded-xl overflow-hidden shadow-sm dark:shadow-none border border-gray-200 dark:border-gray-700">
+                <!-- Subscription Header -->
+                <div class="p-2 bg-gradient-to-r from-blue-500 to-blue-600 dark:from-blue-800 dark:to-blue-900 text-white">
+                    <div class="flex flex-col sm:flex-row sm:items-center sm:justify-between gap-1 md:gap-4">
+                        <div class="space-y-1">
+                            <div class="flex items-center gap-3">
+                                <div class="p-2 bg-white/20 dark:bg-white/10 rounded-lg">
+                                    <svg xmlns="http://www.w3.org/2000/svg" class="h-6 w-6" fill="none" viewBox="0 0 24 24"
+                                        stroke="currentColor">
+                                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
+                                            d="M20 7l-8-4-8 4m16 0l-8 4m8-4v10l-8 4m0-10L4 7m8 4v10M4 7v10l8 4" />
+                                    </svg>
+                                </div>
+                                <div>
+                                    <h2 class="text-xl md:text-2xl font-bold">{{ __('dashboard.current_subscription') }}</h2>
+                                </div>
                             </div>
                         </div>
-                    </div>
 
-                    @if ($currentSubscriptions->count() > 0)
-                        @php
-                            $nearestExpiry = $currentSubscriptions->min('ends_at');
-                        @endphp
-                        <div class="grid grid-cols-2 gap-4 sm:flex sm:items-center sm:gap-6">
-                            <div class="text-center sm:text-right">
-                                <p class="text-blue-100 text-sm">{{ __('dashboard.valid_until') }}</p>
-                                <p class="text-xl font-semibold">
+                        @if ($currentSubscriptions->count() > 0)
+                            @php
+                                $nearestExpiry = $currentSubscriptions->min('ends_at');
+                            @endphp
+                            <div class="flex items-center gap-2 sm:gap-4">
+                                <p class="text-blue-100 text-sm whitespace-nowrap">{{ __('dashboard.valid_until') }}</p>
+                                <p class="text-base sm:text-lg font-semibold">
                                     @if ($nearestExpiry)
                                         {{ $nearestExpiry->format('M d, Y') }}
                                     @else
@@ -92,13 +58,14 @@
                                     @endif
                                 </p>
                             </div>
-                        </div>
-                    @endif
+                        @endif
+                    </div>
                 </div>
-            </div>
 
-            @if ($currentSubscriptions->count() > 0)
-                <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4">
+                <!-- Plan Cards -->
+                @if ($currentSubscriptions->count() > 0)
+                    <div class="px-0 py-2 md:p-2 bg-gray-50 dark:bg-gray-800">
+                        <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4">
                     @foreach ($currentSubscriptions->take(3) as $subscription)
                         @php
                             // Get plan name with fallback
@@ -151,7 +118,7 @@
                         @endphp
 
                         <div
-                            class="bg-white rounded-lg shadow-md overflow-hidden border border-gray-200 hover:shadow-lg transition-all duration-200 transform hover:-translate-y-1 flex flex-col">
+                            class="bg-white dark:bg-gray-800 rounded-lg shadow-md overflow-hidden border border-gray-200 dark:border-gray-700 hover:shadow-lg transition-all duration-200 transform hover:-translate-y-1 flex flex-col h-full">
                             <!-- Card Header -->
                             <div class="bg-gradient-to-r {{ $gradient }} p-5 text-white flex-shrink-0">
                                 <div class="flex justify-between items-start gap-3 mb-4">
@@ -180,9 +147,9 @@
                                             ? round($userQuizAttempts->avg('score_percentage'))
                                             : 0;
                                     @endphp
-                                    <div class="bg-white/20 rounded-lg p-2 text-center flex-shrink-0"
+                                    <div class="bg-white/20 dark:bg-white/10 rounded-lg p-2 text-center flex-shrink-0"
                                         style="min-width: 80px;">
-                                        <div class="text-xs text-white/90 whitespace-nowrap">
+                                        <div class="text-xs text-white/90 dark:text-white/80 whitespace-nowrap">
                                             {{ $hasAttempts ? __('dashboard.quizzes.average_score') : __('dashboard.quizzes.attempts') }}
                                         </div>
                                         <div class="text-2xl font-bold leading-tight mt-1">
@@ -196,7 +163,7 @@
                                 </div>
 
                                 <div
-                                    class="inline-flex items-center px-2.5 py-1 rounded-full text-xs font-medium bg-white/20">
+                                    class="inline-flex items-center px-2.5 py-1 rounded-full text-xs font-medium bg-white/20 dark:bg-white/10">
                                     <svg xmlns="http://www.w3.org/2000/svg" class="h-3.5 w-3.5 mr-1" fill="none"
                                         viewBox="0 0 24 24" stroke="currentColor">
                                         <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
@@ -208,16 +175,16 @@
                             </div>
 
                             <!-- Progress Section -->
-                            <div class="p-5 bg-gradient-to-b from-gray-50 to-white border-b border-gray-100 flex-shrink-0">
+                            <div class="p-5 bg-gradient-to-b from-gray-50 to-white dark:from-gray-800 dark:to-gray-700 border-b border-gray-100 dark:border-gray-700 flex-shrink-0">
                                 <div class="flex justify-between items-center text-sm mb-2">
-                                    <span class="text-gray-600 font-medium">{{ __('dashboard.quizzes.progress') }}</span>
-                                    <span class="font-semibold text-gray-900">{{ $progressPercent }}%</span>
+                                    <span class="text-gray-600 dark:text-gray-300 font-medium">{{ __('dashboard.quizzes.progress') }}</span>
+                                    <span class="font-semibold text-gray-900 dark:text-white">{{ $progressPercent }}%</span>
                                 </div>
-                                <div class="w-full bg-gray-200 rounded-full h-2.5 overflow-hidden">
+                                <div class="w-full bg-gray-200 dark:bg-gray-700 rounded-full h-2.5 overflow-hidden">
                                     <div class="bg-gradient-to-r {{ $gradient }} h-2.5 rounded-full transition-all duration-500 ease-out"
                                         style="width: {{ $progressPercent }}%;"></div>
                                 </div>
-                                <p class="text-xs text-gray-500 mt-2 flex items-center">
+                                <p class="text-xs text-gray-500 dark:text-gray-400 mt-2 flex items-center">
                                     <svg xmlns="http://www.w3.org/2000/svg" class="h-3.5 w-3.5 mr-1" fill="none"
                                         viewBox="0 0 24 24" stroke="currentColor">
                                         <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
@@ -233,10 +200,10 @@
                             </div>
 
                             <!-- Status Section -->
-                            <div class="p-5 bg-white flex-shrink-0">
+                            <div class="p-5 bg-white dark:bg-gray-800 flex-shrink-0">
                                 <div class="flex justify-between items-center">
                                     <div class="min-w-0 flex-1">
-                                        <p class="text-xs text-gray-500 uppercase tracking-wider mb-1">
+                                        <p class="text-xs text-gray-500 dark:text-gray-400 uppercase tracking-wider mb-1">
                                             {{ __('dashboard.status') }}</p>
                                         <p class="font-semibold text-gray-900 truncate">
                                             @if ($subscription->status === 'ACTIVE')
@@ -278,21 +245,22 @@
                             </div>
                         </div>
                     @endforeach
-                </div>
+                        </div>
 
-                @if ($currentSubscriptions->count() > 3)
-                    <div class="text-center mt-4">
-                        <a href="{{ route('dashboard.quizzes.index', ['locale' => app()->getLocale()]) }}"
-                            class="inline-flex items-center text-blue-600 hover:text-blue-800 font-medium text-sm transition-colors">
-                            {{ __('dashboard.view_all_quizzes') }}
-                            <svg xmlns="http://www.w3.org/2000/svg" class="h-4 w-4 ml-1" fill="none" viewBox="0 0 24 24"
-                                stroke="currentColor">
-                                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 5l7 7-7 7" />
-                            </svg>
-                        </a>
+                        @if ($currentSubscriptions->count() > 3)
+                            <div class="text-center mt-4 px-6 pb-6">
+                                <a href="{{ route('dashboard.quizzes.index', ['locale' => app()->getLocale()]) }}"
+                                    class="inline-flex items-center text-blue-600 hover:text-blue-800 font-medium text-sm transition-colors">
+                                    {{ __('dashboard.view_all_quizzes') }}
+                                    <svg xmlns="http://www.w3.org/2000/svg" class="h-4 w-4 ml-1" fill="none" viewBox="0 0 24 24"
+                                        stroke="currentColor">
+                                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 5l7 7-7 7" />
+                                    </svg>
+                                </a>
+                            </div>
+                        @endif
                     </div>
-                @endif
-            @else
+                @else
                 <div class="bg-white rounded-lg shadow-md p-8 text-center border border-gray-200">
                     <div
                         class="mx-auto flex items-center justify-center h-16 w-16 rounded-full bg-yellow-100 text-yellow-600 mb-4">
@@ -535,7 +503,7 @@
                     @if ($currentSubscriptions->isEmpty())
                         <div class="mt-6">
                             <a href="{{ route('plans', ['locale' => app()->getLocale()]) }}"
-                                class="inline-flex items-center px-4 py-2 border border-transparent text-sm font-medium rounded-md shadow-sm text-white bg-blue-600 hover:bg-blue-700 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-blue-500">
+                                class="inline-flex items-center px-4 py-2 border border-gray-300 rounded-md shadow-sm text-sm font-medium text-gray-700 bg-white hover:bg-gray-50 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-blue-500">
                                 {{ __('dashboard.quizzes.browse_plans') }}
                             </a>
                         </div>

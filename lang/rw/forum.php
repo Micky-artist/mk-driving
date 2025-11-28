@@ -98,9 +98,9 @@ return [
         'quick_links' => 'Amahuza y\'ihuse',
         'contact_us' => 'Twandikire',
         'all_rights_reserved' => 'Amategeko y\'uburenganzira yaraziguye',
-        'privacy_policy' => 'Politiki y\'Ibyanga',
-        'terms_of_service' => 'Amategeko n\'Amabwiriza',
-        'cookie_policy' => 'Politiki y\'Amakuki',
+        'privacy_policy' => 'Ingengo yo Kubika Amakuru Yawe',
+        'terms_of_service' => 'Amabwiriza',
+        'cookie_policy' => 'Ingengo ya cookies',
         'newsletter' => [
             'title' => 'Menya ibishya',
             'description' => 'Kwiyandikisha kuri newsleteri yacu kugirango ubone amakuru mashya n\'ubujyanama bwo kugendera neza',

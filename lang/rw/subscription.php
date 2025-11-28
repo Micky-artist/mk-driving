@@ -23,5 +23,5 @@ return [
     'billing_history' => 'Amakuru yiy\'ishyura',
     'no_subscription' => 'Nta fatabuguzi mufite',
     'subscribe_now' => 'Tangira',
-    'upgrade_message' => 'Kwegurira hejuru gahunda yawe kugirango ubone ibizamini byose nubushobozi.',
+    'upgrade_message' => 'Ongera ifatabuguzi ubone indi myitozo.',
 ];

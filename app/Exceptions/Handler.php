@@ -5,6 +5,7 @@ namespace App\Exceptions;
 use Illuminate\Foundation\Exceptions\Handler as ExceptionHandler;
 use Throwable;
 use Inertia\Facades\Inertia;
+use App\View\Components\ErrorBoundary;
 
 class Handler extends ExceptionHandler
 {
@@ -27,19 +28,36 @@ class Handler extends ExceptionHandler
         $this->reportable(function (Throwable $e) {
             //
         });
+    }
 
-        // Custom error page for 403 Forbidden errors
-        $this->renderable(function (\Symfony\Component\HttpKernel\Exception\HttpException $e, $request) {
-            if ($e->getStatusCode() === 403) {
-                if ($request->is('admin*')) {
-                    return Inertia::render('Errors/403', [
-                        'status' => 403,
-                        'message' => 'Access Denied. You do not have permission to access this page.'
-                    ])->toResponse($request)->setStatusCode(403);
-                }
+    /**
+     * Render an exception into an HTTP response.
+     *
+     * @param  \Illuminate\Http\Request  $request
+     * @param  \Throwable  $e
+     * @return \Symfony\Component\HttpFoundation\Response
+     */
+    public function render($request, Throwable $e)
+    {
+        // Handle API requests with JSON response
+        if ($request->wantsJson() || $request->is('api/*')) {
+            return response()->json([
+                'error' => $e->getMessage(),
+                'status' => method_exists($e, 'getStatusCode') ? $e->getStatusCode() : 500,
+            ], method_exists($e, 'getStatusCode') ? $e->getStatusCode() : 500);
+        }
+
+        // Handle 403 errors with Inertia for admin routes
+        if ($e instanceof \Symfony\Component\HttpKernel\Exception\HttpException && $e->getStatusCode() === 403) {
+            if ($request->is('admin*')) {
+                return Inertia::render('Errors/403', [
+                    'status' => 403,
+                    'message' => 'Access Denied. You do not have permission to access this page.'
+                ])->toResponse($request)->setStatusCode(403);
             }
-            
-            return null;
-        });
+        }
+
+        // Use our ErrorBoundary component for all other exceptions
+        return ErrorBoundary::renderException($e);
     }
 }

@@ -223,20 +223,18 @@
                         </div>
 
                         @guest
-                            <div
-                                class="bg-blue-50 dark:bg-blue-900/20 border border-blue-200 dark:border-blue-800 rounded-lg p-4 mb-4">
-                                
-                                <div class="flex flex-col space-y-2">
-                                    <a href="{{ route('register', ['redirect' => urlencode(route('guest-quiz.show', ['locale' => app()->getLocale(), 'quiz' => $guestQuiz['id']]))]) }}"
-                                        class="w-full bg-gradient-to-r from-blue-500 to-blue-600 hover:from-blue-600 hover:to-blue-700 text-white font-medium py-2 px-4 rounded-lg text-center transition-all duration-300 transform hover:scale-[1.02]">
-                                        {{ __('home.guestQuiz.sign_up_now') }}
-                                    </a>
-                                    <a href="{{ route('guest-quiz.show', ['locale' => app()->getLocale(), 'quiz' => $guestQuiz['id']]) }}"
-                                        class="text-sm text-blue-600 dark:text-blue-400 hover:underline text-center">
-                                        {{ __('home.guestQuiz.continue_as_guest') }}
-                                    </a>
-                                </div>
-                            </div>
+                            <div class="bg-blue-50 dark:bg-blue-900/20 border border-blue-200 dark:border-blue-800 rounded-lg p-4 mb-4">
+    <p class="text-green-600 dark:text-green-400 font-medium mb-4 text-center">
+        {{ __('home.guestQuiz.challenge_yourself') }}
+    </p>
+    <a href="{{ route('guest-quiz.show', ['locale' => app()->getLocale(), 'quiz' => 11]) }}"
+       class="w-full inline-flex items-center justify-center bg-gradient-to-r from-blue-600 to-blue-700 hover:from-blue-700 hover:to-blue-800 text-white font-medium py-2 px-6 rounded-lg shadow-md hover:shadow-lg transition-all duration-300 transform hover:-translate-y-0.5">
+        {{ __('home.guestQuiz.startQuiz') }}
+        <svg class="w-4 h-4 ml-2" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M14 5l7 7m0 0l-7 7m7-7H3"></path>
+        </svg>
+    </a>
+</div>
                         @else
                             <a href="{{ route('guest-quiz.show', ['locale' => app()->getLocale(), 'quiz' => $guestQuiz['id']]) }}"
                                 class="inline-flex items-center justify-center w-full bg-gradient-to-r from-blue-600 to-blue-700 hover:from-blue-700 hover:to-blue-800 text-white font-medium py-3 px-6 rounded-lg shadow-lg hover:shadow-xl transition-all duration-300 transform hover:scale-105">

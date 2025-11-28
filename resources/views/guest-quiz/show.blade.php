@@ -431,16 +431,8 @@
 
 <!-- Signup Nudge Modal -->
 <div id="signupNudgeModal"
-    class="hidden fixed inset-0 bg-black bg-opacity-50 z-50 flex items-center justify-center p-4">
+    class="fixed inset-0 bg-black bg-opacity-50 z-50 flex items-center justify-center p-4" style="display: none;">
     <div class="bg-white rounded-xl max-w-md w-full p-6 relative">
-        <button type="button" id="closeSignupNudge"
-            class="absolute top-4 right-4 text-gray-400 hover:text-gray-600">
-            <svg class="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M6 18L18 6M6 6l12 12">
-                </path>
-            </svg>
-        </button>
-
         <div class="text-center">
             <div class="mx-auto flex items-center justify-center h-16 w-16 rounded-full bg-blue-100 mb-4">
                 <svg class="h-8 w-8 text-blue-600" fill="none" stroke="currentColor" viewBox="0 0 24 24">
@@ -449,21 +441,29 @@
                     </path>
                 </svg>
             </div>
-            <h3 class="text-xl font-bold text-gray-900 mb-2">{{ __('quiz.signupNudge.title') }}</h3>
-            <p class="text-gray-600 mb-6">{{ __('quiz.signupNudge.message') }}</p>
+            <h3 class="text-2xl font-bold text-gray-900 mb-3">{{ __('quiz.signupNudge.title') }}</h3>
+            <p class="text-gray-700 mb-2">{{ __('quiz.signupNudge.message') }}</p>
 
-            <div class="flex flex-col space-y-3">
-                <a href="{{ route('register', ['locale' => app()->getLocale()]) }}"
-                    class="px-6 py-3 bg-gradient-to-r from-blue-600 to-blue-700 text-white font-semibold rounded-lg hover:from-blue-700 hover:to-blue-800 transition-colors text-center">
-                    {{ __('quiz.signupNudge.signUpFree') }}
-                </a>
-                <a href="{{ route('login', ['locale' => app()->getLocale()]) }}"
-                    class="px-6 py-3 border-2 border-blue-600 text-blue-600 font-semibold rounded-lg hover:bg-blue-50 transition-colors text-center">
-                    {{ __('quiz.signupNudge.haveAccount') }}
-                </a>
-                <button type="button" id="continueAsGuest" class="text-sm text-gray-600 hover:text-gray-800 mt-2">
-                    {{ __('quiz.signupNudge.continueAsGuest') }}
-                </button>
+            <div class="space-y-4">
+                <div>
+                    <a href="{{ route('register', ['locale' => app()->getLocale()]) }}"
+                        class="block w-full px-6 py-3 bg-gradient-to-r from-blue-600 to-blue-700 text-white font-semibold rounded-lg hover:from-blue-700 hover:to-blue-800 transition-colors text-center">
+                        {{ __('quiz.signupNudge.signUpFree') }}
+                    </a>
+                </div>
+                
+                <div class="pt-2">
+                    <a href="{{ route('login', ['locale' => app()->getLocale()]) }}"
+                        class="block w-full px-6 py-2 border-2 border-blue-600 text-blue-600 font-semibold rounded-lg hover:bg-blue-50 transition-colors text-center">
+                        {{ __('quiz.signupNudge.haveAccount') }}
+                    </a>
+                </div>
+                <div class="pt-2">
+                    <a href="{{ route('home', ['locale' => app()->getLocale()]) }}"
+                        class="block w-full px-6 py-2 text-gray-600 hover:text-gray-800 font-medium text-center text-sm">
+                        {{ __('quiz.signupNudge.backHomepage') }}
+                    </a>
+                </div>
             </div>
         </div>
     </div>
@@ -504,6 +504,18 @@
             let timerInterval = null;
             let quizStartTime = null;
             let isQuizCompleted = false;
+            let isQuizLocked = localStorage.getItem('isQuizLockedForGuest') === 'true';
+            
+            // Check if quiz was locked in a previous session
+            if (isQuizLocked) {
+                // Disable all interactions immediately
+                document.querySelectorAll('.answer-option input[type="radio"]').forEach(input => {
+                    input.disabled = true;
+                });
+                document.querySelectorAll('.btn-next, .btn-prev, #submitQuiz').forEach(btn => {
+                    btn.disabled = true;
+                });
+            }
 
             // Initialize auto-next state from localStorage, default to true if not set
             let autoNextEnabled = localStorage.getItem('autoNextEnabled') !== 'false';
@@ -596,44 +608,74 @@
                 }
             }
 
-            // Close signup nudge modal
+            // Signup nudge modal
             const signupNudgeModal = document.getElementById('signupNudgeModal');
-            const closeSignupNudge = document.getElementById('closeSignupNudge');
-            const continueAsGuest = document.getElementById('continueAsGuest');
-
-            if (closeSignupNudge) {
-                closeSignupNudge.addEventListener('click', () => {
-                    signupNudgeModal.classList.add('hidden');
-                });
+            
+            // Function to show the signup nudge modal and lock the quiz
+            function showSignupNudgeModal() {
+                if (signupNudgeModal) {
+                    signupNudgeModal.style.display = 'flex';
+                    // Lock the quiz
+                    isQuizLocked = true;
+                    localStorage.setItem('isQuizLockedForGuest', 'true');
+                    
+                    // Disable all answer inputs
+                    document.querySelectorAll('.answer-option input[type="radio"]').forEach(input => {
+                        input.disabled = true;
+                    });
+                    
+                    // Disable navigation buttons
+                    document.querySelectorAll('.btn-next, .btn-prev, #submitQuiz').forEach(btn => {
+                        btn.disabled = true;
+                    });
+                    
+                    return true;
+                }
+                return false;
             }
-
-            if (continueAsGuest) {
-                continueAsGuest.addEventListener('click', function() {
-                    signupNudgeModal.classList.add('hidden');
-                });
-            }
+            
+            // Handle successful login/signup (this would be called after successful authentication)
+            window.handleAuthSuccess = function() {
+                if (signupNudgeModal) {
+                    signupNudgeModal.style.display = 'none';
+                    isQuizLocked = false;
+                    localStorage.removeItem('isQuizLockedForGuest');
+                    
+                    // Re-enable all answer inputs
+                    document.querySelectorAll('.answer-option input[type="radio"]').forEach(input => {
+                        input.disabled = false;
+                    });
+                    
+                    // Re-enable navigation buttons
+                    document.querySelectorAll('.btn-next, .btn-prev, #submitQuiz').forEach(btn => {
+                        btn.disabled = false;
+                    });
+                }
+            };
 
             // Close modal when clicking the X button or clicking outside the modal
             document.getElementById('closeResultsModal').addEventListener('click', function() {
-                resultsModal.classList.add('hidden');
-            });
-
-            // Close modal when clicking outside the modal content
-            resultsModal.addEventListener('click', function(e) {
-                if (e.target === resultsModal) {
+                if (!isQuizLocked) { // Only allow closing if quiz is not locked
                     resultsModal.classList.add('hidden');
                 }
             });
 
             // Close modal when clicking outside the modal content
-            signupNudgeModal.addEventListener('click', function(e) {
-                if (e.target === signupNudgeModal) {
-                    signupNudgeModal.classList.add('hidden');
+            resultsModal.addEventListener('click', function(e) {
+                if (e.target === resultsModal && !isQuizLocked) {
+                    resultsModal.classList.add('hidden');
                 }
             });
 
+
             // Initialize quiz
             function initQuiz() {
+                // Don't initialize if quiz is locked
+                if (isQuizLocked) {
+                    showSignupNudgeModal();
+                    return;
+                }
+
                 // Add reset button event listeners
                 const resetButton = document.getElementById('resetQuiz');
                 if (resetButton) {
@@ -712,14 +754,10 @@
                 updateProgressBar();
                 updateNavigationButtons();
 
-                // Show signup nudge after first question is answered and we're moving to second question
-                if (index === 1 && Object.keys(userAnswers).length === 1 && !localStorage.getItem(
-                        'signupNudgeShown')) {
-                    // Small delay to ensure the question is visible first
-                    setTimeout(() => {
-                        document.getElementById('signupNudgeModal').classList.remove('hidden');
-                        localStorage.setItem('signupNudgeShown', 'true');
-                    }, 500);
+                // Show signup nudge after first question is answered
+                if (index === 0 && !isQuizLocked && !localStorage.getItem('hasSeenSignupNudge')) {
+                    localStorage.setItem('hasSeenSignupNudge', 'true');
+                    setTimeout(showSignupNudgeModal, 1000);
                 }
 
                 // Scroll to top of question

@@ -27,6 +27,7 @@ return [
         'forum' => 'Forum',
         'quizzes' => 'Quizzes',
         'profile' => 'Profile',
+        'admin' => 'Admin Portal',
         'profile_settings' => 'Profile Settings',
         'subscriptions' => 'Subscriptions',
         'settings' => 'Settings',

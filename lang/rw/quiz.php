@@ -148,10 +148,11 @@ return [
     // Signup Nudge
     'signupNudge' => [
         'title' => 'Bika ibyo wakoze',
-        'message' => 'Iyandikishe kugirango ubike ibyo wakoze kandi ubone imyitozo myinshi yo kwitegura!',
-        'signUpFree' => 'Iyandikishe kubuntu',
+        'message' => 'Iyandikishe kugirango ukore umwitozo w\'ubuntu!',
+        'signUpFree' => 'Kwiyandikisha',
         'haveAccount' => 'Nsanzwe mfite konti',
         'continueAsGuest' => 'Komeza utiyandikishije',
+        'backHomepage' => 'Subira Ahabanza',
         'close' => 'Funga'
     ],
     
