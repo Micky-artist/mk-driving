@@ -30,7 +30,7 @@ class AuthServiceProvider extends ServiceProvider
 
         // Define admin role gate
         Gate::define('isAdmin', function ($user) {
-            return $user->hasRole('admin');
+            return $user->hasRole('ADMIN');
         });
 
         // Define content creator role gate

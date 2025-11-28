@@ -71,12 +71,12 @@
     },
 
     getFeedbackText() {
-        if (!this.showAnswer) return '';
-        const correctOption = {{ json_encode($options) }}.find(opt => opt.is_correct);
-        return this.isCorrect ?
-            '{{ __('quiz.correctAnswerFeedback') }}' :
-            '{{ __('quiz.incorrectAnswerFeedback') }} ' + (correctOption?.text || '');
-    },
+    if (!this.showAnswer) return '';
+    const correctOption = {{ json_encode($options) }}.find(opt => opt.is_correct);
+    return this.isCorrect ?
+        `{{ __('quiz.correctAnswerFeedback') }}` :
+        `{{ __('quiz.incorrectAnswerFeedback') }}{{ ' ' }}` + (correctOption?.text || '');
+},
 
     getOptionClasses(option) {
         if (!this.showAnswer) {
@@ -225,6 +225,7 @@
                         @guest
                             <div
                                 class="bg-blue-50 dark:bg-blue-900/20 border border-blue-200 dark:border-blue-800 rounded-lg p-4 mb-4">
+                                
                                 <div class="flex flex-col space-y-2">
                                     <a href="{{ route('register', ['redirect' => urlencode(route('guest-quiz.show', ['locale' => app()->getLocale(), 'quiz' => $guestQuiz['id']]))]) }}"
                                         class="w-full bg-gradient-to-r from-blue-500 to-blue-600 hover:from-blue-600 hover:to-blue-700 text-white font-medium py-2 px-4 rounded-lg text-center transition-all duration-300 transform hover:scale-[1.02]">
@@ -255,8 +256,7 @@
                     <span x-show="!showAnswer">
                         {{ trans_choice('home.guestQuiz.challenging_questions', $guestQuiz['question_count'] ?? 0, ['count' => $guestQuiz['question_count'] ?? 0]) }}
                         • {{ __('home.guestQuiz.no_registration') }}
-                    </span>
-                    <span x-show="showAnswer" class="text-blue-500 font-medium">
+                 <span x-show="showAnswer" class="text-blue-500 font-medium">
                         {{ __('home.guestQuiz.unlock_questions') }}
                     </span>
                 </p>
