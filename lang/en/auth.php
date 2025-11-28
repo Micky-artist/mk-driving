@@ -4,6 +4,7 @@ return [
     // Authentication messages
     'login_success' => 'Login successful',
     'register_success' => 'Registration successful',
+    'sign_up' => 'Sign Up',
     'logout_success' => 'Successfully logged out',
     'password_changed' => 'Password changed successfully',
     'failed' => 'These credentials do not match our records.',

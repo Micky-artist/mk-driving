@@ -17,7 +17,7 @@ return [
     
     // Quiz UI Text
     'questions' => 'Ibyibuzo',
-    'question' => 'Ikibazo',
+    'question' => 'Ikibazo cya',
     'of' => 'kuri',
     'timeLimit' => 'Igihe cyagenwe',
     'timeRemaining' => 'Igihe gisigaye',
@@ -141,5 +141,45 @@ return [
     'timeSpent' => 'Igihe wakoresheje',
     'minutesShort' => 'Iminota',
     'secondsShort' => 'Amasegonda',
-    'questionNumber' => 'Ikibazo cya :current kuri :total'
+    'questionNumber' => 'Ikibazo cya :current kuri :total',
+    
+    // Signup Nudge
+    'signupNudge' => [
+        'title' => 'Bika ibyo wakoze',
+        'message' => 'Iyandikishe kugirango ubike ibyo wakoze kandi ubone imyitozo myinshi byo kwitegura!',
+        'signUpFree' => 'Iyandikishe kubuntu',
+        'haveAccount' => 'Nsanzwe mfite konti',
+        'continueAsGuest' => 'Komeza utiyandikishije',
+        'close' => 'Funga'
+    ],
+    
+    // Quiz Navigation
+    'next' => 'Igikurikira',
+    'auto' => 'Igikurikira kishyireho',
+    'previous' => 'Ikibanza',
+    'resetQuiz' => 'Subiramo umwitozo',
+
+    // Feedback
+    'correct' => 'Nibyo!',
+    'incorrect' => 'Sibyo!',
+
+    // Quiz Results Modal
+    'quizCompleted' => 'Umwitozo warangiye!',
+    'youGotXOutOfY' => 'Ufite :correct mu :total wakoze neza',
+    'timeTaken' => 'Igihe wakoresheje',
+    'wantMoreQuizzes' => 'Ukeneye indi myitozo?',
+    'signupCta' => 'Iyandikishe kugirango ubone imyitozo myinshi, ubone uko wiyongera, unarushanwe n\'abandi!',
+    'signUpFree' => 'Iyandikishe k\'ubuntu',
+    'logIn' => 'Injira',
+    'reviewAnswers' => 'Reba ibisubizo',
+    'takeQuizAgain' => 'Subiramo umwitozo',
+    'shareResults' => 'Sangiza abandi uko wakoze!',
+    
+    // Premium Upgrade
+    'upgradeToPremium' => 'Andikisha ifatabuguzi',
+    'premiumBenefits' => 'Ubasha gukora imyitozo myinshi, ukanakurikirana uko wiyongera!',
+    'viewPlans' => 'Reba Ifatabugurizi rigukwiriye',
+    
+    // Reset Confirmation
+    'resetConfirmation' => 'Urazi neza ko ushaka gusubiramo umwitozo? Ibyo wakoze bizasibwa.'
 ];

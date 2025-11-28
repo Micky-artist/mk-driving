@@ -159,7 +159,7 @@
                     <div class="w-full">
                         <div class="flex justify-between items-center text-sm text-gray-600 mb-1 flex-wrap gap-2">
                             <div class="flex items-center gap-3">
-                                <span>Question <span id="currentQuestion">1</span> of {{ $quiz->questions->count() }}</span>
+                                <span>{{ __('quiz.question') }} <span id="currentQuestion">1</span> {{ __('quiz.of') }} {{ $quiz->questions->count() }}</span>
                                 <span class="score-badge">
                                     <span class="score-correct">✓ <span id="correctCount">0</span></span>
                                     <span class="text-gray-400">|</span>
@@ -167,13 +167,13 @@
                                 </span>
                                 <label class="flex items-center text-sm text-gray-700 cursor-pointer bg-gray-50 px-3 py-1 rounded-lg border border-gray-200 hover:bg-gray-100 transition-colors">
                                     <input type="checkbox" id="autoNextToggle" checked class="h-4 w-4 text-blue-600 focus:ring-blue-500 border-gray-300 rounded">
-                                    <span class="ml-2 font-medium">Auto Next</span>
+                                    <span class="ml-2 font-medium">{{ strtolower(__('quiz.auto')) }}</span>
                                 </label>
                             </div>
                             <div class="flex items-center gap-3">
                                 <span id="timer" class="font-mono font-semibold text-blue-600">20:00</span>
                                 <button type="button" id="resetQuiz" class="px-3 py-1 text-sm text-red-600 hover:text-red-800 hover:bg-red-50 rounded transition-colors">
-                                    Reset Quiz
+                                    {{ __('quiz.resetQuiz') }}
                                 </button>
                             </div>
                         </div>
@@ -199,15 +199,15 @@
                      data-correct-answer="{{ $question->correct_option_id }}">
                     
                     <div class="mb-6">
-                        <h3 class="text-lg font-medium text-gray-900 mb-4">
-                            <span class="font-semibold">Question {{ $index + 1 }}:</span> 
+                        <h3 class="text-lg font-bold mb-2">
+                            <span class="font-semibold">{{ __('quiz.question') }} {{ $index + 1 }}:</span> 
                             {{ $question->getTranslation('text', app()->getLocale()) }}
                         </h3>
                         
                         @if($question->image_path)
                             <div class="mb-4">
                                 <img src="{{ asset('storage/' . $question->image_path) }}" 
-                                     alt="Question Image" 
+                                     alt="{{ __('quiz.questionImage') }}" 
                                      class="max-w-full h-auto rounded-lg border border-gray-200">
                             </div>
                         @endif
@@ -234,19 +234,19 @@
                     <div class="flex justify-between pt-4 border-t border-gray-100">
                         <button type="button" 
                                 class="btn-prev px-4 py-2 bg-gray-100 text-gray-700 rounded-lg hover:bg-gray-200 transition-colors {{ $loop->first ? 'invisible' : '' }}">
-                            Previous
+                            {{ __('quiz.previous') }}
                         </button>
                         
                         @if($loop->last)
                             <button type="submit" 
                                     class="ml-auto px-6 py-2 bg-blue-600 text-white rounded-lg hover:bg-blue-700 transition-colors">
-                                Submit Quiz
+                                {{ __('quiz.submitQuiz') }}
                             </button>
                         @else
                             <button type="button" 
                                     class="btn-next px-6 py-2 bg-blue-600 text-white rounded-lg hover:bg-blue-700 transition-colors opacity-50 cursor-not-allowed ml-auto"
                                     disabled>
-                                Next
+                                {{ __('quiz.next') }}
                             </button>
                         @endif
                     </div>
@@ -257,56 +257,66 @@
 </div>
 
 <!-- Results Modal -->
-<div id="resultsModal" class="hidden fixed inset-0 bg-black bg-opacity-50 modal-backdrop flex items-center justify-center p-4 z-50">
-    <div class="bg-white rounded-xl max-w-2xl w-full p-6 max-h-[90vh] overflow-y-auto">
-        <div class="text-center mb-6">
-            <div class="inline-flex items-center justify-center w-20 h-20 bg-blue-100 rounded-full mb-4">
-                <svg class="w-10 h-10 text-blue-600" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+<div id="resultsModal" class="hidden fixed inset-0 bg-black bg-opacity-50 modal-backdrop flex items-center justify-center p-2 sm:p-4 z-50">
+    <div class="bg-white rounded-xl w-full max-w-md sm:max-w-2xl mx-2 sm:mx-4 p-4 sm:p-6 max-h-[90vh] overflow-y-auto relative">
+        <!-- Close Button -->
+        <button type="button" id="closeResultsModal" class="absolute top-3 right-3 sm:top-4 sm:right-4 text-gray-400 hover:text-gray-600 focus:outline-none">
+            <svg class="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M6 18L18 6M6 6l12 12" />
+            </svg>
+        </button>
+        
+        <div class="text-center mb-4 sm:mb-6">
+            <div class="inline-flex items-center justify-center w-16 h-16 sm:w-20 sm:h-20 bg-blue-100 rounded-full mb-3 sm:mb-4">
+                <svg class="w-8 h-8 sm:w-10 sm:h-10 text-blue-600" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                     <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 12l2 2 4-4m6 2a9 9 0 11-18 0 9 9 0 0118 0z"></path>
                 </svg>
             </div>
-            <h2 class="text-3xl font-bold mb-2 text-gray-900">Quiz Completed!</h2>
-            <div class="text-5xl font-bold text-blue-600 mb-2" id="resultsScore">0%</div>
-            <p class="text-gray-600 mb-4">
-                You got <span id="correctAnswers" class="font-semibold text-green-600">0</span> out of 
-                <span class="font-semibold">{{ $quiz->questions->count() }}</span> questions correct
+            <h2 class="text-2xl sm:text-3xl font-bold mb-1 sm:mb-2 text-gray-900">{{ __('quiz.quizCompleted') }}</h2>
+            <div class="text-4xl sm:text-5xl font-bold text-blue-600 mb-1 sm:mb-2" id="resultsScore">0%</div>
+            <p class="text-gray-600 text-sm sm:text-base mb-3 sm:mb-4">
+                @php
+                    $correctSpan = '<span id="correctAnswers" class="font-semibold text-green-600">0</span>';
+                    $totalSpan = '<span class="font-semibold">' . $quiz->questions->count() . '</span>';
+                @endphp
+                {!! __('quiz.youGotXOutOfY', ['correct' => $correctSpan, 'total' => $totalSpan]) !!}
             </p>
         </div>
 
         <!-- Stats Grid -->
-        <div class="grid grid-cols-3 gap-4 mb-6">
-            <div class="stat-card">
-                <div class="stat-value text-green-600" id="statCorrect">0</div>
-                <div class="stat-label">Correct</div>
+        <div class="grid grid-cols-3 gap-2 sm:gap-3 mb-4 sm:mb-6">
+            <div class="stat-card p-2 sm:p-3">
+                <div class="stat-value text-green-600 text-xl sm:text-2xl" id="statCorrect">0</div>
+                <div class="stat-label text-xs sm:text-sm">{{ __('quiz.correct') }}</div>
             </div>
-            <div class="stat-card">
-                <div class="stat-value text-red-600" id="statIncorrect">0</div>
-                <div class="stat-label">Incorrect</div>
+            <div class="stat-card p-2 sm:p-3">
+                <div class="stat-value text-red-600 text-xl sm:text-2xl" id="statIncorrect">0</div>
+                <div class="stat-label text-xs sm:text-sm">{{ __('quiz.incorrect') }}</div>
             </div>
-            <div class="stat-card">
-                <div class="stat-value text-blue-600" id="statTimeTaken">0:00</div>
-                <div class="stat-label">Time Taken</div>
+            <div class="stat-card p-2 sm:p-3">
+                <div class="stat-value text-blue-600 text-xl sm:text-2xl" id="statTimeTaken">0:00</div>
+                <div class="stat-label text-xs sm:text-sm">{{ __('quiz.timeTaken') }}</div>
             </div>
         </div>
 
         <!-- Upsell Banner -->
         @guest
-        <div class="upsell-banner mb-6">
-            <div class="flex items-start gap-4">
+        <div class="bg-gradient-to-r from-purple-600 to-indigo-600 rounded-lg p-4 sm:p-6 mb-4 sm:mb-6">
+            <div class="flex flex-col sm:flex-row items-center sm:items-start gap-3 sm:gap-4">
                 <div class="flex-shrink-0">
-                    <svg class="w-12 h-12 text-white opacity-90" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                    <svg class="w-10 h-10 sm:w-12 sm:h-12 text-white opacity-90" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                         <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M13 10V3L4 14h7v7l9-11h-7z"></path>
                     </svg>
                 </div>
-                <div class="flex-1">
-                    <h3 class="text-xl font-bold mb-2">Want More Quizzes?</h3>
-                    <p class="text-white text-opacity-90 mb-4">Create a free account to access hundreds of quizzes, track your progress, and compete with others!</p>
-                    <div class="flex gap-3">
-                        <a href="{{ route('register', ['locale' => app()->getLocale()]) }}" class="px-6 py-2 bg-white text-purple-600 font-semibold rounded-lg hover:bg-gray-100 transition-colors">
-                            Sign Up Free
+                <div class="text-center sm:text-left">
+                    <h3 class="text-lg sm:text-xl font-bold mb-1 sm:mb-2 text-white">{{ __('quiz.wantMoreQuizzes') }}</h3>
+                    <p class="text-white text-opacity-90 text-sm sm:text-base mb-3 sm:mb-4">{{ __('quiz.signupCta') }}</p>
+                    <div class="flex flex-col sm:flex-row gap-2 sm:gap-3 justify-center sm:justify-start">
+                        <a href="{{ route('register', ['locale' => app()->getLocale()]) }}" class="px-4 sm:px-6 py-2 bg-white text-purple-600 font-semibold rounded-lg hover:bg-gray-100 transition-colors text-sm sm:text-base">
+                            {{ __('quiz.signUpFree') }}
                         </a>
-                        <a href="{{ route('login', ['locale' => app()->getLocale()]) }}" class="px-6 py-2 bg-transparent border-2 border-white text-white font-semibold rounded-lg hover:bg-white hover:text-purple-600 transition-colors">
-                            Log In
+                        <a href="{{ route('login', ['locale' => app()->getLocale()]) }}" class="px-4 sm:px-6 py-2 bg-transparent border-2 border-white text-white font-semibold rounded-lg hover:bg-white hover:text-purple-600 transition-colors text-sm sm:text-base">
+                            {{ __('quiz.logIn') }}
                         </a>
                     </div>
                 </div>
@@ -315,20 +325,20 @@
         @endguest
 
         @auth
-        <div class="gradient-border mb-6">
-            <div class="gradient-border-inner">
-                <div class="flex items-start gap-4">
+        <div class="gradient-border mb-4 sm:mb-6">
+            <div class="gradient-border-inner p-3 sm:p-4">
+                <div class="flex flex-col sm:flex-row items-center sm:items-start gap-3 sm:gap-4">
                     <div class="flex-shrink-0">
-                        <svg class="w-10 h-10 text-purple-600" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                        <svg class="w-8 h-8 sm:w-10 sm:h-10 text-purple-600" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                             <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M5 3v4M3 5h4M6 17v4m-2-2h4m5-16l2.286 6.857L21 12l-5.714 2.143L13 21l-2.286-6.857L5 12l5.714-2.143L13 3z"></path>
                         </svg>
                     </div>
-                    <div class="flex-1">
-                        <h3 class="text-lg font-bold mb-2 text-gray-900">Upgrade to Premium</h3>
-                        <p class="text-gray-600 mb-3">Get unlimited access to all quizzes, detailed analytics, and AI-powered study recommendations!</p>
-                        <a href="{{ route('plans', ['locale' => app()->getLocale()]) }}" class="inline-flex items-center px-5 py-2 bg-gradient-to-r from-purple-600 to-indigo-600 text-white font-semibold rounded-lg hover:from-purple-700 hover:to-indigo-700 transition-colors">
-                            View Plans
-                            <svg class="w-4 h-4 ml-2" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                    <div class="text-center sm:text-left">
+                        <h3 class="text-base sm:text-lg font-bold mb-1 sm:mb-2 text-gray-900">{{ __('quiz.upgradeToPremium') }}</h3>
+                        <p class="text-gray-600 text-sm sm:text-base mb-2 sm:mb-3">{{ __('quiz.premiumBenefits') }}</p>
+                        <a href="{{ route('plans', ['locale' => app()->getLocale()]) }}" class="inline-flex items-center justify-center sm:justify-start px-4 sm:px-5 py-2 bg-gradient-to-r from-purple-600 to-indigo-600 text-white font-semibold rounded-lg hover:from-purple-700 hover:to-indigo-700 transition-colors text-sm sm:text-base">
+                            {{ __('quiz.viewPlans') }}
+                            <svg class="w-3 h-3 sm:w-4 sm:h-4 ml-1 sm:ml-2" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                                 <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 5l7 7-7 7"></path>
                             </svg>
                         </a>
@@ -340,42 +350,58 @@
 
         <!-- Action Buttons -->
         <div class="flex flex-col sm:flex-row gap-3">
-            <button id="reviewAnswers" class="flex-1 px-6 py-3 bg-blue-600 text-white font-semibold rounded-lg hover:bg-blue-700 transition-colors">
-                Review Answers
+            <button id="reviewAnswers" class="flex-1 px-4 sm:px-6 py-2 sm:py-3 bg-blue-600 text-white font-semibold rounded-lg hover:bg-blue-700 transition-colors text-sm sm:text-base">
+                {{ __('quiz.reviewAnswers') }}
             </button>
-            <button id="resetFromResults" class="flex-1 px-6 py-3 bg-gray-100 text-gray-700 font-semibold rounded-lg hover:bg-gray-200 transition-colors">
-                Take Quiz Again
+            <button id="resetFromResults" class="flex-1 px-4 sm:px-6 py-2 sm:py-3 bg-gray-100 text-gray-700 font-semibold rounded-lg hover:bg-gray-200 transition-colors text-sm sm:text-base">
+                {{ __('quiz.takeQuizAgain') }}
             </button>
-        </div>
-
-        <!-- Share Section -->
-        <div class="mt-6 pt-6 border-t border-gray-200">
-            <p class="text-center text-sm text-gray-600 mb-3">Share your results</p>
-            <div class="flex justify-center gap-3">
-                <button onclick="shareOnTwitter()" class="px-4 py-2 bg-blue-400 text-white rounded-lg hover:bg-blue-500 transition-colors">
-                    <svg class="w-5 h-5" fill="currentColor" viewBox="0 0 24 24">
-                        <path d="M23 3a10.9 10.9 0 01-3.14 1.53 4.48 4.48 0 00-7.86 3v1A10.66 10.66 0 013 4s-4 9 5 13a11.64 11.64 0 01-7 2c9 5 20 0 20-11.5a4.5 4.5 0 00-.08-.83A7.72 7.72 0 0023 3z"></path>
-                    </svg>
-                </button>
-                <button onclick="shareOnFacebook()" class="px-4 py-2 bg-blue-600 text-white rounded-lg hover:bg-blue-700 transition-colors">
-                    <svg class="w-5 h-5" fill="currentColor" viewBox="0 0 24 24">
-                        <path d="M18 2h-3a5 5 0 00-5 5v3H7v4h3v8h4v-8h3l1-4h-4V7a1 1 0 011-1h3z"></path>
-                    </svg>
-                </button>
-                <button onclick="copyResultLink()" class="px-4 py-2 bg-gray-600 text-white rounded-lg hover:bg-gray-700 transition-colors">
-                    <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M8 16H6a2 2 0 01-2-2V6a2 2 0 012-2h8a2 2 0 012 2v2m-6 12h8a2 2 0 002-2v-8a2 2 0 00-2-2h-8a2 2 0 00-2 2v8a2 2 0 002 2z"></path>
-                    </svg>
-                </button>
-            </div>
         </div>
     </div>
 </div>
 @endsection
 
+<!-- Signup Nudge Modal -->
+<div id="signupNudgeModal" class="hidden fixed inset-0 bg-black bg-opacity-50 z-50 flex items-center justify-center p-4">
+    <div class="bg-white rounded-xl max-w-md w-full p-6 relative">
+        <button type="button" id="closeSignupNudge" class="absolute top-4 right-4 text-gray-400 hover:text-gray-600">
+            <svg class="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M6 18L18 6M6 6l12 12"></path>
+            </svg>
+        </button>
+        
+        <div class="text-center">
+            <div class="mx-auto flex items-center justify-center h-16 w-16 rounded-full bg-blue-100 mb-4">
+                <svg class="h-8 w-8 text-blue-600" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 15v2m-6 4h12a2 2 0 002-2v-6a2 2 0 00-2-2H6a2 2 0 00-2 2v6a2 2 0 002 2zm10-10V7a4 4 0 00-8 0v4h8z"></path>
+                </svg>
+            </div>
+            <h3 class="text-xl font-bold text-gray-900 mb-2">{{ __('quiz.signupNudge.title') }}</h3>
+            <p class="text-gray-600 mb-6">{{ __('quiz.signupNudge.message') }}</p>
+            
+            <div class="flex flex-col space-y-3">
+                <a href="{{ route('register', ['locale' => app()->getLocale()]) }}" class="px-6 py-3 bg-gradient-to-r from-blue-600 to-blue-700 text-white font-semibold rounded-lg hover:from-blue-700 hover:to-blue-800 transition-colors text-center">
+                    {{ __('quiz.signupNudge.signUpFree') }}
+                </a>
+                <a href="{{ route('login', ['locale' => app()->getLocale()]) }}" class="px-6 py-3 border-2 border-blue-600 text-blue-600 font-semibold rounded-lg hover:bg-blue-50 transition-colors text-center">
+                    {{ __('quiz.signupNudge.haveAccount') }}
+                </a>
+                <button type="button" id="continueAsGuest" class="text-sm text-gray-600 hover:text-gray-800 mt-2">
+                    {{ __('quiz.signupNudge.continueAsGuest') }}
+                </button>
+            </div>
+        </div>
+    </div>
+</div>
+
 @push('scripts')
 <script>
 document.addEventListener('DOMContentLoaded', function() {
+    // Localized messages
+    const messages = {
+        resetConfirmation: '{{ __("quiz.resetConfirmation") }}'
+    };
+    
     // DOM Elements
     const quizForm = document.getElementById('quizForm');
     const questionContainers = document.querySelectorAll('.question-container');
@@ -426,7 +452,7 @@ document.addEventListener('DOMContentLoaded', function() {
     
     // Reset the quiz
     function resetQuiz() {
-        if (confirm('Are you sure you want to reset the quiz? All your progress will be lost.')) {
+        if (confirm(messages.resetConfirmation)) {
             // Stop any running timers
             if (timerInterval) {
                 clearInterval(timerInterval);
@@ -491,6 +517,42 @@ document.addEventListener('DOMContentLoaded', function() {
             startTimer();
         }
     }
+    
+    // Close signup nudge modal
+    const signupNudgeModal = document.getElementById('signupNudgeModal');
+    const closeSignupNudge = document.getElementById('closeSignupNudge');
+    const continueAsGuest = document.getElementById('continueAsGuest');
+    
+    if (closeSignupNudge) {
+        closeSignupNudge.addEventListener('click', () => {
+            signupNudgeModal.classList.add('hidden');
+        });
+    }
+    
+    if (continueAsGuest) {
+        continueAsGuest.addEventListener('click', function() {
+            signupNudgeModal.classList.add('hidden');
+        });
+    }
+    
+    // Close modal when clicking the X button or clicking outside the modal
+    document.getElementById('closeResultsModal').addEventListener('click', function() {
+        resultsModal.classList.add('hidden');
+    });
+    
+    // Close modal when clicking outside the modal content
+    resultsModal.addEventListener('click', function(e) {
+        if (e.target === resultsModal) {
+            resultsModal.classList.add('hidden');
+        }
+    });
+    
+    // Close modal when clicking outside the modal content
+    signupNudgeModal.addEventListener('click', function(e) {
+        if (e.target === signupNudgeModal) {
+            signupNudgeModal.classList.add('hidden');
+        }
+    });
     
     // Initialize quiz
     function initQuiz() {
@@ -568,6 +630,15 @@ document.addEventListener('DOMContentLoaded', function() {
         updateProgressBar();
         updateNavigationButtons();
         
+        // Show signup nudge after first question is answered and we're moving to second question
+        if (index === 1 && Object.keys(userAnswers).length === 1 && !localStorage.getItem('signupNudgeShown')) {
+            // Small delay to ensure the question is visible first
+            setTimeout(() => {
+                document.getElementById('signupNudgeModal').classList.remove('hidden');
+                localStorage.setItem('signupNudgeShown', 'true');
+            }, 500);
+        }
+        
         // Scroll to top of question
         currentQuestion.scrollIntoView({ behavior: 'smooth', block: 'start' });
     }
@@ -617,7 +688,7 @@ document.addEventListener('DOMContentLoaded', function() {
                 </div>
                 <div class="ml-3">
                     <p class="font-semibold">
-                        ${isCorrect ? 'Correct!' : 'Incorrect'}
+                        ${isCorrect ? `{{ __('quiz.correct') }}` : `{{ __('quiz.incorrect') }}`}
                     </p>
                     ${questionContainer.querySelector('.explanation') ? 
                         `<div class="mt-1 text-sm">

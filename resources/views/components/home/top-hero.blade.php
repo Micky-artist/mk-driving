@@ -15,7 +15,7 @@
         </div>
     </div>
 
-    <div class="relative max-w-7xl w-full mx-auto px-2 sm:px-6 lg:px-8 py-8 md:py-12 overflow-visible">
+    <div class="relative max-w-7xl w-full mx-auto px-2 sm:px-6 lg:px-8 py-8 md:py-6 overflow-visible">
         <div class="relative flex flex-col lg:flex-row gap-8 items-start min-h-[400px] md:min-h-[450px]">
             <!-- Left Column - Guest Quiz (Full width on mobile, 1/2 on desktop) -->
             <!-- Desktop Quiz Section (hidden on mobile) -->
@@ -64,7 +64,7 @@
                     <x-home.car-animation />
 
                     <!-- Billboard CTA with Rotating Messages -->
-                    <div class="relative inline-block group ml-16 md:ml-4 mt-32 md:mt-60">
+                    <div class="relative inline-block group ml-16 md:ml-4 mt-28 md:mt-52">
                         <!-- Billboard Frame -->
                         <div class="absolute -inset-0.5 bg-gradient-to-r from-yellow-400/20 to-yellow-500/20 rounded-md blur-sm opacity-80 group-hover:blur-md group-hover:opacity-100 transition-all duration-500 animate-pulse" style="animation-duration: 3s;"></div>
                         
@@ -80,7 +80,7 @@
                             
                             <!-- CTA Button -->
                             <div class="mt-4">
-                                <a href="{{ $ctaUrl }}"
+                                <a href="{{ route('guest-quiz.show', ['locale' => app()->getLocale(), 'quiz' => 11]) }}"
                                     class="block w-full text-center bg-gradient-to-r from-yellow-400 to-yellow-500 text-blue-900 font-bold py-2 px-4 rounded hover:from-yellow-300 hover:to-yellow-400 transition-all duration-300 transform group-hover:scale-[1.02] shadow-md hover:shadow-yellow-500/30">
                                     {{ $ctaText }}
                                     <svg class="inline-block ml-2 w-4 h-4" fill="none" stroke="currentColor" stroke-width="3" viewBox="0 0 24 24">

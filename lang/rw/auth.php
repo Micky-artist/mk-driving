@@ -3,6 +3,7 @@
 return [
     // Authentication messages
     'login_success' => 'Kwinjira byagenze neza',
+    'sign_up' => 'Iyandikishe',
     'register_success' => 'Kwiyandikisha byagenze neza',
     'logout_success' => 'Gusohoka byagenze neza',
     'password_changed' => 'Ijambo ry\'ibanga ryahinduwe neza',

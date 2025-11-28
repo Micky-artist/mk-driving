@@ -225,12 +225,6 @@
                         @guest
                             <div
                                 class="bg-blue-50 dark:bg-blue-900/20 border border-blue-200 dark:border-blue-800 rounded-lg p-4 mb-4">
-                                <h4 class="font-medium text-blue-800 dark:text-blue-200 mb-2">
-                                    {{ __('home.guestQuiz.save_your_progress') }}
-                                </h4>
-                                <p class="text-sm text-blue-700 dark:text-blue-300 mb-3">
-                                    {{ __('home.guestQuiz.sign_up_to_save') }}
-                                </p>
                                 <div class="flex flex-col space-y-2">
                                     <a href="{{ route('register', ['redirect' => urlencode(route('guest-quiz.show', ['locale' => app()->getLocale(), 'quiz' => $guestQuiz['id']]))]) }}"
                                         class="w-full bg-gradient-to-r from-blue-500 to-blue-600 hover:from-blue-600 hover:to-blue-700 text-white font-medium py-2 px-4 rounded-lg text-center transition-all duration-300 transform hover:scale-[1.02]">

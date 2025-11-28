@@ -4,7 +4,7 @@
         <div id="animation-container" class="relative w-full h-full overflow-hidden min-h-[400px] md:min-h-[475px]">
 
             <!-- Car Animation Container -->
-            <div id="car-animation-container" class="absolute top-0 left-0  -mt-36 md:-mt-28 -ml-6 md:-ml-20 z-10 w-[300px] md:w-[500px] h-auto">
+            <div id="car-animation-container" class="absolute top-0 left-0  -mt-36 md:-mt-28 -ml-6 md:ml-32 z-10 w-[300px] md:w-[500px] h-auto">
                 <div id="car-animation" class="w-full h-full">
                     <!-- Car shadow -->
                     <div
@@ -14,7 +14,7 @@
             </div>
 
             <!-- Bike Animation Container -->
-            <div id="bike-animation-container" class="absolute bottom-0 right-0 -mb-6 md:-mb-10 -mr-6 md:-mr-12 z-20 w-[300px] md:w-[500px] h-auto">
+            <div id="bike-animation-container" class="absolute bottom-0 right-0 -mb-6 md:-mb-6 -mr-6 md:-mr-10 z-20 w-[300px] md:w-[450px] h-auto">
                 <div id="bike-animation" class="w-full h-full">
                     <!-- Bike shadow -->
                     <div

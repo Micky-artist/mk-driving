@@ -150,7 +150,7 @@ return [
         'challenge_yourself' => 'Reba n\'ibindi',
         'save_your_progress' => 'Menya aho ugeze',
         'sign_up_to_save' => 'Iyandikishe ubike aho ugeze kandi ukurikirane uko wiyongera',
-        'sign_up_now' => 'Iyandikishe Nonaha!',
+        'sign_up_now' => 'Iyandikishe tubashe kwibuka ibisubizo!',
         'continue_as_guest' => 'Komeza nk\'umushyitsi',
     ],
     'footer' => [

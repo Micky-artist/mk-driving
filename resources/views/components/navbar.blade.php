@@ -142,16 +142,16 @@
                         </div>
                     </div>
                 @else
-                    <div class="flex items-center space-x-4">
+                    <div class="flex items-center space-x-3">
                         <a 
                             href="{{ route('login', app()->getLocale()) }}" 
-                            class="text-gray-500 hover:text-gray-700 px-3 py-2 rounded-md text-sm font-medium"
+                            class="bg-white text-[#023047] px-4 py-2 rounded-full text-sm font-medium hover:bg-gray-100 border border-[#023047] transition-colors duration-200"
                         >
                             {{ __('navigation.login') }}
                         </a>
                         <a 
                             href="{{ route('register', app()->getLocale()) }}" 
-                            class="bg-[#023047] text-white px-4 py-2 rounded-full text-sm font-medium hover:bg-[#023047]/90"
+                            class="bg-[#023047] text-white px-4 py-2 rounded-full text-sm font-medium hover:bg-[#023047]/90 transition-colors duration-200"
                         >
                             {{ __('navigation.register') }}
                         </a>

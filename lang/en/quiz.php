@@ -141,5 +141,45 @@ return [
     'timeSpent' => 'Time Spent',
     'minutesShort' => 'min',
     'secondsShort' => 'sec',
-    'questionNumber' => 'Question :current of :total'
+    'questionNumber' => 'Question :current of :total',
+    
+    // Signup Nudge
+    'signupNudge' => [
+        'title' => 'Save Your Progress',
+        'message' => 'Sign up to save your quiz progress and access more practice tests!',
+        'signUpFree' => 'Sign Up Free',
+        'haveAccount' => 'I Already Have an Account',
+        'continueAsGuest' => 'Continue as Guest',
+        'close' => 'Close'
+    ],
+    
+    // Quiz Navigation
+    'next' => 'Next',
+    'auto' => 'Auto Next',
+    'previous' => 'Previous',
+    'resetQuiz' => 'Reset Quiz',
+    
+    // Feedback
+    'correct' => 'Correct!',
+    'incorrect' => 'Incorrect',
+    
+    // Quiz Results Modal
+    'quizCompleted' => 'Quiz Completed!',
+    'youGotXOutOfY' => 'You got :correct out of :total questions correct',
+    'timeTaken' => 'Time Taken',
+    'wantMoreQuizzes' => 'Want More Quizzes?',
+    'signupCta' => 'Create a free account to access hundreds of quizzes, track your progress, and compete with others!',
+    'signUpFree' => 'Sign Up Free',
+    'logIn' => 'Log In',
+    'reviewAnswers' => 'Review Answers',
+    'takeQuizAgain' => 'Take Quiz Again',
+    'shareResults' => 'Share your results',
+    
+    // Premium Upgrade
+    'upgradeToPremium' => 'Upgrade to Premium',
+    'premiumBenefits' => 'Get unlimited access to all quizzes, detailed analytics, and AI-powered study recommendations!',
+    'viewPlans' => 'View Plans',
+    
+    // Reset Confirmation
+    'resetConfirmation' => 'Are you sure you want to reset the quiz? All your progress will be lost.'
 ];
