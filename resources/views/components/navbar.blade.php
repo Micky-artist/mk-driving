@@ -47,13 +47,13 @@
                             'fragment' => null,
                             'is_home' => false
                         ],
-                        [
-                            'route' => 'news.index',
-                            'text' => __('navigation.news'),
-                            'routes' => ['news.*', 'news.show'],
-                            'fragment' => null,
-                            'is_home' => false
-                        ],
+                        // [
+                        //     'route' => 'news.index',
+                        //     'text' => __('navigation.news'),
+                        //     'routes' => ['news.*', 'news.show'],
+                        //     'fragment' => null,
+                        //     'is_home' => false
+                        // ],
                         [
                             'route' => 'forum.index',
                             'text' => __('forum.page_title'),

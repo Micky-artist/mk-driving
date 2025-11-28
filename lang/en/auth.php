@@ -33,6 +33,8 @@ return [
     'continue_with_google' => 'Continue with Google',
     'or_sign_in_with_email' => 'Or sign in with email',
     'or_sign_up_with_email' => 'Or sign up with email',
+    'google_login_failed' => 'Unable to login using Google. Please try again.',
+    'closing' => 'Closing...',
     
     // Common
     'email' => 'Email',

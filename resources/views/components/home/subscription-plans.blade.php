@@ -333,12 +333,19 @@
         <!-- Help section -->
         <div class="mt-12 text-center fade-in delay-400">
             <p class="text-gray-600 dark:text-gray-300 mb-3">{{ __('home.subscriptionPlans.needHelp') }}</p>
-            <a href="{{ route('home', ['#subscription-plans']) }}" class="inline-flex items-center text-blue-600 dark:text-blue-400 font-medium hover:text-blue-800 dark:hover:text-blue-300 transition-colors duration-200 group">
-                <span>{{ __('home.subscriptionPlans.contact_us') }}</span>
-                <svg class="w-4 h-4 ml-1 transform group-hover:translate-x-1 transition-transform duration-200" fill="none" viewBox="0 0 24 24" stroke="currentColor">
-                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M14 5l7 7m0 0l-7 7m7-7H3" />
-                </svg>
-            </a>
+            <div class="flex items-center justify-center space-x-6">
+                <a href="mailto:mkscholars250@gmail.com" class="inline-flex items-center text-blue-600 dark:text-blue-400 font-medium hover:text-blue-800 dark:hover:text-blue-300 transition-colors duration-200 group">
+                    <span>{{ __('home.subscriptionPlans.contact_us') }}</span>
+                    <svg class="w-4 h-4 ml-1 transform group-hover:translate-x-1 transition-transform duration-200" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M3 8l7.89 5.26a2 2 0 002.22 0L21 8M5 19h14a2 2 0 002-2V7a2 2 0 00-2-2H5a2 2 0 00-2 2v10a2 2 0 002 2z" />
+                    </svg>
+                </a>
+                <span class="text-gray-400">|</span>
+                <a href="https://wa.me/250798611161" target="_blank" rel="noopener noreferrer" class="inline-flex items-center text-green-600 dark:text-green-400 font-medium hover:text-green-700 dark:hover:text-green-300 transition-colors duration-200 group">
+                    <i class="fab fa-whatsapp text-xl mr-2"></i>
+                    <span>WhatsApp</span>
+                </a>
+            </div>
         </div>
     </div>
 </div>

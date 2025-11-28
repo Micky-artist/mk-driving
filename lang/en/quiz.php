@@ -181,5 +181,9 @@ return [
     'viewPlans' => 'View Plans',
     
     // Reset Confirmation
-    'resetConfirmation' => 'Are you sure you want to reset the quiz? All your progress will be lost.'
+    'resetConfirmation' => 'Are you sure you want to reset the quiz? All your progress will be lost.',
+    
+    // Subscription Plans
+    'wantMorePractice' => 'Want more practice?',
+    'unlockFullAccess' => 'Unlock full access to all practice tests, detailed explanations, and track your progress!'
 ];

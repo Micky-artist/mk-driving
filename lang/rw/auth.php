@@ -33,6 +33,8 @@ return [
     'continue_with_google' => 'Koresha Konti ya Google',
     'or_sign_in_with_email' => 'Cg ukoreshe imeri',
     'or_sign_up_with_email' => 'Cg wiyandikishe ukoresheje imeri',
+    'google_login_failed' => 'Ntushoboye kwinjira ukoresheje Google. Ongera ugerageze.',
+    'closing' => 'Gufunga...',
     
     // Common
     'email' => 'Imeri',
@@ -41,7 +43,6 @@ return [
     'already_registered' => 'Ubu ufite konti?',
     'sign_in' => 'Injira',
     
-    // Register page
     // Forgot Password Page
     'forgot_password_page' => [
         'title' => 'Guhindura ijambo ry\'ibanga',

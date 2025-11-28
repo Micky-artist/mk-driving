@@ -4,7 +4,7 @@ return [
     'loading' => 'Birategereje...',
     'error' => 'Habaye ikosa',
     'success' => 'Byagenze neza',
-    'cancel' => 'Kuraguza',
+    'cancel' => 'Hagarika',
     'save' => 'Kubika',
     'edit' => 'Guhindura',
     'delete' => 'Gusiba',

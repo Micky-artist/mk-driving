@@ -158,6 +158,39 @@ Route::prefix('{locale}')
                     ];
                 });
 
+            // Get recent forum questions with top answer and answers count
+            $recentQuestions = \App\Models\ForumQuestion::withCount('answers')
+                ->with(['answers' => function($query) {
+                    // Get the top-voted answer for each question
+                    $query->where('is_approved', true)
+                        ->orderBy('votes', 'desc')
+                        ->limit(1);
+                }, 'answers.user', 'user'])
+                ->where('is_approved', true)
+                ->orderBy('created_at', 'desc')
+                ->take(5)
+                ->get()
+                ->map(function($question) use ($locale) {
+                    $title = $question->title;
+                    $content = $question->content;
+                    
+                    return [
+                        'id' => $question->id,
+                        'title' => $title[$locale] ?? $title[config('app.fallback_locale')] ?? 'No title',
+                        'content' => $content[$locale] ?? $content[config('app.fallback_locale')] ?? '',
+                        'created_at' => $question->created_at,
+                        'user' => $question->user,
+                        'answers_count' => $question->answers_count,
+                        'top_answer' => $question->answers->first() ? [
+                            'content' => $question->answers->first()->content[$locale] ?? $question->answers->first()->content[config('app.fallback_locale')] ?? '',
+                            'user' => $question->answers->first()->user,
+                            'created_at' => $question->answers->first()->created_at,
+                            'votes' => $question->answers->first()->votes ?? 0
+                        ] : null,
+                        'topics' => $question->topics
+                    ];
+                });
+
             // Get active quizzes with relationships
             \Illuminate\Support\Facades\Log::debug('Starting quizzes query');
             $quizzes = collect();
@@ -233,7 +266,8 @@ Route::prefix('{locale}')
                 'plans' => $plans,
                 'blogs' => $blogs,
                 'quizzes' => $quizzes,
-                'currentLocale' => $locale
+                'currentLocale' => $locale,
+                'recentQuestions' => $recentQuestions ?? collect()
             ]);
         })->name('home');
         

@@ -28,8 +28,7 @@
                 <div class="relative z-10 px-4 sm:px-6 lg:px-8">
                     @include('components.home.hero')
                     @include('components.home.subscription-plans')
-                    @include('components.home.offers')
-                    @include('components.home.blogs')
+                    @include('components.home.forum-section', ['questions' => $recentQuestions ?? []])
                 </div>
             </div>
         </div>

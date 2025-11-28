@@ -74,14 +74,14 @@ class GoogleAuthController extends Controller
             return view('auth.oauth-callback', [
                 'redirectUrl' => url("/{$locale}/dashboard"),
                 'status' => 'success',
-                'message' => 'Login successful!'
+                'message' => __('auth.login_success')
             ]);
 
         } catch (\Exception $e) {
             return view('auth.oauth-callback', [
                 'redirectUrl' => route('login', app()->getLocale()),
                 'status' => 'error',
-                'message' => 'Unable to login using Google. Please try again.'
+                'message' => __('auth.google_login_failed')
             ]);
         }
     }

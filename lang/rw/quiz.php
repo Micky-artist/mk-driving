@@ -146,7 +146,7 @@ return [
     // Signup Nudge
     'signupNudge' => [
         'title' => 'Bika ibyo wakoze',
-        'message' => 'Iyandikishe kugirango ubike ibyo wakoze kandi ubone imyitozo myinshi byo kwitegura!',
+        'message' => 'Iyandikishe kugirango ubike ibyo wakoze kandi ubone imyitozo myinshi yo kwitegura!',
         'signUpFree' => 'Iyandikishe kubuntu',
         'haveAccount' => 'Nsanzwe mfite konti',
         'continueAsGuest' => 'Komeza utiyandikishije',
@@ -181,5 +181,9 @@ return [
     'viewPlans' => 'Reba Ifatabugurizi rigukwiriye',
     
     // Reset Confirmation
-    'resetConfirmation' => 'Urazi neza ko ushaka gusubiramo umwitozo? Ibyo wakoze bizasibwa.'
+    'resetConfirmation' => 'Urazi neza ko ushaka gusubiramo umwitozo? Ibyo wakoze bizasibwa.',
+    
+    // Subscription Plans
+    'wantMorePractice' => 'Ukeneye kwitoza byimbitse?',
+    'unlockFullAccess' => 'Andikisha ifatabuguzi ukomeze kwitoza mpaka witeguye ikizami!'
 ];
