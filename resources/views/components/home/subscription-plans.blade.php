@@ -362,7 +362,7 @@
     success: false,
     phoneNumber: '',
     paymentStatus: 'idle',
-    momoPhoneNumber: '{{ env('MOMO_PHONE_NUMBER', '2507XXXXXXXX') }}',
+    momoPhoneNumber: '{{ config('payment.momo_phone_number') }}',
 
     init() {
         this.$watch('showModal', value => {
