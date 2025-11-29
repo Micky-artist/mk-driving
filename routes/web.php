@@ -65,8 +65,7 @@ Route::get('/language/{locale}', [LanguageController::class, 'switch'])
 
 // Redirect root to localized home with 'rw' as default
 Route::get('/', function (LocaleService $localeService) {
-    $preferredLocale = $localeService->getLocale() === 'en' ? 'rw' : $localeService->getLocale();
-    return redirect()->route('home', ['locale' => $preferredLocale]);
+    return redirect()->route('home', ['locale' => 'rw']);
 });
 
 // Localized routes
@@ -98,14 +97,14 @@ Route::prefix('{locale}')
                     if (is_string($name)) {
                         $name = json_decode($name, true) ?: [];
                     }
-                    $displayName = $name[$locale] ?? $name[config('app.fallback_locale', 'en')] ?? 'Unnamed Plan';
+                    $displayName = $name[$locale] ?? $name[config('app.fallback_locale', 'rw')] ?? 'Unnamed Plan';
 
                     // Handle description (string or array)
                     $description = $plan->description;
                     if (is_string($description)) {
                         $description = json_decode($description, true) ?: [];
                     }
-                    $displayDescription = $description[$locale] ?? $description[config('app.fallback_locale', 'en')] ?? '';
+                    $displayDescription = $description[$locale] ?? $description[config('app.fallback_locale', 'rw')] ?? '';
 
                     // Handle features (string, array, or JSON string)
                     $features = $plan->features;
@@ -117,8 +116,8 @@ Route::prefix('{locale}')
                     $features = is_array($features) ? $features : [];
                     if (isset($features[$locale])) {
                         $features = (array)$features[$locale];
-                    } elseif (isset($features[config('app.fallback_locale', 'en')])) {
-                        $features = (array)$features[config('app.fallback_locale', 'en')];
+                    } elseif (isset($features[config('app.fallback_locale', 'rw')])) {
+                        $features = (array)$features[config('app.fallback_locale', 'rw')];
                     }
                     $features = array_map('strval', $features);
                     
@@ -177,13 +176,13 @@ Route::prefix('{locale}')
                     
                     return [
                         'id' => $question->id,
-                        'title' => $title[$locale] ?? $title[config('app.fallback_locale')] ?? 'No title',
-                        'content' => $content[$locale] ?? $content[config('app.fallback_locale')] ?? '',
+                        'title' => $title[$locale] ?? $title[config('app.fallback_locale', 'rw')] ?? 'No title',
+                        'content' => $content[$locale] ?? $content[config('app.fallback_locale', 'rw')] ?? '',
                         'created_at' => $question->created_at,
                         'user' => $question->user,
                         'answers_count' => $question->answers_count,
                         'top_answer' => $question->answers->first() ? [
-                            'content' => $question->answers->first()->content[$locale] ?? $question->answers->first()->content[config('app.fallback_locale')] ?? '',
+                            'content' => $question->answers->first()->content[$locale] ?? $question->answers->first()->content[config('app.fallback_locale', 'rw')] ?? '',
                             'user' => $question->answers->first()->user,
                             'created_at' => $question->answers->first()->created_at,
                             'votes' => $question->answers->first()->votes ?? 0

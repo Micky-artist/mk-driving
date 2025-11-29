@@ -26,14 +26,14 @@ class RouteServiceProvider extends ServiceProvider
      *
      * @var array
      */
-    protected $locales;
-
+    protected $locales = ['rw', 'en'];
+    
     /**
      * The default application locale.
      *
      * @var string
      */
-    protected $defaultLocale;
+    protected $defaultLocale = 'rw';
 
     /**
      * Create a new route service provider instance.
@@ -44,8 +44,8 @@ class RouteServiceProvider extends ServiceProvider
     {
         parent::__construct($app);
         
-        $this->locales = array_keys(config('app.available_locales', ['en' => 'English']));
-        $this->defaultLocale = config('app.locale', 'en');
+        $this->locales = array_keys(config('app.available_locales', ['rw' => 'Kinyarwanda', 'en' => 'English']));
+        $this->defaultLocale = config('app.locale', 'rw');
     }
 
     /**

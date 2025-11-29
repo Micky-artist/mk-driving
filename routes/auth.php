@@ -10,7 +10,7 @@ use Illuminate\Support\Facades\Route;
 use Illuminate\Http\Request;
 
 // Group auth routes with locale prefix
-Route::prefix('{locale}')->where(['locale' => '[a-zA-Z]{2}'])->group(function () {
+Route::prefix('{locale}')->where(['locale' => '(rw|en)'])->group(function () {
     // Display login form
     Route::get('/login', [AuthenticatedSessionController::class, 'create'])
         ->middleware('guest')

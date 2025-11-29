@@ -19,12 +19,12 @@ class LocaleService
 
     public function getAvailableLocales()
     {
-        return config('app.available_locales', ['en' => 'English']);
+        return config('app.available_locales', ['rw' => 'Kinyarwanda', 'en' => 'English']);
     }
 
     public function getFallbackLocale()
     {
-        return config('app.fallback_locale', 'en');
+        return config('app.fallback_locale', 'rw');
     }
 
     public function validateLocale($locale)
