@@ -123,7 +123,7 @@ return [
     
     // Password validation messages
     'password_requirements' => [
-        'title' => 'Ijambo ry\'ibanga kagomba kuba rifite:',
+        'title' => 'Ijambo ry\'ibanga rigomba kuba rifite:',
         'length' => 'Inyuguti 6 byibura',
         'letter_number_required' => 'Umubare umwe byibura',
         'strength' => [

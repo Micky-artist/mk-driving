@@ -63,9 +63,10 @@ Route::get('/language/{locale}', [LanguageController::class, 'switch'])
     ->name('language.switch')
     ->where('locale', '[a-zA-Z]{2}');
 
-// Redirect root to localized home
+// Redirect root to localized home with 'rw' as default
 Route::get('/', function (LocaleService $localeService) {
-    return redirect()->route('home', ['locale' => $localeService->getLocale()]);
+    $preferredLocale = $localeService->getLocale() === 'en' ? 'rw' : $localeService->getLocale();
+    return redirect()->route('home', ['locale' => $preferredLocale]);
 });
 
 // Localized routes

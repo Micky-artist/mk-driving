@@ -18,9 +18,29 @@ class RegisteredUserController extends Controller
      *
      * @return \Illuminate\View\View
      */
-    public function create()
+    public function create(Request $request)
     {
         return view('auth.register');
+    }
+    
+    /**
+     * Check if the given URL is a valid redirect URL
+     * 
+     * @param string $url
+     * @return bool
+     */
+    protected function isValidRedirectUrl($url)
+    {
+        if (!filter_var($url, FILTER_VALIDATE_URL)) {
+            return false;
+        }
+        
+        // Ensure the URL is from the same domain to prevent open redirects
+        $appUrl = config('app.url');
+        $urlHost = parse_url($url, PHP_URL_HOST);
+        $appHost = parse_url($appUrl, PHP_URL_HOST);
+        
+        return $urlHost === $appHost;
     }
 
     /**
@@ -52,8 +72,16 @@ class RegisteredUserController extends Controller
             event(new Registered($user));
             Auth::login($user);
 
-            $locale = $request->route('locale') ?? app()->getLocale();
-            return response()->json(['redirect' => route('dashboard', ['locale' => $locale])]);
+            // Get return_to from the request or fall back to the URL parameter
+            $returnTo = $request->input('return_to') ?? $request->query('return_to');
+            
+            // Validate the return URL to prevent open redirects
+            if ($returnTo && $this->isValidRedirectUrl($returnTo)) {
+                return response()->json(['redirect' => $returnTo]);
+            }
+            
+            // Default redirect to home
+            return response()->json(['redirect' => route('home', ['locale' => app()->getLocale()])]);
             
         } catch (\Illuminate\Validation\ValidationException $e) {
             return response()->json([

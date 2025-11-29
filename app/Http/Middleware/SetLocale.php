@@ -22,12 +22,18 @@ class SetLocale
         $locale = $request->segment(1);
         $localeSource = 'url';
         
-        // If not in URL, try session or browser
+        // If not in URL, try session, then default to 'rw' if not set
         if (!$this->localeService->validateLocale($locale)) {
-            $locale = session('locale') ?: $request->getPreferredLanguage(
-                array_keys($this->localeService->getAvailableLocales())
-            );
-            $localeSource = $locale === session('locale') ? 'session' : 'browser';
+            $locale = session('locale') ?: 'rw'; // Default to 'rw' if no session
+            $localeSource = 'session';
+            
+            // Only check browser language if no session is set and 'rw' is not available
+            if (!$locale) {
+                $locale = $request->getPreferredLanguage(
+                    array_keys($this->localeService->getAvailableLocales())
+                );
+                $localeSource = 'browser';
+            }
             
             // If we need to redirect to include the locale in the URL
             if ($this->shouldRedirectToIncludeLocale($request, $locale)) {

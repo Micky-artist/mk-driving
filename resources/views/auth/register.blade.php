@@ -190,6 +190,7 @@
 
 @section('content')
 <div class="w-full min-h-screen flex flex-col relative overflow-hidden gradient-bg">
+    <input type="hidden" id="returnTo" value="{{ request()->input('return_to') }}">
     
     <div class="flex-grow flex items-center justify-center px-4 py-8 relative z-10">
         <div class="w-full max-w-md mx-auto">
@@ -344,9 +345,9 @@
                             <div id="password-validation" class="mt-2 hidden">
                                 <div class="flex items-center justify-between mb-1">
                                     <div class="h-2 w-full bg-gray-200 rounded-full overflow-hidden dark:bg-gray-700">
-                                        <div id="strength-meter-fill" class="h-full bg-gray-400 rounded-full transition-all duration-300 w-0"></div>
-                                    </div>
-                                    <span id="strength-text" class="text-xs font-medium ml-2 text-gray-500 dark:text-gray-400">{{ __('auth.password_requirements.strength.weak') }}</span>
+                                    <div id="password-strength-meter" class="h-full bg-gray-400 rounded-full transition-all duration-300 w-0"></div>
+                                </div>
+                                <span id="password-strength-text" class="text-xs font-medium ml-2 text-gray-500 dark:text-gray-400">{{ __('auth.password_requirements.strength.weak') }}</span>
                                 </div>
                                 
                                 <div id="password-requirements" class="text-xs text-gray-500 dark:text-gray-400 space-y-1 mt-2">
@@ -471,54 +472,39 @@
 <script src="{{ asset('js/google-auth.js') }}"></script>
 <script>
     let hasUserTyped = false;
-    
-    // Toggle password visibility
-    function togglePasswordVisibility(fieldId) {
-        const passwordField = document.getElementById(fieldId);
-        const eyeOpen = document.getElementById(`eye-open-${fieldId}`);
-        const eyeOpen2 = document.getElementById(`eye-open-2-${fieldId}`);
-        const eyeClosed = document.getElementById(`eye-closed-${fieldId}`);
-        
-        if (passwordField.type === 'password') {
-            passwordField.type = 'text';
-            if (eyeOpen) eyeOpen.style.display = 'none';
-            if (eyeOpen2) eyeOpen2.style.display = 'none';
-            if (eyeClosed) eyeClosed.style.display = 'block';
-        } else {
-            passwordField.type = 'password';
-            if (eyeOpen) eyeOpen.style.display = 'block';
-            if (eyeOpen2) eyeOpen2.style.display = 'block';
-            if (eyeClosed) eyeClosed.style.display = 'none';
-        }
-    }
-    
-    // Update requirement indicator
-    function updateRequirement(type, isValid) {
-        const element = document.getElementById(`req-${type}`);
-        if (!element) return;
-        
-        const icon = element.querySelector('svg');
-        if (isValid) {
-            icon.classList.remove('text-red-400');
-            icon.classList.add('text-green-500');
-            icon.innerHTML = '<path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M5 13l4 4L19 7"></path>';
-        } else {
-            icon.classList.remove('text-green-500');
-            icon.classList.add('text-red-400');
-            icon.innerHTML = '<path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M6 18L18 6M6 6l12 12"></path>';
-        }
-    }
-    
-    // Password validation function
-function validatePassword() {
-    const password = document.getElementById('password').value;
+    // Register Form JavaScript
+document.addEventListener('DOMContentLoaded', function() {
+    // Get the form element
+    const form = document.getElementById('registerForm');
+    if (!form) return;
+
+    // Remove any existing event listeners to prevent duplicates
+    const newForm = form.cloneNode(true);
+    form.parentNode.replaceChild(newForm, form);
+    const formToUse = document.getElementById('registerForm');
+
+    // Initialize password validation UI
+    const passwordInput = document.getElementById('password');
+    const confirmPasswordInput = document.getElementById('password_confirmation');
     const validationDiv = document.getElementById('password-validation');
-    const strengthMeter = document.getElementById('strength-meter-fill');
-    const strengthText = document.getElementById('strength-text');
+    
+    // Hide validation UI by default
+    if (validationDiv) {
+        validationDiv.classList.add('hidden');
+    }
+    
+    // Track if user has started typing
+    let hasUserTyped = false;
+    
+    // Update the password validation function
+function validatePassword() {
+    const password = passwordInput.value;
+    const strengthMeter = document.getElementById('password-strength-meter');
+    const strengthText = document.getElementById('password-strength-text');
     
     if (!validationDiv) return false;
     
-    // Show validation UI after first character
+    // Show validation UI when typing
     if (password.length > 0) {
         if (!hasUserTyped) {
             hasUserTyped = true;
@@ -539,7 +525,7 @@ function validatePassword() {
     
     // Update requirement indicators
     updateRequirement('length', hasMinLength);
-    updateRequirement('letter', hasLetter && hasNumber); // Combined check for letter and number
+    updateRequirement('letter', hasLetter && hasNumber);
     
     // Calculate password strength (simplified)
     let strength = 0;
@@ -548,7 +534,7 @@ function validatePassword() {
     if (hasNumber) strength += 1;
     
     // Update strength meter
-    if (strengthMeter) {
+    if (strengthMeter && strengthText) {
         const width = (strength / 3) * 100;
         strengthMeter.style.width = `${width}%`;
         
@@ -568,120 +554,8 @@ function validatePassword() {
     // Return true only if all requirements are met
     return hasMinLength && hasLetter && hasNumber;
 }
-
-// Form submission handler
-document.getElementById('registerForm').addEventListener('submit', async function(e) {
-    e.preventDefault();
     
-    const form = e.target;
-    const submitButton = form.querySelector('button[type="submit"]');
-    const buttonText = submitButton.querySelector('#buttonText');
-    const originalButtonText = buttonText.textContent;
-    
-    // Disable the submit button and show loading state
-    submitButton.disabled = true;
-    buttonText.textContent = '{{ __("auth.register.creating_account") }}';
-    
-    // Get form data
-    const formData = new FormData(form);
-    const email = form.querySelector('input[name="email"]').value;
-    const password = form.querySelector('input[name="password"]').value;
-    const passwordConfirmation = form.querySelector('input[name="password_confirmation"]').value;
-    
-    // Client-side validation
-    if (password !== passwordConfirmation) {
-        showFormError(form, '{{ __("auth.password_requirements.mismatch") }}');
-        submitButton.disabled = false;
-        buttonText.textContent = originalButtonText;
-        return;
-    }
-    
-    const hasMinLength = password.length >= 6;
-    const hasLetter = /[A-Za-z]/.test(password);
-    const hasNumber = /[0-9]/.test(password);
-    
-    if (!hasMinLength || !hasLetter || !hasNumber) {
-        showFormError(form, '{{ __("auth.password_requirements.letter_number_required") }}');
-        submitButton.disabled = false;
-        buttonText.textContent = originalButtonText;
-        return;
-    }
-    
-    try {
-        const response = await fetch(form.action, {
-            method: 'POST',
-            body: formData,
-            headers: {
-                'Accept': 'application/json',
-                'X-Requested-With': 'XMLHttpRequest',
-                'X-CSRF-TOKEN': document.querySelector('meta[name="csrf-token"]').content
-            }
-        });
-        
-        const data = await response.json();
-        
-        if (response.ok) {
-            // Redirect on success
-            window.location.href = data.redirect || '{{ route("dashboard", app()->getLocale()) }}';
-        } else {
-            // Handle validation errors
-            if (data.errors) {
-                // Handle email already exists error
-                if (data.errors.email && data.errors.email.includes('Konti isanzweho. Mujye aho binjirira.')) {
-                    showUserExistsModal(email);
-                } else {
-                    // Show first error message
-                    const firstError = Object.values(data.errors)[0][0];
-                    showFormError(form, firstError);
-                }
-            } else {
-                showFormError(form, data.message || '{{ __("auth.register.error_occurred") }}');
-            }
-        }
-    } catch (error) {
-        console.error('Error:', error);
-        showFormError(form, '{{ __("auth.register.error_occurred") }}');
-    } finally {
-        submitButton.disabled = false;
-        buttonText.textContent = originalButtonText;
-    }
-});
-
-// Show error message in form
-function showFormError(form, message) {
-    // Remove any existing error messages
-    const existingError = form.querySelector('.form-error-message');
-    if (existingError) {
-        existingError.remove();
-    }
-    
-    // Create and show new error message
-    const errorDiv = document.createElement('div');
-    errorDiv.className = 'form-error-message p-3 bg-red-50 dark:bg-red-900/20 text-red-700 dark:text-red-300 rounded-lg text-sm text-center mb-4';
-    errorDiv.textContent = message;
-    form.insertBefore(errorDiv, form.firstChild);
-    
-    // Scroll to error
-    errorDiv.scrollIntoView({ behavior: 'smooth', block: 'center' });
-}
-
-// Replace your existing showUserExistsModal function with this:
-function showUserExistsModal(email) {
-    const modal = document.getElementById('accountExistsModal');
-    const messageElement = document.getElementById('accountExistsMessage');
-    
-    // Set the message with the email
-    const message = "{{ __('auth.register.account_exists_message', ['email' => '']) }}".replace(':email', email);
-    messageElement.textContent = message;
-    
-    // Show the modal
-    modal.classList.remove('hidden');
-    
-    // Focus on the first interactive element for accessibility
-    const focusable = modal.querySelector('button, [href], [tabindex]:not([tabindex="-1"])');
-    if (focusable) focusable.focus();
-}
-    
+    // Update requirement indicator
     function updateRequirement(id, isValid) {
         const element = document.getElementById(`req-${id}`);
         if (!element) return;
@@ -700,6 +574,7 @@ function showUserExistsModal(email) {
         }
     }
     
+    // Validate password match
     function validatePasswordMatch() {
         const password = document.getElementById('password').value;
         const confirmPassword = document.getElementById('password_confirmation').value;
@@ -707,265 +582,237 @@ function showUserExistsModal(email) {
         const mismatchElement = document.getElementById('password-mismatch');
         
         if (confirmPassword === '') {
-            matchElement.classList.add('hidden');
-            mismatchElement.classList.add('hidden');
+            matchElement?.classList.add('hidden');
+            mismatchElement?.classList.add('hidden');
             return;
         }
         
         if (password === confirmPassword) {
-            matchElement.classList.remove('hidden');
-            mismatchElement.classList.add('hidden');
+            matchElement?.classList.remove('hidden');
+            mismatchElement?.classList.add('hidden');
         } else {
-            matchElement.classList.add('hidden');
-            mismatchElement.classList.remove('hidden');
+            matchElement?.classList.add('hidden');
+            mismatchElement?.classList.remove('hidden');
         }
     }
     
-    // Initialize password validation on page load
-    document.addEventListener('DOMContentLoaded', function() {
-        // Add event listeners if elements exist
-        const passwordInput = document.getElementById('password');
-        const confirmPasswordInput = document.getElementById('password_confirmation');
+    // Toggle password visibility
+    function togglePasswordVisibility(targetId) {
+        const input = document.getElementById(targetId);
+        if (!input) return;
         
-        // Hide validation UI by default
-        const validationDiv = document.getElementById('password-validation');
-        if (validationDiv) {
-            validationDiv.classList.add('hidden');
+        const type = input.getAttribute('type') === 'password' ? 'text' : 'password';
+        input.setAttribute('type', type);
+        
+        // Toggle icon
+        const icon = document.getElementById(`eye-icon-${targetId}`);
+        if (icon) {
+            if (type === 'password') {
+                icon.innerHTML = '<path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M15 12a3 3 0 11-6 0 3 3 0 016 0z" /><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M2.458 12C3.732 7.943 7.523 5 12 5c4.478 0 8.268 2.943 9.542 7-1.274 4.057-5.064 7-9.542 7-4.477 0-8.268-2.943-9.542-7z" />';
+            } else {
+                icon.innerHTML = '<path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M13.875 18.825A10.05 10.05 0 0112 19c-4.478 0-8.268-2.943-9.543-7a9.97 9.97 0 011.563-3.029m5.858.908a3 3 0 114.243 4.243M9.878 9.878l4.242 4.242M9.88 9.88l-3.29-3.29m7.532 7.532l3.29 3.29M3 3l3.59 3.59m0 0A9.953 9.953 0 0112 5c4.478 0 8.268 2.943 9.543 7a10.025 10.025 0 01-4.132 5.411m0 0L21 21" />';
+            }
+        }
+    }
+    
+    // Show form error
+    function showFormError(form, message) {
+        // Remove any existing error messages
+        const existingError = form.querySelector('.form-error-message');
+        if (existingError) {
+            existingError.remove();
         }
         
-        if (passwordInput) {
-            // Add focus event to show validation on focus
-            passwordInput.addEventListener('focus', function() {
-                if (this.value.length > 0) {
-                    const validationDiv = document.getElementById('password-validation');
-                    if (validationDiv) {
-                        validationDiv.classList.remove('hidden');
-                    }
-                }
-            });
+        // Create and show new error message
+        const errorDiv = document.createElement('div');
+        errorDiv.className = 'form-error-message p-3 bg-red-50 dark:bg-red-900/20 text-red-700 dark:text-red-300 rounded-lg text-sm text-center mb-4';
+        errorDiv.textContent = message;
+        form.insertBefore(errorDiv, form.firstChild);
+        
+        // Scroll to error
+        errorDiv.scrollIntoView({ behavior: 'smooth', block: 'center' });
+    }
+    
+    // Show user exists modal
+    function showUserExistsModal(email) {
+        const modal = document.getElementById('accountExistsModal');
+        const messageElement = document.getElementById('accountExistsMessage');
+        
+        if (modal && messageElement) {
+            // Set the message with the email
+            const message = "{{ __('auth.register.account_exists_message', ['email' => '']) }}".replace(':email', email);
+            messageElement.textContent = message;
             
-            // Add input event for real-time validation
-            passwordInput.addEventListener('input', validatePassword);
+            // Show the modal
+            modal.classList.remove('hidden');
             
-            // Add blur event to hide validation if empty
-            passwordInput.addEventListener('blur', function() {
-                if (this.value.length === 0) {
-                    const validationDiv = document.getElementById('password-validation');
-                    if (validationDiv) {
-                        validationDiv.classList.add('hidden');
-                    }
+            // Focus on the first interactive element for accessibility
+            const focusable = modal.querySelector('button, [href], [tabindex]:not([tabindex="-1"])');
+            if (focusable) focusable.focus();
+        }
+    }
+    
+    // Initialize event listeners
+    if (passwordInput) {
+        // Add focus event to show validation on focus
+        passwordInput.addEventListener('focus', function() {
+            if (this.value.length > 0) {
+                const validationDiv = document.getElementById('password-validation');
+                if (validationDiv) {
+                    validationDiv.classList.remove('hidden');
                 }
-            });
-        }
+            }
+        });
         
-        if (confirmPasswordInput) {
-            confirmPasswordInput.addEventListener('input', validatePasswordMatch);
-        }
+        // Add input event for real-time validation
+        passwordInput.addEventListener('input', validatePassword);
+        
+        // Add blur event to hide validation if empty
+        passwordInput.addEventListener('blur', function() {
+            if (this.value.length === 0) {
+                const validationDiv = document.getElementById('password-validation');
+                if (validationDiv) {
+                    validationDiv.classList.add('hidden');
+                }
+            }
+        });
+    }
+    
+    if (confirmPasswordInput) {
+        confirmPasswordInput.addEventListener('input', validatePasswordMatch);
+    }
+    
+    // Initialize toggle password buttons
+    document.querySelectorAll('.toggle-password-btn').forEach(button => {
+        button.addEventListener('click', function(e) {
+            e.preventDefault();
+            const targetId = this.getAttribute('onclick')
+                .replace('togglePasswordVisibility(\'', '')
+                .replace('\')', '');
+            togglePasswordVisibility(targetId);
+        });
     });
-
-    // Handle form submission
-    document.getElementById('registerForm').addEventListener('submit', async function(e) {
+    
+    // Form submission handler
+    formToUse.addEventListener('submit', async function(e) {
         e.preventDefault();
         
-        const form = e.target;
-        const submitButton = form.querySelector('button[type="submit"]');
-        const submitText = submitButton.querySelector('.register-button-text');
-        const spinner = submitButton.querySelector('svg');
-        
-        // Run client-side validation
-        if (!validatePassword()) {
-            // Show error message
-            const errorDiv = document.createElement('div');
-            errorDiv.className = 'text-red-500 text-sm mt-2';
-            errorDiv.textContent = 'Please ensure your password meets all requirements.';
-            
-            const existingError = document.getElementById('password-error');
-            if (existingError) {
-                existingError.remove();
-            }
-            errorDiv.id = 'password-error';
-            document.getElementById('password').parentNode.appendChild(errorDiv);
-            return false;
-        }
-        
-        // Validate password match
-        const password = form.password.value;
-        const confirmPassword = form.password_confirmation.value;
-        
-        if (password !== confirmPassword) {
-            const errorDiv = document.createElement('div');
-            errorDiv.className = 'text-red-500 text-sm mt-2';
-            errorDiv.textContent = 'Passwords do not match.';
-            
-            const existingError = document.getElementById('password-match-error');
-            if (existingError) {
-                existingError.remove();
-            }
-            errorDiv.id = 'password-match-error';
-            document.getElementById('password_confirmation').parentNode.appendChild(errorDiv);
-            return false;
-        }
+        const submitButton = this.querySelector('button[type="submit"]');
+        const buttonText = submitButton.querySelector('#buttonText');
+        const originalButtonText = buttonText ? buttonText.textContent : submitButton.textContent;
         
         try {
-            // Disable the submit button and show loading state
-            submitButton.disabled = true;
-            if (submitText) submitText.textContent = '{{ __("auth.register.registering") }}';
-            if (spinner) spinner.classList.remove('hidden');
-            
-            const formData = new FormData(form);
-            const response = await fetch(form.action, {
-                method: 'POST',
-                headers: {
-                    'Accept': 'application/json',
-                    'X-CSRF-TOKEN': document.querySelector('meta[name="csrf-token"]').content
-                },
-                body: formData
-            });
-            
-            const data = await response.json();
-            
-            if (response.ok) {
-                // Redirect to the provided URL on success
-                window.location.href = data.redirect || '{{ route("dashboard", app()->getLocale()) }}';
-            } else {
-                // Handle errors
-                if (data.errors) {
-                    // Clear previous errors
-                    const errorElements = document.querySelectorAll('.text-red-500');
-                    errorElements.forEach(el => el.remove());
-                    
-                    // Show new errors
-                    for (const [field, errors] of Object.entries(data.errors)) {
-                        const input = document.querySelector(`[name="${field}"]`);
-                        if (input) {
-                            const errorDiv = document.createElement('div');
-                            errorDiv.className = 'text-red-500 text-sm mt-1';
-                            errorDiv.textContent = errors[0];
-                            input.parentNode.appendChild(errorDiv);
-                        }
-                    }
-                    alert(data.message || 'An error occurred during registration');
-                }
-                // Re-enable the submit button
-                submitButton.disabled = false;
-                if (submitText) submitText.textContent = '{{ __("auth.register.register_button") }}';
-                if (spinner) spinner.classList.add('hidden');
+            // Validate password
+            if (!validatePassword()) {
+                showFormError(this, '{{ __("auth.password_requirements.letter_number_required") }}');
+                return;
             }
-        } catch (error) {
-            console.error('Error:', error);
-            alert('An unexpected error occurred. Please try again.');
-            // Re-enable the submit button
-            submitButton.disabled = false;
-            if (submitText) submitText.textContent = '{{ __("auth.register.register_button") }}';
-            if (spinner) spinner.classList.add('hidden');
-        }
-    });
-    // Handle form submission
-    document.getElementById('registerForm').addEventListener('submit', async function(e) {
-        e.preventDefault();
-        
-        const form = e.target;
-        const submitButton = form.querySelector('button[type="submit"]');
-        const originalButtonText = submitButton.innerHTML;
-        
-        try {
+            
+            // Validate password match
+            const password = this.querySelector('input[name="password"]').value;
+            const confirmPassword = this.querySelector('input[name="password_confirmation"]').value;
+            
+            if (password !== confirmPassword) {
+                showFormError(this, '{{ __("auth.password_requirements.mismatch") }}');
+                return;
+            }
+            
             // Disable the submit button and show loading state
             submitButton.disabled = true;
-            submitButton.innerHTML = `
-                <svg class="animate-spin -ml-1 mr-2 h-4 w-4 text-white inline" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24">
-                    <circle class="opacity-25" cx="12" cy="12" r="10" stroke="currentColor" stroke-width="4"></circle>
-                    <path class="opacity-75" fill="currentColor" d="M4 12a8 8 0 018-8V0C5.373 0 0 5.373 0 12h4zm2 5.291A7.962 7.962 0 014 12H0c0 3.042 1.135 5.824 3 7.938l3-2.647z"></path>
-                </svg>
-                {{ __('auth.register.creating_account') }}
-            `;
-            
-            const formData = new FormData(form);
-            const response = await fetch(form.action, {
-                method: 'POST',
-                headers: {
-                    'Accept': 'application/json',
-                    'X-Requested-With': 'XMLHttpRequest',
-                    'X-CSRF-TOKEN': document.querySelector('meta[name="csrf-token"]').content
-                },
-                body: formData
-            });
-            
-            const data = await response.json();
-            
-            if (response.ok) {
-                // Redirect to the provided URL on success
-                window.location.href = data.redirect;
+            if (buttonText) {
+                buttonText.textContent = '{{ __("auth.register.creating_account") }}';
             } else {
-                // Handle errors
-                if (data.errors) {
-                    // Clear previous errors
-                    const errorElements = form.querySelectorAll('.error-message');
-                    errorElements.forEach(el => el.remove());
-                    
-                    // Add new errors
-                    for (const [field, messages] of Object.entries(data.errors)) {
-                        const input = form.querySelector(`[name="${field}"]`);
-                        if (input) {
-                            const errorDiv = document.createElement('p');
-                            errorDiv.className = 'text-red-500 text-xs mt-1 error-message';
-                            errorDiv.textContent = messages[0];
-                            input.parentNode.insertBefore(errorDiv, input.nextSibling);
-                        }
-                    }
-                } else if (data.message) {
-                    alert(data.message);
-                }
+                submitButton.innerHTML = `
+                    <svg class="animate-spin -ml-1 mr-2 h-4 w-4 text-white inline" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24">
+                        <circle class="opacity-25" cx="12" cy="12" r="10" stroke="currentColor" stroke-width="4"></circle>
+                        <path class="opacity-75" fill="currentColor" d="M4 12a8 8 0 018-8V0C5.373 0 0 5.373 0 12h4zm2 5.291A7.962 7.962 0 014 12H0c0 3.042 1.135 5.824 3 7.938l3-2.647z"></path>
+                    </svg>
+                    {{ __("auth.register.creating_account") }}
+                `;
+            }
+            
+            // Get form data
+            const formData = new FormData(this);
+            const email = this.querySelector('input[name="email"]').value;
+            
+            // Get return_to from URL if not in form data
+            const returnTo = new URLSearchParams(window.location.search).get('return_to');
+            if (returnTo) {
+                formData.append('return_to', returnTo);
+            }
+            
+            try {
+                const response = await fetch(this.action, {
+                    method: 'POST',
+                    headers: {
+                        'Accept': 'application/json',
+                        'X-Requested-With': 'XMLHttpRequest',
+                        'X-CSRF-TOKEN': document.querySelector('meta[name="csrf-token"]').content
+                    },
+                    body: formData
+                });
                 
-                // Re-enable the submit button
+                const data = await response.json();
+                
+                if (response.ok) {
+                    // Redirect on success
+                    window.location.href = data.redirect || '{{ route("dashboard", app()->getLocale()) }}';
+                } else {
+                    // Handle validation errors
+                    if (data.errors) {
+                        // Handle email already exists error
+                        if (data.errors.email && data.errors.email.includes('Konti isanzweho. Mujye aho binjirira.')) {
+                            showUserExistsModal(email);
+                        } else {
+                            // Show first error message
+                            const firstError = Object.values(data.errors)[0][0];
+                            showFormError(this, firstError);
+                        }
+                    } else {
+                        showFormError(this, data.message || '{{ __("auth.register.error_occurred") }}');
+                    }
+                }
+            } catch (error) {
+                console.error('Error:', error);
+                showFormError(this, '{{ __("auth.register.error_occurred") }}');
+            } finally {
                 submitButton.disabled = false;
-                submitButton.innerHTML = originalButtonText;
+                if (buttonText) {
+                    buttonText.textContent = originalButtonText;
+                } else {
+                    submitButton.innerHTML = originalButtonText;
+                }
             }
         } catch (error) {
             console.error('Registration error:', error);
-            alert('An error occurred. Please try again.');
-            // Re-enable the submit button
+            showFormError(this, '{{ __("auth.register.error_occurred") }}');
             submitButton.disabled = false;
-            submitButton.innerHTML = originalButtonText;
+            if (buttonText) {
+                buttonText.textContent = originalButtonText;
+            } else {
+                submitButton.innerHTML = originalButtonText;
+            }
         }
     });
-    
-    // Toggle password visibility
-    function togglePasswordVisibility(inputId) {
-        const input = document.getElementById(inputId);
-        const icon = document.querySelector(`[data-toggle="${inputId}"]`);
-        
-        if (input.type === 'password') {
-            input.type = 'text';
-            icon.innerHTML = `
-                <svg class="h-5 w-5" fill="none" viewBox="0 0 24 24" stroke="currentColor">
-                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M13.875 18.825A10.05 10.05 0 0112 19c-4.478 0-8.268-2.943-9.543-7a9.97 9.97 0 011.563-3.029m5.858.908a3 3 0 114.243 4.243M9.878 9.878l4.242 4.242M9.88 9.88l-3.29-3.29m7.532 7.532l3.29 3.29M3 3l3.59 3.59m0 0A9.953 9.953 0 0112 5c4.478 0 8.268 2.943 9.543 7a10.025 10.025 0 01-4.132 5.411m0 0L21 21" />
-                </svg>
-            `;
-        } else {
-            input.type = 'password';
-            icon.innerHTML = `
-                <svg class="h-5 w-5" fill="none" viewBox="0 0 24 24" stroke="currentColor">
-                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M15 12a3 3 0 11-6 0 3 3 0 016 0z" />
-                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M2.458 12C3.732 7.943 7.523 5 12 5c4.478 0 8.268 2.943 9.542 7-1.274 4.057-5.064 7-9.542 7-4.477 0-8.268-2.943-9.542-7z" />
-                </svg>
-            `;
+});
+
+// Show account exists message (kept outside DOMContentLoaded as it might be called from other scripts)
+function showUserExistsMessage(email) {
+    const messageDiv = document.getElementById('accountExistsMessage');
+    if (messageDiv) {
+        const messageText = messageDiv.querySelector('p');
+        if (messageText) {
+            // Update the message with the email
+            const baseMessage = "{{ __('auth.register.account_exists_message', ['email' => '%%EMAIL%%']) }}";
+            messageText.textContent = baseMessage.replace('%%EMAIL%%', email);
+            
+            // Show the message
+            messageDiv.classList.remove('hidden');
+            
+            // Scroll to the message
+            messageDiv.scrollIntoView({ behavior: 'smooth', block: 'center' });
         }
     }
-
-    // Show account exists message
-    function showUserExistsMessage(email) {
-        const messageDiv = document.getElementById('accountExistsMessage');
-        const messageText = messageDiv.querySelector('p');
-        
-        // Update the message with the email
-        const baseMessage = "{{ __('auth.register.account_exists_message', ['email' => '%%EMAIL%%']) }}";
-        messageText.textContent = baseMessage.replace('%%EMAIL%%', email);
-        
-        // Show the message
-        messageDiv.classList.remove('hidden');
-        
-        // Scroll to the message
-        messageDiv.scrollIntoView({ behavior: 'smooth', block: 'center' });
-    }
+}
 </script>
 @endpush

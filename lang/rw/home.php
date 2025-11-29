@@ -144,7 +144,7 @@ return [
         'subscribe_to_unlock' => 'Iyandikishe kuri :planName kugirango ufungure iyi n\'indi myitozo yose ya :planName!',
         'tryOurFreeGuestQuiz' => 'Biroroshye kwimenyereza utishyuye!',
         'testYourKnowledge' => 'Gerageza ubumenyi bwawe',
-        'startQuiz' => 'Tangira Umwitozo',
+        'startQuiz' => 'Komeza Umwitozo',
         'noQuizAvailable' => 'Ntacyo mubarura ubu',
         'continue_streak' => 'Komeza Gukora Imyitozo',
         'challenge_yourself' => 'Reba n\'ibindi',

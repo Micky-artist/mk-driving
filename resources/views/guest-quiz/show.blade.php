@@ -429,45 +429,92 @@
     </div>
 @endsection
 
-<!-- Signup Nudge Modal -->
+<!-- Signup Nudge Modal - Only show for guests -->
+@guest
 <div id="signupNudgeModal"
-    class="fixed inset-0 bg-black bg-opacity-50 z-50 flex items-center justify-center p-4" style="display: none;">
-    <div class="bg-white rounded-xl max-w-md w-full p-6 relative">
-        <div class="text-center">
-            <div class="mx-auto flex items-center justify-center h-16 w-16 rounded-full bg-blue-100 mb-4">
-                <svg class="h-8 w-8 text-blue-600" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
-                        d="M12 15v2m-6 4h12a2 2 0 002-2v-6a2 2 0 00-2-2H6a2 2 0 00-2 2v6a2 2 0 002 2zm10-10V7a4 4 0 00-8 0v4h8z">
-                    </path>
-                </svg>
-            </div>
-            <h3 class="text-2xl font-bold text-gray-900 mb-3">{{ __('quiz.signupNudge.title') }}</h3>
-            <p class="text-gray-700 mb-2">{{ __('quiz.signupNudge.message') }}</p>
+    class="fixed inset-0 bg-black/70 backdrop-blur-sm z-50 flex items-center justify-center p-4 opacity-0 transition-opacity duration-300 pointer-events-none">
+    <div class="bg-gradient-to-br from-white to-blue-50 rounded-2xl max-w-md w-full overflow-hidden shadow-2xl transform transition-all duration-300 scale-95"
+        style="box-shadow: 0 20px 25px -5px rgba(0, 0, 0, 0.1), 0 10px 10px -5px rgba(0, 0, 0, 0.04);">
+        <!-- Decorative elements -->
+        <div class="absolute top-0 left-0 w-full h-2 bg-gradient-to-r from-blue-500 to-indigo-600"></div>
+        <div class="absolute -top-10 -right-10 w-24 h-24 rounded-full bg-blue-100 opacity-30"></div>
+        <div class="absolute -bottom-8 -left-8 w-20 h-20 rounded-full bg-indigo-100 opacity-30"></div>
 
-            <div class="space-y-4">
-                <div>
-                    <a href="{{ route('register', ['locale' => app()->getLocale()]) }}"
-                        class="block w-full px-6 py-3 bg-gradient-to-r from-blue-600 to-blue-700 text-white font-semibold rounded-lg hover:from-blue-700 hover:to-blue-800 transition-colors text-center">
-                        {{ __('quiz.signupNudge.signUpFree') }}
-                    </a>
+        <div class="relative z-10 p-8">
+
+            <!-- Content -->
+            <div class="text-center">
+                <!-- Animated Checkmark -->
+                <div class="mx-auto flex items-center justify-center h-20 w-20 rounded-full bg-gradient-to-br from-blue-100 to-indigo-100 mb-6 transform transition-all duration-500 hover:scale-110">
+                    <div class="relative">
+                        <svg class="w-10 h-10 text-blue-600" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
+                                d="M5 13l4 4L19 7"></path>
+                        </svg>
+                    </div>
                 </div>
                 
-                <div class="pt-2">
-                    <a href="{{ route('login', ['locale' => app()->getLocale()]) }}"
-                        class="block w-full px-6 py-2 border-2 border-blue-600 text-blue-600 font-semibold rounded-lg hover:bg-blue-50 transition-colors text-center">
-                        {{ __('quiz.signupNudge.haveAccount') }}
+                <h3 class="text-2xl font-bold text-gray-900 mb-3 font-sans">{{ __('quiz.signupNudge.title') }}</h3>
+                <p class="text-gray-600 mb-6 leading-relaxed">{{ __('quiz.signupNudge.message') }}</p>
+
+                <div class="space-y-4">
+                    <!-- Primary CTA -->
+                    @php
+                        $currentUrl = url()->current();
+                        $registerUrl = route('register', [
+                            'locale' => app()->getLocale(),
+                            'return_to' => $currentUrl
+                        ]);
+                        $loginUrl = route('login', [
+                            'locale' => app()->getLocale(),
+                            'return_to' => $currentUrl
+                        ]);
+                    @endphp
+                    <a href="{{ $registerUrl }}"
+                        class="block w-full px-6 py-3.5 bg-gradient-to-r from-blue-600 to-indigo-600 hover:from-blue-700 hover:to-indigo-700 text-white font-semibold rounded-lg shadow-md hover:shadow-lg transform transition-all duration-200 hover:-translate-y-0.5 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-blue-500">
+                        {{ __('quiz.signupNudge.signUpFree') }}
                     </a>
-                </div>
-                <div class="pt-2">
-                    <a href="{{ route('home', ['locale' => app()->getLocale()]) }}"
-                        class="block w-full px-6 py-2 text-gray-600 hover:text-gray-800 font-medium text-center text-sm">
-                        {{ __('quiz.signupNudge.backHomepage') }}
-                    </a>
+                    
+                    <!-- Secondary Action -->
+                    <div class="pt-1">
+                        <a href="{{ $loginUrl }}"
+                            class="inline-flex items-center text-blue-600 hover:text-blue-800 font-medium text-sm transition-colors">
+                            <span>{{ __('quiz.signupNudge.haveAccount') }}</span>
+                            <svg class="w-4 h-4 ml-1" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 5l7 7-7 7"></path>
+                            </svg>
+                        </a>
+                    </div>
                 </div>
             </div>
         </div>
+        
+        <!-- Footer -->
+        <div class="bg-gray-50 px-6 py-4 text-center border-t border-gray-100">
+            <a href="{{ route('home', ['locale' => app()->getLocale()]) }}"
+                class="text-sm text-gray-500 hover:text-gray-700 font-medium transition-colors">
+                {{ __('quiz.signupNudge.backHomepage') }}
+            </a>
+        </div>
     </div>
 </div>
+@endguest
+
+<style>
+    @keyframes fadeIn {
+        from { opacity: 0; transform: translateY(10px); }
+        to { opacity: 1; transform: translateY(0); }
+    }
+    
+    #signupNudgeModal.active {
+        opacity: 1;
+        pointer-events: auto;
+    }
+    
+    #signupNudgeModal.active > div {
+        animation: fadeIn 0.4s cubic-bezier(0.4, 0, 0.2, 1) forwards;
+    }
+</style>
 
 @push('scripts')
     <script>
@@ -504,17 +551,50 @@
             let timerInterval = null;
             let quizStartTime = null;
             let isQuizCompleted = false;
-            let isQuizLocked = localStorage.getItem('isQuizLockedForGuest') === 'true';
+            let isQuizLocked = false;
+            let hasAnsweredQuestion = false;
             
-            // Check if quiz was locked in a previous session
-            if (isQuizLocked) {
-                // Disable all interactions immediately
+            // Function to show the signup nudge modal
+            const showNudge = () => {
+                const modal = document.getElementById('signupNudgeModal');
+                if (modal) {
+                    modal.style.display = 'flex';
+                    modal.classList.add('flex');
+                    modal.classList.remove('hidden');
+                    // Add active class for animation
+                    setTimeout(() => {
+                        modal.classList.add('active');
+                    }, 10);
+                }
+            };
+
+            // Check if quiz was locked in a previous session and user is not logged in
+            const savedLockState = localStorage.getItem('isQuizLockedForGuest') === 'true';
+            const isLoggedIn = @json(auth()->check());
+            
+            if (savedLockState && !isLoggedIn) {
+                isQuizLocked = true;
+                
+                // Check if they've answered any questions
+                const answeredQuestions = JSON.parse(localStorage.getItem('userAnswers') || '{}');
+                hasAnsweredQuestion = Object.keys(answeredQuestions).length > 0;
+                
+                // Disable all inputs
                 document.querySelectorAll('.answer-option input[type="radio"]').forEach(input => {
                     input.disabled = true;
                 });
+                
+                // Disable navigation
                 document.querySelectorAll('.btn-next, .btn-prev, #submitQuiz').forEach(btn => {
                     btn.disabled = true;
                 });
+                
+                // Show the nudge when the DOM is ready
+                if (document.readyState === 'complete') {
+                    showNudge();
+                } else {
+                    window.addEventListener('load', showNudge);
+                }
             }
 
             // Initialize auto-next state from localStorage, default to true if not set
@@ -613,9 +693,12 @@
             
             // Function to show the signup nudge modal and lock the quiz
             function showSignupNudgeModal() {
+                // Don't show the modal if user is logged in
+                if (isLoggedIn) return;
+                
                 if (signupNudgeModal) {
                     signupNudgeModal.style.display = 'flex';
-                    // Lock the quiz
+                    // Lock the quiz for guests
                     isQuizLocked = true;
                     localStorage.setItem('isQuizLockedForGuest', 'true');
                     
@@ -763,13 +846,17 @@
 
             // Check if the selected answer is correct
             function checkAnswer(questionContainer, selectedValue, skipFeedback = false) {
+                // Don't proceed if the user is logged in
+                if (isLoggedIn) return false;
+                
                 const questionId = questionContainer.dataset.questionId;
                 const correctAnswer = questionContainer.dataset.correctAnswer;
                 const isCorrect = selectedValue === correctAnswer;
                 
-                // Show signup nudge after first question is answered
-                if (currentQuestionIndex === 0 && !isQuizLocked && !localStorage.getItem('hasSeenSignupNudge')) {
-                    localStorage.setItem('hasSeenSignupNudge', 'true');
+                // Show signup nudge for guests after answering their first question
+                if (currentQuestionIndex === 0 && !isQuizLocked && !isLoggedIn) {
+                    // Set the lock state when a question is answered (guests only)
+                    localStorage.setItem('isQuizLockedForGuest', 'true');
                     // Small delay to let the answer feedback show first
                     setTimeout(showSignupNudgeModal, 1000);
                 }
@@ -879,8 +966,11 @@
                 timerInterval = setInterval(() => {
                     if (timeLeft > 0 && !isQuizCompleted) {
                         timeLeft--;
-                        updateTimerDisplay();
+                        // Save progress after answering
                         saveProgress();
+                        
+                        // Track that we've answered at least one question
+                        hasAnsweredQuestion = true;
                     } else if (timeLeft === 0 && !isQuizCompleted) {
                         clearInterval(timerInterval);
                         timerInterval = null;
@@ -1026,6 +1116,55 @@
 
             // Event listeners
 
+            // Show signup nudge modal with animation
+            function showSignupNudge() {
+                // Never show the nudge for logged-in users
+                if (isLoggedIn) return;
+                
+                const modal = document.getElementById('signupNudgeModal');
+                if (modal) {
+                    // Show the modal
+                    modal.style.display = 'flex';
+                    // Trigger reflow to enable animation
+                    void modal.offsetWidth;
+                    modal.classList.add('active');
+                    
+                    // Lock the quiz after showing the nudge
+                    isQuizLocked = true;
+                    localStorage.setItem('isQuizLockedForGuest', 'true');
+                    
+                    // Disable all inputs
+                    document.querySelectorAll('.answer-option input[type="radio"]').forEach(input => {
+                        input.disabled = true;
+                    });
+                    
+                    // Disable navigation
+                    document.querySelectorAll('.btn-next, .btn-prev, #submitQuiz').forEach(btn => {
+                        btn.disabled = true;
+                    });
+                }
+            }
+            
+            // Close signup nudge modal
+            function closeSignupNudge() {
+                const modal = document.getElementById('signupNudgeModal');
+                if (modal) {
+                    modal.classList.remove('active');
+                    setTimeout(() => {
+                        modal.style.display = 'none';
+                    }, 300);
+                }
+            }
+            
+            // Close modal when clicking outside
+            document.addEventListener('click', function(e) {
+                const modal = document.getElementById('signupNudgeModal');
+                if (e.target === modal) {
+                    // Don't allow closing by clicking outside
+                    return false;
+                }
+            });
+
             // Answer selection
             questionContainers.forEach(container => {
                 const inputs = container.querySelectorAll('input[type="radio"]');
@@ -1069,10 +1208,17 @@
 
                         // Update navigation buttons
                         updateNavigationButtons();
-
+                        
                         // Schedule auto-advance if enabled
-                        if (autoNextEnabled && currentQuestionIndex < questionContainers
-                            .length - 1) {
+                        if (autoNextEnabled && currentQuestionIndex < questionContainers.length - 1) {
+                            // Show signup nudge after answering first question and moving to next
+                            if (Object.keys(userAnswers).length === 1) {
+                                // Show the next question first
+                                showQuestion(currentQuestionIndex + 1);
+                                // Then show the nudge
+                                setTimeout(showSignupNudge, 300);
+                                return;
+                            }
                             // Clear any existing timeout to prevent multiple auto-advances
                             if (window.autoAdvanceTimeout) {
                                 clearTimeout(window.autoAdvanceTimeout);
