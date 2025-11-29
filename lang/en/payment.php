@@ -37,5 +37,10 @@ return [
     'payment_requested' => 'Payment Requested!',
     'payment_requested_message' => 'A payment request has been sent to your phone. Please complete the payment on your mobile device.',
     'payment_processing' => 'Processing your payment...',
-    'error_occurred' => 'An error occurred. Please try again.'
+    'error_occurred' => 'An error occurred. Please try again.',
+    'press_or_dial' => 'Press',
+    'instructions' => 'Instructions',
+    'copy_code' => 'Copy Code',
+    'and_follow_instructions' => 'and follow instructions',
+    'whatsapp_contact' => 'WhatsApp us after payment for plan activation'
 ];

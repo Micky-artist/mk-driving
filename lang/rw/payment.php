@@ -34,9 +34,14 @@ return [
     'phone_placeholder' => 'urugero: 78XXXXXXX',
     'submit_payment' => 'Ohereza kwishyura',
     'close' => 'Funga',
+    'instructions' => 'Amabwiriza',
+    'copy_code' => 'Koporora kode',
     'invalid_phone' => 'Nyamuneka shyiramo numero y\'MTN Mobile Money ikwiye (urugero: 72xxxxxxx, 73xxxxxxx, 78xxxxxxx, cyangwa 79xxxxxxx)',
     'payment_requested' => 'Kwishyura byasabywe!',
     'payment_requested_message' => 'Ubutumwa bwo kwishyura bwoherejwe kuri telefoni yawe. Urarangiza ubwishyu kuri telephone yawe.',
     'payment_processing' => 'Biri gukorwa...',
-    'error_occurred' => 'Habaye ikibazo. Nyamuneka gerageza nanone.'
+    'error_occurred' => 'Habaye ikibazo. Nyamuneka gerageza nanone.',
+    'press_or_dial' => 'Kanda,',
+    'and_follow_instructions' => 'ukurikize amabwiriza',
+    'whatsapp_contact' => 'Twandikire kuri WhatsApp ko wishyuye dufungure ifatabuguzi'
 ];

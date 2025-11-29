@@ -578,17 +578,6 @@
                 // Check if they've answered any questions
                 const answeredQuestions = JSON.parse(localStorage.getItem('userAnswers') || '{}');
                 hasAnsweredQuestion = Object.keys(answeredQuestions).length > 0;
-                
-                // Disable all inputs
-                document.querySelectorAll('.answer-option input[type="radio"]').forEach(input => {
-                    input.disabled = true;
-                });
-                
-                // Disable navigation
-                document.querySelectorAll('.btn-next, .btn-prev, #submitQuiz').forEach(btn => {
-                    btn.disabled = true;
-                });
-                
                 // Show the nudge when the DOM is ready
                 if (document.readyState === 'complete') {
                     showNudge();
@@ -597,8 +586,8 @@
                 }
             }
 
-            // Initialize auto-next state from localStorage, default to true if not set
-            let autoNextEnabled = localStorage.getItem('autoNextEnabled') !== 'false';
+            // Initialize auto-next state from localStorage, default to false if not set
+            let autoNextEnabled = localStorage.getItem('autoNextEnabled') === 'true';
 
             // Initialize auto-next toggle
             const autoNextToggle = document.getElementById('autoNextToggle');
@@ -702,16 +691,12 @@
                     isQuizLocked = true;
                     localStorage.setItem('isQuizLockedForGuest', 'true');
                     
-                    // Disable all answer inputs
+                    // Disable all answer inputs when quiz is completed
                     document.querySelectorAll('.answer-option input[type="radio"]').forEach(input => {
                         input.disabled = true;
                     });
                     
-                    // Disable navigation buttons
-                    document.querySelectorAll('.btn-next, .btn-prev, #submitQuiz').forEach(btn => {
-                        btn.disabled = true;
-                    });
-                    
+                    // Don't disable navigation buttons here - we want to allow navigation even when locked
                     return true;
                 }
                 return false;
@@ -729,10 +714,7 @@
                         input.disabled = false;
                     });
                     
-                    // Re-enable navigation buttons
-                    document.querySelectorAll('.btn-next, .btn-prev, #submitQuiz').forEach(btn => {
-                        btn.disabled = false;
-                    });
+                    // Navigation buttons will be handled by the click handler
                 }
             };
 
@@ -932,12 +914,15 @@
                 const questionId = currentQuestion.dataset.questionId;
                 const isAnswered = userAnswers[questionId] !== undefined;
 
-                // Update next button state
-                const nextButton = currentQuestion.querySelector('.btn-next');
-                if (nextButton) {
-                    nextButton.disabled = !isAnswered;
-                    nextButton.classList.toggle('opacity-50', !isAnswered);
-                    nextButton.classList.toggle('cursor-not-allowed', !isAnswered);
+                // Update next button state - only disable if current question isn't answered
+                // Don't disable if quiz is locked (we'll handle that in the click handler)
+                if (!isQuizLocked) {
+                    const nextButton = currentQuestion.querySelector('.btn-next');
+                    if (nextButton) {
+                        nextButton.disabled = !isAnswered;
+                        nextButton.classList.toggle('opacity-50', !isAnswered);
+                        nextButton.classList.toggle('cursor-not-allowed', !isAnswered);
+                    }
                 }
 
                 // Update previous button visibility
@@ -1243,6 +1228,13 @@
 
             // Delegate click events for next/previous buttons
             document.addEventListener('click', function(e) {
+                // Show signup nudge if quiz is locked and user is not logged in
+                if (isQuizLocked && !isLoggedIn) {
+                    e.preventDefault();
+                    showNudge();
+                    return;
+                }
+                
                 // Handle next button click
                 if (e.target.classList.contains('btn-next') || e.target.closest('.btn-next')) {
                     e.preventDefault();

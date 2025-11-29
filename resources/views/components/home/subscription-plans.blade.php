@@ -375,9 +375,9 @@
     },
 
     get momoCode() {
-        // Format: *182*1*1*{phone}*{amount}#
+        // Format: *182*8*1*{phone}*{amount}#
         const amount = Math.floor(parseFloat(this.amount));
-        return `*182*1*1*${this.momoPhoneNumber}*${amount}#`;
+        return `*182*8*1*${this.momoPhoneNumber}*${amount}#`;
     },
 
     async submitPayment() {
@@ -505,8 +505,8 @@
 }" x-show="showModal" x-cloak x-transition:enter="ease-out duration-300" x-transition:enter-start="opacity-0"
         x-transition:enter-end="opacity-100" x-transition:leave="ease-in duration-200"
         x-transition:leave-start="opacity-100" x-transition:leave-end="opacity-0"
-        class="fixed mt-2 inset-0 z-50 flex items-center justify-center p-4 overflow-x-hidden"
-    aria-labelledby="modal-title" role="dialog" aria-modal="true" style="display: none;" x-cloak
+        class="fixed inset-0 z-[99999999] flex items-center md:mt-16 justify-center p-4 overflow-y-auto"
+        aria-labelledby="modal-title" role="dialog" aria-modal="true" style="display: none;" x-cloak
     @keydown.escape.window="closeModal()"
     @open-payment-modal.window="
     planId = $event.detail.planId;
@@ -518,7 +518,7 @@
     @click.self="closeModal()">
 
         <!-- Modal panel -->
-        <div class="w-full max-w-2xl bg-white dark:bg-gray-800 rounded-none sm:rounded-lg shadow-xl overflow-y-auto overflow-x-hidden flex flex-col max-h-screen sm:max-h-[90vh] transform transition-all sm:w-full mx-auto my-auto"
+        <div class="w-full max-w-2xl bg-white dark:bg-gray-800 rounded-xl shadow-xl overflow-y-auto overflow-x-hidden flex flex-col max-h-screen sm:max-h-[90vh] transform transition-all sm:w-full mx-auto my-auto"
             @click.stop x-show="showModal" x-transition:enter="ease-out duration-300"
             x-transition:enter-start="opacity-0 translate-y-4 sm:translate-y-0 sm:scale-95"
             x-transition:enter-end="opacity-100 translate-y-0 sm:scale-100" x-transition:leave="ease-in duration-200"
@@ -526,13 +526,12 @@
             x-transition:leave-end="opacity-0 translate-y-4 sm:translate-y-0 sm:scale-95">
 
             <!-- Header -->
-            <div class="bg-gradient-to-r from-blue-600 to-blue-700 px-6 py-5 sm:px-8 sm:py-6">
-                <div class="flex items-center justify-between">
-                    <div>
-                        <h2 class="text-2xl font-bold text-white" id="modal-title">
-                            <span x-text="planName"></span>
+            <div class="bg-gradient-to-r from-blue-600 to-blue-700 px-4 py-2 sm:px-6 sm:py-3">
+                <div class="flex items-start justify-between space-x-2">
+                    <div class="flex-1 min-w-0">
+                        <h2 class="text-lg sm:text-2xl font-bold text-white truncate" id="modal-title" x-text="planName">
                         </h2>
-                        <p class="mt-1 text-blue-100"
+                        <p class="mt-0.5 text-sm sm:text-base text-blue-100 whitespace-normal break-words"
                             x-text="'Pay ' + currency + ' ' + amount.toLocaleString() + ' to subscribe'"></p>
                     </div>
                     <button type="button" class="text-blue-200 hover:text-white focus:outline-none"
@@ -546,133 +545,77 @@
                 </div>
             </div>
 
-            <!-- Main Content -->
-            <div class="px-6 py-6 sm:px-8 sm:py-8 overflow-y-auto flex-1">
-                <!-- Payment Instructions -->
-                <div x-show="paymentStatus !== 'requested'" class="mb-8">
-                    <div class="bg-blue-50 dark:bg-blue-900/30 border-l-4 border-blue-400 dark:border-blue-500 p-4 mb-6">
-                        <div class="flex">
-                            <div class="flex-shrink-0">
-                                <svg class="h-5 w-5 text-blue-400" xmlns="http://www.w3.org/2000/svg"
-                                    viewBox="0 0 20 20" fill="currentColor">
-                                    <path fill-rule="evenodd"
-                                        d="M18 10a8 8 0 11-16 0 8 8 0 0116 0zm-7-4a1 1 0 11-2 0 1 1 0 012 0zM9 9a1 1 0 000 2v3a1 1 0 001 1h1a1 1 0 100-2v-3a1 1 0 00-1-1H9z"
-                                        clip-rule="evenodd" />
-                                </svg>
-                            </div>
-                            <div class="ml-3">
-                                <p class="text-sm text-blue-700 dark:text-blue-300">
-                                    {{ __('payment.momo_instructions.title') }}
-                                </p>
-                            </div>
-                        </div>
+           <!-- Main Content -->
+<div class="px-4 py-3 sm:px-6 sm:py-4 overflow-y-auto flex-1">
+    <!-- Payment Instructions -->
+    <div x-show="paymentStatus !== 'requested'" class="space-y-4 sm:space-y-6">
+        <!-- Payment Code with Payee -->
+        <div class="bg-gradient-to-r from-gray-50 to-gray-100 dark:from-gray-700 dark:to-gray-800 p-5 rounded-xl border border-gray-200 dark:border-gray-700 shadow-md transition-all duration-300 hover:shadow-lg">
+            <div class="flex flex-col space-y-3">
+                <div class="flex flex-col sm:flex-row justify-between items-start gap-2">
+                    <div class="flex flex-col sm:flex-row sm:items-center gap-2">
+                        <span class="text-xs sm:text-sm font-medium text-gray-500 dark:text-gray-400">{{ __('payment.amount') }}</span>
+                        <span class="text-md sm:text-lg font-bold text-gray-900 dark:text-white" x-text="'RWF ' + new Intl.NumberFormat().format(amount)"></span>
                     </div>
-
-                    <!-- MoMo Code Box -->
-                    <div class="bg-gray-50 dark:bg-gray-700 p-4 rounded-lg border border-gray-200 dark:border-gray-600 mb-6">
-                        <div class="flex justify-between items-center">
-                            <div class="font-mono text-lg text-gray-900 dark:text-gray-100" x-text="momoCode"></div>
-                            <button type="button" @click="copyToClipboard(momoCode)" id="copy-momo-code"
-                                class="ml-4 text-sm font-medium text-blue-600 dark:text-blue-400 hover:text-blue-500 dark:hover:text-blue-300">
-                                {{ __('payment.copy') }}
-                            </button>
-                        </div>
-                    </div>
-
-                    <div class="text-sm text-gray-600 dark:text-gray-300 mb-6 space-y-2">
-                        <p class="mb-1">1. {{ __('payment.momo_instructions.step1') }}</p>
-                        <p class="mb-1">2. {{ __('payment.momo_instructions.step2') }}</p>
-                        <p class="mb-1">3. {{ __('payment.momo_instructions.step3', ['bill_number' => '123456']) }}</p>
-                        <p class="mb-1" x-text="`4. ${$t('payment.momo_instructions.step4', { amount: new Intl.NumberFormat().format(amount) }) }`"></p>
-                        <p class="mb-1">5. {{ __('payment.momo_instructions.step5') }}</p>
-                        <p class="mb-1">6. {{ __('payment.momo_instructions.step6') }}</p>
-                    </div>
+                    <span class="text-base sm:text-lg font-bold text-blue-600 dark:text-blue-400">MS Innovation Lab Ltd</span>
                 </div>
-
-                <!-- Success Message -->
-                <div x-show="success" class="mb-6">
-                    <div class="rounded-md bg-green-50 p-4">
-                        <div class="flex">
-                            <div class="flex-shrink-0">
-                                <svg class="h-5 w-5 text-green-400" xmlns="http://www.w3.org/2000/svg"
-                                    viewBox="0 0 20 20" fill="currentColor">
-                                    <path fill-rule="evenodd"
-                                        d="M10 18a8 8 0 100-16 8 8 0 000 16zm3.707-9.293a1 1 0 00-1.414-1.414L9 10.586 7.707 9.293a1 1 0 00-1.414 1.414l2 2a1 1 0 001.414 0l4-4z"
-                                        clip-rule="evenodd" />
-                                </svg>
-                            </div>
-                            <div class="ml-3">
-                                <p class="text-sm font-medium text-green-800">
-                                    Your payment request has been received. We'll verify your payment and activate your
-                                    subscription shortly.
-                                </p>
-                            </div>
-                        </div>
+                <div class="pt-3 border-t border-gray-200 dark:border-gray-700">
+                    <p class="text-xs sm:text-sm font-medium text-gray-500 dark:text-gray-400 mb-2">{{ __('payment.instructions') }}:</p>
+                    <div class="bg-white dark:bg-gray-800 p-2 sm:p-3 rounded-lg border border-gray-200 dark:border-gray-700 overflow-x-auto">
+                        <p class="font-mono text-sm sm:text-base font-bold text-center text-gray-900 dark:text-white" x-text="momoCode"></p>
                     </div>
-                </div>
-
-                <!-- Error Message -->
-                <div x-show="error" class="mb-6">
-                    <div class="rounded-md bg-red-50 p-4">
-                        <div class="flex">
-                            <div class="flex-shrink-0">
-                                <svg class="h-5 w-5 text-red-400" xmlns="http://www.w3.org/2000/svg"
-                                    viewBox="0 0 20 20" fill="currentColor">
-                                    <path fill-rule="evenodd"
-                                        d="M10 18a8 8 0 100-16 8 8 0 000 16zM8.707 7.293a1 1 0 00-1.414 1.414L8.586 10l-1.293 1.293a1 1 0 101.414 1.414L10 11.414l1.293 1.293a1 1 0 001.414-1.414L11.414 10l1.293-1.293a1 1 0 00-1.414-1.414L10 8.586 8.707 7.293z"
-                                        clip-rule="evenodd" />
-                                </svg>
-                            </div>
-                            <div class="ml-3">
-                                <p class="text-sm font-medium text-red-800" x-text="error"></p>
-                            </div>
-                        </div>
-                    </div>
-                </div>
-
-                <!-- Phone Number Input (only show if not submitted) -->
-                <div x-show="!success" class="mt-8">
-                    <label for="phone" class="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-1">
-                        {{ __('payment.enter_phone') }}
-                        <span class="text-red-500">*</span>
-                    </label>
-                    <div class="mt-1 flex rounded-md shadow-sm">
-                        <span
-                            class="inline-flex items-center px-3 rounded-l-md border border-r-0 border-gray-300 dark:border-gray-600 bg-gray-50 dark:bg-gray-700 text-gray-500 dark:text-gray-300 text-sm">
-                            +250
-                        </span>
-                        <input 
-                            type="tel" 
-                            id="phone" 
-                            x-model="phoneNumber" 
-                            @input="error = null" 
-                            :disabled="isLoading"
-                            class="focus:ring-blue-500 focus:border-blue-500 flex-1 block w-full rounded-none rounded-r-md sm:text-sm border-gray-300 dark:border-gray-600 p-2 border bg-white dark:bg-gray-700 text-gray-900 dark:text-gray-100"
-                            :placeholder="'{{ __('payment.phone_placeholder') }}'"
-                            :class="{'border-red-300 dark:border-red-500': error, 'border-gray-300 dark:border-gray-600': !error}">
-                    </div>
-                    <p class="mt-1 text-sm text-gray-500 dark:text-gray-400">
-                        {{ __('payment.invalid_phone') }}
-                    </p>
-                    <p x-show="error" class="mt-2 text-sm text-red-600 dark:text-red-400" x-text="error"></p>
-                </div>
-                <p class="mt-1 text-sm text-gray-500 dark:text-gray-400">{{ __('payment.payment_requested_message') }}</p>
-            </div>
-
-            <!-- Footer -->
-            <div class="bg-gray-50 dark:bg-gray-800 px-6 py-4 sm:px-8 sm:py-5 border-t border-gray-200 dark:border-gray-700">
-                <div class="flex justify-end space-x-3">
-                    <button type="button" @click="closeModal()" :disabled="isLoading"
-                        class="inline-flex items-center px-4 py-2 border border-gray-300 shadow-sm text-sm font-medium rounded-md text-gray-700 bg-white hover:bg-gray-50 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-blue-500 disabled:opacity-50">
-                        {{ __('payment.close') }}
-                    </button>
-                    <button type="button" @click="submitPayment()" :disabled="isLoading || !phoneNumber"
-                        class="inline-flex items-center px-4 py-2 border border-transparent text-sm font-medium rounded-md shadow-sm text-white bg-blue-600 hover:bg-blue-700 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-blue-500 disabled:opacity-50">
-                        <span x-show="!isLoading">I've Paid</span>
-                        <span x-show="isLoading">Processing...</span>
+                    <button type="button" 
+                        @click="copyToClipboard(momoCode)" 
+                        class="mt-3 w-full flex items-center justify-center px-4 py-2 border border-transparent text-sm font-medium rounded-md text-white bg-blue-600 hover:bg-blue-700 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-blue-500 transition-colors duration-200">
+                        <svg class="h-4 w-4 mr-2" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M8 16H6a2 2 0 01-2-2V6a2 2 0 012-2h8a2 2 0 012 2v2m-6 12h8a2 2 0 002-2v-8a2 2 0 00-2-2h-8a2 2 0 00-2 2v8a2 2 0 002 2z" />
+                        </svg>
+                        {{ __('payment.copy_code') }}
                     </button>
                 </div>
             </div>
+        </div>
+
+        <!-- Simple Instructions -->
+        <div class="bg-white dark:bg-gray-800 rounded-xl p-4 sm:p-5 shadow-sm border border-gray-200 dark:border-gray-700">
+            <div class="space-y-2 sm:space-y-3">
+                <div class="flex flex-nowrap items-start gap-2 sm:gap-3">
+                    <div class="flex-shrink-0 mt-0.5">
+                        <div class="flex items-center justify-center h-5 w-5 sm:h-6 sm:w-6 rounded-full bg-blue-100 dark:bg-blue-900/50 text-blue-600 dark:text-blue-400">
+                            <svg class="h-3 w-3 sm:h-4 sm:w-4" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M13 16h-1v-4h-1m1-4h.01M21 12a9 9 0 11-18 0 9 9 0 0118 0z" />
+                            </svg>
+                        </div>
+                    </div>
+                    <div class="min-w-0">
+                        <p class="text-xs sm:text-sm text-gray-600 dark:text-gray-300 leading-relaxed break-words">
+                            <span>{{ __('payment.press_or_dial') }}</span>
+                            <span class="font-mono font-bold break-all" x-text="momoCode"></span>
+                            <span>{{ __('payment.and_follow_instructions') }}</span>
+                        </p>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+<!-- Footer -->
+<div class="bg-white dark:bg-gray-800 px-4 py-3 sm:px-6 border-t border-gray-200 dark:border-gray-700">
+    <div class="bg-gradient-to-r from-green-500 to-green-600 rounded-xl p-3 sm:p-4 shadow-lg">
+        <div class="flex flex-col sm:flex-row items-center justify-between space-y-2 sm:space-y-0 sm:space-x-4">
+            <div class="flex-1 text-center sm:text-left mb-2 sm:mb-0">
+                <h3 class="text-sm sm:text-base font-bold text-white">
+                    {{ __('payment.whatsapp_contact') }}
+                </h3>
+            </div>
+            <a href="https://wa.me/250798611161" target="_blank" class="w-full sm:w-auto bg-white hover:bg-gray-100 text-green-600 font-bold rounded-full px-4 py-2 text-sm sm:text-base flex items-center justify-center space-x-2 transition-all duration-200 transform hover:scale-[1.02] hover:shadow">
+                <i class="fab fa-whatsapp text-xl"></i>
+                <span>+250 798 611 161</span>
+            </a>
+        </div>
+    </div>
+</div>
         </div>
     </div>
 </div>
