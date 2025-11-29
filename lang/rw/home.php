@@ -125,8 +125,8 @@ return [
     'planTests' => [
         'more_tests' => 'Indi Myitozo',
         'subtitle' => 'Ongera ifatabuguzi na Mobile Money.',
-        'questions_count' => '{0} Nta kibazo|{1} :count Ikibazo|[2,*] :count Ibibazo',
-        'plan' => 'Ifatabuguzi',
+        'questions_count' => '{0} Nta kibazo|{1} Ikibazo kimwe|[2,*] Ibibazo :count',
+        'plan' => 'Ifatabuguzi rya :planName',
         'unlock_access' => 'Tangira Ifatabuguzi',
         'pay_with_mobile_money' => 'Kwishyura kuri Mobile Money',
         'view_all_plans' => 'Reba Amafatabuguzi',

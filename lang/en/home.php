@@ -126,7 +126,7 @@ return [
         'more_tests' => 'More Tests',
         'subtitle' => 'Access premium driving tests and quizzes to prepare for your exam',
         'questions_count' => '{0} No questions|{1} :count Question|[2,*] :count Questions',
-        'plan' => 'Plan',
+        'plan' => ':planName Plan',
         'unlock_access' => 'Unlock full access to this test',
         'pay_with_mobile_money' => 'Pay with Mobile Money',
         'view_all_plans' => 'View All Plans',

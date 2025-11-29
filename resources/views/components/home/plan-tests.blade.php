@@ -52,9 +52,9 @@
                                     {{ $title }}
                                 </h4>
                                 <p class="text-sm text-slate-700 dark:text-slate-300 mb-1">
-                                    {{ trans_choice('home.planTests.questions_count', $questionsCount, ['count' => $questionsCount]) }} • {{ $planName }} {{ __('home.planTests.plan') }}
+                                    {{ trans_choice('home.planTests.questions_count', $questionsCount, ['count' => $questionsCount]) }} • {{ __('home.planTests.plan', ['planName' => $planName]) }}
                                 </p>
-                                <div class="h-1 w-16 bg-blue-500 my-3 rounded-full"></div>
+                                <div class="h-1 w-16 bg-blue-500 my-3 mx-auto rounded-full"></div>
                                 <p class="text-sm text-slate-600 dark:text-slate-400 mb-4 max-w-xs mx-auto">
                                     {{ __('home.planTests.unlock_access') }}
                                 </p>
