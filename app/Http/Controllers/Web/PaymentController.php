@@ -41,7 +41,7 @@ class PaymentController extends Controller
             'metadata' => [
                 'requested_at' => now()->toDateTimeString(),
                 'payment_method' => 'MTN Mobile Money',
-                'momo_phone' => env('MOMO_PHONE_NUMBER', '2507XXXXXXXX'),
+                'momo_phone' => env('MOMO_PHONE_NUMBER', 'XXXXX'),
             ],
         ]);
 

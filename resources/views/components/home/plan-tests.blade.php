@@ -7,8 +7,8 @@
 @endphp
 
 @if ($hasQuizzes)
-    <section class="py-4 bg-white dark:bg-slate-950">
-        <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+    <section class="py-4 bg-white dark:bg-slate-950 relative">
+        <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 relative" style="z-index: 1;">
             <!-- Section Header -->
             <div class="mb-4 text-center">
                 <div class="mb-2">

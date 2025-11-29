@@ -15,6 +15,8 @@ return [
     'payment_success' => 'Payment Successful!',
     'payment_failed' => 'Payment Failed',
     'receipt' => 'Receipt',
+    'copied_to_clipboard' => 'Copied to clipboard!',
+    'copied' => 'Copied!',
     'download_receipt' => 'Download Receipt',
     'momo_instructions' => [
         'title' => 'Mobile Money Payment Instructions',

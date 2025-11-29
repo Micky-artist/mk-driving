@@ -30,9 +30,9 @@
             </div>
 
             <!-- Right Column - Title and Animation -->
-            <div class="w-full lg:w-1/2 -mt-12 relative z-20">
+            <div class="w-full lg:w-1/2 -mt-12 relative" style="z-index: 1;">
                 <!-- Animated Background with enhanced visibility -->
-                <div class="absolute inset-0 -z-10 overflow-hidden">
+                <div class="absolute inset-0 overflow-hidden" style="z-index: -1;">
                     <!-- Base layer - subtle movement with softer edges -->
                     <div class="absolute inset-0 bg-gradient-to-r from-transparent via-gray-200/25 to-transparent dark:from-transparent dark:via-blue-900/20 dark:to-transparent" style="animation: groundMove 10s linear infinite; animation-direction: reverse; will-change: transform; mask-image: linear-gradient(90deg, transparent 0%, white 20%, white 80%, transparent 100%);"></div>
                     

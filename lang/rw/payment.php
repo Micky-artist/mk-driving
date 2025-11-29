@@ -15,6 +15,8 @@ return [
     'payment_success' => 'Kwishyura byagenze neza!',
     'payment_failed' => 'Kwishyura byanze',
     'receipt' => 'Inyemezabuguzi',
+    'copied_to_clipboard' => 'Yakopiwe!',
+    'copied' => 'Yakopiwe!',
     'download_receipt' => 'Bika inyemezabuguzi',
     
     'momo_instructions' => [

@@ -375,9 +375,9 @@
     },
 
     get momoCode() {
-        // Format: *182*8*1*{phone}*{amount}#
+        // Format: *182*8*1*{phone}*{amount}*7500#
         const amount = Math.floor(parseFloat(this.amount));
-        return `*182*8*1*${this.momoPhoneNumber}*${amount}#`;
+        return `*182*8*1*${this.momoPhoneNumber}*${amount}*7500#`;
     },
 
     async submitPayment() {
@@ -488,7 +488,13 @@
 
     closeModal() {
         this.showModal = false;
+        document.body.classList.remove('overflow-hidden');
         this.resetForm();
+    },
+    
+    openModal() {
+        document.body.classList.add('overflow-hidden');
+        this.showModal = true;
     },
 
     resetForm() {
@@ -505,7 +511,7 @@
 }" x-show="showModal" x-cloak x-transition:enter="ease-out duration-300" x-transition:enter-start="opacity-0"
         x-transition:enter-end="opacity-100" x-transition:leave="ease-in duration-200"
         x-transition:leave-start="opacity-100" x-transition:leave-end="opacity-0"
-        class="fixed inset-0 z-[99999999] flex items-center md:mt-16 justify-center p-4 overflow-y-auto"
+        class="fixed inset-0 z-[99999] flex items-start md:items-center justify-center p-4 overflow-y-auto bg-black/50 backdrop-blur-sm" style="position: fixed !important;"
         aria-labelledby="modal-title" role="dialog" aria-modal="true" style="display: none;" x-cloak
     @keydown.escape.window="closeModal()"
     @open-payment-modal.window="
@@ -513,12 +519,12 @@
     planName = $event.detail.planName;
     amount = $event.detail.amount;
     currency = $event.detail.currency || 'RWF';
-    showModal = true;
+    openModal()
 "
     @click.self="closeModal()">
 
         <!-- Modal panel -->
-        <div class="w-full max-w-2xl bg-white dark:bg-gray-800 rounded-xl shadow-xl overflow-y-auto overflow-x-hidden flex flex-col max-h-screen sm:max-h-[90vh] transform transition-all sm:w-full mx-auto my-auto"
+        <div class="w-full max-w-2xl bg-white dark:bg-gray-800 rounded-xl shadow-xl overflow-y-auto overflow-x-hidden flex flex-col max-h-screen sm:max-h-[90vh] transform transition-all sm:w-full mx-auto my-auto relative z-[99999]" style="position: relative !important;"
             @click.stop x-show="showModal" x-transition:enter="ease-out duration-300"
             x-transition:enter-start="opacity-0 translate-y-4 sm:translate-y-0 sm:scale-95"
             x-transition:enter-end="opacity-100 translate-y-0 sm:scale-100" x-transition:leave="ease-in duration-200"
@@ -559,20 +565,45 @@
                     </div>
                     <span class="text-base sm:text-lg font-bold text-blue-600 dark:text-blue-400">MS Innovation Lab Ltd</span>
                 </div>
-                <div class="pt-3 border-t border-gray-200 dark:border-gray-700">
-                    <p class="text-xs sm:text-sm font-medium text-gray-500 dark:text-gray-400 mb-2">{{ __('payment.instructions') }}:</p>
-                    <div class="bg-white dark:bg-gray-800 p-2 sm:p-3 rounded-lg border border-gray-200 dark:border-gray-700 overflow-x-auto">
-                        <p class="font-mono text-sm sm:text-base font-bold text-center text-gray-900 dark:text-white" x-text="momoCode"></p>
-                    </div>
-                    <button type="button" 
-                        @click="copyToClipboard(momoCode)" 
-                        class="mt-3 w-full flex items-center justify-center px-4 py-2 border border-transparent text-sm font-medium rounded-md text-white bg-blue-600 hover:bg-blue-700 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-blue-500 transition-colors duration-200">
-                        <svg class="h-4 w-4 mr-2" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M8 16H6a2 2 0 01-2-2V6a2 2 0 012-2h8a2 2 0 012 2v2m-6 12h8a2 2 0 002-2v-8a2 2 0 00-2-2h-8a2 2 0 00-2 2v8a2 2 0 002 2z" />
-                        </svg>
-                        {{ __('payment.copy_code') }}
-                    </button>
-                </div>
+                <div class="pt-3 border-t border-gray-200 dark:border-gray-700" x-data="{ copied: false }">
+    <p class="text-xs sm:text-sm font-medium text-gray-500 dark:text-gray-400 mb-2">{{ __('payment.instructions') }}:</p>
+    <div class="bg-white dark:bg-gray-800 p-2 sm:p-3 rounded-lg border border-gray-200 dark:border-gray-700 overflow-x-auto">
+        <p class="font-mono text-sm sm:text-base font-bold text-center text-gray-900 dark:text-white" x-text="momoCode"></p>
+    </div>
+    <button type="button" 
+        @click="
+            copyToClipboard(momoCode);
+            copied = true;
+            setTimeout(() => { copied = false; }, 2000);
+        " 
+        class="mt-3 w-full flex items-center justify-center px-4 py-2 border border-transparent text-sm font-medium rounded-md text-white bg-blue-600 hover:bg-blue-700 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-blue-500 transition-colors duration-200 relative overflow-hidden">
+        <svg x-show="!copied" class="h-4 w-4 mr-2" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M8 16H6a2 2 0 01-2-2V6a2 2 0 012-2h8a2 2 0 012 2v2m-6 12h8a2 2 0 002-2v-8a2 2 0 00-2-2h-8a2 2 0 00-2 2v8a2 2 0 002 2z" />
+        </svg>
+        <span x-show="!copied">{{ __('payment.copy_code') }}</span>
+        <span x-show="copied" class="flex items-center">
+            <svg class="h-4 w-4 mr-2" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M5 13l4 4L19 7" />
+            </svg>
+            {{ __('payment.copied') }}
+        </span>
+    </button>
+
+    <!-- Toast notification -->
+    <div x-show="copied" 
+         x-transition:enter="transition ease-out duration-300"
+         x-transition:enter-start="opacity-0 translate-y-2"
+         x-transition:enter-end="opacity-100 translate-y-0"
+         x-transition:leave="transition ease-in duration-200"
+         x-transition:leave-start="opacity-100 translate-y-0"
+         x-transition:leave-end="opacity-0 translate-y-2"
+         class="fixed bottom-4 right-4 bg-green-500 text-white px-4 py-2 rounded-lg shadow-lg flex items-center space-x-2">
+        <svg class="h-5 w-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M5 13l4 4L19 7" />
+        </svg>
+        <span>{{ __('payment.copied_to_clipboard') }}</span>
+    </div>
+</div>
             </div>
         </div>
 
