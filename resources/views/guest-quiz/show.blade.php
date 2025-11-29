@@ -754,12 +754,6 @@
                 updateProgressBar();
                 updateNavigationButtons();
 
-                // Show signup nudge after first question is answered
-                if (index === 0 && !isQuizLocked && !localStorage.getItem('hasSeenSignupNudge')) {
-                    localStorage.setItem('hasSeenSignupNudge', 'true');
-                    setTimeout(showSignupNudgeModal, 1000);
-                }
-
                 // Scroll to top of question
                 currentQuestion.scrollIntoView({
                     behavior: 'smooth',
@@ -772,6 +766,13 @@
                 const questionId = questionContainer.dataset.questionId;
                 const correctAnswer = questionContainer.dataset.correctAnswer;
                 const isCorrect = selectedValue === correctAnswer;
+                
+                // Show signup nudge after first question is answered
+                if (currentQuestionIndex === 0 && !isQuizLocked && !localStorage.getItem('hasSeenSignupNudge')) {
+                    localStorage.setItem('hasSeenSignupNudge', 'true');
+                    // Small delay to let the answer feedback show first
+                    setTimeout(showSignupNudgeModal, 1000);
+                }
 
                 // Update UI
                 const answerOptions = questionContainer.querySelectorAll('.answer-option');

@@ -226,6 +226,13 @@ class QuizController extends Controller
         // Get all quizzes first
         $allQuizzes = $query->orderBy('created_at', 'desc')->get();
         
+        // Ensure attempts is always a collection, even if empty
+        $allQuizzes->each(function ($quiz) {
+            if (!isset($quiz->attempts)) {
+                $quiz->setRelation('attempts', collect());
+            }
+        });
+        
         // Filter quizzes based on user's subscription
         $filteredQuizzes = $allQuizzes->filter(function($quiz) use ($user) {
             return $this->canAccessQuiz($user, $quiz);

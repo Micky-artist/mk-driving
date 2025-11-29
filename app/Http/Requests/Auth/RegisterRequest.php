@@ -31,12 +31,10 @@ class RegisterRequest extends FormRequest
             'password' => [
                 'required',
                 'string',
-                'min:8',
+                'min:6',
                 'confirmed',
-                'regex:/[A-Z]/',      // at least one uppercase
-                'regex:/[a-z]/',      // at least one lowercase
-                'regex:/[0-9]/',      // at least one number
-                'regex:/[^A-Za-z0-9]/' // at least one special character
+                'regex:/[A-Za-z]/',  // at least one letter
+                'regex:/[0-9]/'      // at least one number
             ],
             'password_confirmation' => ['required', 'string', 'same:password'],
             'phone_number' => ['nullable', 'string', 'max:20'],
@@ -47,7 +45,8 @@ class RegisterRequest extends FormRequest
     public function messages()
     {
         return [
-            'password.regex' => 'The password must contain at least one uppercase letter, one lowercase letter, one number, and one special character.'
+            'password.regex' => __('auth.password_requirements.letter_number_required'),
+            'password.min' => __('auth.password_requirements.length')
         ];
     }
 }

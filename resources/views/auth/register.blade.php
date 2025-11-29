@@ -357,29 +357,11 @@
                                         </svg>
                                         <span>{{ __('auth.password_requirements.length') }}</span>
                                     </div>
-                                    <div class="flex items-center" id="req-uppercase">
+                                    <div class="flex items-center" id="req-letter">
                                         <svg class="w-3.5 h-3.5 mr-1.5 text-red-400" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                                             <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M6 18L18 6M6 6l12 12"></path>
                                         </svg>
-                                        <span>{{ __('auth.password_requirements.uppercase') }}</span>
-                                    </div>
-                                    <div class="flex items-center" id="req-lowercase">
-                                        <svg class="w-3.5 h-3.5 mr-1.5 text-red-400" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M6 18L18 6M6 6l12 12"></path>
-                                        </svg>
-                                        <span>{{ __('auth.password_requirements.lowercase') }}</span>
-                                    </div>
-                                    <div class="flex items-center" id="req-number">
-                                        <svg class="w-3.5 h-3.5 mr-1.5 text-red-400" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M6 18L18 6M6 6l12 12"></path>
-                                        </svg>
-                                        <span>{{ __('auth.password_requirements.number') }}</span>
-                                    </div>
-                                    <div class="flex items-center" id="req-special">
-                                        <svg class="w-3.5 h-3.5 mr-1.5 text-red-400" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M6 18L18 6M6 6l12 12"></path>
-                                        </svg>
-                                        <span>{{ __('auth.password_requirements.special') }}</span>
+                                        <span>{{ __('auth.password_requirements.letter_number_required') }}</span>
                                     </div>
                                 </div>
                             </div>
@@ -463,6 +445,26 @@
         </div>
     </div>
 </div>
+
+<!-- Account exists message (initially hidden) -->
+<div id="accountExistsMessage" class="mt-4 p-4 bg-red-50 dark:bg-red-900/20 border border-red-200 dark:border-red-800 rounded-md hidden">
+    <div class="flex">
+        <div class="flex-shrink-0">
+            <svg class="h-5 w-5 text-red-400" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 20 20" fill="currentColor">
+                <path fill-rule="evenodd" d="M10 18a8 8 0 100-16 8 8 0 000 16zM8.28 7.22a.75.75 0 00-1.06 1.06L8.94 10l-1.72 1.72a.75.75 0 101.06 1.06L10 11.06l1.72 1.72a.75.75 0 101.06-1.06L11.06 10l1.72-1.72a.75.75 0 00-1.06-1.06L10 8.94 8.28 7.22z" clip-rule="evenodd" />
+            </svg>
+        </div>
+        <div class="ml-3">
+            <p class="text-sm text-red-700 dark:text-red-300">
+                {{ __('auth.register.account_exists_message', ['email' => '']) }}
+                <a href="{{ route('login', app()->getLocale()) }}" class="font-medium text-blue-600 dark:text-blue-400 hover:text-blue-500 dark:hover:text-blue-300">
+                    {{ __('auth.register.sign_in_instead') }}
+                </a>
+            </p>
+        </div>
+    </div>
+</div>
+
 @endsection
 
 @push('scripts')
@@ -508,80 +510,177 @@
     }
     
     // Password validation function
-    function validatePassword() {
-        const password = document.getElementById('password').value;
-        const validationDiv = document.getElementById('password-validation');
-        const strengthMeter = document.getElementById('strength-meter-fill');
-        const strengthText = document.getElementById('strength-text');
-        
-        // Hide validation UI by default
-        if (!validationDiv) return false;
-        
-        // Show validation UI after first character
-        if (password.length > 0) {
-            if (!hasUserTyped) {
-                hasUserTyped = true;
-                validationDiv.classList.remove('hidden');
-            }
-        } else {
-            // Hide validation UI when password is empty
-            validationDiv.classList.add('hidden');
-            hasUserTyped = false;
-            // Clear any existing error messages
-            const errorDiv = document.getElementById('password-error');
-            if (errorDiv) errorDiv.remove();
-            return false;
+function validatePassword() {
+    const password = document.getElementById('password').value;
+    const validationDiv = document.getElementById('password-validation');
+    const strengthMeter = document.getElementById('strength-meter-fill');
+    const strengthText = document.getElementById('strength-text');
+    
+    if (!validationDiv) return false;
+    
+    // Show validation UI after first character
+    if (password.length > 0) {
+        if (!hasUserTyped) {
+            hasUserTyped = true;
+            validationDiv.classList.remove('hidden');
         }
-        
-        // Check password requirements
-        const hasMinLength = password.length >= 8;
-        const hasUppercase = /[A-Z]/.test(password);
-        const hasLowercase = /[a-z]/.test(password);
-        const hasNumber = /[0-9]/.test(password);
-        const hasSpecial = /[^A-Za-z0-9]/.test(password);
-        
-        // Update requirement indicators
-        updateRequirement('length', hasMinLength);
-        updateRequirement('uppercase', hasUppercase);
-        updateRequirement('lowercase', hasLowercase);
-        updateRequirement('number', hasNumber);
-        updateRequirement('special', hasSpecial);
-        
-        // Calculate password strength
-        let strength = 0;
-        if (hasMinLength) strength += 1;
-        if (hasUppercase) strength += 1;
-        if (hasLowercase) strength += 1;
-        if (hasNumber) strength += 1;
-        if (hasSpecial) strength += 1;
-        
-        // Update strength meter
-        if (strengthMeter) {
-            const width = (strength / 5) * 100;
-            strengthMeter.style.width = `${width}%`;
-            
-            // Set color based on strength
-            if (strength <= 2) {
-                strengthMeter.className = 'h-full bg-red-500 rounded-full transition-all duration-300';
-                strengthText.textContent = '{{ __("auth.password_requirements.strength.weak") }}';
-            } else if (strength === 3) {
-                strengthMeter.className = 'h-full bg-yellow-500 rounded-full transition-all duration-300';
-                strengthText.textContent = '{{ __("auth.password_requirements.strength.medium") }}';
-            } else if (strength === 4) {
-                strengthMeter.className = 'h-full bg-blue-500 rounded-full transition-all duration-300';
-                strengthText.textContent = '{{ __("auth.password_requirements.strength.strong") }}';
-            } else {
-                strengthMeter.className = 'h-full bg-green-500 rounded-full transition-all duration-300';
-                strengthText.textContent = '{{ __("auth.password_requirements.strength.very_strong") }}';
-            }
-        }
-        
-        // Return true only if all requirements are met
-        return hasMinLength && hasUppercase && hasLowercase && hasNumber && hasSpecial;
-        
-        // Also check password match when password changes
-        validatePasswordMatch();
+    } else {
+        validationDiv.classList.add('hidden');
+        hasUserTyped = false;
+        const errorDiv = document.getElementById('password-error');
+        if (errorDiv) errorDiv.remove();
+        return false;
     }
+    
+    // Only check for minimum length, at least one letter and one number
+    const hasMinLength = password.length >= 6;
+    const hasLetter = /[A-Za-z]/.test(password);
+    const hasNumber = /[0-9]/.test(password);
+    
+    // Update requirement indicators
+    updateRequirement('length', hasMinLength);
+    updateRequirement('letter', hasLetter && hasNumber); // Combined check for letter and number
+    
+    // Calculate password strength (simplified)
+    let strength = 0;
+    if (hasMinLength) strength += 1;
+    if (hasLetter) strength += 1;
+    if (hasNumber) strength += 1;
+    
+    // Update strength meter
+    if (strengthMeter) {
+        const width = (strength / 3) * 100;
+        strengthMeter.style.width = `${width}%`;
+        
+        // Set color and localized text based on strength
+        if (strength <= 1) {
+            strengthMeter.className = 'h-full bg-red-500 rounded-full transition-all duration-300';
+            strengthText.textContent = '{{ __("auth.password_requirements.strength.weak") }}';
+        } else if (strength === 2) {
+            strengthMeter.className = 'h-full bg-yellow-500 rounded-full transition-all duration-300';
+            strengthText.textContent = '{{ __("auth.password_requirements.strength.good") }}';
+        } else {
+            strengthMeter.className = 'h-full bg-green-500 rounded-full transition-all duration-300';
+            strengthText.textContent = '{{ __("auth.password_requirements.strength.strong") }}';
+        }
+    }
+    
+    // Return true only if all requirements are met
+    return hasMinLength && hasLetter && hasNumber;
+}
+
+// Form submission handler
+document.getElementById('registerForm').addEventListener('submit', async function(e) {
+    e.preventDefault();
+    
+    const form = e.target;
+    const submitButton = form.querySelector('button[type="submit"]');
+    const buttonText = submitButton.querySelector('#buttonText');
+    const originalButtonText = buttonText.textContent;
+    
+    // Disable the submit button and show loading state
+    submitButton.disabled = true;
+    buttonText.textContent = '{{ __("auth.register.creating_account") }}';
+    
+    // Get form data
+    const formData = new FormData(form);
+    const email = form.querySelector('input[name="email"]').value;
+    const password = form.querySelector('input[name="password"]').value;
+    const passwordConfirmation = form.querySelector('input[name="password_confirmation"]').value;
+    
+    // Client-side validation
+    if (password !== passwordConfirmation) {
+        showFormError(form, '{{ __("auth.password_requirements.mismatch") }}');
+        submitButton.disabled = false;
+        buttonText.textContent = originalButtonText;
+        return;
+    }
+    
+    const hasMinLength = password.length >= 6;
+    const hasLetter = /[A-Za-z]/.test(password);
+    const hasNumber = /[0-9]/.test(password);
+    
+    if (!hasMinLength || !hasLetter || !hasNumber) {
+        showFormError(form, '{{ __("auth.password_requirements.letter_number_required") }}');
+        submitButton.disabled = false;
+        buttonText.textContent = originalButtonText;
+        return;
+    }
+    
+    try {
+        const response = await fetch(form.action, {
+            method: 'POST',
+            body: formData,
+            headers: {
+                'Accept': 'application/json',
+                'X-Requested-With': 'XMLHttpRequest',
+                'X-CSRF-TOKEN': document.querySelector('meta[name="csrf-token"]').content
+            }
+        });
+        
+        const data = await response.json();
+        
+        if (response.ok) {
+            // Redirect on success
+            window.location.href = data.redirect || '{{ route("dashboard", app()->getLocale()) }}';
+        } else {
+            // Handle validation errors
+            if (data.errors) {
+                // Handle email already exists error
+                if (data.errors.email && data.errors.email.includes('Konti isanzweho. Mujye aho binjirira.')) {
+                    showUserExistsModal(email);
+                } else {
+                    // Show first error message
+                    const firstError = Object.values(data.errors)[0][0];
+                    showFormError(form, firstError);
+                }
+            } else {
+                showFormError(form, data.message || '{{ __("auth.register.error_occurred") }}');
+            }
+        }
+    } catch (error) {
+        console.error('Error:', error);
+        showFormError(form, '{{ __("auth.register.error_occurred") }}');
+    } finally {
+        submitButton.disabled = false;
+        buttonText.textContent = originalButtonText;
+    }
+});
+
+// Show error message in form
+function showFormError(form, message) {
+    // Remove any existing error messages
+    const existingError = form.querySelector('.form-error-message');
+    if (existingError) {
+        existingError.remove();
+    }
+    
+    // Create and show new error message
+    const errorDiv = document.createElement('div');
+    errorDiv.className = 'form-error-message p-3 bg-red-50 dark:bg-red-900/20 text-red-700 dark:text-red-300 rounded-lg text-sm text-center mb-4';
+    errorDiv.textContent = message;
+    form.insertBefore(errorDiv, form.firstChild);
+    
+    // Scroll to error
+    errorDiv.scrollIntoView({ behavior: 'smooth', block: 'center' });
+}
+
+// Replace your existing showUserExistsModal function with this:
+function showUserExistsModal(email) {
+    const modal = document.getElementById('accountExistsModal');
+    const messageElement = document.getElementById('accountExistsMessage');
+    
+    // Set the message with the email
+    const message = "{{ __('auth.register.account_exists_message', ['email' => '']) }}".replace(':email', email);
+    messageElement.textContent = message;
+    
+    // Show the modal
+    modal.classList.remove('hidden');
+    
+    // Focus on the first interactive element for accessibility
+    const focusable = modal.querySelector('button, [href], [tabindex]:not([tabindex="-1"])');
+    if (focusable) focusable.focus();
+}
     
     function updateRequirement(id, isValid) {
         const element = document.getElementById(`req-${id}`);
@@ -851,6 +950,22 @@
                 </svg>
             `;
         }
+    }
+
+    // Show account exists message
+    function showUserExistsMessage(email) {
+        const messageDiv = document.getElementById('accountExistsMessage');
+        const messageText = messageDiv.querySelector('p');
+        
+        // Update the message with the email
+        const baseMessage = "{{ __('auth.register.account_exists_message', ['email' => '%%EMAIL%%']) }}";
+        messageText.textContent = baseMessage.replace('%%EMAIL%%', email);
+        
+        // Show the message
+        messageDiv.classList.remove('hidden');
+        
+        // Scroll to the message
+        messageDiv.scrollIntoView({ behavior: 'smooth', block: 'center' });
     }
 </script>
 @endpush

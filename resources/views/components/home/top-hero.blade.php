@@ -79,7 +79,7 @@
                             </div>
                             
                             <!-- CTA Button -->
-                            <div class="mt-4">
+                            <div class="relative z-50 mt-4">
                                 <a href="{{ route('guest-quiz.show', ['locale' => app()->getLocale(), 'quiz' => 11]) }}"
                                     class="block w-full text-center bg-gradient-to-r from-yellow-400 to-yellow-500 text-blue-900 font-bold py-2 px-4 rounded hover:from-yellow-300 hover:to-yellow-400 transition-all duration-300 transform group-hover:scale-[1.02] shadow-md hover:shadow-yellow-500/30">
                                     {{ $ctaText }}

@@ -37,7 +37,7 @@ class UpdateUserRequest extends FormRequest
             ],
             'phone' => ['nullable', 'string', 'max:20'],
             'role' => ['sometimes', 'string', 'in:admin,instructor,student'],
-            'password' => ['sometimes', 'string', 'min:8', 'confirmed'],
+            'password' => ['sometimes', 'string', 'min:6', 'confirmed'],
             'profile_image' => ['nullable', 'string'],
             'is_active' => ['sometimes', 'boolean'],
             'has_attempted_guest_quiz' => ['sometimes', 'boolean'],

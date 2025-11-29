@@ -202,7 +202,7 @@
                             id="bookmarkQuiz" 
                             class="bookmark-btn p-2 hover:bg-gray-100 rounded-lg transition-colors duration-200 {{ $isBookmarked ? 'text-yellow-500' : 'text-gray-400' }}"
                             data-quiz-id="{{ $quiz->id }}"
-                            title="{{ $isBookmarked ? 'Remove from bookmarks' : 'Add to bookmarks' }}">
+                            title="{{ $isBookmarked ? __('quiz.removeFromBookmarks') : __('quiz.addToBookmarks') }}">
                         <svg class="w-6 h-6" fill="{{ $isBookmarked ? 'currentColor' : 'none' }}" stroke="currentColor" viewBox="0 0 24 24">
                             <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M5 5a2 2 0 012-2h10a2 2 0 012 2v16l-7-3.5L5 21V5z"></path>
                         </svg>
@@ -215,20 +215,20 @@
                         <svg class="w-5 h-5 mr-1.5 text-blue-500" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                             <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 8v4l3 3m6-3a9 9 0 11-18 0 9 9 0 0118 0z"></path>
                         </svg>
-                        <span>{{ $quiz->time_limit_minutes }} minutes</span>
+                        <span>{{ $quiz->time_limit_minutes }} {{ trans_choice('quiz.minutes', $quiz->time_limit_minutes) }}</span>
                     </div>
                     <div class="flex items-center text-sm text-gray-600">
                         <svg class="w-5 h-5 mr-1.5 text-green-500" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                             <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 12h6m-6 4h6m2 5H7a2 2 0 01-2-2V5a2 2 0 012-2h5.586a1 1 0 01.707.293l5.414 5.414a1 1 0 01.293.707V19a2 2 0 01-2 2z"></path>
                         </svg>
-                        <span>{{ $quiz->questions->count() }} questions</span>
+                        <span>{{ $quiz->questions->count() }} {{ trans_choice('quiz.questions', $quiz->questions->count()) }}</span>
                     </div>
                     @if($userAttempts > 0)
                     <div class="flex items-center text-sm text-gray-600">
                         <svg class="w-5 h-5 mr-1.5 text-purple-500" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                             <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4 4v5h.582m15.356 2A8.001 8.001 0 004.582 9m0 0H9m11 11v-5h-.581m0 0a8.003 8.003 0 01-15.357-2m15.357 2H15"></path>
                         </svg>
-                        <span>Attempt {{ $userAttempts + 1 }}</span>
+                        <span>{{ __('quiz.attempt', ['number' => $userAttempts + 1]) }}</span>
                     </div>
                     @endif
                     @if($bestScore)
@@ -236,12 +236,12 @@
                         <svg class="w-5 h-5 mr-1.5 text-yellow-500" fill="currentColor" viewBox="0 0 20 20">
                             <path d="M9.049 2.927c.3-.921 1.603-.921 1.902 0l1.07 3.292a1 1 0 00.95.69h3.462c.969 0 1.371 1.24.588 1.81l-2.8 2.034a1 1 0 00-.364 1.118l1.07 3.292c.3.921-.755 1.688-1.54 1.118l-2.8-2.034a1 1 0 00-1.175 0l-2.8 2.034c-.784.57-1.838-.197-1.539-1.118l1.07-3.292a1 1 0 00-.364-1.118L2.98 8.72c-.783-.57-.38-1.81.588-1.81h3.461a1 1 0 00.951-.69l1.07-3.292z"></path>
                         </svg>
-                        <span>Best: {{ $bestScore }}%</span>
+                        <span>{{ __('quiz.bestScore', ['score' => $bestScore]) }}</span>
                     </div>
                     @endif
                     @if($userStreak > 0)
                     <span class="streak-badge">
-                        🔥 {{ $userStreak }} day streak
+                        🔥 {{ trans_choice('quiz.dayStreak', $userStreak, ['count' => $userStreak]) }}
                     </span>
                     @endif
                 </div>
@@ -260,7 +260,7 @@
                                 <!-- Auto Next Toggle -->
                                 <label class="flex items-center text-sm text-gray-700 cursor-pointer bg-gray-50 px-3 py-1 rounded-lg border border-gray-200 hover:bg-gray-100 transition-colors">
                                     <input type="checkbox" id="autoNextToggle" checked class="h-4 w-4 text-blue-600 focus:ring-blue-500 border-gray-300 rounded">
-                                    <span class="ml-2 font-medium">Auto Next</span>
+                                    <span class="ml-2 font-medium">{{ __('quiz.autoNext') }}</span>
                                 </label>
                             </div>
                             <div class="flex items-center gap-3">
@@ -271,7 +271,7 @@
                                     </svg>
                                 </button>
                                 <button type="button" id="resetQuiz" class="px-3 py-1 text-sm text-red-600 hover:text-red-800 hover:bg-red-50 rounded transition-colors">
-                                    Reset Quiz
+                                    {{ __('quiz.resetQuiz') }}
                                 </button>
                             </div>
                         </div>
@@ -350,19 +350,19 @@
                     <div class="flex justify-between pt-4 border-t border-gray-100">
                         <button type="button" 
                                 class="btn-prev px-4 py-2 bg-gray-100 text-gray-700 rounded-lg hover:bg-gray-200 transition-colors {{ $loop->first ? 'invisible' : '' }}">
-                            Previous
+                            {{ __('quiz.previous') }}
                         </button>
                         
                         @if($loop->last)
                             <button type="submit" 
                                     class="ml-auto px-6 py-2 bg-blue-600 text-white rounded-lg hover:bg-blue-700 transition-colors">
-                                Submit Quiz
+                                {{ __('quiz.submitQuiz') }}
                             </button>
                         @else
                             <button type="button" 
                                     class="btn-next px-6 py-2 bg-blue-600 text-white rounded-lg hover:bg-blue-700 transition-colors opacity-50 cursor-not-allowed ml-auto"
                                     disabled>
-                                Next
+                                {{ __('quiz.next') }}
                             </button>
                         @endif
                     </div>
@@ -381,14 +381,14 @@
                     <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M10 9v6m4-6v6m7-3a9 9 0 11-18 0 9 9 0 0118 0z"></path>
                 </svg>
             </div>
-            <h2 class="text-2xl font-bold mb-2 text-gray-900">Quiz Paused</h2>
-            <p class="text-gray-600 mb-6">Take a break. Your progress is saved.</p>
+            <h2 class="text-2xl font-bold mb-2 text-gray-900">{{ __('quiz.quizPaused') }}</h2>
+            <p class="text-gray-600 mb-6">{{ __('quiz.quizPausedMessage') }}</p>
             <div class="flex flex-col gap-3">
                 <button id="resumeQuiz" class="w-full px-6 py-3 bg-blue-600 text-white font-semibold rounded-lg hover:bg-blue-700 transition-colors">
-                    Resume Quiz
+                    {{ __('quiz.resumeQuiz') }}
                 </button>
                 <a href="{{ route('dashboard.quizzes.index', ['locale' => app()->getLocale()]) }}" class="w-full px-6 py-3 bg-gray-100 text-gray-700 font-semibold rounded-lg hover:bg-gray-200 transition-colors text-center">
-                    Exit Quiz
+                    {{ __('quiz.exitQuiz') }}
                 </a>
             </div>
         </div>
@@ -404,12 +404,16 @@
                     <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 12l2 2 4-4m6 2a9 9 0 11-18 0 9 9 0 0118 0z"></path>
                 </svg>
             </div>
-            <h2 class="text-3xl font-bold mb-2 text-gray-900">Quiz Completed!</h2>
+            <h2 class="text-3xl font-bold mb-2 text-gray-900">{{ __('quiz.quizCompleted') }}</h2>
             <div class="text-5xl font-bold text-blue-600 mb-2" id="resultsScore">0%</div>
-            <p class="text-gray-600 mb-4">
-                You got <span id="correctAnswers" class="font-semibold text-green-600">0</span> out of 
-                <span class="font-semibold">{{ $quiz->questions->count() }}</span> questions correct
-            </p>
+            <div class="text-gray-600 mb-4 space-y-1">
+                <div class="flex flex-wrap justify-center items-baseline gap-1">
+                    <span>{{ __('quiz.youGot') }}</span>
+                    <span id="correctAnswers" class="font-semibold text-green-600">0</span>
+                    <span>{{ __('quiz.outOf') }}</span>
+                    <span class="font-semibold">{{ $quiz->questions->count() }}</span>
+                </div>
+            </div>
             
             <!-- Pass/Fail Badge -->
             <div id="passBadge" class="hidden inline-flex items-center px-4 py-2 rounded-full text-sm font-semibold mb-4">
@@ -424,38 +428,38 @@
         <div class="grid grid-cols-4 gap-4 mb-6">
             <div class="stat-card">
                 <div class="stat-value text-green-600" id="statCorrect">0</div>
-                <div class="stat-label">Correct</div>
+                <div class="stat-label">{{ __('quiz.correct') }}</div>
             </div>
             <div class="stat-card">
                 <div class="stat-value text-red-600" id="statIncorrect">0</div>
-                <div class="stat-label">Incorrect</div>
+                <div class="stat-label">{{ __('quiz.incorrect') }}</div>
             </div>
             <div class="stat-card">
                 <div class="stat-value text-blue-600" id="statTimeTaken">0:00</div>
-                <div class="stat-label">Time</div>
+                <div class="stat-label">{{ __('quiz.time') }}</div>
             </div>
             <div class="stat-card">
                 <div class="stat-value text-purple-600" id="statAccuracy">0%</div>
-                <div class="stat-label">Accuracy</div>
+                <div class="stat-label">{{ __('quiz.accuracy') }}</div>
             </div>
         </div>
 
         <!-- Performance Comparison -->
         @if($bestScore)
-        <div class="mb-6 p-4 bg-gray-50 rounded-lg">
-            <h3 class="font-semibold text-gray-900 mb-3">Your Progress</h3>
-            <div class="space-y-2">
-                <div class="flex justify-between text-sm">
-                    <span class="text-gray-600">Current Score:</span>
-                    <span class="font-semibold" id="currentScoreComparison">0%</span>
+        <div class="mb-6 p-5 bg-gradient-to-r from-blue-50 to-blue-100 rounded-xl shadow-sm">
+            <h3 class="font-semibold text-gray-900 mb-4 text-lg">{{ __('quiz.yourProgress') }}</h3>
+            <div class="space-y-3">
+                <div class="flex justify-between items-center text-sm">
+                    <span class="text-gray-700">{{ __('quiz.currentScore') }}:</span>
+                    <span class="font-semibold text-blue-700" id="currentScoreComparison">0%</span>
                 </div>
-                <div class="flex justify-between text-sm">
-                    <span class="text-gray-600">Previous Best:</span>
-                    <span class="font-semibold">{{ $bestScore }}%</span>
+                <div class="flex justify-between items-center text-sm">
+                    <span class="text-gray-700">{{ __('quiz.previousBest') }}:</span>
+                    <span class="font-semibold text-blue-700">{{ $bestScore }}%</span>
                 </div>
-                <div class="flex justify-between text-sm">
-                    <span class="text-gray-600">Improvement:</span>
-                    <span class="font-semibold" id="improvement">0%</span>
+                <div class="flex justify-between items-center text-sm">
+                    <span class="text-gray-700">{{ __('quiz.improvement') }}:</span>
+                    <span class="font-semibold text-green-600" id="improvement">0%</span>
                 </div>
             </div>
         </div>
@@ -463,37 +467,15 @@
 
         <!-- Action Buttons -->
         <div class="flex flex-col sm:flex-row gap-3">
-            <button id="reviewAnswers" class="flex-1 px-6 py-3 bg-blue-600 text-white font-semibold rounded-lg hover:bg-blue-700 transition-colors">
-                Review Answers
+            <button id="reviewAnswers" class="flex-1 px-6 py-3 bg-gradient-to-r from-blue-600 to-blue-700 text-white font-semibold rounded-lg hover:from-blue-700 hover:to-blue-800 transition-all transform hover:-translate-y-0.5 shadow-md hover:shadow-lg">
+                {{ __('quiz.reviewAnswers') }}
             </button>
-            <button id="resetFromResults" class="flex-1 px-6 py-3 bg-gray-100 text-gray-700 font-semibold rounded-lg hover:bg-gray-200 transition-colors">
-                Retake Quiz
+            <button id="resetFromResults" class="flex-1 px-6 py-3 bg-gradient-to-r from-gray-100 to-gray-50 text-gray-700 font-semibold rounded-lg hover:from-gray-200 hover:to-gray-100 border border-gray-200 transition-all transform hover:-translate-y-0.5 shadow-sm hover:shadow">
+                {{ __('quiz.retakeQuiz') }}
             </button>
-            <a href="{{ route('dashboard.quizzes.index', ['locale' => app()->getLocale()]) }}" class="flex-1 px-6 py-3 bg-gray-100 text-gray-700 font-semibold rounded-lg hover:bg-gray-200 transition-colors text-center">
-                Back to Quizzes
+            <a href="{{ route('dashboard.quizzes.index', ['locale' => app()->getLocale()]) }}" class="flex-1 px-6 py-3 bg-gradient-to-r from-gray-100 to-gray-50 text-gray-700 font-semibold rounded-lg hover:from-gray-200 hover:to-gray-100 border border-gray-200 transition-all transform hover:-translate-y-0.5 shadow-sm hover:shadow text-center">
+                {{ __('quiz.backToQuizzes') }}
             </a>
-        </div>
-
-        <!-- Share Section -->
-        <div class="mt-6 pt-6 border-t border-gray-200">
-            <p class="text-center text-sm text-gray-600 mb-3">Share your achievement</p>
-            <div class="flex justify-center gap-3">
-                <button onclick="shareOnTwitter()" class="px-4 py-2 bg-blue-400 text-white rounded-lg hover:bg-blue-500 transition-colors">
-                    <svg class="w-5 h-5" fill="currentColor" viewBox="0 0 24 24">
-                        <path d="M23 3a10.9 10.9 0 01-3.14 1.53 4.48 4.48 0 00-7.86 3v1A10.66 10.66 0 013 4s-4 9 5 13a11.64 11.64 0 01-7 2c9 5 20 0 20-11.5a4.5 4.5 0 00-.08-.83A7.72 7.72 0 0023 3z"></path>
-                    </svg>
-                </button>
-                <button onclick="shareOnFacebook()" class="px-4 py-2 bg-blue-600 text-white rounded-lg hover:bg-blue-700 transition-colors">
-                    <svg class="w-5 h-5" fill="currentColor" viewBox="0 0 24 24">
-                        <path d="M18 2h-3a5 5 0 00-5 5v3H7v4h3v8h4v-8h3l1-4h-4V7a1 1 0 011-1h3z"></path>
-                    </svg>
-                </button>
-                <button onclick="copyResultLink()" class="px-4 py-2 bg-gray-600 text-white rounded-lg hover:bg-gray-700 transition-colors">
-                    <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M8 16H6a2 2 0 01-2-2V6a2 2 0 012-2h8a2 2 0 012 2v2m-6 12h8a2 2 0 002-2v-8a2 2 0 00-2-2h-8a2 2 0 00-2 2v8a2 2 0 002 2z"/>
-                    </svg>
-                </button>
-            </div>
         </div>
     </div>
 </div>
@@ -1035,8 +1017,18 @@
         
         // Update score display
         function updateScoreDisplay() {
-            correctCountEl.textContent = quizResults.correct;
+            const correctCount = quizResults.correct;
+            const totalQuestions = {{ $quiz->questions->count() }};
+            const scorePercentage = totalQuestions > 0 ? Math.round((correctCount / totalQuestions) * 100) : 0;
+            
+            correctCountEl.textContent = correctCount;
             incorrectCountEl.textContent = quizResults.incorrect;
+            
+            // Update the score percentage in the results modal
+            const scorePercentageEl = document.getElementById('scorePercentage');
+            if (scorePercentageEl) {
+                scorePercentageEl.textContent = `${scorePercentage}%`;
+            }
         }
         
         // Update navigation buttons
@@ -1398,6 +1390,18 @@ function submitQuizForm(isTimeUp = false) {
                     
                     // Update navigation buttons
                     updateNavigationButtons();
+                    
+                    // Auto-advance to next question if enabled
+                    const autoNextToggle = document.getElementById('autoNextToggle');
+                    if (autoNextToggle && autoNextToggle.checked) {
+                        // Small delay to show feedback before moving to next question
+                        setTimeout(() => {
+                            const nextButton = container.closest('.question-container').querySelector('.btn-next');
+                            if (nextButton && !nextButton.disabled) {
+                                nextButton.click();
+                            }
+                        }, 1000); // 1 second delay before auto-advancing
+                    }
                     
                     console.log('Answer processed. Auto-next enabled:', autoNextEnabled);
                     

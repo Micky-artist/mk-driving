@@ -26,7 +26,14 @@
                         @php
                             // Calculate progress for the quiz
                             $totalQuestions = $quiz->questions_count ?? 0;
-                            $attemptedQuestions = $quiz->attempts->isNotEmpty() ? $quiz->attempts->first()->answers->count() : 0;
+                            $attemptedQuestions = 0;
+                            
+                            // Safely get the number of attempted questions
+                            if ($quiz->attempts->isNotEmpty()) {
+                                $latestAttempt = $quiz->attempts->first();
+                                $attemptedQuestions = isset($latestAttempt->answers) ? $latestAttempt->answers->count() : 0;
+                            }
+                            
                             $progressPercent = $totalQuestions > 0 ? min(100, round(($attemptedQuestions / $totalQuestions) * 100)) : 0;
                             
                             // Define gradient based on progress
@@ -138,7 +145,7 @@
                 <!-- Pagination -->
                 @if($quizzes->hasPages())
                     <div class="mt-10">
-                        {{ $quizzes->links('vendor.pagination.simple-tailwind') }}
+                        {{ $quizzes->links() }}
                     </div>
                 @endif
             @else

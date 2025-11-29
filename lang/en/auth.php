@@ -44,6 +44,14 @@ return [
     'sign_in' => 'Sign in',
     
     // Register page
+    'register' => [
+        'account_exists' => 'Account Already Exists',
+        'account_exists_message' => 'An account with the email :email already exists. Would you like to sign in instead?',
+        'sign_in_instead' => 'Sign In Instead',
+        'creating_account' => 'Creating Account...',
+        'error_occurred' => 'An error occurred. Please try again.'
+    ],
+    
     // Forgot Password Page
     'forgot_password_page' => [
         'title' => 'Reset Your Password',
@@ -103,19 +111,21 @@ return [
     'errors' => [
         'invalid_credentials' => 'Invalid email or password',
         'email_exists' => 'An account with this email already exists. Please log in instead.',
-        'password_mismatch' => 'Passwords do not match',
-        'weak_password' => 'Password must be at least 6 characters',
+        'password_mismatch' => 'The passwords you entered do not match. Please try again.',
+        'weak_password' => 'Password must be at least 6 characters and include both letters and numbers',
+        'validation' => [
+            'min' => [
+                'string' => 'The :attribute must be at least :min characters.'
+            ]
+        ],
         'invalid_email' => 'Please enter a valid email address'
     ],
     
     // Password validation messages
     'password_requirements' => [
         'title' => 'Password must contain:',
-        'length' => 'At least 8 characters',
-        'uppercase' => 'At least 1 uppercase letter',
-        'lowercase' => 'At least 1 lowercase letter',
-        'number' => 'At least 1 number',
-        'special' => 'At least 1 special character (!@#$%^&*)',
+        'length' => 'At least 6 characters',
+        'letter_number_required' => 'At least 1 letter and 1 number',
         'strength' => [
             'weak' => 'Weak',
             'medium' => 'Medium',

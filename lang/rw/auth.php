@@ -43,6 +43,15 @@ return [
     'already_registered' => 'Ubu ufite konti?',
     'sign_in' => 'Injira',
     
+    // Register page
+    'register' => [
+        'account_exists' => 'Konti isanzweho',
+        'account_exists_message' => 'Hari konti isanzwe ifite iyi imeyiri :email. Urashaka kwinjira?',
+        'sign_in_instead' => 'Injira ',
+        'creating_account' => 'Biri gukorwa...',
+        'error_occurred' => 'Habaye ikibazo. Ongera ugerageze.'
+    ],
+    
     // Forgot Password Page
     'forgot_password_page' => [
         'title' => 'Guhindura ijambo ry\'ibanga',
@@ -100,21 +109,23 @@ return [
     
     // Errors
     'errors' => [
-        'invalid_credentials' => 'Imeri cyangwa ijambo ry\'ibanga ntabwo aribyo',
-        'email_exists' => 'Konti isanzweho. Mujye aho binjirira.',
-        'password_mismatch' => 'Amajambo y\'ibanga ntabwo arahuje',
-        'weak_password' => 'Ijambo ry\'ibanga kagomba kuba inyuguti 6 byibura',
+        'invalid_credentials' => 'Imeri cyangwa ijambo ry\'ibanga utanze ntabwo aribyo.',
+        'email_exists' => 'Hari konti isanzwe ifite iyi imeri. Mwakwinjira?',
+        'password_mismatch' => 'Amajambo y\'ibanga utanze ntabwo ahuje.',
+        'weak_password' => 'Ijambo ry\'ibanga rigomba kuba inyuguti 6 n\'umubare umwe byibura',
+        'validation' => [
+            'min' => [
+                'string' => ':attribute igomba kuba inyuguti :min byibura.'
+            ]
+        ],
         'invalid_email' => 'Andika imeri yemewe'
     ],
     
     // Password validation messages
     'password_requirements' => [
         'title' => 'Ijambo ry\'ibanga kagomba kuba rifite:',
-        'length' => 'Inyuguti 8 byibura',
-        'uppercase' => 'Inyuguti nkuru imwe byibura',
-        'lowercase' => 'Inyuguti nto imwe byibura',
-        'number' => 'Umubare umwe byibura',
-        'special' => 'Inyuguti idasanzwe imwe (!@#$%^&*) byibura',
+        'length' => 'Inyuguti 6 byibura',
+        'letter_number_required' => 'Umubare umwe byibura',
         'strength' => [
             'weak' => 'Ntarengwa',
             'medium' => 'Iragerageza',
