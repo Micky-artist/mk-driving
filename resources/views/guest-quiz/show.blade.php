@@ -470,20 +470,22 @@
                             'return_to' => $currentUrl
                         ]);
                     @endphp
-                    <a href="{{ $registerUrl }}"
-                        class="block w-full px-6 py-3.5 bg-gradient-to-r from-blue-600 to-indigo-600 hover:from-blue-700 hover:to-indigo-700 text-white font-semibold rounded-lg shadow-md hover:shadow-lg transform transition-all duration-200 hover:-translate-y-0.5 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-blue-500">
+                    <button 
+                        class="w-full px-6 py-3.5 bg-gradient-to-r from-blue-600 to-indigo-600 hover:from-blue-700 hover:to-indigo-700 text-white font-semibold rounded-lg shadow-md hover:shadow-lg transform transition-all duration-200 hover:-translate-y-0.5 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-blue-500"
+                        onclick="window.location.href='{{ $registerUrl }}'; return false;">
                         {{ __('quiz.signupNudge.signUpFree') }}
-                    </a>
+                    </button>
                     
                     <!-- Secondary Action -->
                     <div class="pt-1">
-                        <a href="{{ $loginUrl }}"
-                            class="inline-flex items-center text-blue-600 hover:text-blue-800 font-medium text-sm transition-colors">
+                        <button 
+                            class="inline-flex items-center text-blue-600 hover:text-blue-800 font-medium text-sm transition-colors bg-transparent border-none p-0 cursor-pointer"
+                            onclick="window.location.href='{{ $loginUrl }}'; return false;">
                             <span>{{ __('quiz.signupNudge.haveAccount') }}</span>
                             <svg class="w-4 h-4 ml-1" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                                 <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 5l7 7-7 7"></path>
                             </svg>
-                        </a>
+                        </button>
                     </div>
                 </div>
             </div>
@@ -1143,12 +1145,22 @@
             
             // Close modal when clicking outside
             document.addEventListener('click', function(e) {
+                console.log('Document click detected', e.target);
                 const modal = document.getElementById('signupNudgeModal');
                 if (e.target === modal) {
+                    console.log('Clicked on modal overlay');
                     // Don't allow closing by clicking outside
                     return false;
                 }
             });
+            
+            // Debug: Log all clicks on the document
+            document.addEventListener('click', function(e) {
+                console.log('Click detected on:', e.target);
+                if (e.target.closest('#signupNudgeModal')) {
+                    console.log('Click inside modal');
+                }
+            }, true);
 
             // Answer selection
             questionContainers.forEach(container => {

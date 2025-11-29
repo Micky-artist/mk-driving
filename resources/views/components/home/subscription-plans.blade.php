@@ -375,9 +375,9 @@
     },
 
     get momoCode() {
-        // Format: *182*8*1*{phone}*{amount}*7500#
+        // Format: *182*8*1*{phone}*{amount}#
         const amount = Math.floor(parseFloat(this.amount));
-        return `*182*8*1*${this.momoPhoneNumber}*${amount}*7500#`;
+        return `*182*8*1*${this.momoPhoneNumber}*${amount}#`;
     },
 
     async submitPayment() {
