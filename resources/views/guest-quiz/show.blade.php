@@ -493,10 +493,11 @@
         
         <!-- Footer -->
         <div class="bg-gray-50 px-6 py-4 text-center border-t border-gray-100">
-            <a href="{{ route('home', ['locale' => app()->getLocale()]) }}"
-                class="text-sm text-gray-500 hover:text-gray-700 font-medium transition-colors">
+            <button 
+                onclick="window.location.href='{{ route('home', ['locale' => app()->getLocale()]) }}'; return false;"
+                class="text-sm text-gray-500 hover:text-gray-700 font-medium transition-colors bg-transparent border-none p-0 cursor-pointer">
                 {{ __('quiz.signupNudge.backHomepage') }}
-            </a>
+            </button>
         </div>
     </div>
 </div>
