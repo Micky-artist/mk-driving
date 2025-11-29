@@ -3,7 +3,7 @@
 return [
     'hero' => [
         'title' => 'Ishuri ry\'ikinyarwanda ryo kwiga kudirisha',
-        'subtitle' => 'Korana n\'ibibazo bya nyakuri. Kwiga vuba kandi ukageza ibyemezo n\'umutekano',
+        'subtitle' => 'Korana n\'ibibazo by\'ukuri. Kwiga vuba kandi ugakora wiyizeye',
         'get_started' => 'Tangira nonaha',
         'learn_more' => 'Menya byinshi',
         'trusted_by' => 'Byizewe na',
@@ -18,7 +18,7 @@ return [
         'subtitle' => 'Ibyiza twatanga abanyeshuri',
         'feature1' => [
             'title' => 'Kwigisha kwihuse',
-            'description' => 'Kwiga vuba kandi ukageza ibyemezo n\'umutekano',
+            'description' => 'Kwiga vuba kandi ukazakora wiyizeye',
         ],
         'feature2' => [
             'title' => 'Abarimu b\'abahanga',

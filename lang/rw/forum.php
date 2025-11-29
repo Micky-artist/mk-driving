@@ -94,7 +94,7 @@ return [
     
     // Footer
     'footer' => [
-        'tagline' => 'Umutekano wawe ku nzira ni intego yacu. Twifashishije ubumenyi n\'ubuhanga, turadukora neza kugirango dukomeze kubaha serivisi nziza kandi yizewe mu kwiga kugendera neza.',
+        'tagline' => 'Umutekano wawe mu muhanda ni intego yacu. Twishimira kubaha serivisi nziza kandi zizewe mu kwiga amategeko y\'umuhanda.',
         'quick_links' => 'Amahuza y\'ihuse',
         'contact_us' => 'Twandikire',
         'all_rights_reserved' => 'Amategeko y\'uburenganzira yaraziguye',
@@ -103,7 +103,7 @@ return [
         'cookie_policy' => 'Ingengo ya cookies',
         'newsletter' => [
             'title' => 'Menya ibishya',
-            'description' => 'Kwiyandikisha kuri newsleteri yacu kugirango ubone amakuru mashya n\'ubujyanama bwo kugendera neza',
+            'description' => 'Kwiyandikisha kuri newsleteri yacu kugirango ubone amakuru mashya n\'ubujyanama bwo gutwara neza',
             'placeholder' => 'Andika imeri yawe',
             'subscribe' => 'Kwiyandikisha',
             'success' => 'Murakoze kwiyandikisha!',
