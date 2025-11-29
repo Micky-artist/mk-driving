@@ -18,6 +18,8 @@ return [
     'copied_to_clipboard' => 'Yakopiwe!',
     'copied' => 'Yakopiwe!',
     'download_receipt' => 'Bika inyemezabuguzi',
+    'pay_amount' => 'Ishyura',
+    'to_subscribe' => 'kugirango wiyandikishe',
     
     'momo_instructions' => [
         'title' => 'Amabwiriza yo kwishyura kuri Mobile Money',

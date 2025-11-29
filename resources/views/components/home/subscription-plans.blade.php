@@ -538,7 +538,7 @@
                         <h2 class="text-lg sm:text-2xl font-bold text-white truncate" id="modal-title" x-text="planName">
                         </h2>
                         <p class="mt-0.5 text-sm sm:text-base text-blue-100 whitespace-normal break-words"
-                            x-text="'Pay ' + currency + ' ' + amount.toLocaleString() + ' to subscribe'"></p>
+                            x-text="'{{ __('payment.pay_amount') }}: ' + currency + ' ' + amount.toLocaleString() + ' {{ __('payment.to_subscribe') }}'"></p>
                     </div>
                     <button type="button" class="text-blue-200 hover:text-white focus:outline-none"
                         @click="closeModal()" :disabled="isLoading">

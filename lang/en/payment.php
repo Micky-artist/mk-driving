@@ -18,6 +18,8 @@ return [
     'copied_to_clipboard' => 'Copied to clipboard!',
     'copied' => 'Copied!',
     'download_receipt' => 'Download Receipt',
+    'pay_amount' => 'Pay',
+    'to_subscribe' => 'to subscribe',
     'momo_instructions' => [
         'title' => 'Mobile Money Payment Instructions',
         'step1' => 'Dial *182# on your phone',
