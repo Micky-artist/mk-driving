@@ -24,7 +24,39 @@
     <meta name="viewport" content="width=device-width, initial-scale=1">
     <meta name="csrf-token" content="{{ csrf_token() }}">
 
-    <title>{{ config('app.name', 'MK Driving') }}</title>
+    <title>{{ config('app.name', 'MK Driving School') }}</title>
+
+    <!-- General Meta Tags -->
+    <meta name="description" content="Prepare for your driving test with MK Driving - The best way to practice and pass your driving theory test in Rwanda">
+    
+    <!-- Open Graph / Social Media Meta Tags (used by Facebook, Instagram, WhatsApp, etc.) -->
+    <meta property="og:title" content="{{ config('app.name', 'MK Driving School') }} - Pass Your Driving Test in Rwanda">
+    <meta property="og:description" content="🚗✨ Prepare & pass your driving test with MK Driving School. Practice tests, expert tips, and everything you need to get your driver's license in Rwanda!">
+    <meta property="og:image" content="{{ url('/og-image.png') }}">
+    <meta property="og:image:width" content="1200">
+    <meta property="og:image:height" content="630">
+    <meta property="og:url" content="{{ url()->current() }}">
+    <meta property="og:type" content="website">
+    <meta property="og:site_name" content="MK Driving School">
+    
+    <!-- WhatsApp Specific -->
+    <meta property="og:image:secure_url" content="{{ url('/og-image.png') }}">
+    <meta property="og:image:alt" content="MK Driving School - Pass Your Driving Test in Rwanda">
+    
+    <!-- Twitter Card Meta Tags -->
+    <meta name="twitter:card" content="summary_large_image">
+    <meta name="twitter:title" content="{{ config('app.name', 'MK Driving School') }} - Pass Your Driving Test in Rwanda">
+    <meta name="twitter:description" content="🚗✨ Prepare & pass your driving test with MK Driving School. Practice tests, expert tips, and everything you need to get your driver's license in Rwanda!">
+    <meta name="twitter:image" content="{{ url('/og-image.png') }}">
+    
+    <!-- Additional Meta Tags for Better Sharing -->
+    <meta name="theme-color" content="#1a365d"> <!-- Dark blue from your color scheme -->
+    <meta name="mobile-web-app-capable" content="yes">
+    <meta name="apple-mobile-web-app-title" content="MK Driving">
+    <meta name="apple-mobile-web-app-status-bar-style" content="default">
+    <meta name="apple-mobile-web-app-capable" content="yes">
+    <meta name="application-name" content="MK Driving">
+    <meta name="msapplication-TileColor" content="#1a365d">
 
     <!-- Favicon -->
     <link rel="icon" type="image/png" href="{{ asset('favicon.ico') }}">
