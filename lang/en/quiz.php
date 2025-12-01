@@ -198,6 +198,19 @@ return [
     
     // Quiz Navigation
     'next' => 'Next',
+    
+    // Quiz Limit Messages
+    'quizLimitReached' => 'Daily Quiz Limit Reached',
+    'quizLimitMessage' => 'You can retake this quiz in :time. Upgrade to a premium plan for unlimited practice!',
+    'upgradeForUnlimited' => 'Unlock unlimited quiz attempts and access to all premium features.',
+    'upgradeNow' => 'Upgrade Now',
+    'cancel' => 'Cancel',
+    'resetRestricted' => 'Reset Restricted',
+    'resetRestrictedMessage' => 'To reset this quiz, please upgrade to a premium plan for unlimited attempts and features.',
+    'upgradeBenefits' => 'Premium Benefits',
+    'unlimitedAttempts' => 'Unlimited quiz attempts',
+    'noWaitingTime' => 'No waiting time between attempts',
+    'fullAccess' => 'Full access to all premium features',
     'auto' => 'Auto Next',
     'previous' => 'Previous',
     'resetQuiz' => 'Reset Quiz',

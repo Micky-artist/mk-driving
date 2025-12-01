@@ -195,6 +195,38 @@ class QuizController extends Controller
 
         return $activeSubscription;
     }
+    
+    /**
+     * Check if user can retake the quiz
+     */
+    protected function canRetakeQuiz($user, $quiz)
+    {
+        // Admins can always retake
+        if ($user->isAdmin()) {
+            return true;
+        }
+
+        // Check if user has an active subscription
+        $hasActiveSubscription = $user->activeSubscriptions()->exists();
+        if ($hasActiveSubscription) {
+            return true;
+        }
+
+        // For free users, check last attempt time
+        $lastAttempt = $user->quizAttempts()
+            ->where('quiz_id', $quiz->id)
+            ->whereNotNull('completed_at')
+            ->latest('completed_at')
+            ->first();
+
+        // If no previous attempts, allow taking the quiz
+        if (!$lastAttempt) {
+            return true;
+        }
+
+        // Check if 24 hours have passed since last attempt
+        return $lastAttempt->completed_at->addHours(24)->isPast();
+    }
 
     /**
      * Get quizzes filtered by status and user's subscription
@@ -290,7 +322,7 @@ class QuizController extends Controller
         // Direct database query for the first question's options
         if ($quiz->questions->isNotEmpty()) {
             $firstQuestion = $quiz->questions->first();
-            $directOptions = \DB::table('options')
+            $directOptions = DB::table('options')
                 ->where('question_id', $firstQuestion->id)
                 ->get();
                 
@@ -338,6 +370,26 @@ class QuizController extends Controller
         });
 
         if (!$activeAttempt) {
+            // Check if user can retake the quiz before creating a new attempt
+            $canRetake = $this->canRetakeQuiz($user, $quiz);
+            $hasActiveSubscription = $user->activeSubscriptions()->exists();
+            
+            if (!$canRetake && !$hasActiveSubscription) {
+                $lastAttempt = $user->quizAttempts()
+                    ->where('quiz_id', $quiz->id)
+                    ->whereNotNull('completed_at')
+                    ->latest('completed_at')
+                    ->first();
+                    
+                if ($lastAttempt) {
+                    $nextRetakeTime = $lastAttempt->completed_at->addHours(24);
+                    return redirect()->route('dashboard.quizzes.index')
+                        ->with('error', __('quiz.quizLimitReached') . ' ' . __('quiz.quizLimitMessage', [
+                            'time' => $nextRetakeTime->diffForHumans()
+                        ]));
+                }
+            }
+            
             $activeAttempt = $user->quizAttempts()->create([
                 'quiz_id' => $quiz->id,
                 'started_at' => now(),
@@ -356,6 +408,23 @@ class QuizController extends Controller
         
         // Get user's current streak
         $userStreak = $user->getCurrentStreak();
+        
+        // Check if user can retake the quiz
+        $canRetake = $this->canRetakeQuiz($user, $quiz);
+        $nextRetakeTime = null;
+        $hasActiveSubscription = $user->activeSubscriptions()->exists();
+        
+        if (!$canRetake && !$hasActiveSubscription) {
+            $lastAttempt = $user->quizAttempts()
+                ->where('quiz_id', $quiz->id)
+                ->whereNotNull('completed_at')
+                ->latest('completed_at')
+                ->first();
+                
+            if ($lastAttempt) {
+                $nextRetakeTime = $lastAttempt->completed_at->addHours(24);
+            }
+        }
 
         return view('dashboard.quizzes.show', [
             'quiz' => $quiz,
@@ -365,7 +434,10 @@ class QuizController extends Controller
             'isBookmarked' => $isBookmarked,
             'userAttempts' => $userAttempts,
             'bestScore' => $bestScore,
-            'userStreak' => $userStreak
+            'userStreak' => $userStreak,
+            'canRetake' => $canRetake,
+            'nextRetakeTime' => $nextRetakeTime,
+            'hasActiveSubscription' => $hasActiveSubscription
         ]);
     }
     

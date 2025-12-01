@@ -1,10 +1,14 @@
 <?php
 
 return [
+    'availableQuizzes' => 'Imyitozo mufite',
+    'viewAll' => 'Yirebe yose',
+    'inProgress' => 'Ibyo uri kwitoza',
+    'continueLearning' => 'Komeza kwitoza',
     'title' => 'Imodoka',
     'status' => 'Imimerere',
     'welcome_back' => 'Murakaza neza',
-    'welcome_message' => 'Komeza imyotozo y\'amategeko y\'umuhanda',
+    'welcome_message' => 'Komeza imyitozo y\'amategeko y\'umuhanda',
     'days_remaining' => 'Hasigaye :days',
     'current_subscription' => 'Ifatabuguzi ryawe',
     'valid_until' => 'Kugeza',
@@ -16,9 +20,9 @@ return [
     'no_time_limit' => 'Nta mpera y\'igihe',
     'time_limit' => 'Mu iminota: :minutes',
     'stats' => [
-        'total_quizzes' => 'Imyotozo yose',
+        'total_quizzes' => 'Imyitozo yose',
         'completed' => 'Byarangiye',
-        'in_progress' => 'Biri mu nzira',
+        'in_progress' => 'Ibyo uri kwitoza',
         'average_score' => 'Amanota muri rusange',
     ],
     'navigation' => [
@@ -45,7 +49,7 @@ return [
         'locked' => 'Yafungijwe',
         'continue_learning' => 'Komeza kwiga',
         'recently_completed' => 'Byarangiye vuba aha',
-        'average_score' => 'Inyungu zisanzwe',
+        'average_score' => 'Amanota mufite',
         'attempts' => 'Igerageza',
         'started_on' => 'Byatangiye ku',
         'min' => 'min',

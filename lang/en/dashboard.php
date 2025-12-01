@@ -1,6 +1,10 @@
 <?php
 
 return [
+    'availableQuizzes' => 'Available Quizzes',
+    'viewAll' => 'View all',
+    'inProgress' => 'In Progress',
+    'continueLearning' => 'Continue learning',
     'title' => 'Dashboard',
     'status' => 'Status',
     'welcome_back' => 'Welcome back',

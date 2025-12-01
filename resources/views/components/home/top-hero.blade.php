@@ -80,13 +80,23 @@
                             
                             <!-- CTA Button -->
                             <div class="relative z-50 mt-4">
-                                <a href="{{ route('guest-quiz.show', ['locale' => app()->getLocale(), 'quiz' => 11]) }}"
-                                    class="block w-full text-center bg-gradient-to-r from-yellow-400 to-yellow-500 text-blue-900 font-bold py-2 px-4 rounded hover:from-yellow-300 hover:to-yellow-400 transition-all duration-300 transform group-hover:scale-[1.02] shadow-md hover:shadow-yellow-500/30">
-                                    {{ $ctaText }}
-                                    <svg class="inline-block ml-2 w-4 h-4" fill="none" stroke="currentColor" stroke-width="3" viewBox="0 0 24 24">
-                                        <path stroke-linecap="round" stroke-linejoin="round" d="M17 8l4 4m0 0l-4 4m4-4H3"></path>
-                                    </svg>
-                                </a>
+                                @auth
+                                    <a href="/{{ app()->getLocale() }}/dashboard"
+                                        class="block w-full text-center bg-gradient-to-r from-yellow-400 to-yellow-500 text-blue-900 font-bold py-2 px-4 rounded hover:from-yellow-300 hover:to-yellow-400 transition-all duration-300 transform group-hover:scale-[1.02] shadow-md hover:shadow-yellow-500/30">
+                                        {{ $ctaText }}
+                                        <svg class="inline-block ml-2 w-4 h-4" fill="none" stroke="currentColor" stroke-width="3" viewBox="0 0 24 24">
+                                            <path stroke-linecap="round" stroke-linejoin="round" d="M17 8l4 4m0 0l-4 4m4-4H3"></path>
+                                        </svg>
+                                    </a>
+                                @else
+                                    <a href="{{ route('guest-quiz.show', ['locale' => app()->getLocale(), 'quiz' => 11]) }}"
+                                        class="block w-full text-center bg-gradient-to-r from-yellow-400 to-yellow-500 text-blue-900 font-bold py-2 px-4 rounded hover:from-yellow-300 hover:to-yellow-400 transition-all duration-300 transform group-hover:scale-[1.02] shadow-md hover:shadow-yellow-500/30">
+                                        {{ $ctaText }}
+                                        <svg class="inline-block ml-2 w-4 h-4" fill="none" stroke="currentColor" stroke-width="3" viewBox="0 0 24 24">
+                                            <path stroke-linecap="round" stroke-linejoin="round" d="M17 8l4 4m0 0l-4 4m4-4H3"></path>
+                                        </svg>
+                                    </a>
+                                @endauth
                             </div>
                         </div>
                         

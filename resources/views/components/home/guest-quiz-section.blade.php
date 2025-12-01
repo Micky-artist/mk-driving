@@ -203,15 +203,27 @@
             <!-- CTA Button -->
             <div class="text-center" x-init="console.log('CTA section mounted', { showAnswer: $data.showAnswer })">
                 <template x-if="!showAnswer" x-init="console.log('Initial CTA visible')">
-                    <a href="{{ route('guest-quiz.show', ['locale' => app()->getLocale(), 'quiz' => $guestQuiz['id']]) }}"
-                        class="inline-flex items-center justify-center w-full bg-gradient-to-r from-blue-600 to-blue-700 hover:from-blue-700 hover:to-blue-800 text-white font-medium py-3 px-6 rounded-lg shadow-md hover:shadow-lg transition-all duration-300 transform hover:-translate-y-0.5 relative z-10">
-                        {{ __('quiz.guestQuiz.startFullQuiz') }}
-                        <svg class="w-4 h-4 ml-2 -mr-1" fill="currentColor" viewBox="0 0 20 20">
-                            <path fill-rule="evenodd"
-                                d="M10.293 5.293a1 1 0 011.414 0l4 4a1 1 0 010 1.414l-4 4a1 1 0 01-1.414-1.414L12.586 11H5a1 1 0 110-2h7.586l-2.293-2.293a1 1 0 010-1.414z"
-                                clip-rule="evenodd" />
-                        </svg>
-                    </a>
+                    @auth
+                        <a href="/{{ app()->getLocale() }}/dashboard/quizzes/11"
+                            class="inline-flex items-center justify-center w-full bg-gradient-to-r from-blue-600 to-blue-700 hover:from-blue-700 hover:to-blue-800 text-white font-medium py-3 px-6 rounded-lg shadow-md hover:shadow-lg transition-all duration-300 transform hover:-translate-y-0.5 relative z-10">
+                            {{ __('quiz.guestQuiz.startFullQuiz') }}
+                            <svg class="w-4 h-4 ml-2 -mr-1" fill="currentColor" viewBox="0 0 20 20">
+                                <path fill-rule="evenodd"
+                                    d="M10.293 5.293a1 1 0 011.414 0l4 4a1 1 0 010 1.414l-4 4a1 1 0 01-1.414-1.414L12.586 11H5a1 1 0 110-2h7.586l-2.293-2.293a1 1 0 010-1.414z"
+                                    clip-rule="evenodd" />
+                            </svg>
+                        </a>
+                    @else
+                        <a href="{{ route('guest-quiz.show', ['locale' => app()->getLocale(), 'quiz' => $guestQuiz['id']]) }}"
+                            class="inline-flex items-center justify-center w-full bg-gradient-to-r from-blue-600 to-blue-700 hover:from-blue-700 hover:to-blue-800 text-white font-medium py-3 px-6 rounded-lg shadow-md hover:shadow-lg transition-all duration-300 transform hover:-translate-y-0.5 relative z-10">
+                            {{ __('quiz.guestQuiz.startFullQuiz') }}
+                            <svg class="w-4 h-4 ml-2 -mr-1" fill="currentColor" viewBox="0 0 20 20">
+                                <path fill-rule="evenodd"
+                                    d="M10.293 5.293a1 1 0 011.414 0l4 4a1 1 0 010 1.414l-4 4a1 1 0 01-1.414-1.414L12.586 11H5a1 1 0 110-2h7.586l-2.293-2.293a1 1 0 010-1.414z"
+                                    clip-rule="evenodd" />
+                            </svg>
+                        </a>
+                    @endauth
                 </template>
 
                 <template x-if="showAnswer" x-init="console.log('Post-answer UI visible', { isCorrect: $data.isCorrect })">
@@ -222,31 +234,30 @@
                             </p>
                         </div>
 
-                        @guest
-                            <div class="bg-blue-50 dark:bg-blue-900/20 border border-blue-200 dark:border-blue-800 rounded-lg p-4 mb-4">
-    <p class="text-green-600 dark:text-green-400 font-medium mb-4 text-center">
-        {{ __('home.guestQuiz.challenge_yourself') }}
-    </p>
-    <a href="{{ route('guest-quiz.show', ['locale' => app()->getLocale(), 'quiz' => 11]) }}"
-       class="w-full inline-flex items-center justify-center bg-gradient-to-r from-blue-600 to-blue-700 hover:from-blue-700 hover:to-blue-800 text-white font-medium py-2 px-6 rounded-lg shadow-md hover:shadow-lg transition-all duration-300 transform hover:-translate-y-0.5">
-        {{ __('home.guestQuiz.startQuiz') }}
-        <svg class="w-4 h-4 ml-2" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M14 5l7 7m0 0l-7 7m7-7H3"></path>
-        </svg>
-    </a>
-</div>
-                        @else
-                            <a href="{{ route('guest-quiz.show', ['locale' => app()->getLocale(), 'quiz' => $guestQuiz['id']]) }}"
+                        @auth
+                            <a href="/{{ app()->getLocale() }}/dashboard/quizzes/11"
                                 class="inline-flex items-center justify-center w-full bg-gradient-to-r from-blue-600 to-blue-700 hover:from-blue-700 hover:to-blue-800 text-white font-medium py-3 px-6 rounded-lg shadow-lg hover:shadow-xl transition-all duration-300 transform hover:scale-105">
-                                <span
-                                    x-text="isCorrect ? `🚀 ${@js(__('home.guestQuiz.continue_streak'))}` : `💪 ${@js(__('home.guestQuiz.challenge_yourself'))}`"></span>
+                                <span>{{ __('home.guestQuiz.challenge_yourself') }}</span>
                                 <svg class="w-5 h-5 ml-2 animate-pulse" fill="none" stroke="currentColor"
                                     viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg">
                                     <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
                                         d="M13 7l5 5m0 0l-5 5m5-5H6"></path>
                                 </svg>
                             </a>
-                        @endguest
+                        @else
+                            <div class="bg-blue-50 dark:bg-blue-900/20 border border-blue-200 dark:border-blue-800 rounded-lg p-4 mb-4">
+                                <p class="text-green-600 dark:text-green-400 font-medium mb-4 text-center">
+                                    {{ __('home.guestQuiz.challenge_yourself') }}
+                                </p>
+                                <a href="{{ route('guest-quiz.show', ['locale' => app()->getLocale(), 'quiz' => 11]) }}"
+                                   class="w-full inline-flex items-center justify-center bg-gradient-to-r from-blue-600 to-blue-700 hover:from-blue-700 hover:to-blue-800 text-white font-medium py-2 px-6 rounded-lg shadow-md hover:shadow-lg transition-all duration-300 transform hover:-translate-y-0.5">
+                                    {{ __('home.guestQuiz.startQuiz') }}
+                                    <svg class="w-4 h-4 ml-2" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M14 5l7 7m0 0l-7 7m7-7H3"></path>
+                                    </svg>
+                                </a>
+                            </div>
+                        @endauth
                     </div>
                 </template>
 

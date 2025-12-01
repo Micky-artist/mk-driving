@@ -290,7 +290,7 @@
                         <div>
                             <p
                                 class="text-sm font-medium text-gray-500 group-hover:text-blue-600 transition-colors truncate">
-                                {{ __('Available Quizzes') }}</p>
+                                {{ __('dashboard.availableQuizzes') }}</p>
                             <p
                                 class="mt-1 text-2xl font-semibold text-blue-600 group-hover:text-blue-700 transition-colors">
                                 {{ $stats['total_quizzes'] }}</p>
@@ -305,7 +305,7 @@
                     </div>
                     <div class="mt-2 text-right">
                         <span class="text-xs text-blue-500 font-medium inline-flex items-center">
-                            {{ __('View all') }}
+                            {{ __('dashboard.viewAll') }}
                             <svg xmlns="http://www.w3.org/2000/svg" class="h-3.5 w-3.5 ml-0.5" fill="none"
                                 viewBox="0 0 24 24" stroke="currentColor">
                                 <path stroke-linecap="round" stroke-linejoin="round" stroke-width="3" d="M9 5l7 7-7 7" />
@@ -323,7 +323,7 @@
                         <div>
                             <p
                                 class="text-sm font-medium text-gray-500 group-hover:text-purple-600 transition-colors truncate">
-                                {{ __('In Progress') }}</p>
+                                {{ __('dashboard.inProgress') }}</p>
                             <p
                                 class="mt-1 text-2xl font-semibold text-purple-600 group-hover:text-purple-700 transition-colors">
                                 {{ $stats['in_progress_count'] }}</p>
@@ -339,7 +339,7 @@
                     </div>
                     <div class="mt-2 text-right">
                         <span class="text-xs text-purple-500 font-medium inline-flex items-center">
-                            {{ __('Continue learning') }}
+                            {{ __('dashboard.continueLearning') }}
                             <svg xmlns="http://www.w3.org/2000/svg" class="h-3.5 w-3.5 ml-0.5" fill="none"
                                 viewBox="0 0 24 24" stroke="currentColor">
                                 <path stroke-linecap="round" stroke-linejoin="round" stroke-width="3" d="M9 5l7 7-7 7" />

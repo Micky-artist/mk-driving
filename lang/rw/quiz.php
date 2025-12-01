@@ -121,7 +121,7 @@ return [
     'allQuestionsAnswered' => 'Byose byasubijwe',
     'questionsRemaining' => 'Hari ibibazo :count bisigaye',
     'questionNumber' => 'Ikibazo :current kuri :total',
-    'submitConfirmTitle' => 'Kohereza umwitozo?',
+    'submitConfirmTitle' => 'Kohereza ibisubizo?',
     'submitConfirmText' => 'Urazi neza ko ushaka kohereza ibisubizo byawe?',
     'cancel' => 'Hagarika',
     'confirm' => 'Emeza',
@@ -157,7 +157,7 @@ return [
     'exitQuiz' => 'Sohoka mu mwitozo',
     'previous' => 'Ikibanza',
     'next' => 'Igikurikira',
-    'submitQuiz' => 'Kohereza umwitozo',
+    'submitQuiz' => 'Kohereza ibisubizo',
     'correct' => 'Byagenze neza',
     'incorrect' => 'Ntibyagenze neza',
     'results' => 'Ibisubizo',
@@ -196,6 +196,19 @@ return [
         'backHomepage' => 'Subira Ahabanza',
         'close' => 'Funga'
     ],
+    
+    // Quiz Navigation
+    'quizLimitReached' => 'Kwituza by\'ubuntu by\'umunsi byarangiye!',
+    'quizLimitMessage' => 'Urashobora kongera mu :time. Ongera ifatabuguzi witoze bitarangira!',
+    'upgradeForUnlimited' => 'Wahitamo ifatabuguzi rikunogeye hano.',
+    'upgradeNow' => 'Iyongeze nonaha',
+    'cancel' => 'Hagarika',
+    'resetRestricted' => 'Gusubiramo ntibishoboka',
+    'resetRestrictedMessage' => 'Kugirango usubire gutangira uyu mwitozo, nyamuneka andikisha ifatabuguzi rikwemerera.',
+    'upgradeBenefits' => 'Icyiza cy\'ifatabuguzi',
+    'unlimitedAttempts' => 'Kugerageza imyitozo incuro zitarangira',
+    'noWaitingTime' => 'Ntagutegereza hagati yo kugerageza umwitozo',
+    'fullAccess' => 'Kubasha kwitozo n\'indi myitozo myinshi',
     
     // Quiz Navigation
     'next' => 'Igikurikira',
