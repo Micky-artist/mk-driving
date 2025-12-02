@@ -258,27 +258,37 @@
                                 @endforeach
                             </div>
 
-                            <div class="answer-feedback"></div>
-                        </div>
+                            <!-- Feedback section that will be shown after answer -->
+                            <div id="answer-feedback-{{ $question->id }}" class="hidden">
+                                <div x-data="{ showAnswer: false, isCorrect: false }" x-init="document.addEventListener('answer-selected', function(e) {
+                                    showAnswer = true;
+                                    isCorrect = e.detail.isCorrect;
+                                });">
+                                    <div x-show="showAnswer" class="space-y-4 mt-6">
+                                        <div x-show="isCorrect" class="animate-bounce">
+                                            <p class="text-green-600 dark:text-green-400 font-medium text-center">
+                                                🎉 {{ __('home.guestQuiz.great_job') }}
+                                            </p>
+                                        </div>
 
-                        <div class="flex justify-between pt-4 border-t border-gray-100">
-                            <button type="button"
-                                class="btn-prev px-4 py-2 bg-gray-100 text-gray-700 rounded-lg hover:bg-gray-200 transition-colors {{ $loop->first ? 'invisible' : '' }}">
-                                {{ __('quiz.previous') }}
-                            </button>
-
-                            @if ($loop->last)
-                                <button type="submit"
-                                    class="ml-auto px-6 py-2 bg-blue-600 text-white rounded-lg hover:bg-blue-700 transition-colors">
-                                    {{ __('quiz.submitQuiz') }}
-                                </button>
-                            @else
-                                <button type="button"
-                                    class="btn-next px-6 py-2 bg-blue-600 text-white rounded-lg hover:bg-blue-700 transition-colors opacity-50 cursor-not-allowed ml-auto"
-                                    disabled>
-                                    {{ __('quiz.next') }}
-                                </button>
-                            @endif
+                                        <div
+                                            class="bg-blue-50 dark:bg-blue-900/20 border border-blue-200 dark:border-blue-800 rounded-lg p-4">
+                                            <p class="text-green-600 dark:text-green-400 font-medium text-center mb-3">
+                                                {{ __('home.guestQuiz.challenge_yourself') }}
+                                            </p>
+                                            <button onclick="event.stopImmediatePropagation(); showSignupNudge(); return false;"
+                                                class="w-full inline-flex items-center justify-center bg-gradient-to-r from-blue-600 to-blue-700 hover:from-blue-700 hover:to-blue-800 text-white font-medium py-2 px-6 rounded-lg shadow-md hover:shadow-lg transition-all duration-300 transform hover:-translate-y-0.5">
+                                                {{ __('home.guestQuiz.startQuiz') }}
+                                                <svg class="w-4 h-4 ml-2" fill="none" stroke="currentColor"
+                                                    viewBox="0 0 24 24">
+                                                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
+                                                        d="M14 5l7 7m0 0l-7 7m7-7H3"></path>
+                                                </svg>
+                                            </button>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
                         </div>
                     </div>
                 @endforeach
@@ -413,114 +423,131 @@
                     </div>
                 </div>
             @endauth
-
-            <!-- Action Buttons -->
-            <div class="flex flex-col sm:flex-row gap-3">
-                <button id="reviewAnswers"
-                    class="flex-1 px-4 sm:px-6 py-2 sm:py-3 bg-blue-600 text-white font-semibold rounded-lg hover:bg-blue-700 transition-colors text-sm sm:text-base">
-                    {{ __('quiz.reviewAnswers') }}
-                </button>
-                <button id="resetFromResults"
-                    class="flex-1 px-4 sm:px-6 py-2 sm:py-3 bg-gray-100 text-gray-700 font-semibold rounded-lg hover:bg-gray-200 transition-colors text-sm sm:text-base">
-                    {{ __('quiz.takeQuizAgain') }}
-                </button>
-            </div>
         </div>
     </div>
 @endsection
 
 <!-- Signup Nudge Modal - Only show for guests -->
 @guest
-<div id="signupNudgeModal"
-    class="fixed inset-0 bg-black/70 backdrop-blur-sm z-50 flex items-center justify-center p-4 opacity-0 transition-opacity duration-300 pointer-events-none">
-    <div class="bg-gradient-to-br from-white to-blue-50 rounded-2xl max-w-md w-full overflow-hidden shadow-2xl transform transition-all duration-300 scale-95"
-        style="box-shadow: 0 20px 25px -5px rgba(0, 0, 0, 0.1), 0 10px 10px -5px rgba(0, 0, 0, 0.04);">
-        <!-- Decorative elements -->
-        <div class="absolute top-0 left-0 w-full h-2 bg-gradient-to-r from-blue-500 to-indigo-600"></div>
-        <div class="absolute -top-10 -right-10 w-24 h-24 rounded-full bg-blue-100 opacity-30"></div>
-        <div class="absolute -bottom-8 -left-8 w-20 h-20 rounded-full bg-indigo-100 opacity-30"></div>
+    <div id="signupNudgeModal"
+        class="fixed inset-0 bg-black/70 backdrop-blur-sm z-50 flex items-center justify-center p-4 opacity-0 transition-opacity duration-300 pointer-events-none">
+        <div class="bg-gradient-to-br from-white to-blue-50 rounded-2xl max-w-md w-full overflow-hidden shadow-2xl transform transition-all duration-300 scale-95"
+            style="box-shadow: 0 20px 25px -5px rgba(0, 0, 0, 0.1), 0 10px 10px -5px rgba(0, 0, 0, 0.04);">
+            <!-- Decorative elements -->
+            <div class="absolute top-0 left-0 w-full h-2 bg-gradient-to-r from-blue-500 to-indigo-600"></div>
+            <div class="absolute -top-10 -right-10 w-24 h-24 rounded-full bg-blue-100 opacity-30"></div>
+            <div class="absolute -bottom-8 -left-8 w-20 h-20 rounded-full bg-indigo-100 opacity-30"></div>
 
-        <div class="relative z-10 p-8">
+            <div class="relative z-10 p-8">
 
-            <!-- Content -->
-            <div class="text-center">
-                <!-- Animated Checkmark -->
-                <div class="mx-auto flex items-center justify-center h-20 w-20 rounded-full bg-gradient-to-br from-blue-100 to-indigo-100 mb-6 transform transition-all duration-500 hover:scale-110">
-                    <div class="relative">
-                        <svg class="w-10 h-10 text-blue-600" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
-                                d="M5 13l4 4L19 7"></path>
-                        </svg>
-                    </div>
-                </div>
-                
-                <h3 class="text-2xl font-bold text-gray-900 mb-3 font-sans">{{ __('quiz.signupNudge.title') }}</h3>
-                <p class="text-gray-600 mb-6 leading-relaxed">{{ __('quiz.signupNudge.message') }}</p>
-
-                <div class="space-y-4">
-                    <!-- Primary CTA -->
-                    @php
-                        $currentUrl = url()->current();
-                        $registerUrl = route('register', [
-                            'locale' => app()->getLocale(),
-                            'return_to' => $currentUrl
-                        ]);
-                        $loginUrl = route('login', [
-                            'locale' => app()->getLocale(),
-                            'return_to' => $currentUrl
-                        ]);
-                    @endphp
-                    <button 
-                        class="w-full px-6 py-3.5 bg-gradient-to-r from-blue-600 to-indigo-600 hover:from-blue-700 hover:to-indigo-700 text-white font-semibold rounded-lg shadow-md hover:shadow-lg transform transition-all duration-200 hover:-translate-y-0.5 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-blue-500"
-                        onclick="window.location.href='{{ $registerUrl }}'; return false;">
-                        {{ __('quiz.signupNudge.signUpFree') }}
-                    </button>
-                    
-                    <!-- Secondary Action -->
-                    <div class="pt-1">
-                        <button 
-                            class="inline-flex items-center text-blue-600 hover:text-blue-800 font-medium text-sm transition-colors bg-transparent border-none p-0 cursor-pointer"
-                            onclick="window.location.href='{{ $loginUrl }}'; return false;">
-                            <span>{{ __('quiz.signupNudge.haveAccount') }}</span>
-                            <svg class="w-4 h-4 ml-1" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 5l7 7-7 7"></path>
+                <!-- Content -->
+                <div class="text-center">
+                    <!-- Animated Checkmark -->
+                    <div
+                        class="mx-auto flex items-center justify-center h-20 w-20 rounded-full bg-gradient-to-br from-blue-100 to-indigo-100 mb-6 transform transition-all duration-500 hover:scale-110">
+                        <div class="relative">
+                            <svg class="w-10 h-10 text-blue-600" fill="none" stroke="currentColor"
+                                viewBox="0 0 24 24">
+                                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M5 13l4 4L19 7">
+                                </path>
                             </svg>
+                        </div>
+                    </div>
+
+                    <h3 class="text-2xl font-bold text-gray-900 mb-3 font-sans">{{ __('quiz.signupNudge.title') }}</h3>
+                    <p class="text-gray-600 mb-6 leading-relaxed">{{ __('quiz.signupNudge.message') }}</p>
+
+                    <div class="space-y-4">
+                        <!-- Primary CTA -->
+                        @php
+                            $currentUrl = url()->current();
+                            $registerUrl = route('register', [
+                                'locale' => app()->getLocale(),
+                                'return_to' => $currentUrl,
+                            ]);
+                            $loginUrl = route('login', [
+                                'locale' => app()->getLocale(),
+                                'return_to' => $currentUrl,
+                            ]);
+                        @endphp
+                        <button
+                            class="w-full px-6 py-3.5 bg-gradient-to-r from-blue-600 to-indigo-600 hover:from-blue-700 hover:to-indigo-700 text-white font-semibold rounded-lg shadow-md hover:shadow-lg transform transition-all duration-200 hover:-translate-y-0.5 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-blue-500"
+                            onclick="window.location.href='{{ $registerUrl }}'; return false;">
+                            {{ __('quiz.signupNudge.signUpFree') }}
                         </button>
+
+                        <!-- Secondary Action -->
+                        <div class="pt-1">
+                            <button
+                                class="inline-flex items-center text-blue-600 hover:text-blue-800 font-medium text-sm transition-colors bg-transparent border-none p-0 cursor-pointer"
+                                onclick="window.location.href='{{ $loginUrl }}'; return false;">
+                                <span>{{ __('quiz.signupNudge.haveAccount') }}</span>
+                                <svg class="w-4 h-4 ml-1" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
+                                        d="M9 5l7 7-7 7"></path>
+                                </svg>
+                            </button>
+                        </div>
                     </div>
                 </div>
             </div>
-        </div>
-        
-        <!-- Footer -->
-        <div class="bg-gray-50 px-6 py-4 text-center border-t border-gray-100">
-            <button 
-                onclick="window.location.href='{{ route('home', ['locale' => app()->getLocale()]) }}'; return false;"
-                class="text-sm text-gray-500 hover:text-gray-700 font-medium transition-colors bg-transparent border-none p-0 cursor-pointer">
-                {{ __('quiz.signupNudge.backHomepage') }}
-            </button>
+
+            <!-- Footer -->
+            <div class="bg-gray-50 px-6 py-4 text-center border-t border-gray-100">
+                <button
+                    onclick="window.location.href='{{ route('home', ['locale' => app()->getLocale()]) }}'; return false;"
+                    class="text-sm text-gray-500 hover:text-gray-700 font-medium transition-colors bg-transparent border-none p-0 cursor-pointer">
+                    {{ __('quiz.signupNudge.backHomepage') }}
+                </button>
+            </div>
         </div>
     </div>
-</div>
 @endguest
 
 <style>
     @keyframes fadeIn {
-        from { opacity: 0; transform: translateY(10px); }
-        to { opacity: 1; transform: translateY(0); }
+        from {
+            opacity: 0;
+            transform: translateY(10px);
+        }
+
+        to {
+            opacity: 1;
+            transform: translateY(0);
+        }
     }
-    
+
     #signupNudgeModal.active {
         opacity: 1;
         pointer-events: auto;
     }
-    
-    #signupNudgeModal.active > div {
+
+    #signupNudgeModal.active>div {
         animation: fadeIn 0.4s cubic-bezier(0.4, 0, 0.2, 1) forwards;
     }
 </style>
 
 @push('scripts')
     <script>
+        // Make the function globally available
+        window.showSignupNudge = function() {
+            const modal = document.getElementById('signupNudgeModal');
+            if (modal) {
+                modal.style.display = 'flex';
+                modal.style.opacity = '1';
+                modal.style.pointerEvents = 'auto';
+                document.body.style.overflow = 'hidden';
+            }
+            return false; // Prevent default action
+        };
+
+        // Remove any existing click handlers
+        document.addEventListener('DOMContentLoaded', function() {
+            document.querySelectorAll('button[onclick*="showSignupNudge"]').forEach(button => {
+                button.onclick = null;
+                button.addEventListener('click', window.showSignupNudge);
+            });
+        });
         document.addEventListener('DOMContentLoaded', function() {
             // Localized messages
             const messages = {
@@ -556,7 +583,7 @@
             let isQuizCompleted = false;
             let isQuizLocked = false;
             let hasAnsweredQuestion = false;
-            
+
             // Function to show the signup nudge modal
             const showNudge = () => {
                 const modal = document.getElementById('signupNudgeModal');
@@ -571,22 +598,21 @@
                 }
             };
 
-            // Check if quiz was locked in a previous session and user is not logged in
-            const savedLockState = localStorage.getItem('isQuizLockedForGuest') === 'true';
+            // Check if user is logged in
             const isLoggedIn = @json(auth()->check());
-            
-            if (savedLockState && !isLoggedIn) {
-                isQuizLocked = true;
-                
-                // Check if they've answered any questions
-                const answeredQuestions = JSON.parse(localStorage.getItem('userAnswers') || '{}');
-                hasAnsweredQuestion = Object.keys(answeredQuestions).length > 0;
-                // Show the nudge when the DOM is ready
-                if (document.readyState === 'complete') {
-                    showNudge();
-                } else {
-                    window.addEventListener('load', showNudge);
-                }
+
+            // For guests, we'll show the first question and lock navigation until signup
+            if (!isLoggedIn) {
+                // Only show the first question for guests
+                currentQuestionIndex = 0;
+                showQuestion(currentQuestionIndex);
+
+                // Disable all questions except the first one
+                questionContainers.forEach((container, index) => {
+                    if (index > 0) {
+                        container.style.display = 'none';
+                    }
+                });
             }
 
             // Initialize auto-next state from localStorage, default to false if not set
@@ -682,41 +708,37 @@
 
             // Signup nudge modal
             const signupNudgeModal = document.getElementById('signupNudgeModal');
-            
+
             // Function to show the signup nudge modal and lock the quiz
             function showSignupNudgeModal() {
-                // Don't show the modal if user is logged in
-                if (isLoggedIn) return;
-                
                 if (signupNudgeModal) {
                     signupNudgeModal.style.display = 'flex';
                     // Lock the quiz for guests
                     isQuizLocked = true;
-                    localStorage.setItem('isQuizLockedForGuest', 'true');
-                    
+
                     // Disable all answer inputs when quiz is completed
                     document.querySelectorAll('.answer-option input[type="radio"]').forEach(input => {
                         input.disabled = true;
                     });
-                    
+
                     // Don't disable navigation buttons here - we want to allow navigation even when locked
                     return true;
                 }
                 return false;
             }
-            
+
             // Handle successful login/signup (this would be called after successful authentication)
             window.handleAuthSuccess = function() {
                 if (signupNudgeModal) {
                     signupNudgeModal.style.display = 'none';
                     isQuizLocked = false;
                     localStorage.removeItem('isQuizLockedForGuest');
-                    
+
                     // Re-enable all answer inputs
                     document.querySelectorAll('.answer-option input[type="radio"]').forEach(input => {
                         input.disabled = false;
                     });
-                    
+
                     // Navigation buttons will be handled by the click handler
                 }
             };
@@ -738,12 +760,6 @@
 
             // Initialize quiz
             function initQuiz() {
-                // Don't initialize if quiz is locked
-                if (isQuizLocked) {
-                    showSignupNudgeModal();
-                    return;
-                }
-
                 // Add reset button event listeners
                 const resetButton = document.getElementById('resetQuiz');
                 if (resetButton) {
@@ -760,61 +776,28 @@
                 // Start timer
                 startTimer();
 
-                // Load saved progress if exists
-                const savedProgress = localStorage.getItem('quizProgress');
-                if (savedProgress) {
-                    try {
-                        const progress = JSON.parse(savedProgress);
-                        if (progress.quizId === {{ $quiz->id }}) {
-                            userAnswers = progress.answers || {};
-                            quizResults = progress.results || {
-                                correct: 0,
-                                incorrect: 0
-                            };
-                            currentQuestionIndex = progress.currentQuestionIndex || 0;
-                            timeLeft = progress.timeLeft || timeLeft;
-                            updateTimerDisplay();
-                            updateProgressBar();
-                            updateScoreDisplay();
-
-                            // Restore selected answers
-                            Object.entries(userAnswers).forEach(([questionId, answerId]) => {
-                                const input = document.querySelector(
-                                    `input[name="answers[${questionId}]"][value="${answerId}"]`);
-                                if (input) {
-                                    input.checked = true;
-                                    input.disabled = true;
-                                    input.closest('.answer-option').classList.add('selected');
-
-                                    const questionContainer = input.closest('.question-container');
-                                    if (questionContainer) {
-                                        questionContainer.classList.add('answer-locked');
-                                        const isCorrect = checkAnswer(questionContainer, answerId, true);
-                                        showFeedback(questionContainer, isCorrect);
-                                    }
-                                }
-                            });
-
-                            // Show the current question
-                            showQuestion(currentQuestionIndex);
-                        }
-                    } catch (e) {
-                        console.error('Error parsing saved progress:', e);
-                        localStorage.removeItem('quizProgress');
-                    }
-                }
             }
 
             // Show question by index
             function showQuestion(index) {
+                // For guests, only allow the first question
+                if (!isLoggedIn && index > 0) {
+                    showSignupNudge();
+                    return;
+                }
+
                 // Hide all questions
                 questionContainers.forEach(container => {
                     container.classList.remove('active');
+                    if (!isLoggedIn) {
+                        container.style.display = 'none';
+                    }
                 });
 
                 // Show current question
                 const currentQuestion = questionContainers[index];
                 currentQuestion.classList.add('active');
+                currentQuestion.style.display = 'block';
                 currentQuestionIndex = index;
 
                 // Update UI
@@ -831,19 +814,25 @@
 
             // Check if the selected answer is correct
             function checkAnswer(questionContainer, selectedValue, skipFeedback = false) {
-                // Don't proceed if the user is logged in
-                if (isLoggedIn) return false;
-                
                 const questionId = questionContainer.dataset.questionId;
                 const correctAnswer = questionContainer.dataset.correctAnswer;
                 const isCorrect = selectedValue === correctAnswer;
-                
-                // Show signup nudge for guests after answering their first question
-                if (currentQuestionIndex === 0 && !isQuizLocked && !isLoggedIn) {
-                    // Set the lock state when a question is answered (guests only)
-                    localStorage.setItem('isQuizLockedForGuest', 'true');
-                    // Small delay to let the answer feedback show first
-                    setTimeout(showSignupNudgeModal, 1000);
+
+                // For guests, show the feedback and signup nudge
+                if (!isLoggedIn) {
+                    // Show feedback
+                    const feedbackEl = document.getElementById(`answer-feedback-${questionId}`);
+                    if (feedbackEl) {
+                        feedbackEl.classList.remove('hidden');
+
+                        // Dispatch event for Alpine.js
+                        const event = new CustomEvent('answer-selected', {
+                            detail: {
+                                isCorrect
+                            }
+                        });
+                        document.dispatchEvent(event);
+                    }
                 }
 
                 // Update UI
@@ -861,43 +850,40 @@
                     }
                 });
 
-                // Show feedback if not skipping
-                if (!skipFeedback) {
-                    showFeedback(questionContainer, isCorrect);
-                }
+                // Disable all options after selection
+                answerOptions.forEach(option => {
+                    const input = option.querySelector('input[type="radio"]');
+                    if (input) {
+                        input.disabled = true;
+                    }
+                });
 
                 return isCorrect;
             }
 
             // Show feedback for the answer
             function showFeedback(questionContainer, isCorrect) {
-                const feedbackEl = questionContainer.querySelector('.answer-feedback');
-                if (!feedbackEl) return;
-
-                feedbackEl.className = `answer-feedback p-4 rounded-lg ${
-            isCorrect ? 'bg-green-50 text-green-800 border-l-4 border-green-500' : 'bg-red-50 text-red-800 border-l-4 border-red-500'
-        }`;
-
-                feedbackEl.innerHTML = `
-            <div class="flex items-start">
-                <div class="flex-shrink-0">
-                    ${isCorrect ? '✅' : '❌'}
-                </div>
-                <div class="ml-3">
-                    <p class="font-semibold">
-                        ${isCorrect ? `{{ __('quiz.correct') }}` : `{{ __('quiz.incorrect') }}`}
-                    </p>
-                    ${questionContainer.querySelector('.explanation') ? 
-                        `<div class="mt-1 text-sm">
-                                    ${questionContainer.querySelector('.explanation').innerHTML}
-                                </div>` : ''
-                    }
-                </div>
-            </div>
-        `;
-
-                feedbackEl.style.display = 'block';
-            }
+    const questionId = questionContainer.dataset.questionId;
+    const feedbackEl = document.getElementById(`answer-feedback-${questionId}`);
+    
+    if (feedbackEl) {
+        // Show the feedback element
+        feedbackEl.classList.remove('hidden');
+        
+        // Dispatch the answer-selected event for Alpine.js
+        const event = new CustomEvent('answer-selected', {
+            detail: { isCorrect }
+        });
+        document.dispatchEvent(event);
+        
+        // Force Alpine.js to re-evaluate x-show
+        if (window.Alpine) {
+            Alpine.discoverUninitializedComponents(el => {
+                Alpine.initializeComponent(el);
+            });
+        }
+    }
+}
 
             // Update progress bar
             function updateProgressBar() {
@@ -917,15 +903,38 @@
                 const questionId = currentQuestion.dataset.questionId;
                 const isAnswered = userAnswers[questionId] !== undefined;
 
-                // Update next button state - only disable if current question isn't answered
-                // Don't disable if quiz is locked (we'll handle that in the click handler)
-                if (!isQuizLocked) {
+                // For guests, only show the first question
+                if (!isLoggedIn) {
                     const nextButton = currentQuestion.querySelector('.btn-next');
                     if (nextButton) {
                         nextButton.disabled = !isAnswered;
                         nextButton.classList.toggle('opacity-50', !isAnswered);
                         nextButton.classList.toggle('cursor-not-allowed', !isAnswered);
+
+                        // Change next button text to "Sign Up to Continue" for guests
+                        if (currentQuestionIndex === 0) {
+                            nextButton.textContent = '{{ __('quiz.signupToContinue') }}';
+                        }
                     }
+
+                    // Hide previous button for guests
+                    const prevButton = currentQuestion.querySelector('.btn-prev');
+                    if (prevButton) {
+                        prevButton.classList.add('invisible');
+                    }
+                    return;
+                }
+
+                // For logged-in users, use the normal navigation
+                const nextButton = currentQuestion.querySelector('.btn-next');
+                if (nextButton) {
+                    nextButton.disabled = !isAnswered;
+                    nextButton.classList.toggle('opacity-50', !isAnswered);
+                    nextButton.classList.toggle('cursor-not-allowed', !isAnswered);
+
+                    // Reset button text for logged-in users
+                    nextButton.textContent = currentQuestionIndex < questionContainers.length - 1 ?
+                        '{{ __('quiz.nextQuestion') }}' : '{{ __('quiz.finishQuiz') }}';
                 }
 
                 // Update previous button visibility
@@ -956,7 +965,7 @@
                         timeLeft--;
                         // Save progress after answering
                         saveProgress();
-                        
+
                         // Track that we've answered at least one question
                         hasAnsweredQuestion = true;
                     } else if (timeLeft === 0 && !isQuizCompleted) {
@@ -1008,27 +1017,6 @@
                 return `${minutes}:${secs.toString().padStart(2, '0')}`;
             }
 
-            // Show quiz results
-            function showResults(correctAnswers, timeTaken) {
-                const totalQuestions = questionContainers.length;
-                const percentage = Math.round((correctAnswers / totalQuestions) * 100);
-
-                // Update results modal
-                resultsScore.textContent = `${percentage}%`;
-                correctAnswersEl.textContent = correctAnswers;
-                statCorrectEl.textContent = correctAnswers;
-                statIncorrectEl.textContent = quizResults.incorrect;
-                statTimeTakenEl.textContent = formatTime(timeTaken);
-
-                // Show modal
-                resultsModal.classList.remove('hidden');
-
-                // Add animation
-                setTimeout(() => {
-                    resultsModal.querySelector('.bg-white').classList.add('animate-fadeIn');
-                }, 100);
-            }
-
             // Submit quiz form
             function submitQuizForm(isTimeUp = false) {
                 if (isQuizCompleted) return;
@@ -1068,17 +1056,47 @@
                 // Calculate final score
                 let correctAnswers = 0;
                 questionContainers.forEach(container => {
+                    const inputs = container.querySelectorAll('input[type="radio"]');
                     const questionId = container.dataset.questionId;
-                    const selectedAnswer = userAnswers[questionId];
-                    const correctAnswer = container.dataset.correctAnswer;
 
-                    if (selectedAnswer && selectedAnswer === correctAnswer) {
-                        correctAnswers++;
-                    }
+                    inputs.forEach(input => {
+                        input.addEventListener('change', function() {
+                            // Prevent changes if already answered
+                            if (userAnswers[questionId] !== undefined) {
+                                return;
+                            }
+
+                            const answerOptions = container.querySelectorAll(
+                                '.answer-option');
+
+                            // Clear previous selection
+                            answerOptions.forEach(opt => opt.classList.remove('selected'));
+
+                            // Mark selected
+                            this.closest('.answer-option').classList.add('selected');
+
+                            // Save answer
+                            userAnswers[questionId] = this.value;
+
+                            // Check answer
+                            const isCorrect = checkAnswer(container, this.value);
+
+                            // Update score
+                            if (isCorrect) {
+                                quizResults.correct++;
+                            } else {
+                                quizResults.incorrect++;
+                            }
+
+                            // Update score display
+                            updateScoreDisplay();
+
+                            // Save progress
+                            saveProgress();
+                        });
+                    });
                 });
 
-                // Show results
-                showResults(correctAnswers, timeTaken);
 
                 // Clear saved progress and start time
                 localStorage.removeItem('quizProgress');
@@ -1106,33 +1124,13 @@
 
             // Show signup nudge modal with animation
             function showSignupNudge() {
-                // Never show the nudge for logged-in users
-                if (isLoggedIn) return;
-                
                 const modal = document.getElementById('signupNudgeModal');
                 if (modal) {
-                    // Show the modal
                     modal.style.display = 'flex';
-                    // Trigger reflow to enable animation
-                    void modal.offsetWidth;
-                    modal.classList.add('active');
-                    
-                    // Lock the quiz after showing the nudge
-                    isQuizLocked = true;
-                    localStorage.setItem('isQuizLockedForGuest', 'true');
-                    
-                    // Disable all inputs
-                    document.querySelectorAll('.answer-option input[type="radio"]').forEach(input => {
-                        input.disabled = true;
-                    });
-                    
-                    // Disable navigation
-                    document.querySelectorAll('.btn-next, .btn-prev, #submitQuiz').forEach(btn => {
-                        btn.disabled = true;
-                    });
+                    document.body.style.overflow = 'hidden';
                 }
             }
-            
+
             // Close signup nudge modal
             function closeSignupNudge() {
                 const modal = document.getElementById('signupNudgeModal');
@@ -1143,7 +1141,7 @@
                     }, 300);
                 }
             }
-            
+
             // Close modal when clicking outside
             document.addEventListener('click', function(e) {
                 console.log('Document click detected', e.target);
@@ -1154,7 +1152,7 @@
                     return false;
                 }
             });
-            
+
             // Debug: Log all clicks on the document
             document.addEventListener('click', function(e) {
                 console.log('Click detected on:', e.target);
@@ -1206,9 +1204,10 @@
 
                         // Update navigation buttons
                         updateNavigationButtons();
-                        
+
                         // Schedule auto-advance if enabled
-                        if (autoNextEnabled && currentQuestionIndex < questionContainers.length - 1) {
+                        if (autoNextEnabled && currentQuestionIndex < questionContainers
+                            .length - 1) {
                             // Show signup nudge after answering first question and moving to next
                             if (Object.keys(userAnswers).length === 1) {
                                 // Show the next question first
@@ -1247,7 +1246,7 @@
                     showNudge();
                     return;
                 }
-                
+
                 // Handle next button click
                 if (e.target.classList.contains('btn-next') || e.target.closest('.btn-next')) {
                     e.preventDefault();

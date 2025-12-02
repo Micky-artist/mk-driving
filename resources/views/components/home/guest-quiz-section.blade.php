@@ -249,13 +249,13 @@
                                 <p class="text-green-600 dark:text-green-400 font-medium mb-4 text-center">
                                     {{ __('home.guestQuiz.challenge_yourself') }}
                                 </p>
-                                <a href="{{ route('guest-quiz.show', ['locale' => app()->getLocale(), 'quiz' => 11]) }}"
+                                <button onclick="return showSignupNudge();"
                                    class="w-full inline-flex items-center justify-center bg-gradient-to-r from-blue-600 to-blue-700 hover:from-blue-700 hover:to-blue-800 text-white font-medium py-2 px-6 rounded-lg shadow-md hover:shadow-lg transition-all duration-300 transform hover:-translate-y-0.5">
                                     {{ __('home.guestQuiz.startQuiz') }}
                                     <svg class="w-4 h-4 ml-2" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                                         <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M14 5l7 7m0 0l-7 7m7-7H3"></path>
                                     </svg>
-                                </a>
+                                </button>
                             </div>
                         @endauth
                     </div>

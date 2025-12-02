@@ -50,11 +50,32 @@
                         </div>
                     </div>
                 </div>
-                <!-- Title Section - Moved to top of right column -->
-                <div class="text-left ml-2 mt-8 md:mt-12">
+                <!-- Title Section with Typing Animation -->
+                <div class="text-left ml-2 mt-8 md:mt-12" x-data="{
+                    text: '{{ $title }}',
+                    displayText: '',
+                    charIndex: 0,
+                    typeSpeed: 20, // milliseconds per character (faster typing)
+                    isTyping: true,
+                    
+                    init() {
+                        this.animateText();
+                    },
+                    
+                    animateText() {
+                        if (this.charIndex < this.text.length) {
+                            this.displayText += this.text.charAt(this.charIndex);
+                            this.charIndex++;
+                            setTimeout(() => this.animateText(), this.typeSpeed);
+                        } else {
+                            this.isTyping = false;
+                        }
+                    }
+                }">
                     <h1
                         class="text-2xl sm:text-3xl md:text-4xl font-extrabold bg-gradient-to-r from-blue-600 via-blue-500 to-cyan-500 dark:from-cyan-300 dark:via-blue-200 dark:to-cyan-300 bg-clip-text text-transparent mb-1 sm:mb-2 leading-tight">
-                        {{ $title }}
+                        <span x-text="displayText" class="inline-block"></span>
+                        <span x-show="isTyping" class="inline-block w-1 h-8 bg-cyan-400 dark:bg-cyan-200 ml-1 animate-pulse"></span>
                     </h1>
                     <div class="h-1 w-12 bg-blue-400/70 dark:bg-cyan-300/70 my-2 mx-auto rounded-full"></div>
                 </div>
