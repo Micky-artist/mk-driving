@@ -50,12 +50,15 @@
                     <div class="mt-1">
                         <div class="relative rounded-lg shadow-sm">
                             <input type="text" 
-                                   name="title" 
+                                   name="title[{{ app()->getLocale() }}]" 
                                    id="title" 
-                                   class="block w-full px-4 py-3 text-base border-0 rounded-xl bg-gray-50 dark:bg-gray-700/50 text-gray-900 dark:text-white placeholder-gray-500 dark:placeholder-gray-400 focus:ring-2 focus:ring-blue-500 focus:border-transparent transition-all duration-200 @error('title') ring-2 ring-red-500 @enderror"
-                                   value="{{ old('title') }}" 
+                                   class="block w-full px-4 py-3 text-base border-0 rounded-xl bg-gray-50 dark:bg-gray-700/50 text-gray-900 dark:text-white placeholder-gray-500 dark:placeholder-gray-400 focus:ring-2 focus:ring-blue-500 focus:border-transparent transition-all duration-200 @error('title.*') ring-2 ring-red-500 @enderror"
+                                   value="{{ old('title.'.app()->getLocale()) }}" 
                                    placeholder="{{ __('forum.question.title_placeholder') }}"
                                    required>
+                            @error('title.*')
+                                <p class="mt-2 text-sm text-red-600">{{ $message }}</p>
+                            @enderror
                             <div class="absolute inset-y-0 right-0 flex items-center pr-3 pointer-events-none">
                                 <svg class="h-5 w-5 text-gray-400" fill="none" viewBox="0 0 24 24" stroke="currentColor">
                                     <path stroke-linecap="round" stroke-linejoin="round" stroke-width="1.5" d="M8.228 9c.549-1.165 2.03-2 3.772-2 2.21 0 4 1.343 4 3 0 1.4-1.278 2.575-3.006 2.907-.542.104-.994.54-.994 1.093m0 3h.01M21 12a9 9 0 11-18 0 9 9 0 0118 0z" />
@@ -85,11 +88,14 @@
                     <div class="mt-1">
                         <div class="rounded-lg shadow-sm">
                             <textarea id="content" 
-                                     name="content" 
+                                     name="content[{{ app()->getLocale() }}]" 
                                      rows="8"
-                                     class="block w-full px-4 py-3 text-base border-0 rounded-xl bg-gray-50 dark:bg-gray-700/50 text-gray-900 dark:text-white placeholder-gray-500 dark:placeholder-gray-400 focus:ring-2 focus:ring-blue-500 focus:border-transparent transition-all duration-200 @error('content') ring-2 ring-red-500 @enderror"
+                                     class="block w-full px-4 py-3 text-base border-0 rounded-xl bg-gray-50 dark:bg-gray-700/50 text-gray-900 dark:text-white placeholder-gray-500 dark:placeholder-gray-400 focus:ring-2 focus:ring-blue-500 focus:border-transparent transition-all duration-200 @error('content.*') ring-2 ring-red-500 @enderror"
                                      placeholder="{{ __('forum.question.body_placeholder') }}"
-                                     required>{{ old('content') }}</textarea>
+                                     required>{{ old('content.'.app()->getLocale()) }}</textarea>
+                            @error('content.*')
+                                <p class="mt-2 text-sm text-red-600">{{ $message }}</p>
+                            @enderror
                         </div>
                         @error('content')
                             <p class="mt-2 text-sm text-red-600 flex items-center">

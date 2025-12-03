@@ -91,15 +91,44 @@
                 <div>
                     <p class="font-medium text-gray-800 dark:text-gray-100">{{ $authorName }}</p>
                     <div class="flex items-center text-sm text-gray-500 dark:text-gray-400">
-                        <time datetime="{{ $question['createdAt'] }}" title="{{ $question['createdAt'] }}" class="flex items-center hover:text-gray-700 dark:hover:text-gray-300 transition-colors duration-200">
+                        <time datetime="{{ $question['createdAt'] }}" title="{{ $question['createdAt']->format('F j, Y, g:i a') }}" class="flex items-center hover:text-gray-700 dark:hover:text-gray-300 transition-colors duration-200">
                             <svg class="w-3.5 h-3.5 mr-1" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                                 <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 8v4l3 3m6-3a9 9 0 11-18 0 9 9 0 0118 0z" />
                             </svg>
-                            {{ \Carbon\Carbon::parse($question['createdAt'])->diffForHumans() }}
+                            @php
+                                $diff = $question['createdAt']->diffInSeconds(now());
+                                if ($diff < 60) {
+                                    echo trans_choice('time.second_ago', $diff, ['count' => $diff]);
+                                } elseif ($diff < 3600) {
+                                    $minutes = floor($diff / 60);
+                                    echo trans_choice('time.minute_ago', $minutes, ['count' => $minutes]);
+                                } elseif ($diff < 86400) {
+                                    $hours = floor($diff / 3600);
+                                    echo trans_choice('time.hour_ago', $hours, ['count' => $hours]);
+                                } else {
+                                    $days = floor($diff / 86400);
+                                    echo trans_choice('time.day_ago', $days, ['count' => $days]);
+                                }
+                            @endphp
                         </time>
                         @if(isset($question['updatedAt']) && $question['updatedAt'] != $question['createdAt'])
                             <span class="mx-2 text-gray-300 dark:text-gray-600">•</span>
-                            <span class="text-xs text-gray-400 dark:text-gray-500" title="{{ __('forum.edited') }} {{ \Carbon\Carbon::parse($question['updatedAt'])->diffForHumans() }}">
+                            <span class="text-xs text-gray-400 dark:text-gray-500" title="{{ __('forum.edited') }}
+                                @php
+                                    $diff = $question['updatedAt']->diffInSeconds(now());
+                                    if ($diff < 60) {
+                                        echo trans_choice('time.second_ago', $diff, ['count' => $diff]);
+                                    } elseif ($diff < 3600) {
+                                        $minutes = floor($diff / 60);
+                                        echo trans_choice('time.minute_ago', $minutes, ['count' => $minutes]);
+                                    } elseif ($diff < 86400) {
+                                        $hours = floor($diff / 3600);
+                                        echo trans_choice('time.hour_ago', $hours, ['count' => $hours]);
+                                    } else {
+                                        $days = floor($diff / 86400);
+                                        echo trans_choice('time.day_ago', $days, ['count' => $days]);
+                                    }
+                                @endphp">
                                 {{ __('forum.edited') }}
                             </span>
                         @endif

@@ -545,32 +545,29 @@ Route::prefix('{locale}')
             ->name('subscriptions.destroy');
         });
 
-// Admin routes - moved inside locale group to support localized admin routes
-
-// Forum Routes (already inside locale prefix)
-Route::prefix('forum')
-    ->name('forum.')
-    ->group(function () {
-        Route::get('/', [\App\Http\Controllers\Web\ForumController::class, 'index'])->name('index');
-        Route::get('/ask', [\App\Http\Controllers\Web\ForumController::class, 'create'])->name('create');
-        Route::post('/', [\App\Http\Controllers\Web\ForumController::class, 'store'])->name('store');
-        Route::get('/{id}', [\App\Http\Controllers\Web\ForumController::class, 'show'])->name('show');
-        
-        // Answers
-        Route::post('/{questionId}/answers', [\App\Http\Controllers\Web\ForumController::class, 'storeAnswer'])
-            ->name('answers.store')
-            ->middleware('auth');
-            
-        // Voting
-        Route::post('/{type}/{id}/vote', [\App\Http\Controllers\Web\ForumController::class, 'vote'])
-            ->name('vote')
-            ->middleware('auth');
-            
-        // Mark as best answer
-        Route::post('/{questionId}/best-answer/{answerId}', [\App\Http\Controllers\Web\ForumController::class, 'markAsBestAnswer'])
-            ->name('best-answer')
-            ->middleware('auth');
-    });
+        // Forum Routes (protected by auth and verified middleware)
+        Route::middleware(['auth', 'verified'])->group(function () {
+            Route::prefix('forum')
+                ->name('forum.')
+                ->group(function () {
+                    Route::get('/', [\App\Http\Controllers\Web\ForumController::class, 'index'])->name('index');
+                    Route::get('/ask', [\App\Http\Controllers\Web\ForumController::class, 'create'])->name('create');
+                    Route::post('/', [\App\Http\Controllers\Web\ForumController::class, 'store'])->name('store');
+                    Route::get('/{id}', [\App\Http\Controllers\Web\ForumController::class, 'show'])->name('show');
+                    
+                    // Answers
+                    Route::post('/{questionId}/answers', [\App\Http\Controllers\Web\ForumController::class, 'storeAnswer'])
+                        ->name('answers.store');
+                        
+                    // Voting
+                    Route::post('/{type}/{id}/vote', [\App\Http\Controllers\Web\ForumController::class, 'vote'])
+                        ->name('vote');
+                        
+                    // Mark as best answer
+                    Route::post('/{questionId}/best-answer/{answerId}', [\App\Http\Controllers\Web\ForumController::class, 'markAsBestAnswer'])
+                        ->name('best-answer');
+                });
+        });
     }); // Close the locale prefix group
 
 // Authentication routes (from auth.php)

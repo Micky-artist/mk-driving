@@ -33,8 +33,22 @@
                         <svg class="flex-shrink-0 mr-1.5 h-5 w-5 text-gray-400" fill="currentColor" viewBox="0 0 20 20">
                             <path fill-rule="evenodd" d="M6 2a1 1 0 00-1 1v1H4a2 2 0 00-2 2v10a2 2 0 002 2h12a2 2 0 002-2V6a2 2 0 00-2-2h-1V3a1 1 0 10-2 0v1H7V3a1 1 0 00-1-1zm0 5a1 1 0 000 2h8a1 1 0 100-2H6z" clip-rule="evenodd" />
                         </svg>
-                        <time datetime="{{ $question->created_at->toDateTimeString() }}">
-                            {{ $question->created_at->diffForHumans() }}
+                        <time datetime="{{ $question->created_at->toDateTimeString() }}" title="{{ $question->created_at->format('F j, Y, g:i a') }}">
+                            @php
+                                $diff = $question->created_at->diffInSeconds(now());
+                                if ($diff < 60) {
+                                    echo trans_choice('time.second_ago', $diff, ['count' => $diff]);
+                                } elseif ($diff < 3600) {
+                                    $minutes = floor($diff / 60);
+                                    echo trans_choice('time.minute_ago', $minutes, ['count' => $minutes]);
+                                } elseif ($diff < 86400) {
+                                    $hours = floor($diff / 3600);
+                                    echo trans_choice('time.hour_ago', $hours, ['count' => $hours]);
+                                } else {
+                                    $days = floor($diff / 86400);
+                                    echo trans_choice('time.day_ago', $days, ['count' => $days]);
+                                }
+                            @endphp
                         </time>
                     </div>
                     @if(isset($question->tags) && $question->tags->isNotEmpty())

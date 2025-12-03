@@ -45,11 +45,12 @@ class ForumController extends Controller
                 'id' => $question->id,
                 'title' => $title,
                 'content' => $content,
+                'createdAt' => $question->created_at,
+                'updatedAt' => $question->updated_at,
                 'author' => [
                     'firstName' => $question->user->first_name,
                     'lastName' => $question->user->last_name,
                 ],
-                'createdAt' => $question->created_at->toIso8601String(),
                 'answers' => $question->answers->map(function($answer) use ($locale, $fallbackLocale) {
                     // Ensure answer content is properly decoded if it's a JSON string
                     $answerContentData = is_string($answer->content) ? json_decode($answer->content, true) : $answer->content;
@@ -95,24 +96,30 @@ class ForumController extends Controller
      */
     public function store(Request $request)
     {
+        $locale = app()->getLocale();
+        $fallback = config('app.fallback_locale', 'rw');
+        
         $validated = $request->validate([
             'title' => 'required|array',
-            'title.en' => 'required|string|min:10|max:255',
-            'title.rw' => 'required|string|min:10|max:255',
+            'title.'.$locale => 'required|string|min:10|max:255',
             'content' => 'required|array',
-            'content.en' => 'required|string|min:20',
-            'content.rw' => 'required|string|min:20',
+            'content.'.$locale => 'required|string|min:20',
         ]);
+        
+        // Ensure we have both languages, using current language for fallback if needed
+        $title = [
+            $locale => $validated['title'][$locale],
+            $fallback => $validated['title'][$fallback] ?? $validated['title'][$locale]
+        ];
+        
+        $content = [
+            $locale => $validated['content'][$locale],
+            $fallback => $validated['content'][$fallback] ?? $validated['content'][$locale]
+        ];
 
         $question = new ForumQuestion([
-            'title' => json_encode([
-                'en' => $validated['title']['en'],
-                'rw' => $validated['title']['rw']
-            ]),
-            'content' => json_encode([
-                'en' => $validated['content']['en'],
-                'rw' => $validated['content']['rw']
-            ]),
+            'title' => json_encode($title),
+            'content' => json_encode($content),
             'user_id' => Auth::id(),
             'is_approved' => true,
         ]);
@@ -150,7 +157,7 @@ class ForumController extends Controller
         $question->increment('views');
         
         $locale = app()->getLocale();
-        $fallbackLocale = config('app.fallback_locale', 'en');
+        $fallbackLocale = config('app.fallback_locale', 'rw');
         
         // Prepare question data with localized content
         $questionData = [
