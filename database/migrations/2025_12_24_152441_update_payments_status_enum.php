@@ -12,17 +12,19 @@ return new class extends Migration
     public function up(): void
     {
         Schema::table('payments', function (Blueprint $table) {
-            // Update status enum to include all MTN API statuses
+            // Update status enum to include all MTN API statuses + existing values
             $table->enum('status', [
                 'PENDING',
-                'SUCCESSFUL', 
+                'SUCCESSFUL',
+                'COMPLETED',
                 'FAILED',
                 'CANCELLED',
                 'EXPIRED',
                 'REJECTED',
                 'TIMEOUT',
                 'NOT_FOUND',
-                'ERROR'
+                'ERROR',
+                'REFUNDED'
             ])->default('PENDING')->change();
         });
     }
