@@ -52,12 +52,36 @@ public function index()
                 ->take(3)
                 ->get();
                 
+            // Get in-progress quizzes with progress calculation
+            $inProgressQuizzes = $user->quizAttempts()
+                ->with('quiz')
+                ->where('status', 'in_progress')
+                ->orderBy('updated_at', 'desc')
+                ->get()
+                ->map(function ($attempt) {
+                    $totalQuestions = $attempt->quiz->questions_count ?? 0;
+                    $attempt->progress = $totalQuestions > 0 
+                        ? round(($attempt->answers_count / $totalQuestions) * 100) 
+                        : 0;
+                    return $attempt;
+                });
+                
+            // Get recently completed quizzes
+            $completedQuizzes = $user->quizAttempts()
+                ->with('quiz')
+                ->where('status', 'completed')
+                ->orderBy('completed_at', 'desc')
+                ->take(5)
+                ->get();
+                
             return view('dashboard.index', [
                 'quizzes' => $quizzes,
                 'news' => $news,
                 'questions' => $questions,
                 'userQuizzes' => $userQuizzes,
-                'user' => $user
+                'user' => $user,
+                'inProgressQuizzes' => $inProgressQuizzes,
+                'completedQuizzes' => $completedQuizzes
             ]);
             
         } catch (\Exception $e) {

@@ -629,11 +629,11 @@
                                     </a>
                                     <div class="flex justify-between text-sm mb-1">
                                         <span>{{ __('dashboard.quizzes.progress') }}</span>
-                                        <span>{{ $progressPercentage }}%</span>
+                                        <span>{{ $attempt->progress ?? 0 }}%</span>
                                     </div>
                                     <div class="w-full bg-gray-200 rounded-full h-2">
                                         <div class="bg-blue-600 h-2 rounded-full"
-                                            style="width: {{ $progressPercentage }}%"></div>
+                                            style="width: {{ $attempt->progress ?? 0 }}%"></div>
                                     </div>
                                 </div>
                             </div>
