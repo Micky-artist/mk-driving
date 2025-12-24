@@ -90,6 +90,12 @@ return [
         'view_all_subscriptions' => 'View All Subscriptions',
         'valid_until' => 'Valid until',
     ],
+    'available_quizzes' => 'Available Quizzes',
+    'questions' => 'questions',
+    'completed' => 'Completed',
+    'in_progress' => 'In Progress',
+    'not_started' => 'Not Started',
+    'score' => 'Score',
     'recent_activity' => 'Recent Activity',
     'upcoming_lessons' => 'Upcoming Lessons',
     'profile' => [

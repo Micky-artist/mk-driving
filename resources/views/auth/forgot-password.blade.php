@@ -223,9 +223,6 @@
 </div>
 
 <div class="w-full min-h-screen flex flex-col relative overflow-hidden gradient-bg">
-    <!-- Background Animation Component -->
-    <x-background-animation />
-    
     <div class="flex-grow flex items-center justify-center px-1 relative z-10 py-8">
         <div class="w-full max-w-md mx-auto">
             <div class="auth-card rounded-2xl p-8">

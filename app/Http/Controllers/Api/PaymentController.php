@@ -24,14 +24,14 @@ class PaymentController extends Controller
     {
         $request->validate([
             'plan_id' => 'required|exists:subscription_plans,id',
-            'phone_number' => 'required|string|regex:/^0[0-9]{9}$/',
+            'phone_number' => 'required|string|regex:/^[0-9]{9,12}$/', // Accept 9-12 digit numbers
             'amount' => 'required|numeric|min:100', // Minimum 100 RWF
             'currency' => 'required|string|in:RWF',
         ]);
 
         try {
-            // Format phone number to MTN format (remove leading 0 and add country code)
-            $phoneNumber = '250' . ltrim($request->phone_number, '0');
+            // Format phone number using the same logic as the web controller
+            $phoneNumber = $this->formatPhoneNumber($request->phone_number);
             $amount = (string) $request->amount;
             $externalId = (string) Str::uuid();
             $payerMessage = 'Subscription payment';
@@ -84,7 +84,38 @@ class PaymentController extends Controller
     }
 
     /**
-     * Check payment status
+     * Format phone number to MTN format (supports both Rwanda numbers and sandbox test numbers)
+     */
+    private function formatPhoneNumber($phone)
+    {
+        // Remove all non-digit characters
+        $cleaned = preg_replace('/\D/', '', $phone);
+        
+        // Allow MTN sandbox test numbers (46733123450-46733123461)
+        if (strlen($cleaned) === 11 && preg_match('/^467331234[5-6][0-9]$/', $cleaned)) {
+            return $cleaned; // Return test number as-is
+        }
+        
+        // Check if it's a 9-digit number starting with 72, 73, 78, or 79
+        if (strlen($cleaned) === 9 && preg_match('/^7[2389]\d{7}$/', $cleaned)) {
+            return '250' . $cleaned; // Convert to 12-digit format
+        }
+        
+        // Check if it's a 12-digit number starting with 25072, 25073, 25078, or 25079
+        if (strlen($cleaned) === 12 && preg_match('/^2507[2389]\d{7}$/', $cleaned)) {
+            return $cleaned; // Already in correct format
+        }
+        
+        // Check if it's a 10-digit number starting with 07 (Rwanda format)
+        if (strlen($cleaned) === 10 && preg_match('/^07[2389]\d{7}$/', $cleaned)) {
+            return '250' . substr($cleaned, 1); // Remove 0, add 250 prefix
+        }
+        
+        throw new \Exception('Invalid phone number format. Use Rwanda MTN numbers (07x xxx xxxx) or sandbox test numbers.');
+    }
+
+    /**
+     * Check payment status with real-time polling support
      */
     public function checkStatus($reference)
     {
@@ -97,6 +128,7 @@ class PaymentController extends Controller
                 return response()->json([
                     'status' => strtolower($payment->status),
                     'payment' => $payment,
+                    'completed' => true,
                 ]);
             }
 
@@ -106,7 +138,7 @@ class PaymentController extends Controller
             // Update payment status
             $payment->update([
                 'status' => strtoupper($status),
-                'completed_at' => now(),
+                'completed_at' => in_array(strtoupper($status), ['SUCCESSFUL', 'FAILED', 'CANCELLED']) ? now() : null,
             ]);
 
             // If payment is successful, activate subscription
@@ -117,6 +149,7 @@ class PaymentController extends Controller
             return response()->json([
                 'status' => strtolower($status),
                 'payment' => $payment,
+                'completed' => in_array(strtoupper($status), ['SUCCESSFUL', 'FAILED', 'CANCELLED']),
             ]);
 
         } catch (\Exception $e) {
@@ -142,8 +175,8 @@ class PaymentController extends Controller
         Log::info('MTN MoMo Webhook received:', $data);
 
         try {
-            // Verify the webhook signature (implement this based on MTN's security requirements)
-            // $this->verifyWebhookSignature($request);
+            // Validate webhook signature for security
+            $this->momoService->validateWebhookSignature($request);
 
             $reference = $data['externalId'] ?? null;
             if (!$reference) {
@@ -157,16 +190,19 @@ class PaymentController extends Controller
             $status = strtoupper($data['status'] ?? 'PENDING');
             $payment->update([
                 'status' => $status,
-                'completed_at' => now(),
+                'completed_at' => in_array($status, ['SUCCESSFUL', 'FAILED', 'CANCELLED']) ? now() : null,
                 'metadata' => array_merge($payment->metadata ?? [], [
                     'webhook_data' => $data,
                     'webhook_received_at' => now()->toDateTimeString(),
                 ]),
             ]);
 
-            // If payment is successful, activate subscription
+            // If payment is successful, activate subscription immediately
             if ($status === 'SUCCESSFUL') {
                 $this->activateSubscription($payment);
+                
+                // Send real-time notification to frontend if needed
+                // You could implement WebSocket or Server-Sent Events here
             }
 
             return response()->json(['success' => true]);

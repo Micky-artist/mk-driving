@@ -20,6 +20,35 @@ return [
     'download_receipt' => 'Download Receipt',
     'pay_amount' => 'Pay',
     'to_subscribe' => 'to subscribe',
+    
+    // New seamless payment flow
+    'phone_number' => 'MTN Mobile Money Number',
+    'phone_help' => 'Enter your MTN number (e.g., 078xxxxxxx or 25078xxxxxxx)',
+    'pay_to' => 'Pay To',
+    'secure_payment' => 'Secure payment powered by MTN Mobile Money',
+    'encrypted' => 'Encrypted',
+    'secure' => 'Secure',
+    
+    // Payment statuses
+    'awaiting_payment' => 'Awaiting Payment Confirmation',
+    'check_phone_prompt' => 'Please check your phone for a payment request and approve it with your PIN',
+    'reference' => 'Reference',
+    'payment_successful' => 'Payment Successful!',
+    'subscription_activated' => 'Your subscription has been activated successfully!',
+    'payment_failed' => 'Payment Failed',
+    'try_again' => 'Try Again',
+    
+    // Instructions
+    'next_steps' => 'Next Steps',
+    'step1_check_phone' => 'Check your phone for the MTN Mobile Money payment request',
+    'step2_approve' => 'Approve the payment with your PIN',
+    'step3_auto_activate' => 'Your subscription will be activated automatically',
+    
+    // Status messages
+    'verifying' => 'Verifying payment status',
+    'redirecting_soon' => 'Redirecting to your dashboard...',
+    
+    // Legacy support (keeping for backwards compatibility)
     'momo_instructions' => [
         'title' => 'Mobile Money Payment Instructions',
         'step1' => 'Dial *182# on your phone',
@@ -34,13 +63,21 @@ return [
         'copied' => 'Copied!'
     ],
     'enter_phone' => 'Enter your MTN Mobile Money number',
-    'phone_placeholder' => 'e.g., 78XXXXXXX',
+    'phone_placeholder' => 'e.g., 078XXXXXXX or 25078XXXXXXX',
     'submit_payment' => 'Submit Payment',
+    'payment_intent' => 'Submit Payment Intent',
+    'amount' => 'Amount',
+    'pay_to' => 'Pay To',
+    'phone_number' => 'Phone Number',
+    'phone_help' => 'Use Rwanda MTN numbers (07x xxx xxxx)',
     'close' => 'Close',
     'invalid_phone' => 'Please enter a valid MTN Mobile Money number (e.g., 72xxxxxxx, 73xxxxxxx, 78xxxxxxx, or 79xxxxxxx)',
     'payment_requested' => 'Payment Requested!',
     'payment_requested_message' => 'A payment request has been sent to your phone. Please complete the payment on your mobile device.',
-    'payment_processing' => 'Processing your payment...',
+    'payment_intent_submitted' => 'Payment Request Submitted!',
+    'payment_intent_submitted_message' => 'Your subscription request has been received. Please complete the payment using the instructions below.',
+    'processing' => 'Processing...',
+    'payment_processing' => 'Processing...',
     'error_occurred' => 'An error occurred. Please try again.',
     'press_or_dial' => 'Press',
     'instructions' => 'Instructions',

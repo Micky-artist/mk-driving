@@ -76,16 +76,28 @@
                             <div class="w-[280px] md:w-[500px] h-[200px] md:h-[250px] relative">
                                 <!-- Loading Skeleton -->
                                 <div id="car-loading"
-                                    class="absolute pt-4 inset-0 bg-gradient-to-br from-blue-100/20 to-blue-200/20 dark:from-blue-800/20 dark:to-blue-900/20 rounded-lg overflow-hidden">
-                                    <!-- Moving lines animation -->
-                                    <div class="absolute inset-0 flex flex-col justify-center items-start gap-8">
-                                        <div class="h-px w-full bg-gradient-to-r from-transparent via-blue-300/30 to-transparent animate-pulse"
-                                            style="animation: slideRight 3s linear infinite;"></div>
-                                        <div class="h-px w-full bg-gradient-to-r from-transparent via-blue-300/30 to-transparent animate-pulse"
-                                            style="animation: slideRight 3s linear infinite; animation-delay: 1s;">
+                                    class="absolute pt-4 inset-0 bg-gradient-to-br from-gray-200/40 to-gray-300/40 dark:from-blue-800/20 dark:to-blue-900/20 rounded-lg overflow-hidden">
+                                    <!-- Shimmer overlay -->
+                                    <div class="absolute inset-0 bg-gradient-to-r from-transparent via-white/30 to-transparent animate-shimmer"></div>
+                                    
+                                    <!-- Skeleton shapes for car -->
+                                    <div class="absolute inset-0 flex flex-col justify-center items-center gap-4 p-8">
+                                        <!-- Main car body skeleton -->
+                                        <div class="w-3/4 h-12 bg-gray-300/60 dark:bg-gray-600/40 rounded-lg animate-pulse"></div>
+                                        <!-- Car details -->
+                                        <div class="flex gap-4 w-3/4 justify-center">
+                                            <div class="w-8 h-8 bg-gray-300/60 dark:bg-gray-600/40 rounded-full animate-pulse" style="animation-delay: 0.2s;"></div>
+                                            <div class="w-16 h-6 bg-gray-300/60 dark:bg-gray-600/40 rounded animate-pulse" style="animation-delay: 0.4s;"></div>
+                                            <div class="w-8 h-8 bg-gray-300/60 dark:bg-gray-600/40 rounded-full animate-pulse" style="animation-delay: 0.6s;"></div>
                                         </div>
-                                        <div class="h-px w-full bg-gradient-to-r from-transparent via-blue-300/30 to-transparent animate-pulse"
-                                            style="animation: slideRight 3s linear infinite; animation-delay: 2s;">
+                                        <!-- Moving lines for motion effect -->
+                                        <div class="absolute inset-0 flex flex-col justify-center items-start gap-6 opacity-50">
+                                            <div class="h-px w-full bg-gradient-to-r from-transparent via-gray-400/40 dark:via-blue-300/20 to-transparent"
+                                                style="animation: slideRight 2.5s linear infinite;"></div>
+                                            <div class="h-px w-full bg-gradient-to-r from-transparent via-gray-400/40 dark:via-blue-300/20 to-transparent"
+                                                style="animation: slideRight 2.5s linear infinite; animation-delay: 0.8s;"></div>
+                                            <div class="h-px w-full bg-gradient-to-r from-transparent via-gray-400/40 dark:via-blue-300/20 to-transparent"
+                                                style="animation: slideRight 2.5s linear infinite; animation-delay: 1.6s;"></div>
                                         </div>
                                     </div>
                                 </div>
@@ -196,16 +208,28 @@
                             <div class="w-[250px] md:w-[450px] h-[116px] md:h-[220px] relative">
                                 <!-- Loading Skeleton -->
                                 <div id="bike-loading"
-                                    class="absolute inset-0 bg-gradient-to-br from-blue-100/20 to-blue-200/20 dark:from-blue-800/20 dark:to-blue-900/20 rounded-lg overflow-hidden">
-                                    <!-- Moving lines animation -->
-                                    <div class="absolute inset-0 flex flex-col justify-center items-start gap-8">
-                                        <div class="h-px w-full bg-gradient-to-r from-transparent via-blue-300/30 to-transparent animate-pulse"
-                                            style="animation: slideRight 3s linear infinite;"></div>
-                                        <div class="h-px w-full bg-gradient-to-r from-transparent via-blue-300/30 to-transparent animate-pulse"
-                                            style="animation: slideRight 3s linear infinite; animation-delay: 1s;">
+                                    class="absolute inset-0 bg-gradient-to-br from-gray-200/40 to-gray-300/40 dark:from-blue-800/20 dark:to-blue-900/20 rounded-lg overflow-hidden">
+                                    <!-- Shimmer overlay -->
+                                    <div class="absolute inset-0 bg-gradient-to-r from-transparent via-white/30 to-transparent animate-shimmer"></div>
+                                    
+                                    <!-- Skeleton shapes for bike -->
+                                    <div class="absolute inset-0 flex flex-col justify-center items-center gap-3 p-6">
+                                        <!-- Main bike body skeleton -->
+                                        <div class="w-2/3 h-8 bg-gray-300/60 dark:bg-gray-600/40 rounded-lg animate-pulse"></div>
+                                        <!-- Bike details -->
+                                        <div class="flex gap-3 w-2/3 justify-center">
+                                            <div class="w-6 h-6 bg-gray-300/60 dark:bg-gray-600/40 rounded-full animate-pulse" style="animation-delay: 0.2s;"></div>
+                                            <div class="w-12 h-4 bg-gray-300/60 dark:bg-gray-600/40 rounded animate-pulse" style="animation-delay: 0.4s;"></div>
+                                            <div class="w-6 h-6 bg-gray-300/60 dark:bg-gray-600/40 rounded-full animate-pulse" style="animation-delay: 0.6s;"></div>
                                         </div>
-                                        <div class="h-px w-full bg-gradient-to-r from-transparent via-blue-300/30 to-transparent animate-pulse"
-                                            style="animation: slideRight 3s linear infinite; animation-delay: 2s;">
+                                        <!-- Moving lines for motion effect -->
+                                        <div class="absolute inset-0 flex flex-col justify-center items-start gap-4 opacity-50">
+                                            <div class="h-px w-full bg-gradient-to-r from-transparent via-gray-400/40 dark:via-blue-300/20 to-transparent"
+                                                style="animation: slideRight 2.5s linear infinite;"></div>
+                                            <div class="h-px w-full bg-gradient-to-r from-transparent via-gray-400/40 dark:via-blue-300/20 to-transparent"
+                                                style="animation: slideRight 2.5s linear infinite; animation-delay: 0.8s;"></div>
+                                            <div class="h-px w-full bg-gradient-to-r from-transparent via-gray-400/40 dark:via-blue-300/20 to-transparent"
+                                                style="animation: slideRight 2.5s linear infinite; animation-delay: 1.6s;"></div>
                                         </div>
                                     </div>
                                 </div>
@@ -274,16 +298,28 @@
                             <div class="w-[250px] md:w-[450px] h-[180px] md:h-[220px] relative">
                                 <!-- Loading Skeleton -->
                                 <div id="bike-loading-desktop"
-                                    class="absolute inset-0 bg-gradient-to-br from-blue-100/20 to-blue-200/20 dark:from-blue-800/20 dark:to-blue-900/20 rounded-lg overflow-hidden">
-                                    <!-- Moving lines animation -->
-                                    <div class="absolute inset-0 flex flex-col justify-center items-start gap-8">
-                                        <div class="h-px w-full bg-gradient-to-r from-transparent via-blue-300/30 to-transparent animate-pulse"
-                                            style="animation: slideRight 3s linear infinite;"></div>
-                                        <div class="h-px w-full bg-gradient-to-r from-transparent via-blue-300/30 to-transparent animate-pulse"
-                                            style="animation: slideRight 3s linear infinite; animation-delay: 1s;">
+                                    class="absolute inset-0 bg-gradient-to-br from-gray-200/40 to-gray-300/40 dark:from-blue-800/20 dark:to-blue-900/20 rounded-lg overflow-hidden">
+                                    <!-- Shimmer overlay -->
+                                    <div class="absolute inset-0 bg-gradient-to-r from-transparent via-white/30 to-transparent animate-shimmer"></div>
+                                    
+                                    <!-- Skeleton shapes for bike -->
+                                    <div class="absolute inset-0 flex flex-col justify-center items-center gap-4 p-8">
+                                        <!-- Main bike body skeleton -->
+                                        <div class="w-2/3 h-10 bg-gray-300/60 dark:bg-gray-600/40 rounded-lg animate-pulse"></div>
+                                        <!-- Bike details -->
+                                        <div class="flex gap-4 w-2/3 justify-center">
+                                            <div class="w-8 h-8 bg-gray-300/60 dark:bg-gray-600/40 rounded-full animate-pulse" style="animation-delay: 0.2s;"></div>
+                                            <div class="w-16 h-6 bg-gray-300/60 dark:bg-gray-600/40 rounded animate-pulse" style="animation-delay: 0.4s;"></div>
+                                            <div class="w-8 h-8 bg-gray-300/60 dark:bg-gray-600/40 rounded-full animate-pulse" style="animation-delay: 0.6s;"></div>
                                         </div>
-                                        <div class="h-px w-full bg-gradient-to-r from-transparent via-blue-300/30 to-transparent animate-pulse"
-                                            style="animation: slideRight 3s linear infinite; animation-delay: 2s;">
+                                        <!-- Moving lines for motion effect -->
+                                        <div class="absolute inset-0 flex flex-col justify-center items-start gap-6 opacity-50">
+                                            <div class="h-px w-full bg-gradient-to-r from-transparent via-gray-400/40 dark:via-blue-300/20 to-transparent"
+                                                style="animation: slideRight 2.5s linear infinite;"></div>
+                                            <div class="h-px w-full bg-gradient-to-r from-transparent via-gray-400/40 dark:via-blue-300/20 to-transparent"
+                                                style="animation: slideRight 2.5s linear infinite; animation-delay: 0.8s;"></div>
+                                            <div class="h-px w-full bg-gradient-to-r from-transparent via-gray-400/40 dark:via-blue-300/20 to-transparent"
+                                                style="animation: slideRight 2.5s linear infinite; animation-delay: 1.6s;"></div>
                                         </div>
                                     </div>
                                 </div>
@@ -337,6 +373,21 @@
                             transform: translateX(100%);
                             opacity: 0;
                         }
+                    }
+
+                    @keyframes shimmer {
+                        0% {
+                            transform: translateX(-100%);
+                        }
+
+                        100% {
+                            transform: translateX(100%);
+                        }
+                    }
+
+                    .animate-shimmer {
+                        animation: shimmer 2s ease-in-out infinite;
+                        background-size: 200% 100%;
                     }
 
                     .animate-groundMove {

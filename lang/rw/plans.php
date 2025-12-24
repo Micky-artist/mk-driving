@@ -12,7 +12,7 @@ return [
     'contact_support' => 'Itsinda ryacu ririmo kugufasha guhitamo ifatabuguzi rijyanye niby\'ukeneye.',
     'contact_us' => 'Twandikire',
     'features' => [
-        'unlimited_quizzes' => 'Imyitozo y\'ubudashira',
+        'unlimited_quizzes' => 'Imyitozo itarangira',
         'access_to_all_courses' => 'Kurikirana amasomo yose.',
         'certificate' => 'Impamyabumenyi',
         'priority_support' => 'Inkunga y\'ibanze',
@@ -39,6 +39,6 @@ return [
         'hours' => 'Amasaha :count',
         'day' => 'Umunsi 1',
         'days' => 'Iminsi :count',
-        'no_limit' => 'Ubudashira',
+        'no_limit' => 'Nta kurangira',
     ],
 ];

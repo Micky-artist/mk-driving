@@ -27,18 +27,50 @@
             display: none !important; 
         }
         
-        html, body {
-            height: 100%;
-            margin: 0;
-            padding: 0;
+        /* Dark mode scrollbar styles for Webkit browsers */
+        .dark ::-webkit-scrollbar {
+            width: 6px;
+            height: 6px;
+        }
+        
+        .dark ::-webkit-scrollbar-track {
+            background: rgb(31 41 55);
+        }
+        
+        .dark ::-webkit-scrollbar-thumb {
+            background-color: rgb(55 65 81);
+            border-radius: 3px;
+        }
+        
+        .dark ::-webkit-scrollbar-thumb:hover {
+            background-color: rgb(75 85 99);
+        }
+        
+        /* Light mode scrollbar styles for Webkit browsers */
+        ::-webkit-scrollbar {
+            width: 6px;
+            height: 6px;
+        }
+        
+        ::-webkit-scrollbar-track {
+            background: transparent;
+        }
+        
+        ::-webkit-scrollbar-thumb {
+            background-color: rgb(203 213 225);
+            border-radius: 3px;
+        }
+        
+        ::-webkit-scrollbar-thumb:hover {
+            background-color: rgb(189 197 209);
         }
     </style>
     
     <!-- Page-specific Styles -->
     @stack('styles')
 </head>
-<body class="font-sans antialiased bg-gray-50 h-full">
-    <div id="app" x-data="{ sidebarOpen: false }" class="h-screen flex overflow-hidden bg-gray-50">
+<body class="font-sans antialiased bg-gray-50 dark:bg-gray-900 h-full">
+    <div id="app" x-data="{ sidebarOpen: false }" class="h-screen flex overflow-hidden bg-gray-50 dark:bg-gray-900">
         <!-- Mobile sidebar overlay -->
         <div 
             x-show="sidebarOpen"
@@ -49,15 +81,15 @@
             x-transition:leave="transition-opacity ease-linear duration-300"
             x-transition:leave-start="opacity-100"
             x-transition:leave-end="opacity-0"
-            class="fixed inset-0 bg-gray-900 bg-opacity-50 z-40 lg:hidden"
+            class="fixed inset-0 bg-gray-900 bg-opacity-50 dark:bg-gray-900 dark:bg-opacity-70 z-40 lg:hidden"
             x-cloak
         ></div>
 
         <!-- Sidebar -->
         <div 
-            class="fixed inset-y-0 left-0 z-40 w-64 bg-white border-r border-gray-200 transform transition-transform duration-300 ease-in-out lg:translate-x-0 lg:static lg:z-auto flex-shrink-0 h-screen overflow-y-auto"
+            class="fixed inset-y-0 left-0 z-40 w-64 bg-white dark:bg-gray-800 border-r border-gray-200 dark:border-gray-700 transform transition-transform duration-300 ease-in-out lg:translate-x-0 lg:static lg:z-auto flex-shrink-0 h-screen overflow-y-auto"
             :class="sidebarOpen ? 'translate-x-0' : '-translate-x-full'"
-            style="scrollbar-width: thin;"
+            style="scrollbar-width: thin; scrollbar-color: rgb(55 65 81) rgb(31 41 55);"
         >
             <x-sidebar :active="$activeRoute ?? ''" />
         </div>
@@ -65,12 +97,12 @@
         <!-- Main content wrapper -->
         <div class="flex-1 flex flex-col overflow-hidden">
             <!-- Header -->
-            <header class="bg-white border-b border-gray-200 shadow-sm z-30">
+            <header class="bg-white dark:bg-gray-800 border-b border-gray-200 dark:border-gray-700 shadow-sm z-30">
                 <div class="flex items-center justify-between h-[63px] px-4 sm:px-6 lg:px-8">
                     <!-- Mobile menu button -->
                     <button 
                         @click="sidebarOpen = true"
-                        class="lg:hidden -ml-2 p-2 rounded-md text-gray-500 hover:text-gray-600 hover:bg-gray-100 focus:outline-none focus:ring-2 focus:ring-inset focus:ring-blue-500"
+                        class="lg:hidden -ml-2 p-2 rounded-md text-gray-500 dark:text-gray-400 hover:text-gray-600 dark:hover:text-gray-300 hover:bg-gray-100 dark:hover:bg-gray-700 focus:outline-none focus:ring-2 focus:ring-inset focus:ring-blue-500"
                         aria-label="Open sidebar"
                     >
                         <svg class="h-6 w-6" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke="currentColor">
@@ -79,8 +111,8 @@
                     </button>
                     
                     <!-- Page title -->
-                    <h1 class="text-xl font-semibold text-gray-900">
-                        <a href="{{ route('dashboard', ['locale' => app()->getLocale()]) }}" class="hover:text-blue-600 transition-colors">
+                    <h1 class="text-xl font-semibold text-gray-900 dark:text-white">
+                        <a href="{{ route('dashboard', ['locale' => app()->getLocale()]) }}" class="hover:text-blue-600 dark:hover:text-blue-400 transition-colors">
                             {{ $title ?? __('navigation.dashboard') }}
                         </a>
                     </h1>
@@ -91,8 +123,8 @@
             </header>
 
             <!-- Main content -->
-            <main class="flex-1 overflow-y-auto focus:outline-none">
-                <div class="py-6 px-4 sm:px-6 lg:px-8">
+            <main class="flex-1 overflow-y-auto focus:outline-none" style="scrollbar-width: thin; scrollbar-color: rgb(55 65 81) rgb(31 41 55);" class="dark:[scrollbar-color:rgb(55 65 81)_rgb(31 41 55)]">
+                <div class="">
                     <div class="max-w-7xl mx-auto">
                         @yield('dashboard-content')
                     </div>

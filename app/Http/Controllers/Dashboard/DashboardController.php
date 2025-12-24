@@ -27,16 +27,37 @@ class DashboardController extends Controller
     {
         $user = Auth::user();
         
-        // Get user's active subscriptions with plan details and quiz count
+        // Get user's active and pending subscriptions with plan details and quiz count
         $currentSubscriptions = $user->subscriptions()
             ->with(['plan' => function($query) {
                 $query->withCount('quizzes');
             }])
-            ->where('ends_at', '>=', now())
-            ->where('status', 'ACTIVE')
+            ->whereIn('status', ['ACTIVE', 'PENDING'])
+            ->where(function($query) {
+                $query->where('ends_at', '>=', now())
+                      ->orWhere('status', 'PENDING'); // Include pending regardless of end date
+            })
             ->get()
-            ->each(function($subscription) {
+            ->each(function($subscription) use ($user) {
                 $subscription->quizzes_count = $subscription->plan->quizzes_count ?? 0;
+                
+                // Get quizzes for this plan
+                $subscription->quizzes = $subscription->plan->quizzes()
+                    ->where('is_active', true)
+                    ->with(['attempts' => function($query) use ($user) {
+                        $query->where('user_id', $user->id)->orderBy('created_at', 'desc');
+                    }])
+                    ->take(10) // Limit to 10 quizzes for carousel
+                    ->get()
+                    ->map(function($quiz) use ($user) {
+                        // Check if user has attempted this quiz
+                        $attempt = $quiz->attempts->first();
+                        $quiz->user_attempt = $attempt;
+                        $quiz->attempt_status = $attempt ? $attempt->status : 'not_started';
+                        $quiz->score = $attempt ? $attempt->score_percentage : null;
+                        return $quiz;
+                    });
+                
                 return $subscription;
             });
             

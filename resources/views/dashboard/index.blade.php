@@ -14,6 +14,11 @@
             background-color: #3b82f6;
             border-radius: 0.25rem;
         }
+
+        /* Dark mode progress bar styles */
+        .dark .progress-bar {
+            background-color: #374151;
+        }
     </style>
 @endpush
 
@@ -62,11 +67,10 @@
                     </div>
                 </div>
 
-                <!-- Plan Cards -->
+                <!-- Plan Cards with Quiz Carousel -->
                 @if ($currentSubscriptions->count() > 0)
                     <div class="px-0 py-2 md:p-2 bg-gray-50 dark:bg-gray-800">
-                        <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4">
-                    @foreach ($currentSubscriptions->take(3) as $subscription)
+                        @foreach ($currentSubscriptions->take(3) as $subscription)
                         @php
                             // Get plan name with fallback
                             $planName = is_string($subscription->plan->name)
@@ -107,7 +111,7 @@
                             // For backward compatibility with the gradient logic below
                             $daysRemaining = $hoursRemaining !== null ? (int) ($hoursRemaining / 24) : null;
 
-                            // Define gradient based on days remaining
+                            // Define gradient based on days remaining (reverting to simple blue design)
                             $gradient = 'from-blue-600 to-blue-700';
                             if ($daysRemaining !== null && $daysRemaining < 7) {
                                 $gradient = 'from-yellow-500 to-yellow-600';
@@ -117,161 +121,234 @@
                             }
                         @endphp
 
-                        <div
-                            class="bg-white dark:bg-gray-800 rounded-lg shadow-md overflow-hidden border border-gray-200 dark:border-gray-700 hover:shadow-lg transition-all duration-200 transform hover:-translate-y-1 flex flex-col h-full">
-                            <!-- Card Header -->
-                            <div class="bg-gradient-to-r {{ $gradient }} p-5 text-white flex-shrink-0">
-                                <div class="flex justify-between items-start gap-3 mb-4">
-                                    <div class="flex-1 min-w-0">
-                                        <h3 class="text-lg font-bold truncate">{{ $planDisplayName }}</h3>
-                                        @if (!empty($planDisplayDescription))
-                                            <p class="text-sm text-white/90 mt-1 line-clamp-2">
-                                                {{ $planDisplayDescription }}
-                                            </p>
-                                        @endif
-                                    </div>
-                                    @php
-                                        $userQuizAttempts = auth()
-                                            ->user()
-                                            ->quizAttempts()
-                                            ->whereHas('quiz', function ($query) use ($subscription) {
-                                                $query->where(
-                                                    'subscription_plan_slug',
-                                                    $subscription->subscription_plan_slug,
-                                                );
-                                            })
-                                            ->where('status', 'completed')
-                                            ->get();
-                                        $hasAttempts = $userQuizAttempts->isNotEmpty();
-                                        $averageScore = $hasAttempts
-                                            ? round($userQuizAttempts->avg('score_percentage'))
-                                            : 0;
-                                    @endphp
-                                    <div class="bg-white/20 dark:bg-white/10 rounded-lg p-2 text-center flex-shrink-0"
-                                        style="min-width: 80px;">
-                                        <div class="text-xs text-white/90 dark:text-white/80 whitespace-nowrap">
-                                            {{ $hasAttempts ? __('dashboard.quizzes.average_score') : __('dashboard.quizzes.attempts') }}
-                                        </div>
-                                        <div class="text-2xl font-bold leading-tight mt-1">
-                                            @if ($hasAttempts)
-                                                {{ $averageScore }}%
-                                            @else
-                                                0
-                                            @endif
-                                        </div>
-                                    </div>
-                                </div>
-
+                        <div class="flex flex-col lg:flex-row gap-6 mb-6">
+                            <!-- Subscription Card -->
+                            <div class="flex-1 lg:max-w-md">
                                 <div
-                                    class="inline-flex items-center px-2.5 py-1 rounded-full text-xs font-medium bg-white/20 dark:bg-white/10">
-                                    <svg xmlns="http://www.w3.org/2000/svg" class="h-3.5 w-3.5 mr-1" fill="none"
-                                        viewBox="0 0 24 24" stroke="currentColor">
-                                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
-                                            d="M9 12h6m-6 4h6m2 5H7a2 2 0 01-2-2V5a2 2 0 012-2h5.586a1 1 0 01.707.293l5.414 5.414a1 1 0 01.293.707V19a2 2 0 01-2 2z" />
-                                    </svg>
-                                    {{ $subscription->quizzes_count ?? 0 }}
-                                    {{ trans_choice('dashboard.quizzes.available', $subscription->quizzes_count ?? 0) }}
-                                </div>
-                            </div>
+                                    class="bg-white dark:bg-gray-800 rounded-lg shadow-md overflow-hidden border border-gray-200 dark:border-gray-700 hover:shadow-lg transition-all duration-200 transform hover:-translate-y-1">
+                                    <!-- Card Header -->
+                                    <div class="bg-gradient-to-r {{ $gradient }} p-5 text-white">
+                                        <div class="flex justify-between items-start gap-3 mb-4">
+                                            <div class="flex-1 min-w-0">
+                                                <h3 class="text-lg font-bold truncate">{{ $planDisplayName }}</h3>
+                                                @if (!empty($planDisplayDescription))
+                                                    <p class="text-sm text-white/90 mt-1 line-clamp-2">
+                                                        {{ $planDisplayDescription }}
+                                                    </p>
+                                                @endif
+                                            </div>
+                                            @php
+                                                $userQuizAttempts = auth()
+                                                    ->user()
+                                                    ->quizAttempts()
+                                                    ->whereHas('quiz', function ($query) use ($subscription) {
+                                                        $query->where(
+                                                            'subscription_plan_slug',
+                                                            $subscription->subscription_plan_slug,
+                                                        );
+                                                    })
+                                                    ->where('status', 'completed')
+                                                    ->get();
+                                                $hasAttempts = $userQuizAttempts->isNotEmpty();
+                                                $averageScore = $hasAttempts
+                                                    ? round($userQuizAttempts->avg('score_percentage'))
+                                                    : 0;
+                                            @endphp
+                                            <div class="bg-white/20 dark:bg-white/10 rounded-lg p-2 text-center flex-shrink-0"
+                                                style="min-width: 80px;">
+                                                <div class="text-xs text-white/90 dark:text-white/80 whitespace-nowrap">
+                                                    {{ $hasAttempts ? __('dashboard.quizzes.average_score') : __('dashboard.quizzes.attempts') }}
+                                                </div>
+                                                <div class="text-2xl font-bold leading-tight mt-1">
+                                                    @if ($hasAttempts)
+                                                        {{ $averageScore }}%
+                                                    @else
+                                                        0
+                                                    @endif
+                                                </div>
+                                            </div>
+                                        </div>
 
-                            <!-- Progress Section -->
-                            <div class="p-5 bg-gradient-to-b from-gray-50 to-white dark:from-gray-800 dark:to-gray-700 border-b border-gray-100 dark:border-gray-700 flex-shrink-0">
-                                <div class="flex justify-between items-center text-sm mb-2">
-                                    <span class="text-gray-600 dark:text-gray-300 font-medium">{{ __('dashboard.quizzes.progress') }}</span>
-                                    <span class="font-semibold text-gray-900 dark:text-white">{{ $progressPercent }}%</span>
-                                </div>
-                                <div class="w-full bg-gray-200 dark:bg-gray-700 rounded-full h-2.5 overflow-hidden">
-                                    <div class="bg-gradient-to-r {{ $gradient }} h-2.5 rounded-full transition-all duration-500 ease-out"
-                                        style="width: {{ $progressPercent }}%;"></div>
-                                </div>
-                                <p class="text-xs text-gray-500 dark:text-gray-400 mt-2 flex items-center">
-                                    <svg xmlns="http://www.w3.org/2000/svg" class="h-3.5 w-3.5 mr-1" fill="none"
-                                        viewBox="0 0 24 24" stroke="currentColor">
-                                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
-                                            d="M8 7V3m8 4V3m-9 8h10M5 21h14a2 2 0 002-2V7a2 2 0 00-2-2H5a2 2 0 00-2 2v12a2 2 0 002 2z" />
-                                    </svg>
-                                    @if ($endDate)
-                                        {{ __('dashboard.valid_until') }}: <span
-                                            class="font-medium ml-1">{{ $endDate->format('M d, Y') }}</span>
-                                    @else
-                                        {{ __('dashboard.no_end_date') }}
-                                    @endif
-                                </p>
-                            </div>
-
-                            <!-- Status Section -->
-                            <div class="p-5 bg-white dark:bg-gray-800 flex-shrink-0">
-                                <div class="flex justify-between items-center">
-                                    <div class="min-w-0 flex-1">
-                                        <p class="text-xs text-gray-500 dark:text-gray-400 uppercase tracking-wider mb-1">
-                                            {{ __('dashboard.status') }}</p>
-                                        <p class="font-semibold text-gray-900 truncate">
-                                            @if ($subscription->status === 'ACTIVE')
-                                                {{ __('dashboard.subscription.active') }}
-                                            @elseif($subscription->status === 'CANCELLED')
-                                                {{ __('dashboard.subscription.cancelled') }}
-                                            @elseif($subscription->status === 'EXPIRED')
-                                                {{ __('dashboard.subscription.expired') }}
-                                            @else
-                                                {{ ucfirst(strtolower($subscription->status)) }}
-                                            @endif
-                                        </p>
+                                        <div
+                                            class="inline-flex items-center px-2.5 py-1 rounded-full text-xs font-medium bg-white/20 dark:bg-white/10">
+                                            <svg xmlns="http://www.w3.org/2000/svg" class="h-3.5 w-3.5 mr-1" fill="none"
+                                                viewBox="0 0 24 24" stroke="currentColor">
+                                                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
+                                                    d="M9 12h6m-6 4h6m2 5H7a2 2 0 01-2-2V5a2 2 0 012-2h5.586a1 1 0 01.707.293l5.414 5.414a1 1 0 01.293.707V19a2 2 0 01-2 2z" />
+                                            </svg>
+                                            {{ $subscription->quizzes_count ?? 0 }}
+                                            {{ trans_choice('dashboard.quizzes.available', $subscription->quizzes_count ?? 0) }}
+                                        </div>
                                     </div>
-                                    <span
-                                        class="inline-flex items-center px-3 py-1.5 rounded-full text-xs font-semibold flex-shrink-0 ml-3 {{ $subscription->status === 'ACTIVE'
-                                            ? 'bg-green-100 text-green-800'
-                                            : ($subscription->status === 'PENDING'
-                                                ? 'bg-yellow-100 text-yellow-800'
-                                                : 'bg-gray-100 text-gray-800') }}">
-                                        <span
-                                            class="w-1.5 h-1.5 rounded-full mr-1.5 {{ $subscription->status === 'ACTIVE'
-                                                ? 'bg-green-500'
-                                                : ($subscription->status === 'PENDING'
-                                                    ? 'bg-yellow-500'
-                                                    : 'bg-gray-500') }}"></span>
-                                        @if ($subscription->status === 'ACTIVE')
-                                            {{ __('dashboard.subscription.active') }}
-                                        @elseif($subscription->status === 'PENDING')
-                                            {{ __('dashboard.subscription.pending') }}
-                                        @elseif($subscription->status === 'CANCELLED')
-                                            {{ __('dashboard.subscription.cancelled') }}
-                                        @elseif($subscription->status === 'EXPIRED')
-                                            {{ __('dashboard.subscription.expired') }}
-                                        @else
-                                            {{ $subscription->status }}
-                                        @endif
-                                    </span>
+
+                                    <!-- Progress/Payment Section -->
+                                    @if ($subscription->status === 'PENDING')
+                                        <div class="p-5 bg-gradient-to-b from-gray-50 to-white dark:from-gray-800 dark:to-gray-700 border-b border-gray-100 dark:border-gray-700 flex-shrink-0">
+                                            <div class="space-y-3">
+                                                <div class="flex justify-between items-center text-sm">
+                                                    <span class="text-gray-600 dark:text-gray-300 font-medium">{{ __('dashboard.payment_method') }}</span>
+                                                    <span class="font-semibold text-gray-900 dark:text-white capitalize">
+                                                        {{ str_replace('_', ' ', $subscription->payment_method) }}
+                                                    </span>
+                                                </div>
+                                                @if ($subscription->phone_number)
+                                                    <div class="flex justify-between items-center text-sm">
+                                                        <span class="text-gray-600 dark:text-gray-300 font-medium">{{ __('dashboard.phone_number') }}</span>
+                                                        <span class="font-semibold text-gray-900 dark:text-white">
+                                                            {{ $subscription->phone_number }}
+                                                        </span>
+                                                    </div>
+                                                @endif
+                                                <div class="flex justify-between items-center text-sm">
+                                                    <span class="text-gray-600 dark:text-gray-300 font-medium">{{ __('dashboard.amount') }}</span>
+                                                    <span class="font-semibold text-gray-900 dark:text-white">
+                                                        {{ number_format($subscription->amount) }} RWF
+                                                    </span>
+                                                </div>
+                                            </div>
+                                            <div class="mt-3 pt-3 border-t border-gray-200 dark:border-gray-600">
+                                                <button onclick="window.location.href='{{ route('plans', ['locale' => app()->getLocale()]) }}'" 
+                                                    class="w-full bg-blue-600 hover:bg-blue-700 text-white font-medium py-2 px-4 rounded-lg text-sm transition-colors">
+                                                    {{ __('dashboard.complete_payment') }}
+                                                </button>
+                                            </div>
+                                        </div>
+                                    @else
+                                        <div class="p-5 bg-gradient-to-b from-gray-50 to-white dark:from-gray-800 dark:to-gray-700 border-b border-gray-100 dark:border-gray-700 flex-shrink-0">
+                                            <div class="flex justify-between items-center text-sm mb-2">
+                                                <span class="text-gray-600 dark:text-gray-300 font-medium">{{ __('dashboard.quizzes.progress') }}</span>
+                                                <span class="font-semibold text-gray-900 dark:text-white">{{ $progressPercent }}%</span>
+                                            </div>
+                                            <div class="w-full bg-gray-200 dark:bg-gray-700 rounded-full h-2.5 overflow-hidden">
+                                                <div class="bg-gradient-to-r {{ $gradient }} h-2.5 rounded-full transition-all duration-500 ease-out"
+                                                    style="width: {{ $progressPercent }}%;"></div>
+                                            </div>
+                                            <p class="text-xs text-gray-500 dark:text-gray-400 mt-2 flex items-center">
+                                                <svg xmlns="http://www.w3.org/2000/svg" class="h-3.5 w-3.5 mr-1" fill="none"
+                                                    viewBox="0 0 24 24" stroke="currentColor">
+                                                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
+                                                        d="M8 7V3m8 4V3m-9 8h10M5 21h14a2 2 0 002-2V7a2 2 0 00-2-2H5a2 2 0 00-2 2v12a2 2 0 002 2z" />
+                                                </svg>
+                                                @if ($endDate)
+                                                    {{ __('dashboard.valid_until') }}: <span
+                                                        class="font-medium ml-1">{{ $endDate->format('M d, Y') }}</span>
+                                                @else
+                                                    {{ __('dashboard.no_end_date') }}
+                                                @endif
+                                            </p>
+                                        </div>
+                                    @endif
+
+                                    <!-- Status Section -->
+                                    <div class="p-5 bg-white dark:bg-gray-800 flex-shrink-0">
+                                        <div class="flex justify-between items-center">
+                                            <div class="min-w-0 flex-1">
+                                                <p class="text-xs text-gray-500 dark:text-gray-400 uppercase tracking-wider mb-1">
+                                                    {{ __('dashboard.status') }}</p>
+                                                <p class="font-semibold text-gray-900 truncate">
+                                                    @if ($subscription->status === 'ACTIVE')
+                                                        {{ __('dashboard.subscription.active') }}
+                                                    @elseif($subscription->status === 'PENDING')
+                                                        {{ __('dashboard.subscription.pending') }}
+                                                    @elseif($subscription->status === 'CANCELLED')
+                                                        {{ __('dashboard.subscription.cancelled') }}
+                                                    @elseif($subscription->status === 'EXPIRED')
+                                                        {{ __('dashboard.subscription.expired') }}
+                                                    @else
+                                                        {{ ucfirst(strtolower($subscription->status)) }}
+                                                    @endif
+                                                </p>
+                                            </div>
+                                            <span
+                                                class="inline-flex items-center px-3 py-1.5 rounded-full text-xs font-semibold flex-shrink-0 ml-3 {{ $subscription->status === 'ACTIVE'
+                                                    ? 'bg-green-100 text-green-800'
+                                                    : ($subscription->status === 'PENDING'
+                                                        ? 'bg-yellow-100 text-yellow-800'
+                                                        : 'bg-gray-100 text-gray-800') }}">
+                                                <span
+                                                    class="w-1.5 h-1.5 rounded-full mr-1.5 {{ $subscription->status === 'ACTIVE'
+                                                        ? 'bg-green-500'
+                                                        : ($subscription->status === 'PENDING'
+                                                            ? 'bg-yellow-500'
+                                                            : 'bg-gray-500') }}"></span>
+                                                @if ($subscription->status === 'ACTIVE')
+                                                    {{ __('dashboard.subscription.active') }}
+                                                @elseif($subscription->status === 'PENDING')
+                                                    {{ __('dashboard.subscription.pending') }}
+                                                @elseif($subscription->status === 'CANCELLED')
+                                                    {{ __('dashboard.subscription.cancelled') }}
+                                                @elseif($subscription->status === 'EXPIRED')
+                                                    {{ __('dashboard.subscription.expired') }}
+                                                @else
+                                                    {{ $subscription->status }}
+                                                @endif
+                                            </span>
+                                        </div>
+                                    </div>
                                 </div>
                             </div>
+
+                            <!-- Quiz Carousel -->
+                            @if ($subscription->status === 'ACTIVE' && $subscription->quizzes->count() > 0)
+                                <div class="flex-1">
+                                    <div class="bg-white dark:bg-gray-800 rounded-lg shadow-md border border-gray-200 dark:border-gray-700 p-4">
+                                        <h4 class="text-lg font-semibold text-gray-900 dark:text-white mb-4">{{ __('dashboard.available_quizzes') }}</h4>
+                                        <div class="overflow-x-auto">
+                                            <div class="flex gap-4 pb-2" style="min-width: max-content;">
+                                                @foreach ($subscription->quizzes as $quiz)
+                                                    <div class="bg-gray-50 dark:bg-gray-700 rounded-lg p-4 border border-gray-200 dark:border-gray-600 hover:border-blue-300 dark:hover:border-blue-600 transition-colors cursor-pointer" 
+                                                         style="min-width: 280px; max-width: 320px;"
+                                                         onclick="window.location.href='{{ route('dashboard.quizzes.show', ['locale' => app()->getLocale(), 'quiz' => $quiz->id]) }}'">
+                                                        <div class="flex justify-between items-start mb-2">
+                                                            <h5 class="font-medium text-gray-900 dark:text-white line-clamp-2 flex-1">{{ $quiz->title }}</h5>
+                                                            <span class="ml-2 px-2 py-1 text-xs rounded-full {{ $quiz->attempt_status === 'completed' ? 'bg-green-100 text-green-800 dark:bg-green-900 dark:text-green-200' : ($quiz->attempt_status === 'in_progress' ? 'bg-yellow-100 text-yellow-800 dark:bg-yellow-900 dark:text-yellow-200' : 'bg-gray-100 text-gray-800 dark:bg-gray-700 dark:text-gray-300') }}">
+                                                                {{ $quiz->attempt_status === 'completed' ? __('dashboard.completed') : ($quiz->attempt_status === 'in_progress' ? __('dashboard.in_progress') : __('dashboard.not_started')) }}
+                                                            </span>
+                                                        </div>
+                                                        <div class="text-sm text-gray-600 dark:text-gray-400 mb-3">
+                                                            {{ $quiz->questions_count }} {{ __('dashboard.questions') }}
+                                                        </div>
+                                                        @if ($quiz->attempt_status === 'completed' && $quiz->score)
+                                                            <div class="flex justify-between items-center text-sm">
+                                                                <span class="text-gray-600 dark:text-gray-400">{{ __('dashboard.score') }}</span>
+                                                                <span class="font-semibold text-blue-600 dark:text-blue-400">{{ $quiz->score }}%</span>
+                                                            </div>
+                                                        @endif
+                                                    </div>
+                                                @endforeach
+                                            </div>
+                                        </div>
+                                    </div>
+                                </div>
+                            @endif
                         </div>
                     @endforeach
-                        </div>
 
-                        @if ($currentSubscriptions->count() > 3)
-                            <div class="text-center mt-4 px-6 pb-6">
-                                <a href="{{ route('dashboard.quizzes.index', ['locale' => app()->getLocale()]) }}"
-                                    class="inline-flex items-center text-blue-600 hover:text-blue-800 font-medium text-sm transition-colors">
-                                    {{ __('dashboard.view_all_quizzes') }}
-                                    <svg xmlns="http://www.w3.org/2000/svg" class="h-4 w-4 ml-1" fill="none" viewBox="0 0 24 24"
-                                        stroke="currentColor">
-                                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 5l7 7-7 7" />
-                                    </svg>
-                                </a>
-                            </div>
-                        @endif
+                    @if ($currentSubscriptions->count() > 3)
+                        <div class="text-center mt-4 px-6 pb-6">
+                            <a href="{{ route('dashboard.quizzes.index', ['locale' => app()->getLocale()]) }}"
+                                class="inline-flex items-center text-blue-600 hover:text-blue-800 font-medium text-sm transition-colors">
+                                {{ __('dashboard.view_all_quizzes') }}
+                                <svg xmlns="http://www.w3.org/2000/svg" class="h-4 w-4 ml-1" fill="none" viewBox="0 0 24 24"
+                                    stroke="currentColor">
+                                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 5l7 7-7 7" />
+                                </svg>
+                            </a>
+                        </div>
+                    @endif
                     </div>
                 @else
-                <div class="bg-white rounded-lg shadow-md p-8 text-center border border-gray-200">
+                <div class="bg-white dark:bg-gray-800 rounded-lg shadow-md p-8 text-center border border-gray-200 dark:border-gray-700">
                     <div
-                        class="mx-auto flex items-center justify-center h-16 w-16 rounded-full bg-yellow-100 text-yellow-600 mb-4">
+                        class="mx-auto flex items-center justify-center h-16 w-16 rounded-full bg-yellow-100 dark:bg-yellow-900/20 text-yellow-600 dark:text-yellow-400 mb-4">
                         <svg xmlns="http://www.w3.org/2000/svg" class="h-8 w-8" fill="none" viewBox="0 0 24 24"
                             stroke="currentColor">
                             <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
                                 d="M12 8v4l3 3m6-3a9 9 0 11-18 0 9 9 0 0118 0z" />
                         </svg>
                     </div>
-                    <h3 class="text-lg font-medium text-gray-900 mb-2">{{ __('subscription.no_subscription') }}</h3>
-                    <p class="text-gray-600 mb-6 max-w-md mx-auto">{{ __('subscription.upgrade_message') }}</p>
+                    <h3 class="text-lg font-medium text-gray-900 dark:text-white mb-2">{{ __('subscription.no_subscription') }}</h3>
+                    <p class="text-gray-600 dark:text-gray-400 mb-6 max-w-md mx-auto">{{ __('subscription.upgrade_message') }}</p>
                     <div class="flex flex-col sm:flex-row justify-center gap-3">
                         <a href="{{ route('plans', ['locale' => app()->getLocale()]) }}"
                             class="px-6 py-3 border border-transparent text-base font-medium rounded-md shadow-sm text-white bg-blue-600 hover:bg-blue-700 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-blue-500 transition-colors">
@@ -285,17 +362,17 @@
             <!-- Available Quizzes -->
             <a href="{{ route('dashboard.quizzes.index', ['locale' => app()->getLocale()]) }}" class="block group">
                 <div
-                    class="bg-white rounded-lg shadow p-4 sm:p-6 hover:shadow-md transition-shadow duration-200 border border-transparent hover:border-blue-200">
+                    class="bg-white dark:bg-gray-800 rounded-lg shadow p-4 sm:p-6 hover:shadow-md transition-shadow duration-200 border border-transparent hover:border-blue-200 dark:hover:border-blue-600">
                     <div class="flex items-center justify-between">
                         <div>
                             <p
-                                class="text-sm font-medium text-gray-500 group-hover:text-blue-600 transition-colors truncate">
+                                class="text-sm font-medium text-gray-500 dark:text-gray-400 group-hover:text-blue-600 dark:group-hover:text-blue-400 transition-colors truncate">
                                 {{ __('dashboard.availableQuizzes') }}</p>
                             <p
-                                class="mt-1 text-2xl font-semibold text-blue-600 group-hover:text-blue-700 transition-colors">
+                                class="mt-1 text-2xl font-semibold text-blue-600 dark:text-blue-400 group-hover:text-blue-700 dark:group-hover:text-blue-300 transition-colors">
                                 {{ $stats['total_quizzes'] }}</p>
                         </div>
-                        <div class="p-3 rounded-full bg-blue-50 group-hover:bg-blue-100 text-blue-600 transition-colors">
+                        <div class="p-3 rounded-full bg-blue-50 dark:bg-blue-900/20 text-blue-600 dark:text-blue-400 transition-colors">
                             <svg xmlns="http://www.w3.org/2000/svg" class="h-6 w-6" fill="none" viewBox="0 0 24 24"
                                 stroke="currentColor">
                                 <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
@@ -304,7 +381,7 @@
                         </div>
                     </div>
                     <div class="mt-2 text-right">
-                        <span class="text-xs text-blue-500 font-medium inline-flex items-center">
+                        <span class="text-xs text-blue-500 dark:text-blue-400 font-medium inline-flex items-center">
                             {{ __('dashboard.viewAll') }}
                             <svg xmlns="http://www.w3.org/2000/svg" class="h-3.5 w-3.5 ml-0.5" fill="none"
                                 viewBox="0 0 24 24" stroke="currentColor">
@@ -318,18 +395,18 @@
             <!-- In Progress Quizzes -->
             <a href="{{ route('dashboard.quizzes.in-progress', ['locale' => app()->getLocale()]) }}" class="block group">
                 <div
-                    class="bg-white rounded-lg shadow p-4 sm:p-6 hover:shadow-md transition-shadow duration-200 border border-transparent hover:border-purple-200">
+                    class="bg-white dark:bg-gray-800 rounded-lg shadow p-4 sm:p-6 hover:shadow-md transition-shadow duration-200 border border-transparent hover:border-purple-200 dark:hover:border-purple-600">
                     <div class="flex items-center justify-between">
                         <div>
                             <p
-                                class="text-sm font-medium text-gray-500 group-hover:text-purple-600 transition-colors truncate">
+                                class="text-sm font-medium text-gray-500 dark:text-gray-400 group-hover:text-purple-600 dark:group-hover:text-purple-400 transition-colors truncate">
                                 {{ __('dashboard.inProgress') }}</p>
                             <p
-                                class="mt-1 text-2xl font-semibold text-purple-600 group-hover:text-purple-700 transition-colors">
+                                class="mt-1 text-2xl font-semibold text-purple-600 dark:text-purple-400 group-hover:text-purple-700 dark:group-hover:text-purple-300 transition-colors">
                                 {{ $stats['in_progress_count'] }}</p>
                         </div>
                         <div
-                            class="p-3 rounded-full bg-purple-50 group-hover:bg-purple-100 text-purple-600 transition-colors">
+                            class="p-3 rounded-full bg-purple-50 dark:bg-purple-900/20 group-hover:bg-purple-100 dark:group-hover:bg-purple-900/30 text-purple-600 dark:text-purple-400 transition-colors">
                             <svg xmlns="http://www.w3.org/2000/svg" class="h-6 w-6" fill="none" viewBox="0 0 24 24"
                                 stroke="currentColor">
                                 <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
@@ -338,7 +415,7 @@
                         </div>
                     </div>
                     <div class="mt-2 text-right">
-                        <span class="text-xs text-purple-500 font-medium inline-flex items-center">
+                        <span class="text-xs text-purple-500 dark:text-purple-400 font-medium inline-flex items-center">
                             {{ __('dashboard.continueLearning') }}
                             <svg xmlns="http://www.w3.org/2000/svg" class="h-3.5 w-3.5 ml-0.5" fill="none"
                                 viewBox="0 0 24 24" stroke="currentColor">
@@ -350,13 +427,13 @@
             </a>
 
             <!-- Completed Quizzes -->
-            <div class="bg-white rounded-lg shadow p-4 sm:p-6">
+            <div class="bg-white dark:bg-gray-800 rounded-lg shadow p-4 sm:p-6">
                 <div class="flex items-center justify-between">
                     <div>
-                        <p class="text-sm font-medium text-gray-500 truncate">{{ __('dashboard.stats.completed') }}</p>
-                        <p class="mt-1 text-2xl font-semibold text-green-600">{{ $stats['completed_count'] }}</p>
+                        <p class="text-sm font-medium text-gray-500 dark:text-gray-400 truncate">{{ __('dashboard.stats.completed') }}</p>
+                        <p class="mt-1 text-2xl font-semibold text-green-600 dark:text-green-400">{{ $stats['completed_count'] }}</p>
                     </div>
-                    <div class="p-3 rounded-full bg-green-100 text-green-600">
+                    <div class="p-3 rounded-full bg-green-100 dark:bg-green-900/20 text-green-600 dark:text-green-400">
                         <svg xmlns="http://www.w3.org/2000/svg" class="h-6 w-6" fill="none" viewBox="0 0 24 24"
                             stroke="currentColor">
                             <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
@@ -368,15 +445,15 @@
 
 
             <!-- Average Score -->
-            <div class="bg-white rounded-lg shadow p-4 sm:p-6">
+            <div class="bg-white dark:bg-gray-800 rounded-lg shadow p-4 sm:p-6">
                 <div class="flex items-center justify-between">
                     <div>
-                        <p class="text-sm font-medium text-gray-500 truncate">{{ __('dashboard.stats.average_score') }}
+                        <p class="text-sm font-medium text-gray-500 dark:text-gray-400 truncate">{{ __('dashboard.stats.average_score') }}
                         </p>
-                        <p class="mt-1 text-2xl font-semibold text-purple-600">
+                        <p class="mt-1 text-2xl font-semibold text-purple-600 dark:text-purple-400">
                             {{ number_format($stats['average_score'], 1) }}%</p>
                     </div>
-                    <div class="p-3 rounded-full bg-purple-100 text-purple-600">
+                    <div class="p-3 rounded-full bg-purple-100 dark:bg-purple-900/20 text-purple-600 dark:text-purple-400">
                         <svg xmlns="http://www.w3.org/2000/svg" class="h-6 w-6" fill="none" viewBox="0 0 24 24"
                             stroke="currentColor">
                             <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
@@ -389,13 +466,13 @@
 
 
         <!-- Available Subscription Plans -->
-        <div class="bg-white rounded-lg shadow overflow-hidden">
+        <div class="bg-white dark:bg-gray-800 rounded-lg shadow overflow-hidden">
             <div class="p-4 sm:p-6">
                 <div class="flex items-center justify-between mb-4">
                     <div>
-                        <h2 class="text-lg font-medium text-gray-900">
+                        <h2 class="text-lg font-medium text-gray-900 dark:text-white">
                             {{ __('dashboard.subscription_plans.available_plans') }}</h2>
-                        <p class="mt-1 text-sm text-gray-500">{{ __('dashboard.subscription_plans.upgrade_description') }}
+                        <p class="mt-1 text-sm text-gray-500 dark:text-gray-400">{{ __('dashboard.subscription_plans.upgrade_description') }}
                         </p>
                     </div>
                 </div>
@@ -409,26 +486,26 @@
                         @endphp
 
                         <div
-                            class="p-3 sm:p-4 border rounded-lg transition-all hover:shadow-md {{ $isCurrentPlan ? 'bg-green-50 border-green-200' : 'hover:border-gray-300' }}">
+                            class="p-3 sm:p-4 border rounded-lg transition-all hover:shadow-md {{ $isCurrentPlan ? 'bg-green-50 dark:bg-green-900/20 border-green-200 dark:border-green-800' : 'hover:border-gray-300 dark:hover:border-gray-600' }}">
                             <div class="flex items-start justify-between mb-2">
-                                <h3 class="font-semibold text-xs sm:text-sm leading-tight">{{ $localizedName }}</h3>
+                                <h3 class="font-semibold text-xs sm:text-sm leading-tight text-gray-900 dark:text-white">{{ $localizedName }}</h3>
                                 @if ($isCurrentPlan)
                                     <span
-                                        class="inline-flex items-center px-2.5 py-0.5 rounded-full text-xs font-medium bg-green-100 text-green-800">
+                                        class="inline-flex items-center px-2.5 py-0.5 rounded-full text-xs font-medium bg-green-100 dark:bg-green-900/20 text-green-800 dark:text-green-200">
                                         {{ __('dashboard.subscription_plans.current') }}
                                     </span>
                                 @endif
                             </div>
                             <div class="space-y-1">
-                                <p class="text-base sm:text-lg font-bold text-green-600">
+                                <p class="text-base sm:text-lg font-bold text-green-600 dark:text-green-400">
                                     {{ $plan->price == 0 ? __('dashboard.subscription_plans.free') : number_format($plan->price) . ' RWF' }}
                                 </p>
-                                <p class="text-xs text-gray-600">{{ $plan->duration }} {{ __('dashboard.days') }}</p>
+                                <p class="text-xs text-gray-600 dark:text-gray-400">{{ $plan->duration }} {{ __('dashboard.days') }}</p>
                             </div>
                             <a href="{{ route('subscriptions', ['locale' => app()->getLocale()]) }}"
                                 class="mt-2 inline-block w-full">
                                 <button type="button"
-                                    class="w-full flex justify-center py-1.5 px-3 border border-gray-300 rounded-md shadow-sm text-xs sm:text-sm font-medium text-gray-700 bg-white hover:bg-gray-50 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-blue-500 disabled:opacity-50 disabled:cursor-not-allowed"
+                                    class="w-full flex justify-center py-1.5 px-3 border border-gray-300 dark:border-gray-600 rounded-md shadow-sm text-xs sm:text-sm font-medium text-gray-700 dark:text-gray-300 bg-white dark:bg-gray-800 hover:bg-gray-50 dark:hover:bg-gray-700 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-blue-500 disabled:opacity-50 disabled:cursor-not-allowed"
                                     {{ $isCurrentPlan ? 'disabled' : '' }}>
                                     {{ $isCurrentPlan ? __('dashboard.subscription_plans.current_plan') : __('dashboard.subscription_plans.view_details') }}
                                 </button>
@@ -436,7 +513,7 @@
                         </div>
                     @empty
                         <div class="col-span-full text-center py-6">
-                            <p class="text-sm text-gray-500">{{ __('dashboard.subscription_plans.no_plans_available') }}
+                            <p class="text-sm text-gray-500 dark:text-gray-400">{{ __('dashboard.subscription_plans.no_plans_available') }}
                             </p>
                         </div>
                     @endforelse
@@ -448,7 +525,7 @@
         <!-- New Quizzes Section -->
         <div class="space-y-6">
             <div class="flex items-center justify-between">
-                <h2 class="text-2xl font-bold text-gray-900">
+                <h2 class="text-2xl font-bold text-gray-900 dark:text-white">
                     @if ($currentSubscriptions->isEmpty())
                         {{ __('dashboard.quizzes.premium_quizzes') }}
                     @else
@@ -457,7 +534,7 @@
                 </h2>
                 @if (Route::has('quizzes.index'))
                     <a href="{{ route('dashboard.quizzes.index', ['locale' => app()->getLocale()]) }}"
-                        class="inline-flex items-center text-blue-600 hover:text-blue-800 font-medium text-sm transition-colors">
+                        class="inline-flex items-center text-blue-600 dark:text-blue-400 hover:text-blue-800 dark:hover:text-blue-300 font-medium text-sm transition-colors">
                         {{ $currentSubscriptions->isEmpty() ? __('dashboard.quizzes.view_all_plans') : __('dashboard.quizzes.view_all_quizzes') }}
                         <svg xmlns="http://www.w3.org/2000/svg" class="h-4 w-4 ml-1" fill="none" viewBox="0 0 24 24"
                             stroke="currentColor">
@@ -488,22 +565,22 @@
                     </div>
                 @endif
             @else
-                <div class="bg-white rounded-xl shadow-sm p-8 text-center border-2 border-dashed border-gray-200">
-                    <svg xmlns="http://www.w3.org/2000/svg" class="h-12 w-12 mx-auto text-gray-400" fill="none"
+                <div class="bg-white dark:bg-gray-800 rounded-xl shadow-sm p-8 text-center border-2 border-dashed border-gray-200 dark:border-gray-600">
+                    <svg xmlns="http://www.w3.org/2000/svg" class="h-12 w-12 mx-auto text-gray-400 dark:text-gray-500" fill="none"
                         viewBox="0 0 24 24" stroke="currentColor">
-                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="1.5"
-                            d="M9.663 17h4.673M12 3v1m6.364 1.636l-.707.707M21 12h-1M4 12H3m3.343-5.657l-.707-.707m2.828 9.9a5 5 0 117.072 0l-.548.547A3.374 3.374 0 0014 18.469V19a2 2 0 11-4 0v-.531c0-.895-.356-1.754-.988-2.386l-.548-.547z" />
+                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
+                            d="M9 12h6m-6 4h6m2 5H7a2 2 0 01-2-2V5a2 2 0 012-2h5.586a1 1 0 01.707.293l5.414 5.414a1 1 0 01.293.707V19a2 2 0 01-2 2z" />
                     </svg>
-                    <h3 class="mt-2 text-lg font-medium text-gray-900">
+                    <h3 class="mt-2 text-lg font-medium text-gray-900 dark:text-white">
                         {{ __('dashboard.quizzes.no_new_quizzes_title') }}
                     </h3>
-                    <p class="mt-1 text-sm text-gray-500">
+                    <p class="mt-1 text-sm text-gray-500 dark:text-gray-400">
                         {{ __('dashboard.quizzes.no_new_quizzes_description') }}
                     </p>
                     @if ($currentSubscriptions->isEmpty())
                         <div class="mt-6">
                             <a href="{{ route('plans', ['locale' => app()->getLocale()]) }}"
-                                class="inline-flex items-center px-4 py-2 border border-gray-300 rounded-md shadow-sm text-sm font-medium text-gray-700 bg-white hover:bg-gray-50 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-blue-500">
+                                class="inline-flex items-center px-4 py-2 border border-gray-300 dark:border-gray-600 rounded-md shadow-sm text-sm font-medium text-gray-700 dark:text-gray-300 bg-white dark:bg-gray-800 hover:bg-gray-50 dark:hover:bg-gray-700 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-blue-500">
                                 {{ __('dashboard.quizzes.browse_plans') }}
                             </a>
                         </div>
@@ -514,51 +591,42 @@
 
         <!-- In Progress Quizzes -->
         @if ($inProgressQuizzes->count() > 0)
-            <div class="bg-white rounded-lg shadow overflow-hidden">
+            <div class="bg-white dark:bg-gray-800 rounded-lg shadow overflow-hidden">
                 <div class="p-4 sm:p-6">
                     <div class="flex items-center justify-between mb-4">
-                        <h2 class="text-lg font-medium text-gray-900">{{ __('dashboard.quizzes.continue_learning') }}</h2>
-                        @if (Route::has('my-quizzes'))
-                            <a href="{{ route('my-quizzes') }}"
-                                class="text-sm font-medium text-blue-600 hover:text-blue-500">{{ __('View all') }}</a>
-                        @endif
+                        <h2 class="text-lg font-medium text-gray-900 dark:text-white">{{ __('dashboard.quizzes.continue_learning') }}</h2>
+                        <a href="{{ route('dashboard.quizzes.in-progress', ['locale' => app()->getLocale()]) }}"
+                            class="text-sm text-blue-600 dark:text-blue-400 hover:text-blue-800 dark:hover:text-blue-300 font-medium transition-colors">
+                            {{ __('dashboard.quizzes.view_all') }}
+                            <svg xmlns="http://www.w3.org/2000/svg" class="h-4 w-4 ml-1 inline" fill="none"
+                                viewBox="0 0 24 24" stroke="currentColor">
+                                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 5l7 7-7 7" />
+                            </svg>
+                        </a>
                     </div>
-                    <div class="space-y-4">
-                        @foreach ($inProgressQuizzes as $attempt)
-                            <div class="border rounded-lg p-4 hover:shadow-md transition-shadow">
-                                <div class="flex flex-col sm:flex-row sm:items-center sm:justify-between">
-                                    <div class="flex-1">
-                                        <h3 class="font-medium text-gray-900">{{ $attempt->quiz->title }}</h3>
-                                        <div class="mt-1 flex items-center text-sm text-gray-500">
-                                            <span class="mr-4">
-                                                {{ __('dashboard.upgrade_now') }}
-                                                {{ $attempt->created_at->format('M d, Y') }}
-                                            </span>
-                                            <span class="flex items-center">
-                                                <svg xmlns="http://www.w3.org/2000/svg" class="h-4 w-4 mr-1"
-                                                    fill="none" viewBox="0 0 24 24" stroke="currentColor">
-                                                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
-                                                        d="M12 8v4l3 3m6-3a9 9 0 11-18 0 9 9 0 0118 0z" />
-                                                </svg>
-                                                {{ $attempt->time_spent }} / {{ $attempt->quiz->time_limit_minutes }}
-                                                {{ __('dashboard.quizzes.min') }}
-                                            </span>
+
+                    <div class="space-y-3">
+                        @foreach ($inProgressQuizzes->take(3) as $attempt)
+                            <div class="flex items-center justify-between p-4 bg-gray-50 dark:bg-gray-700 rounded-lg border border-gray-200 dark:border-gray-600 hover:shadow-md transition-shadow">
+                                <div class="flex-1 min-w-0">
+                                    <a href="{{ route('dashboard.quizzes.show', ['locale' => app()->getLocale(), 'quiz' => $attempt->quiz->id]) }}"
+                                        class="block">
+                                        <h3 class="font-medium text-gray-900 dark:text-white truncate">{{ $attempt->quiz->title }}</h3>
+                                        <div class="mt-1 flex items-center text-sm text-gray-500 dark:text-gray-400">
+                                            <svg xmlns="http://www.w3.org/2000/svg" class="h-4 w-4 mr-1" fill="none"
+                                                viewBox="0 0 24 24" stroke="currentColor">
+                                                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
+                                                    d="M12 8v4l3 3m6-3a9 9 0 11-18 0 9 9 0 0118 0z" />
+                                            </svg>
+                                            {{ $attempt->updated_at->diffForHumans() }}
                                         </div>
-                                    </div>
-                                    <div class="mt-3 sm:mt-0 sm:ml-4">
-                                        <a href="{{ route('quizzes.attempt', ['quiz' => $attempt->quiz_id, 'locale' => app()->getLocale()]) }}"
-                                            class="inline-flex items-center px-3 py-1.5 border border-transparent text-xs font-medium rounded shadow-sm text-white bg-blue-600 hover:bg-blue-700 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-blue-500">
-                                            {{ __('dashboard.quizzes.continue') }}
-                                        </a>
-                                    </div>
+                                    </a>
                                 </div>
-                                <div class="mt-3">
-                                    @php
-                                        $progressPercentage =
-                                            $attempt->total_questions > 0
-                                                ? round(($attempt->current_question / $attempt->total_questions) * 100)
-                                                : 0;
-                                    @endphp
+                                <div class="ml-4 flex-shrink-0">
+                                    <a href="{{ route('dashboard.quizzes.show', ['locale' => app()->getLocale(), 'quiz' => $attempt->quiz->id]) }}"
+                                        class="inline-flex items-center px-3 py-2 border border-transparent text-sm font-medium rounded-md shadow-sm text-white bg-blue-600 hover:bg-blue-700 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-blue-500 transition-colors">
+                                        {{ __('dashboard.quizzes.resume') }}
+                                    </a>
                                     <div class="flex justify-between text-sm mb-1">
                                         <span>{{ __('dashboard.quizzes.progress') }}</span>
                                         <span>{{ $progressPercentage }}%</span>
@@ -577,13 +645,13 @@
 
         <!-- Completed Quizzes -->
         @if ($completedQuizzes->count() > 0)
-            <div class="bg-white rounded-lg shadow overflow-hidden">
+            <div class="bg-white dark:bg-gray-800 rounded-lg shadow overflow-hidden">
                 <div class="p-4 sm:p-6">
                     <div class="flex items-center justify-between mb-4">
-                        <h2 class="text-lg font-medium text-gray-900">{{ __('dashboard.quizzes.recently_completed') }}
+                        <h2 class="text-lg font-medium text-gray-900 dark:text-white">{{ __('dashboard.quizzes.recently_completed') }}
                         </h2>
                         <a href="{{ route('dashboard.quizzes.index', ['locale' => app()->getLocale()]) }}"
-                            class="text-sm font-medium text-blue-600 hover:text-blue-500">{{ __('dashboard.quizzes.view_all') }}</a>
+                            class="text-sm font-medium text-blue-600 dark:text-blue-400 hover:text-blue-500 dark:hover:text-blue-300">{{ __('dashboard.quizzes.view_all') }}</a>
                     </div>
 
                     <div class="space-y-4">
@@ -599,18 +667,18 @@
                             @endphp
 
                             <div
-                                class="flex justify-between items-center p-4 border rounded-lg hover:shadow-md transition-shadow">
+                                class="flex justify-between items-center p-4 border border-gray-200 dark:border-gray-600 rounded-lg hover:shadow-md transition-shadow">
                                 <div>
-                                    <h4 class="font-semibold text-gray-900">
+                                    <h4 class="font-semibold text-gray-900 dark:text-white">
                                         {{ $quizTitle }}
                                     </h4>
-                                    <p class="text-sm text-gray-600">
+                                    <p class="text-sm text-gray-600 dark:text-gray-400">
                                         {{ __('dashboard.quizzes.score') }}: {{ $score }}/{{ $totalMarks }}
                                         ({{ $percentage }}%)
                                     </p>
                                 </div>
                                 <span
-                                    class="inline-flex items-center px-2.5 py-0.5 rounded-full text-xs font-medium bg-green-100 text-green-800">
+                                    class="inline-flex items-center px-2.5 py-0.5 rounded-full text-xs font-medium bg-green-100 dark:bg-green-900/20 text-green-800 dark:text-green-200">
                                     {{ __('dashboard.quizzes.completed') }}
                                 </span>
                             </div>
@@ -619,7 +687,7 @@
                         @if ($completedQuizzes->count() > 5)
                             <div class="text-center mt-4">
                                 <a href="{{ route('quizzes.index', ['locale' => app()->getLocale()]) }}"
-                                    class="inline-flex items-center px-4 py-2 border border-gray-300 rounded-md shadow-sm text-sm font-medium text-gray-700 bg-white hover:bg-gray-50 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-blue-500">
+                                    class="inline-flex items-center px-4 py-2 border border-gray-300 dark:border-gray-600 rounded-md shadow-sm text-sm font-medium text-gray-700 dark:text-gray-300 bg-white dark:bg-gray-800 hover:bg-gray-50 dark:hover:bg-gray-700 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-blue-500">
                                     {{ __('dashboard.quizzes.view_all_completed') }}
                                 </a>
                             </div>
@@ -628,25 +696,24 @@
                 </div>
             </div>
         @else
-            <div class="bg-white rounded-lg shadow overflow-hidden">
+            <div class="bg-white dark:bg-gray-800 rounded-lg shadow overflow-hidden">
                 <div class="p-4 sm:p-6">
-                    <div class="text-center py-12">
-                        <svg class="mx-auto h-12 w-12 text-gray-400" fill="none" viewBox="0 0 24 24"
-                            stroke="currentColor">
-                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="1"
-                                d="M12 6.253v13m0-13C10.832 5.477 9.246 5 7.5 5S4.168 5.477 3 6.253v13C4.168 18.477 5.754 18 7.5 18s3.332.477 4.5 1.253m0-13C13.168 5.477 14.754 5 16.5 5c1.747 0 3.332.477 4.5 1.253v13C19.832 18.477 18.247 18 16.5 18c-1.746 0-3.332.477-4.5 1.253" />
-                        </svg>
-                        <h3 class="mt-2 text-sm font-medium text-gray-900">
-                            {{ __('dashboard.quizzes.no_completed_quizzes') }}</h3>
-                        <p class="mt-1 text-sm text-gray-500">
-                            {{ __('dashboard.quizzes.complete_to_see_results') }}
-                        </p>
-                        <div class="mt-6">
-                            <a href="{{ route('dashboard.quizzes.index', ['locale' => app()->getLocale()]) }}"
-                                class="inline-flex items-center px-4 py-2 border border-transparent text-sm font-medium rounded-md shadow-sm text-white bg-blue-600 hover:bg-blue-700 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-blue-500">
-                                {{ __('dashboard.quizzes.browse_quizzes') }}
-                            </a>
-                        </div>
+                    <svg class="mx-auto h-12 w-12 text-gray-400 dark:text-gray-500" fill="none" viewBox="0 0 24 24"
+                        stroke="currentColor">
+                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
+                            d="M9 5H7a2 2 0 00-2 2v12a2 2 0 002 2h10a2 2 0 002-2V7a2 2 0 00-2-2h-2M9 5a2 2 0 002 2h2a2 2 0 002-2M9 5a2 2 0 012-2h2a2 2 0 012 2m-3 7h3m-3 4h3m-6-4h.01M9 16h.01" />
+                    </svg>
+                    <h3 class="mt-2 text-sm font-medium text-gray-900 dark:text-white">
+                        {{ __('dashboard.quizzes.no_completed_quizzes') }}
+                    </h3>
+                    <p class="mt-1 text-sm text-gray-500 dark:text-gray-400">
+                        {{ __('dashboard.quizzes.start_learning') }}
+                    </p>
+                    <div class="mt-6">
+                        <a href="{{ route('dashboard.quizzes.index', ['locale' => app()->getLocale()]) }}"
+                            class="inline-flex items-center px-4 py-2 border border-transparent text-sm font-medium rounded-md shadow-sm text-white bg-blue-600 hover:bg-blue-700 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-blue-500">
+                            {{ __('dashboard.quizzes.browse_quizzes') }}
+                        </a>
                     </div>
                 </div>
             </div>

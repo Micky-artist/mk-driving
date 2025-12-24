@@ -7,11 +7,11 @@
                 <button @click="mobileMenuOpen = !mobileMenuOpen"
                     class="inline-flex items-center justify-center p-2 rounded-md text-white hover:bg-blue-900 focus:outline-none focus:ring-2 focus:ring-inset focus:ring-white transition-colors duration-200">
                     <svg class="h-6 w-6" stroke="currentColor" fill="none" viewBox="0 0 24 24">
-                        <path x-show="!mobileMenuOpen" x-transition:enter="transition-opacity duration-200"
+                        <path x-show="!mobileMenuOpen" x-cloak x-transition:enter="transition-opacity duration-200"
                             x-transition:leave="transition-opacity duration-200" class="inline-flex"
                             stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
                             d="M4 6h16M4 12h16M4 18h16" />
-                        <path x-show="mobileMenuOpen" x-transition:enter="transition-opacity duration-200"
+                        <path x-show="mobileMenuOpen" x-cloak x-transition:enter="transition-opacity duration-200"
                             x-transition:leave="transition-opacity duration-200" class="inline-flex"
                             stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M6 18L18 6M6 6l12 12" />
                     </svg>
@@ -386,30 +386,30 @@ $classes = $isActive
     }
 
     ::-webkit-scrollbar-track {
-        background: #f1f1f1;
-        border-radius: 10px;
+        background: rgb(249 250 251);
+        border-radius: 4px;
     }
 
     ::-webkit-scrollbar-thumb {
-        background: #888;
-        border-radius: 10px;
+        background-color: rgb(203 213 225);
+        border-radius: 4px;
     }
 
     ::-webkit-scrollbar-thumb:hover {
-        background: #555;
+        background-color: rgb(189 197 209);
     }
 
     /* Dark mode scrollbar */
     .dark ::-webkit-scrollbar-track {
-        background: #1e293b;
+        background: rgb(31 41 55);
     }
 
     .dark ::-webkit-scrollbar-thumb {
-        background: #475569;
+        background: rgb(55 65 81);
     }
 
     .dark ::-webkit-scrollbar-thumb:hover {
-        background: #64748b;
+        background: rgb(75 85 99);
     }
 
     /* Smooth transitions for theme toggle */

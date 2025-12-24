@@ -16,7 +16,7 @@ class SubscriptionPlanSeeder extends Seeder
             [
                 'name' => json_encode([
                     'en' => 'Basic Plan',
-                    'rw' => 'Paka y\'Umunsi'
+                    'rw' => 'Ifatabuguze ry\'Umunsi'
                 ]),
                 'description' => json_encode([
                     'en' => 'Access to 15 quizzes for 24 hours',
@@ -39,7 +39,7 @@ class SubscriptionPlanSeeder extends Seeder
             [
                 'name' => json_encode([
                     'en' => 'Standard Plan',
-                    'rw' => 'Paka y\'Icyumweru'
+                    'rw' => 'Ifatabuguze ry\'Icyumweru'
                 ]),
                 'description' => json_encode([
                     'en' => 'Access to 25 quizzes for 7 days',
@@ -62,7 +62,7 @@ class SubscriptionPlanSeeder extends Seeder
             [
                 'name' => json_encode([
                     'en' => 'Premium Plan',
-                    'rw' => 'Paka y\'Ukwezi'
+                    'rw' => 'Ifatabuguze ry\'Ukwezi'
                 ]),
                 'description' => json_encode([
                     'en' => 'Unlimited quizzes for 1 month',
@@ -85,17 +85,17 @@ class SubscriptionPlanSeeder extends Seeder
             [
                 'name' => json_encode([
                     'en' => 'Gold Unlimited Plan',
-                    'rw' => "Paka y'Ubudashira"
+                    'rw' => "Ifatabuguze Ritarangira"
                 ]),
                 'description' => json_encode([
                     'en' => 'Unlimited access with no time limit',
-                    'rw' => 'Hozaho ku ikizamini byose ubudashira'
+                    'rw' => 'Hozaho ku ikizamini byose ntankomyi'
                 ]),
                 'price' => 25000,
                 'slug' => 'gold-unlimited-plan',
                 'features' => json_encode([
                     'en' => ['unlimited quizzes', 'no limit'],
-                    'rw' => ['ibizamini byose', 'ubudashira']
+                    'rw' => ['ibizamini byose', 'nta kurangira']
                 ]),
                 'duration' => 0, // 0 means no expiration
                 'duration_in_days' => 9999, // Large number to represent unlimited duration

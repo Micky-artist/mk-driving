@@ -6,9 +6,6 @@
 
 @section('content')
 <div x-data="{ selectedPlan: null, showModal: false }">
-    <!-- Background Animation Component -->
-    <x-background-animation />
-    
     <div class="relative z-10">
         <!-- Subscription Plans Component -->
         @include('components.home.subscription-plans', [

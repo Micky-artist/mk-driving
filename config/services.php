@@ -80,7 +80,7 @@ return [
         'collection' => [
             'primary_key' => env('MTN_MOMO_COLLECTION_PRIMARY_KEY'),
             'secondary_key' => env('MTN_MOMO_COLLECTION_SECONDARY_KEY'),
-            'api_user_id' => env('MTN_MOMO_COLLECTION_USER_ID'),
+            'api_user_id' => env('MTN_MOMO_COLLECTION_API_USER_ID'),
             'api_secret' => env('MTN_MOMO_COLLECTION_API_SECRET'),
         ],
         

@@ -155,6 +155,11 @@
     
     @stack('styles')
     <style>
+        /* Alpine.js x-cloak styling to prevent flash */
+        [x-cloak] { 
+            display: none !important; 
+        }
+        
         /* Ensure full height and proper scrolling */
         html, body {
             min-height: 100%;
@@ -175,6 +180,44 @@
         * {
             max-width: 100%;
             box-sizing: border-box;
+        }
+        
+        /* Dark mode scrollbar styles for Webkit browsers */
+        .dark ::-webkit-scrollbar {
+            width: 8px;
+            height: 8px;
+        }
+        
+        .dark ::-webkit-scrollbar-track {
+            background: rgb(31 41 55);
+        }
+        
+        .dark ::-webkit-scrollbar-thumb {
+            background-color: rgb(55 65 81);
+            border-radius: 3px;
+        }
+        
+        .dark ::-webkit-scrollbar-thumb:hover {
+            background-color: rgb(75 85 99);
+        }
+        
+        /* Light mode scrollbar styles for Webkit browsers */
+        ::-webkit-scrollbar {
+            width: 8px;
+            height: 8px;
+        }
+        
+        ::-webkit-scrollbar-track {
+            background: rgb(249 250 251);
+        }
+        
+        ::-webkit-scrollbar-thumb {
+            background-color: rgb(203 213 225);
+            border-radius: 4px;
+        }
+        
+        ::-webkit-scrollbar-thumb:hover {
+            background-color: rgb(189 197 209);
         }
         
         /* Better touch targets for mobile */

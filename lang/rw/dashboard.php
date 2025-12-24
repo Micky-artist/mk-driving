@@ -87,6 +87,12 @@ return [
         'view_all_subscriptions' => 'Reba Amagahunda Yose',
         'valid_until' => 'Kugeza',
     ],
+    'available_quizzes' => 'Ibizamini Bihari',
+    'questions' => 'ibibazo',
+    'completed' => 'Byarangiye',
+    'in_progress' => 'Iri gukorwa',
+    'not_started' => 'Bitatangirwemo',
+    'score' => 'Amanota',
     'recent_activity' => 'Ibyakozwe vuba aha',
     'upcoming_lessons' => 'Inyigisho zizaza',
     'profile' => [

@@ -93,6 +93,9 @@ Route::middleware('auth:sanctum')->group(function () {
     Route::post('/logout', [AuthController::class, 'logout']);
     Route::post('/change-password', [AuthController::class, 'changePassword']);
     
+    // Subscription request route (accessible to all authenticated users)
+    Route::post('/subscriptions/request', [SubscriptionController::class, 'requestSubscription']);
+    
     // Chatbot routes
     Route::prefix('chatbot')->group(function () {
         Route::get('/questions', [ChatbotController::class, 'getPredefinedQuestions']);
@@ -149,7 +152,6 @@ Route::middleware('auth:sanctum')->group(function () {
         // Subscription routes
         Route::prefix('subscriptions')->group(function () {
             // User subscription management
-            Route::post('/request', [SubscriptionController::class, 'requestSubscription']);
             Route::get('/', [SubscriptionController::class, 'getUserSubscriptions']);
             Route::get('/active', [SubscriptionController::class, 'getActiveUserSubscriptions']);
             Route::get('/pending', [SubscriptionController::class, 'getPendingUserSubscriptions']);

@@ -69,7 +69,7 @@ class SubscriptionController extends Controller
                 // Create new subscription
                 $subscription = $user->subscriptions()->create([
                     'subscription_plan_id' => $plan->id,
-                    'start_date' => now(),
+                    'starts_at' => now(),
                     'ends_at' => $endDate,
                     'status' => 'PENDING',
                     'amount' => $plan->price,
