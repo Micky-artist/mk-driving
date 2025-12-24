@@ -62,6 +62,7 @@
 
                 <!-- CTA Buttons - Stacked on mobile -->
                 <div class="flex flex-col sm:flex-row gap-4 sm:gap-5 justify-center lg:justify-start mb-6 sm:mb-8 fade-in delay-400">
+                    @if($guestQuiz)
                         <a href="{{ route('guest-quiz.show', ['locale' => app()->getLocale(), 'quiz' => $guestQuiz->id]) }}"
                            class="group relative inline-flex items-center justify-center gap-2 bg-gradient-to-r from-cyan-500 to-blue-600 hover:from-cyan-600 hover:to-blue-700 rounded-full text-sm sm:text-base lg:text-lg px-7 py-3.5 sm:px-9 sm:py-4 text-white font-semibold transition-all duration-300 transform hover:scale-105 shadow-lg hover:shadow-xl hover:shadow-cyan-500/30">
                             <span class="relative z-10">{{ __('hero.sign_up_free', ['default' => 'Sign Up Free']) }}</span>
@@ -70,6 +71,16 @@
                             </svg>
                             <span class="absolute inset-0 rounded-full bg-gradient-to-r from-cyan-400/20 to-blue-500/20 opacity-0 group-hover:opacity-100 transition-opacity duration-300"></span>
                         </a>
+                    @else
+                        <a href="{{ route('register', app()->getLocale()) }}"
+                           class="group relative inline-flex items-center justify-center gap-2 bg-gradient-to-r from-cyan-500 to-blue-600 hover:from-cyan-600 hover:to-blue-700 rounded-full text-sm sm:text-base lg:text-lg px-7 py-3.5 sm:px-9 sm:py-4 text-white font-semibold transition-all duration-300 transform hover:scale-105 shadow-lg hover:shadow-xl hover:shadow-cyan-500/30">
+                            <span class="relative z-10">{{ __('hero.sign_up_free', ['default' => 'Sign Up Free']) }}</span>
+                            <svg class="w-4 h-4 sm:w-5 sm:h-5 transform group-hover:translate-x-1 transition-transform relative z-10" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2.5" d="M13 7l5 5m0 0l-5 5m5-5H6"/>
+                            </svg>
+                            <span class="absolute inset-0 rounded-full bg-gradient-to-r from-cyan-400/20 to-blue-500/20 opacity-0 group-hover:opacity-100 transition-opacity duration-300"></span>
+                        </a>
+                    @endif
                 </div>
 
                 <!-- Compact Trust Indicators -->

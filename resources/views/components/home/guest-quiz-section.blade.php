@@ -154,7 +154,7 @@
     @endif
 
     <!-- Question Header -->
-    <div class="bg-gradient-to-r from-blue-600 to-blue-700 px-6 py-4">
+    <div class="bg-gradient-to-r from-blue-600 to-blue-700 px-6 py-4 rounded-t-lg">
         <h3 class="text-xl font-bold text-white">
             {{ __('home.guestQuiz.practice_here') }}
         </h3>
@@ -163,9 +163,8 @@
     @if ($question)
         <div class="pt-2">
             <!-- Question -->
-            <!-- Question -->
             <p class="text-gray-700 dark:text-gray-200 font-medium mb-4 leading-tight">
-                {!! $question->getTranslation('text', app()->getLocale()) ??
+                <span class="font-bold text-blue-600 dark:text-blue-400">Q1.</span> {!! $question->getTranslation('text', app()->getLocale()) ??
                     ($question->text['en'] ?? 'Question text not available') !!}
             </p>
 

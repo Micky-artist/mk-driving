@@ -1,10 +1,10 @@
 <div class="relative w-full h-full">
     <div class="relative w-full h-full">
         <!-- Animation Container for layout -->
-        <div id="animation-container" class="relative w-full h-full overflow-hidden min-h-[400px] md:min-h-[475px]">
+        <div id="animation-container" class="relative w-full h-full overflow-hidden min-h-[600px] md:min-h-[475px]">
 
             <!-- Car Animation Container -->
-            <div id="car-animation-container" class="absolute top-0 left-0  -mt-36 md:-mt-28 -ml-4 md:ml-32 z-10 w-[300px] md:w-[500px] h-auto">
+            <div id="car-animation-container" class="absolute top-0 left-1/2 transform -translate-x-1/2 z-10 w-[280px] md:w-[500px] h-auto pt-8">
                 <div id="car-animation" class="w-full h-full">
                     <!-- Car shadow -->
                     <div
@@ -14,7 +14,7 @@
             </div>
 
             <!-- Bike Animation Container -->
-            <div id="bike-animation-container" class="absolute bottom-0 right-0 -mb-6 md:-mb-6 md:-mr-10 z-20 w-[275px] md:w-[450px] h-auto">
+            <div id="bike-animation-container" class="absolute bottom-0 left-1/2 transform -translate-x-1/2 z-20 w-[250px] md:w-[450px] h-auto pb-8">
                 <div id="bike-animation" class="w-full h-full">
                     <!-- Bike shadow -->
                     <div
@@ -23,15 +23,25 @@
                 </div>
             </div>
 
-            <!-- 3D effect on hover -->
+            <!-- 3D effect on hover - desktop only -->
             <style>
                 @media (min-width: 768px) {
+                    #car-animation-container {
+                        left: 25%;
+                        transform: translateX(-50%);
+                    }
+                    
+                    #bike-animation-container {
+                        left: 75%;
+                        transform: translateX(-50%);
+                    }
+                    
                     #car-animation-container:hover {
-                        transform: translateX(-10px) rotateY(5deg);
+                        transform: translateX(-50%) translateX(-10px) rotateY(5deg);
                     }
 
                     #bike-animation-container:hover {
-                        transform: translate(10px, -10px) rotateY(-5deg);
+                        transform: translateX(-50%) translateX(10px) rotateY(-5deg);
                     }
                 }
             </style>
@@ -114,8 +124,8 @@
                                     
                                     // Scale up on mobile
                                     if (isMobile) {
-                                        container.style.transform = 'scale(1.3)';
-                                        container.style.transformOrigin = 'left top';
+                                        container.style.transform = 'scale(1.5)';
+                                        container.style.transformOrigin = 'center top';
                                     }
                                 });
                             }
@@ -131,8 +141,8 @@
                                     
                                     // Scale up on mobile
                                     if (isMobile) {
-                                        container.style.transform = 'scale(1.3)';
-                                        container.style.transformOrigin = 'right bottom';
+                                        container.style.transform = 'scale(1.5)';
+                                        container.style.transformOrigin = 'center bottom';
                                     }
                                 });
                             }

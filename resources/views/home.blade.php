@@ -1,7 +1,7 @@
 @extends('layouts.app')
 
 @section('content')
-    <div class="flex flex-col min-h-screen">
+    <div class="flex flex-col">
         @php
             // Get all quizzes including the guest quiz
             $guestQuiz = $quizzes->firstWhere('is_guest_quiz', true);
