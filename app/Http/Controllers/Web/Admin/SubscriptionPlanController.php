@@ -17,8 +17,23 @@ class SubscriptionPlanController extends Controller
      */
     public function index(): View
     {
-        $plans = SubscriptionPlan::orderBy('price')->get();
-        return view('admin.subscription-plans.index', compact('plans'));
+        $plans = SubscriptionPlan::withCount(['subscriptions' => function($query) {
+                $query->where('status', 'active');
+            }])
+            ->orderBy('price')
+            ->paginate(20);
+            
+        $stats = [
+            'total_plans' => SubscriptionPlan::count(),
+            'active_plans' => SubscriptionPlan::where('is_active', true)->count(),
+            'inactive_plans' => SubscriptionPlan::where('is_active', false)->count(),
+            'total_subscriptions' => \App\Models\Subscription::count(),
+            'revenue' => \App\Models\Subscription::where('status', 'active')
+                ->whereMonth('created_at', now()->month)
+                ->sum('amount') ?? 0,
+        ];
+        
+        return view('admin.subscription-plans.index', compact('plans', 'stats'));
     }
 
     /**
@@ -31,16 +46,37 @@ class SubscriptionPlanController extends Controller
     {
         $subscriptionPlan->loadCount('subscriptions');
         
-        return view('admin.subscription-plans.show', [
+        $stats = [
+            'total' => $subscriptionPlan->subscriptions()->count(),
+            'active' => $subscriptionPlan->subscriptions()
+                ->where('status', 'active')
+                ->where(function($query) {
+                    $query->where('ends_at', '>', now())
+                          ->orWhereNull('ends_at');
+                })
+                ->count(),
+            'pending' => $subscriptionPlan->subscriptions()
+                ->where('status', 'pending')
+                ->count(),
+            'cancelled' => $subscriptionPlan->subscriptions()
+                ->where('status', 'cancelled')
+                ->count(),
+            'revenue' => $subscriptionPlan->subscriptions()
+                ->where('status', 'active')
+                ->sum('amount') ?? 0,
+        ];
+        
+        return view('admin.subscription-plans.manage', [
             'plan' => $subscriptionPlan,
-            'activeSubscriptions' => $subscriptionPlan->subscriptions()
+            'subscriptions' => $subscriptionPlan->subscriptions()
                 ->where('status', 'active')
                 ->where(function($query) {
                     $query->where('ends_at', '>', now())
                           ->orWhereNull('ends_at');
                 })
                 ->latest()
-                ->paginate(10)
+                ->paginate(10),
+            'stats' => $stats
         ]);
     }
 
@@ -102,11 +138,16 @@ class SubscriptionPlanController extends Controller
     public function update(Request $request, SubscriptionPlan $subscriptionPlan)
     {
         $validated = $request->validate([
-            'name' => 'required|string|max:255',
-            'description' => 'nullable|string',
+            'name' => 'required|array|max:255',
+            'name.en' => 'required|string|max:255',
+            'name.rw' => 'required|string|max:255',
+            'description' => 'required|array',
+            'description.en' => 'required|string',
+            'description.rw' => 'required|string',
             'price' => 'required|numeric|min:0',
-            'duration_days' => 'required|integer|min:1',
-            'features' => 'nullable|array',
+            'duration' => 'required|integer|min:1',
+            'max_quizzes' => 'required|integer|min:1',
+            'color' => 'nullable|string|max:7',
             'is_active' => 'boolean',
         ]);
 

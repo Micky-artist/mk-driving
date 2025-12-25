@@ -113,8 +113,21 @@ return [
     */
 
     'from' => [
-        'address' => env('MAIL_FROM_ADDRESS', 'hello@example.com'),
+        'address' => env('MAIL_FROM_ADDRESS', 'contact@mkscholars.com'),
         'name' => env('MAIL_FROM_NAME', 'Example'),
     ],
+
+    /*
+    |--------------------------------------------------------------------------
+    | Support Email Address
+    |--------------------------------------------------------------------------
+    |
+    | This email address will be used in email templates for support contact.
+    | Users can reach out to this address if they have issues with the
+    | password reset or other email-related functionality.
+    |
+    */
+
+    'support_email' => env('MAIL_SUPPORT_EMAIL', 'contact@mkscholars.com'),
 
 ];

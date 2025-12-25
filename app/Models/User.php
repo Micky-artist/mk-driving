@@ -11,8 +11,10 @@ use App\Models\Quiz;
 use App\Models\Subscription;
 use App\Models\Bookmark;
 use App\Enums\Role;
+use Illuminate\Auth\Passwords\CanResetPassword;
 use Illuminate\Foundation\Auth\User as Authenticatable;
 use Illuminate\Notifications\Notifiable;
+use Illuminate\Support\Facades\Mail;
 use Laravel\Sanctum\HasApiTokens;
 
 class User extends Authenticatable
@@ -22,7 +24,7 @@ class User extends Authenticatable
     public const ROLE_STUDENT = 'student';
 
     /** @use HasFactory<\Database\Factories\UserFactory> */
-    use HasApiTokens, HasFactory, Notifiable;
+    use HasApiTokens, HasFactory, Notifiable, CanResetPassword;
 
     /**
      * The attributes that are mass assignable.
@@ -39,7 +41,29 @@ class User extends Authenticatable
         'phone_number',
         'profile_image',
         'is_active',
-        'subscription_plan_id'
+        'subscription_plan_id',
+        'points',
+        'streak_days',
+        'last_activity_date',
+        'quiz_completion_streak',
+        'forum_contributions',
+        'helpful_answers',
+        'current_rank',
+        'previous_rank',
+        'achievement_badges',
+        'last_streak_date',
+        // Location and device tracking fields
+        'country',
+        'city',
+        'timezone',
+        'device_fingerprint',
+        'registration_ip',
+        'registration_user_agent',
+        'registration_device_type',
+        'registration_browser',
+        'registration_platform',
+        'registered_at',
+        'last_seen_at'
     ];
 
     /**
@@ -65,6 +89,11 @@ class User extends Authenticatable
             'password' => 'hashed',
             'is_active' => 'boolean',
             'last_login_at' => 'datetime',
+            'last_activity_date' => 'datetime',
+            'last_streak_date' => 'datetime',
+            'achievement_badges' => 'array',
+            'registered_at' => 'datetime',
+            'last_seen_at' => 'datetime',
         ];
     }
 
@@ -296,5 +325,180 @@ class User extends Authenticatable
         }
 
         return parent::can($ability, $arguments);
+    }
+
+    /**
+     * Update user's rank based on points
+     */
+    public function updateRank(): void
+    {
+        $totalPoints = $this->points;
+        
+        // Define rank thresholds
+        $rankThresholds = [
+            1 => 0,      // Bronze
+            2 => 1000,   // Silver  
+            3 => 5000,   // Gold
+            4 => 10000,  // Platinum
+            5 => 25000,  // Diamond
+            6 => 50000,  // Master
+        ];
+
+        $newRank = 1; // Default to Bronze
+        foreach ($rankThresholds as $rank => $threshold) {
+            if ($totalPoints >= $threshold) {
+                $newRank = $rank;
+            }
+        }
+
+        $this->update(['current_rank' => $newRank]);
+    }
+
+    /**
+     * Update daily streak
+     */
+    public function updateStreak(): void
+    {
+        $today = now()->startOfDay();
+        $lastActivity = $this->last_activity_date ? $this->last_activity_date->startOfDay() : null;
+
+        if ($lastActivity && $lastActivity->eq($today->copy()->subDay())) {
+            // User was active yesterday - increment streak
+            $this->increment('streak_days');
+            $this->update(['last_streak_date' => $today]);
+        } elseif (!$lastActivity || $lastActivity->lt($today->copy()->subDay())) {
+            // Streak broken - reset to 1
+            $this->update(['streak_days' => 1, 'last_streak_date' => $today]);
+        }
+
+        // Update last activity
+        $this->update(['last_activity_date' => now()]);
+    }
+
+    /**
+     * Award points to user
+     */
+    public function awardPoints(int $points, string $reason, array $metadata = []): UserPointsHistory
+    {
+        return UserPointsHistory::awardPoints($this, $points, $reason, $metadata);
+    }
+
+    /**
+     * Get user's leaderboard position
+     */
+    public function getLeaderboardPosition(string $type = Leaderboard::TYPE_ALL_TIME): ?int
+    {
+        return LeaderboardEntry::getUserRank($this->id, $type);
+    }
+
+    /**
+     * Check if user has specific badge
+     */
+    public function hasBadge(string $badge): bool
+    {
+        $badges = $this->achievement_badges ?? [];
+        return in_array($badge, $badges);
+    }
+
+    /**
+     * Award badge to user
+     */
+    public function awardBadge(string $badge): bool
+    {
+        $badges = $this->achievement_badges ?? [];
+        
+        if (in_array($badge, $badges)) {
+            return false; // Already has badge
+        }
+
+        $badges[] = $badge;
+        $this->update(['achievement_badges' => $badges]);
+        
+        // Award points for badge
+        $this->awardPoints(50, UserPointsHistory::REASON_ACHIEVEMENT_UNLOCK, ['badge' => $badge]);
+        
+        return true;
+    }
+
+    /**
+     * Get user's rank name
+     */
+    public function getRankName(): string
+    {
+        $rankNames = [
+            1 => 'Bronze',
+            2 => 'Silver',
+            3 => 'Gold',
+            4 => 'Platinum',
+            5 => 'Diamond',
+            6 => 'Master',
+        ];
+
+        return $rankNames[$this->current_rank] ?? 'Bronze';
+    }
+
+    /**
+     * Get rank progress percentage
+     */
+    public function getRankProgress(): float
+    {
+        $rankThresholds = [
+            1 => 0,
+            2 => 1000,
+            3 => 5000,
+            4 => 10000,
+            5 => 25000,
+            6 => 50000,
+        ];
+
+        $currentThreshold = $rankThresholds[$this->current_rank] ?? 0;
+        $nextThreshold = $rankThresholds[$this->current_rank + 1] ?? 50000;
+
+        if ($this->current_rank >= 6) {
+            return 100; // Master rank is max
+        }
+
+        $range = $nextThreshold - $currentThreshold;
+        $progress = $this->points - $currentThreshold;
+
+        return $range > 0 ? ($progress / $range) * 100 : 0;
+    }
+
+    /**
+     * Check if the user is active.
+     * A user is considered active if they have an active subscription or if they are an admin.
+     *
+     * @return bool
+     */
+    public function isActive(): bool
+    {
+        // Admins are always considered active
+        if ($this->isAdmin()) {
+            return true;
+        }
+
+        // Check if the user has an active subscription
+        return $this->hasActiveSubscription();
+    }
+
+    /**
+     * Check if the user is suspended.
+     *
+     * @return bool
+     */
+    public function isSuspended(): bool
+    {
+        return (bool) $this->is_suspended;
+    }
+
+    /**
+     * Send the password reset notification.
+     *
+     * @param  string  $token
+     * @return void
+     */
+    public function sendPasswordResetNotification($token)
+    {
+        Mail::to($this->email)->send(new \App\Mail\ResetPasswordNotification($token, $this->email));
     }
 }

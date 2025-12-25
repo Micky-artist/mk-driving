@@ -495,7 +495,7 @@
                     <div class="ml-3">
                         <h3 class="text-sm font-medium text-blue-800">{{ __('quiz.quizLimitReached') }}</h3>
                         <div class="mt-2 text-sm text-blue-700">
-                            <p>{{ __('quiz.quizLimitMessage', ['time' => $nextRetakeTime->diffForHumans()]) }}</p>
+                            <p>{{ __('quiz.quizLimitMessage', ['time' => timeDiffForHumans($nextRetakeTime)]) }}</p>
                             <p class="mt-2">{{ __('quiz.upgradeForUnlimited') }}</p>
                         </div>
                         <div class="mt-4">
@@ -1622,7 +1622,7 @@ function submitQuizForm(isTimeUp = false) {
                                 <div class="ml-3">
                                     <h3 class="text-sm font-medium text-gray-900">{{ __('quiz.quizLimitReached') }}</h3>
                                     <div class="mt-1 text-sm text-gray-700">
-                                        <p>{{ __('quiz.quizLimitMessage', ['time' => $nextRetakeTime ? $nextRetakeTime->diffForHumans() : '']) }}</p>
+                                        <p>{{ __('quiz.quizLimitMessage', ['time' => $nextRetakeTime ? timeDiffForHumans($nextRetakeTime) : '']) }}</p>
                                         <p class="mt-2 font-medium text-blue-700">{{ __('quiz.upgradeForUnlimited') }}</p>
                                     </div>
                                 </div>

@@ -26,6 +26,9 @@ return Application::configure(basePath: dirname(__DIR__))
 
         // Add SetLocale middleware to web group
         $middleware->web(\App\Http\Middleware\SetLocale::class);
+        
+        // Add TrackVisitor middleware to web group
+        $middleware->web(\App\Http\Middleware\TrackVisitor::class);
     })
     ->withExceptions(function (Exceptions $exceptions): void {
         //

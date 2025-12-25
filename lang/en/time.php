@@ -19,4 +19,11 @@ return [
     'hour_ago' => ':count hour ago|:count hours ago',
     'minute_ago' => ':count minute ago|:count minutes ago',
     'second_ago' => ':count second ago|:count seconds ago',
+    'year_from_now' => 'in :count year|in :count years',
+    'month_from_now' => 'in :count month|in :count months',
+    'week_from_now' => 'in :count week|in :count weeks',
+    'day_from_now' => 'in :count day|in :count days',
+    'hour_from_now' => 'in :count hour|in :count hours',
+    'minute_from_now' => 'in :count minute|in :count minutes',
+    'second_from_now' => 'in :count second|in :count seconds',
 ];

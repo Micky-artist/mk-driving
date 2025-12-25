@@ -68,17 +68,18 @@ Route::get('/', function (LocaleService $localeService) {
     return redirect()->route('home', ['locale' => 'rw']);
 });
 
+// Admin routes (non-localized - moved outside locale group)
+Route::prefix('admin')
+    ->name('admin.')
+    ->middleware(['auth', 'verified', 'can:isAdmin'])
+    ->group(base_path('routes/admin.php'));
+
 // Localized routes
 Route::prefix('{locale}')
     ->where(['locale' => '[a-zA-Z]{2}'])
     ->middleware(['web', 'localize'])
     ->group(function () {
         
-        // Admin routes
-        Route::prefix('admin')
-            ->name('admin.')
-            ->middleware(['auth', 'verified', 'can:isAdmin'])
-            ->group(base_path('routes/admin.php'));
         // Homepage route (handles /{locale} and /{locale}/home)
         Route::get('', function ($locale) {
             \Illuminate\Support\Facades\Log::info('Home route accessed', ['locale' => $locale]);

@@ -5,9 +5,10 @@
     <div class="flex items-center space-x-2">
         @auth
             @if (Auth::user()->isAdmin())
-                <span class="bg-orange-500 text-white text-xs font-bold px-2 py-0.5 rounded-full border-2 border-white dark:border-slate-900">
+                <a href="{{ route('admin.portal', ['locale' => app()->getLocale()]) }}" 
+                   class="bg-orange-500 text-white text-xs font-bold px-2 py-0.5 rounded-full border-2 border-white dark:border-slate-900 hover:bg-orange-600 transition-colors">
                     ADMIN
-                </span>
+                </a>
             @endif
         @endauth
         <!-- Language Switcher -->

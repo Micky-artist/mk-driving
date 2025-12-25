@@ -10,19 +10,20 @@
         <!-- Header Section -->
         <div class="flex flex-col md:flex-row md:items-center md:justify-between gap-4 mb-8">
             <div>
-                <h1 class="text-2xl font-bold text-gray-800 dark:text-white">@lang('admin.subscriptions.pending_requests')</h1>
+                <h1 class="text-2xl font-bold text-gray-800 dark:text-white">Pending Subscription Requests</h1>
                 <p class="text-gray-700 dark:text-gray-400 mt-1">Review and manage subscription and payment requests</p>
             </div>
             <div class="flex items-center">
                 <span class="inline-flex items-center px-3 py-1 rounded-full text-sm font-medium bg-orange-100 text-orange-800 dark:bg-orange-900 dark:text-orange-200">
                     <span class="w-2 h-2 mr-2 rounded-full bg-orange-500"></span>
-                    <span class="pending-count">{{ $items->total() }}</span> <span class="pending-text">{{ Str::plural('Request', $items->total()) }} Pending</span>
+                    <span class="pending-count">{{ $subscriptions->count() }}</span>
+                    <span class="ml-1 pending-text">Pending Request{{ $subscriptions->count() != 1 ? 's' : '' }}</span>
                 </span>
             </div>
         </div>
 
         <div id="items-container">
-            @if($items->isEmpty())
+            @if($subscriptions->isEmpty())
                 <div class="bg-white dark:bg-gray-800 rounded-xl shadow-sm border border-gray-200 dark:border-gray-700 overflow-hidden">
                     <div class="text-center p-10">
                         <div class="mx-auto w-16 h-16 flex items-center justify-center rounded-full bg-blue-50 dark:bg-blue-900/30 text-blue-500 dark:text-blue-400 mb-4">
@@ -34,16 +35,16 @@
                 </div>
             @else
                 <div class="grid gap-4" id="payment-cards-grid">
-                    @foreach($items as $item)
+                    @foreach($subscriptions as $item)
                         @php
-                            $isPayment = isset($item->payment_id);
+                            $isPaymentRequest = isset($item->payment_status) && $item->payment_status === 'PENDING' && $item->status !== 'PENDING';
                             $user = $item->user ?? null;
                             $plan = $item->plan ?? null;
                             $createdAt = $item->created_at;
                             $isNew = $createdAt->diffInHours() < 24;
                         @endphp
                         
-                        <div class="payment-card bg-white dark:bg-gray-800 rounded-xl shadow-sm border border-gray-200 dark:border-gray-700 overflow-hidden transition-all duration-200 hover:shadow-md {{ $isNew ? 'ring-2 ring-blue-500/20' : '' }}" data-payment-id="{{ $isPayment ? $item->id : '' }}" data-item-id="{{ $item->id }}">
+                        <div class="payment-card bg-white dark:bg-gray-800 rounded-xl shadow-sm border border-gray-200 dark:border-gray-700 overflow-hidden transition-all duration-200 hover:shadow-md {{ $isNew ? 'ring-2 ring-blue-500/20' : '' }}" data-item-id="{{ $item->id }}">
                             <div class="p-5">
                                 <div class="flex items-start gap-4">
                                     <!-- User Avatar -->
@@ -73,9 +74,7 @@
                                                 
                                                 @if($plan)
                                                     @php
-                                                        $planName = is_string($plan->name) ? 
-                                                            json_decode($plan->name, true) ?? $plan->name : 
-                                                            $plan->name;
+                                                        $planName = $item->plan->name['en'] ?? 'Unknown Plan';
                                                         $localizedName = is_array($planName) ? 
                                                             ($planName[app()->getLocale()] ?? $planName['en'] ?? 'N/A') : 
                                                             $planName;
@@ -83,7 +82,7 @@
                                                     <div class="mt-1">
                                                         <span class="inline-flex items-center px-2.5 py-0.5 rounded-full text-xs font-medium bg-blue-100 text-blue-800 dark:bg-blue-900/50 dark:text-blue-300">
                                                             {{ $localizedName }}
-                                                            @if($isPayment)
+                                                            @if($isPaymentRequest)
                                                                 <span class="ml-1">• Payment</span>
                                                             @endif
                                                         </span>
@@ -110,7 +109,7 @@
                                             </div>
                                         </div>
                                         
-                                        @if($isPayment && $item->proof_url)
+                                        @if($isPaymentRequest && $item->proof_url)
                                             <div class="mt-3">
                                                 <a href="{{ $item->proof_url }}" 
                                                    target="_blank" 
@@ -123,16 +122,15 @@
                                         
                                         <!-- Actions -->
                                         <div class="mt-4 pt-3 border-t border-gray-100 dark:border-gray-700 flex flex-wrap gap-2">
-                                            @if($isPayment)
+                                            @if($isPaymentRequest)
                                                 <button type="button" 
-                                                        class="approve-payment-btn w-full sm:w-auto flex-1 sm:flex-none flex items-center justify-center px-4 py-2 border border-transparent rounded-lg shadow-sm text-sm font-medium text-white bg-green-600 hover:bg-green-700 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-green-500 transition-colors disabled:opacity-50 disabled:cursor-not-allowed"
-                                                        data-payment-id="{{ $item->id }}"
+                                                        class="btn btn-success btn-sm approve-payment-btn w-full sm:w-auto flex-1 sm:flex-none"
                                                         data-item-id="{{ $item->id }}">
                                                     <i class="fas fa-check mr-2"></i> Approve Payment
                                                 </button>
                                                 
                                                 <button type="button" 
-                                                        class="reject-btn w-full sm:w-auto flex-1 sm:flex-none flex items-center justify-center px-4 py-2 border border-gray-300 dark:border-gray-600 rounded-lg shadow-sm text-sm font-medium text-gray-700 dark:text-gray-300 bg-white dark:bg-gray-700 hover:bg-gray-50 dark:hover:bg-gray-600 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-red-500 transition-colors disabled:opacity-50 disabled:cursor-not-allowed"
+                                                        class="btn btn-danger btn-sm w-full sm:w-auto flex-1 sm:flex-none"
                                                         data-bs-toggle="modal" 
                                                         data-bs-target="#rejectModal"
                                                         data-id="{{ $item->id }}"
@@ -141,18 +139,17 @@
                                                 </button>
                                             @else
                                                 <button type="button"
-                                                        class="approve-subscription-btn w-full sm:w-auto flex-1 sm:flex-none flex items-center justify-center px-4 py-2 border border-transparent rounded-lg shadow-sm text-sm font-medium text-white bg-green-600 hover:bg-green-700 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-green-500 transition-colors disabled:opacity-50 disabled:cursor-not-allowed"
+                                                        class="btn btn-success btn-sm approve-subscription-btn w-full sm:w-auto flex-1 sm:flex-none"
                                                         data-subscription-id="{{ $item->id }}"
                                                         data-item-id="{{ $item->id }}">
                                                     <i class="fas fa-check mr-2"></i> Approve
                                                 </button>
                                                 
                                                 <button type="button" 
-                                                        class="reject-btn w-full sm:w-auto flex-1 sm:flex-none flex items-center justify-center px-4 py-2 border border-gray-300 dark:border-gray-600 rounded-lg shadow-sm text-sm font-medium text-gray-700 dark:text-gray-300 bg-white dark:bg-gray-700 hover:bg-gray-50 dark:hover:bg-gray-600 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-red-500 transition-colors disabled:opacity-50 disabled:cursor-not-allowed"
+                                                        class="btn btn-danger btn-sm w-full sm:w-auto flex-1 sm:flex-none"
                                                         data-bs-toggle="modal" 
                                                         data-bs-target="#rejectModal"
-                                                        data-id="{{ $item->id }}"
-                                                        data-is-payment="false">
+                                                        data-id="{{ $item->id }}">
                                                     <i class="fas fa-times mr-2"></i> Reject
                                                 </button>
                                             @endif
@@ -167,10 +164,10 @@
                 <!-- Pagination -->
                 <div class="mt-6 flex flex-col sm:flex-row items-center justify-between gap-4 px-4" id="pagination-container">
                     <p class="text-sm text-gray-600 dark:text-gray-400 pagination-info">
-                        Showing {{ $items->firstItem() }} to {{ $items->lastItem() }} of {{ $items->total() }} entries
+                        Showing {{ $subscriptions->firstItem() }} to {{ $subscriptions->lastItem() }} of {{ $subscriptions->total() }} entries
                     </p>
                     <div class="flex-1 sm:flex-none">
-                        {{ $items->links() }}
+                        {{ $subscriptions->appends([])->links() }}
                     </div>
                 </div>
             @endif
@@ -178,8 +175,8 @@
     </div>
 
     <!-- Reject Modal -->
-    <div class="modal fade" id="rejectModal" tabindex="-1" aria-hidden="true">
-        <div class="modal-dialog">
+    <div class="modal fade" id="rejectModal" tabindex="-1" aria-hidden="true" style="display: none; z-index: 1050;">
+        <div class="modal-dialog modal-dialog-centered">
             <div class="modal-content bg-white dark:bg-gray-800 rounded-xl shadow-xl">
                 <div class="modal-header flex items-center justify-between p-4 border-b border-gray-200 dark:border-gray-700">
                     <h5 class="modal-title text-lg font-semibold text-gray-900 dark:text-white">Reject Request</h5>
@@ -225,25 +222,19 @@
 <script>
     document.addEventListener('DOMContentLoaded', function() {
         const csrfToken = document.querySelector('meta[name="csrf-token"]').getAttribute('content');
-        const locale = window.location.pathname.split('/')[1] || 'en';
         let isRefreshing = false;
         
-        // Handle approve payment button click
+        // Handle approve button clicks
         document.addEventListener('click', function(e) {
-            const approveBtn = e.target.closest('.approve-payment-btn');
+            const approveBtn = e.target.closest('.approve-payment-btn, .approve-subscription-btn');
             if (approveBtn) {
                 e.preventDefault();
-                handleApproval(approveBtn, 'payment');
-            }
-            
-            const approveSubBtn = e.target.closest('.approve-subscription-btn');
-            if (approveSubBtn) {
-                e.preventDefault();
-                handleApproval(approveSubBtn, 'subscription');
+                handleApproval(approveBtn);
+                return;
             }
         });
         
-        async function handleApproval(button, type) {
+        async function handleApproval(button) {
             if (button.disabled) return;
             
             const itemId = button.dataset.itemId;
@@ -258,14 +249,11 @@
             button.innerHTML = '<i class="fas fa-spinner fa-spin mr-2"></i> Approving...';
             
             try {
-                const endpoint = type === 'payment' 
-                    ? `/${locale}/admin/payments/${itemId}/approve`
-                    : `/${locale}/admin/subscriptions/${itemId}`;
+                // Admin routes don't use locale - go directly to admin endpoint
+                const endpoint = `/admin/subscriptions/${itemId}/approve`;
                     
-                const method = type === 'payment' ? 'PATCH' : 'POST';
-                
                 const response = await fetch(endpoint, {
-                    method: method,
+                    method: 'POST',
                     headers: {
                         'Content-Type': 'application/json',
                         'X-CSRF-TOKEN': csrfToken,
@@ -277,11 +265,11 @@
                 const data = await response.json();
                 
                 if (!response.ok) {
-                    throw new Error(data.message || `Failed to approve ${type}`);
+                    throw new Error(data.message || 'Failed to approve request');
                 }
                 
                 // Show success notification
-                showNotification('success', data.message || `${type.charAt(0).toUpperCase() + type.slice(1)} approved successfully`);
+                showNotification('success', data.message || 'Request approved successfully');
                 
                 // Update pending count
                 updatePendingCount(-1);
@@ -294,7 +282,7 @@
                 
             } catch (error) {
                 console.error('Error:', error);
-                showNotification('error', error.message || `An error occurred while approving the ${type}`);
+                showNotification('error', error.message || 'An error occurred while approving the request');
                 
                 // Re-enable buttons and restore original content on error
                 allButtons.forEach(btn => btn.disabled = false);
@@ -444,7 +432,8 @@
         const rejectModalElement = document.getElementById('rejectModal');
         let rejectModal = null;
         
-        if (rejectModalElement) {
+        // Wait for Bootstrap to be ready before initializing modal
+        if (typeof bootstrap !== 'undefined' && rejectModalElement) {
             rejectModal = new bootstrap.Modal(rejectModalElement, {
                 backdrop: true,
                 keyboard: true,
@@ -454,13 +443,11 @@
             rejectModalElement.addEventListener('show.bs.modal', function(event) {
                 const button = event.relatedTarget;
                 const id = button.getAttribute('data-id');
-                const isPayment = button.getAttribute('data-is-payment') === 'true';
                 const form = document.getElementById('rejectForm');
                 
                 if (form) {
-                    form.action = isPayment 
-                        ? `/${locale}/admin/payments/${id}/reject`
-                        : `/${locale}/admin/subscriptions/${id}/reject`;
+                    // Admin routes don't use locale - go directly to admin endpoint
+                    form.action = `/admin/subscriptions/${id}/reject`;
                     form.reset();
                 }
             });

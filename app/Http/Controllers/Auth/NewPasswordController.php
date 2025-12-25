@@ -65,7 +65,7 @@ class NewPasswordController extends Controller
             return response()->json(['status' => __($status)]);
         }
 
-        return redirect()->route('login', app()->getLocale())
+        return redirect()->route('login.form', ['locale' => app()->getLocale()])
             ->with('status', __($status));
     }
 }

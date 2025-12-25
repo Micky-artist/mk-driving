@@ -17,32 +17,36 @@
 </head>
 <body class="font-sans antialiased bg-gray-50">
     <div class="min-h-screen bg-gray-50">
+        <!-- Sidebar -->
+        <div 
+            class="fixed inset-y-0 left-0 z-40 w-64 bg-white dark:bg-gray-800 border-r border-gray-200 dark:border-gray-700 transform transition-transform duration-300 ease-in-out lg:translate-x-0 lg:static lg:z-auto flex-shrink-0 h-screen overflow-y-auto scrollbar-thin"
+            :class="sidebarOpen ? 'translate-x-0' : '-translate-x-full'"
+        >
+            <div class="shrink-0 flex items-center">
+                <a href="{{ route('dashboard', ['locale' => app()->getLocale()]) }}" class="text-xl font-bold text-indigo-600">
+                    MK Driving
+                </a>
+            </div>
+
         <!-- Navigation -->
         <nav class="bg-white border-b border-gray-100">
             <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
                 <div class="flex justify-between h-16">
                     <div class="flex">
-                        <!-- Logo -->
-                        <div class="shrink-0 flex items-center">
-                            <a href="{{ route('dashboard', ['locale' => app()->getLocale()]) }}" class="text-xl font-bold text-indigo-600">
-                                MK Driving
-                            </a>
-                        </div>
-
                         <!-- Navigation Links -->
                         <div class="hidden space-x-8 sm:-my-px sm:ml-10 sm:flex">
                             <x-nav-link :href="route('dashboard', ['locale' => app()->getLocale()])" :active="request()->routeIs('dashboard')">
-                                {{ __('navigation.dashboard') }}
+                                Dashboard
                             </x-nav-link>
                             <x-nav-link :href="route('dashboard.quizzes.index', ['locale' => app()->getLocale()])" :active="request()->routeIs('dashboard.quizzes.*')">
-                                {{ __('navigation.quizzes') }}
+                                Quizzes
                             </x-nav-link>
                             <x-nav-link :href="route('subscriptions.index', ['locale' => app()->getLocale()])" :active="request()->routeIs('subscriptions.*')">
-                                {{ __('dashboard.navigation.subscriptions') }}
+                                Subscriptions
                             </x-nav-link>
                             @can('isAdmin')
                             <x-nav-link :href="route('admin.dashboard')" class="bg-yellow-100 text-yellow-800 hover:bg-yellow-200" :active="request()->is('admin*')">
-                                {{ __('Admin Panel') }}
+                                Admin Panel
                             </x-nav-link>
                             @endcan
                         </div>
@@ -64,12 +68,12 @@
 
                             <x-slot name="content">
                                 <x-dropdown-link :href="route('profile.show', ['locale' => app()->getLocale()])">
-                                    {{ __('navigation.profile') }}
+                                    Profile
                                 </x-dropdown-link>
 
                                 @can('isAdmin')
                                 <a href="{{ route('admin.dashboard', ['locale' => app()->getLocale()]) }}" class="block px-4 py-2 text-sm text-gray-700 hover:bg-gray-100" role="menuitem">
-                                    {{ __('Go to Admin Dashboard') }}
+                                    Go to Admin Dashboard
                                 </a>
                                 @endcan
 
@@ -78,7 +82,7 @@
                                     @csrf
                                     <x-dropdown-link :href="route('logout', ['locale' => app()->getLocale()])"
                                             onclick="event.preventDefault(); this.closest('form').submit();">
-                                        {{ __('navigation.logout') }}
+                                        Logout
                                     </x-dropdown-link>
                                 </form>
                             </x-slot>
@@ -101,17 +105,17 @@
             <div :class="{'block': open, 'hidden': !open}" class="hidden sm:hidden">
                 <div class="pt-2 pb-3 space-y-1">
                     <x-responsive-nav-link :href="route('dashboard', ['locale' => app()->getLocale()])" :active="request()->routeIs('dashboard')">
-                        {{ __('navigation.dashboard') }}
+                        Dashboard
                     </x-responsive-nav-link>
                     <x-responsive-nav-link :href="route('dashboard.quizzes.index', ['locale' => app()->getLocale()])" :active="request()->routeIs('dashboard.quizzes.*')">
-                        {{ __('navigation.quizzes') }}
+                        Quizzes
                     </x-responsive-nav-link>
                     <x-responsive-nav-link :href="route('subscriptions.index', ['locale' => app()->getLocale()])" :active="request()->routeIs('subscriptions.*')">
-                        {{ __('dashboard.navigation.subscriptions') }}
+                        Subscriptions
                     </x-responsive-nav-link>
                     @can('isAdmin')
                     <x-responsive-nav-link :href="route('admin.dashboard')" class="bg-yellow-50 text-yellow-800" :active="request()->is('admin*')">
-                        {{ __('Admin Panel') }}
+                        Admin Panel
                     </x-responsive-nav-link>
                     @endcan
                 </div>
@@ -125,7 +129,7 @@
 
                     <div class="mt-3 space-y-1">
                         <x-responsive-nav-link :href="route('profile.edit', ['locale' => app()->getLocale()])">
-                            {{ __('navigation.profile') }}
+                            Profile
                         </x-responsive-nav-link>
 
                         <!-- Authentication -->
@@ -133,7 +137,7 @@
                             @csrf
                             <x-responsive-nav-link :href="route('logout', ['locale' => app()->getLocale()])"
                                     onclick="event.preventDefault(); this.closest('form').submit();">
-                                {{ __('navigation.logout') }}
+                                Logout
                             </x-responsive-nav-link>
                         </form>
                     </div>
@@ -141,8 +145,8 @@
             </div>
         </nav>
 
-        <!-- Page Content -->
-        <main class="p-4 sm:p-2">
+        <!-- Main content -->
+        <main class="flex-1 overflow-y-auto focus:outline-none scrollbar-thin" class="dark:[scrollbar-color:rgb(55_65_81)_rgb(31_41_55)]">
             @if (isset($header))
                 <div class="mb-6">
                     {{ $header }}

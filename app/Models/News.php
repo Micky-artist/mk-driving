@@ -19,17 +19,27 @@ class News extends Model
         'title',
         'slug',
         'content',
-        'images',
+        'image_url',
         'author_id',
         'is_published',
-        'category'
+        'category',
+        'views',
+        'likes_count',
+        'comments_count',
+        'shares_count',
+        'engagement_metrics',
+        'forum_question_id'
     ];
 
     protected $casts = [
         'title' => 'array',
         'content' => 'array',
-        'images' => 'array',
         'is_published' => 'boolean',
+        'views' => 'integer',
+        'likes_count' => 'integer',
+        'comments_count' => 'integer',
+        'shares_count' => 'integer',
+        'engagement_metrics' => 'array',
         'created_at' => 'datetime',
         'updated_at' => 'datetime',
         'deleted_at' => 'datetime',
@@ -281,11 +291,93 @@ class News extends Model
     }
 
     /**
-     * Get the author that owns the news.
+     * Get author that owns news.
      */
     public function author()
     {
         return $this->belongsTo(User::class, 'author_id');
+    }
+
+    /**
+     * Get associated forum question for discussions
+     */
+    public function forumQuestion()
+    {
+        return $this->belongsTo(ForumQuestion::class);
+    }
+
+    /**
+     * Increment view count
+     */
+    public function incrementViews(): void
+    {
+        $this->increment('views');
+        
+        // Update engagement metrics
+        $metrics = $this->engagement_metrics ?? [];
+        $metrics['last_viewed_at'] = now()->toDateTimeString();
+        $this->update(['engagement_metrics' => $metrics]);
+    }
+
+    /**
+     * Increment likes count
+     */
+    public function incrementLikes(): void
+    {
+        $this->increment('likes_count');
+        
+        // Award points to author if threshold reached
+        if ($this->likes_count % 10 === 0) {
+            $this->author->awardPoints(5, UserPointsHistory::REASON_NEWS_ENGAGEMENT, [
+                'news_id' => $this->id,
+                'type' => 'likes_milestone'
+            ]);
+        }
+    }
+
+    /**
+     * Increment comments count
+     */
+    public function incrementComments(): void
+    {
+        $this->increment('comments_count');
+        
+        // Award points to author for engagement
+        $this->author->awardPoints(2, UserPointsHistory::REASON_NEWS_ENGAGEMENT, [
+            'news_id' => $this->id,
+            'type' => 'comment'
+        ]);
+    }
+
+    /**
+     * Get engagement rate
+     */
+    public function getEngagementRate(): float
+    {
+        if ($this->views === 0) {
+            return 0;
+        }
+
+        $totalEngagement = $this->likes_count + $this->comments_count + $this->shares_count;
+        return ($totalEngagement / $this->views) * 100;
+    }
+
+    /**
+     * Create forum discussion for this news
+     */
+    public function createForumDiscussion(): ForumQuestion
+    {
+        $question = ForumQuestion::create([
+            'title' => $this->title,
+            'content' => $this->content,
+            'user_id' => $this->author_id,
+            'is_approved' => true,
+            'topics' => ['announcement', 'news-discussion']
+        ]);
+
+        $this->update(['forum_question_id' => $question->id]);
+        
+        return $question;
     }
 
     /**

@@ -19,4 +19,11 @@ return [
     'hour_ago' => 'amasaha :count ashize',
     'minute_ago' => 'iminota :count ishize',
     'second_ago' => 'amasegonda :count ashize',
+    'year_from_now' => 'mu myaka :count',
+    'month_from_now' => 'u mwizi :count',
+    'week_from_now' => 'mu byumweru :count',
+    'day_from_now' => 'u munsi :count',
+    'hour_from_now' => 'mu saha :count',
+    'minute_from_now' => 'u munota :count',
+    'second_from_now' => 'u masegonda :count',
 ];

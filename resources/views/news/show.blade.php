@@ -131,7 +131,7 @@
                         </div>
                         <div>
                             <span class="text-sm text-gray-500">
-                                {{ __('news.lastUpdated') }}: {{ $article->updated_at->diffForHumans() }}
+                                {{ __('news.lastUpdated') }}: {{ timeDiffForHumans($article->updated_at) }}
                             </span>
                         </div>
                     </div>

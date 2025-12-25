@@ -4,6 +4,8 @@ namespace App\Http\Controllers\Auth;
 
 use App\Http\Controllers\Controller;
 use App\Models\User;
+use App\Models\Visitor;
+use App\Services\DeviceTrackingService;
 use Illuminate\Auth\Events\Registered;
 use Illuminate\Http\Request;
 use Illuminate\Http\Response;
@@ -60,14 +62,34 @@ class RegisteredUserController extends Controller
                 'email.unique' => __('auth.errors.email_exists')
             ]);
 
-            $user = User::create([
+            // Get device fingerprint and location data
+            $fingerprints = DeviceTrackingService::generateDeviceFingerprint($request);
+            $deviceInfo = Visitor::detectDevice($request->userAgent());
+            
+            $userData = [
                 'first_name' => $validated['first_name'],
                 'last_name' => $validated['last_name'],
                 'email' => $validated['email'],
                 'password' => Hash::make($validated['password']),
                 'role' => 'USER', // Must be one of: 'USER', 'ADMIN', or 'INSTRUCTOR'
                 'is_active' => true,
-            ]);
+                // Location data
+                'country' => Visitor::getCountryFromIP($request->ip()),
+                'city' => Visitor::getCityFromIP($request->ip()),
+                'timezone' => $request->header('Timezone') ?? config('app.timezone'),
+                // Device tracking data
+                'device_fingerprint' => $fingerprints['device_fingerprint'],
+                'registration_ip' => $request->ip(),
+                'registration_user_agent' => substr($request->userAgent(), 0, 500),
+                'registration_device_type' => $deviceInfo['device_type'],
+                'registration_browser' => $deviceInfo['browser'],
+                'registration_platform' => $deviceInfo['platform'],
+                // Timestamps
+                'registered_at' => now(),
+                'last_seen_at' => now(),
+            ];
+
+            $user = User::create($userData);
 
             event(new Registered($user));
             Auth::login($user);

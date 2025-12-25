@@ -71,8 +71,9 @@
     <!-- Font Awesome -->
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css" integrity="sha512-iecdLmaskl7CVkqkXNQ/ZH/XLlvWZOJyj7Yy7tcenmpD1ypASozpmT/E0iPtmFIB46ZmdtAc9eNBvH0H/ZpiBw==" crossorigin="anonymous" referrerpolicy="no-referrer" />
     
-    <!-- Scroll Animation Styles -->
+    <!-- Global Scrollbar Styles -->
     <style>
+        /* Fade-in animations */
         .fade-in {
             opacity: 0;
             transform: translateY(20px);
@@ -98,6 +99,74 @@
 
         .fade-in.delay-400 {
             transition-delay: 0.4s;
+        }
+
+        /* Standardized scrollbar styles */
+        /* Dark mode scrollbar styles for Webkit browsers */
+        .dark ::-webkit-scrollbar {
+            width: 6px;
+            height: 6px;
+        }
+
+        .dark ::-webkit-scrollbar-track {
+            background: rgb(31 41 55);
+        }
+
+        .dark ::-webkit-scrollbar-thumb {
+            background-color: rgb(55 65 81);
+            border-radius: 3px;
+        }
+
+        .dark ::-webkit-scrollbar-thumb:hover {
+            background-color: rgb(75 85 99);
+        }
+
+        /* Light mode scrollbar styles for Webkit browsers */
+        ::-webkit-scrollbar {
+            width: 6px;
+            height: 6px;
+        }
+
+        ::-webkit-scrollbar-track {
+            background: transparent;
+        }
+
+        ::-webkit-scrollbar-thumb {
+            background-color: rgb(203 213 225);
+            border-radius: 3px;
+        }
+
+        ::-webkit-scrollbar-thumb:hover {
+            background-color: rgb(189 197 209);
+        }
+
+        /* Firefox scrollbar styles */
+        html {
+            scrollbar-width: thin;
+            scrollbar-color: rgb(55 65 81) rgb(31 41 55);
+        }
+
+        .dark html {
+            scrollbar-color: rgb(55 65 81) rgb(31 41 55);
+        }
+
+        /* Utility classes for scrollable containers */
+        .scrollbar-thin {
+            scrollbar-width: thin;
+            scrollbar-color: rgb(55 65 81) rgb(31 41 55);
+        }
+
+        .dark .scrollbar-thin {
+            scrollbar-color: rgb(55 65 81) rgb(31 41 55);
+        }
+
+        .scrollbar-hide::-webkit-scrollbar {
+            display: none;
+        }
+
+        .scrollbar-hide {
+            -ms-overflow-style: none;
+            scrollbar-width: none;
         }
     </style>
     <script>

@@ -11,7 +11,8 @@ class Option extends Model
         'option_text',
         'is_correct',
         'order',
-        'question_id'
+        'question_id',
+        'image_url'
     ];
 
     protected $casts = [

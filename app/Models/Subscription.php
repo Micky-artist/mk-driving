@@ -20,11 +20,11 @@ class Subscription extends Model
     protected $fillable = [
         'id',
         'status',
+        'payment_status',
         'starts_at',
         'ends_at',
         'canceled_at',
         'amount',
-        'payment_status',
         'transaction_id',
         'payment_reference',
         'payment_method',
@@ -81,11 +81,4 @@ class Subscription extends Model
         return $this->plan();
     }
 
-    /**
-     * Get the payment associated with the subscription.
-     */
-    public function payment()
-    {
-        return $this->hasOne(Payment::class);
     }
-}

@@ -6,12 +6,94 @@ use App\Http\Controllers\Controller;
 use App\Models\Subscription;
 use App\Models\Payment;
 use App\Models\SubscriptionPlan;
+use App\Models\UserActivity;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Facades\Log;
+use Illuminate\Support\Facades\Auth;
 
 class SubscriptionController extends Controller
 {
+    /**
+     * Show subscription plan management dashboard.
+     *
+     * @return \Illuminate\View\View
+     */
+    public function manage(Request $request)
+    {
+        $search = $request->get('search');
+        
+        $plansQuery = SubscriptionPlan::withCount(['subscriptions' => function($query) {
+                $query->where('status', 'active');
+            }])
+            ->orderBy('created_at', 'desc');
+            
+        // Apply search filter
+        if ($search) {
+            $plansQuery->where(function($query) use ($search) {
+                $query->where('name', 'like', "%{$search}%")
+                     ->orWhere('description', 'like', "%{$search}%")
+                     ->orWhere('price', 'like', "%{$search}%");
+            });
+        }
+        
+        $plans = $plansQuery->paginate(20);
+            
+        $stats = [
+            'total_plans' => SubscriptionPlan::count(),
+            'active_plans' => SubscriptionPlan::where('is_active', true)->count(),
+            'inactive_plans' => SubscriptionPlan::where('is_active', false)->count(),
+            'total_subscriptions' => Subscription::count(),
+            'active_subscriptions' => Subscription::where('status', 'active')->count(),
+            'revenue' => Subscription::where('status', 'active')
+                ->whereMonth('created_at', now()->month)
+                ->sum('amount') ?? 0,
+        ];
+        
+        return view('admin.subscriptions.manage', compact('plans', 'stats', 'search'));
+    }
+    
+    /**
+     * Show subscriptions for a specific plan.
+     *
+     * @param  \App\Models\SubscriptionPlan  $plan
+     * @return \Illuminate\View\View
+     */
+    public function managePlan(Request $request, SubscriptionPlan $plan)
+    {
+        $search = $request->get('search');
+        
+        $subscriptionsQuery = Subscription::with(['user', 'plan'])
+            ->where('subscription_plan_id', $plan->id)
+            ->orderBy('created_at', 'desc');
+            
+        // Apply search filter
+        if ($search) {
+            $subscriptionsQuery->where(function($query) use ($search) {
+                $query->whereHas('user', function($userQuery) use ($search) {
+                    $userQuery->where('first_name', 'like', "%{$search}%")
+                             ->orWhere('last_name', 'like', "%{$search}%")
+                             ->orWhere('email', 'like', "%{$search}%")
+                             ->orWhere('phone_number', 'like', "%{$search}%");
+                });
+            });
+        }
+        
+        $subscriptions = $subscriptionsQuery->paginate(20);
+            
+        $stats = [
+            'total' => Subscription::where('subscription_plan_id', $plan->id)->count(),
+            'active' => Subscription::where('subscription_plan_id', $plan->id)->where('status', 'active')->count(),
+            'pending' => Subscription::where('subscription_plan_id', $plan->id)->where('status', 'pending')->count(),
+            'cancelled' => Subscription::where('subscription_plan_id', $plan->id)->where('status', 'cancelled')->count(),
+            'revenue' => Subscription::where('subscription_plan_id', $plan->id)
+                ->where('status', 'active')
+                ->sum('amount') ?? 0,
+        ];
+        
+        return view('admin.subscriptions.manage-plan', compact('plan', 'subscriptions', 'stats', 'search'));
+    }
+    
     /**
      * Show the form for creating a new subscription.
      *
@@ -20,8 +102,8 @@ class SubscriptionController extends Controller
     public function create()
     {
         $plans = SubscriptionPlan::where('is_active', true)->orderBy('price')->get();
-        $users = \App\Models\User::select('id', 'name', 'email')
-            ->orderBy('name')
+        $users = \App\Models\User::select('id', 'first_name', 'last_name', 'email')
+            ->orderBy('first_name')
             ->get();
             
         return view('admin.subscriptions.create', compact('plans', 'users'));
@@ -70,6 +152,21 @@ class SubscriptionController extends Controller
                 'payment_date' => now(),
             ]);
             
+            // Log subscription activity
+            UserActivity::log(
+                $validated['user_id'],
+                UserActivity::TYPE_SUBSCRIPTION,
+                [
+                    'action' => 'created',
+                    'subscription_id' => $subscription->id,
+                    'plan_name' => SubscriptionPlan::find($validated['subscription_plan_id'])->name['en'] ?? 'Unknown Plan',
+                    'amount' => $validated['amount'],
+                    'status' => $validated['status'],
+                ],
+                request()->ip(),
+                request()->userAgent()
+            );
+            
             DB::commit();
             
             return redirect()->route('admin.subscriptions.show', $subscription)
@@ -82,32 +179,77 @@ class SubscriptionController extends Controller
         }
     }
     /**
-     * Display the subscriptions dashboard.
+     * Display published subscriptions (active with valid end dates).
+     */
+    public function published(Request $request)
+    {
+        $search = $request->get('search');
+        
+        $subscriptionsQuery = Subscription::with(['user', 'plan'])
+            ->where('status', 'active')
+            ->where('ends_at', '>=', now())
+            ->orderBy('created_at', 'desc');
+            
+        // Apply search filter
+        if ($search) {
+            $subscriptionsQuery->where(function($query) use ($search) {
+                $query->whereHas('user', function($userQuery) use ($search) {
+                    $userQuery->where('first_name', 'like', "%{$search}%")
+                             ->orWhere('last_name', 'like', "%{$search}%")
+                             ->orWhere('email', 'like', "%{$search}%")
+                             ->orWhere('phone_number', 'like', "%{$search}%");
+                })
+                ->orWhereHas('plan', function($planQuery) use ($search) {
+                    $planQuery->where('name', 'like', "%{$search}%");
+                });
+            });
+        }
+        
+        $subscriptions = $subscriptionsQuery->paginate(20);
+            
+        $stats = [
+            'total' => Subscription::count(),
+            'active' => Subscription::where('status', 'active')->count(),
+            'pending' => Subscription::where('status', 'pending')->count(),
+            'published' => Subscription::where('status', 'active')->where('ends_at', '>=', now())->count(),
+            'unpublished' => Subscription::whereHas('plan', function($query) {
+                $query->where('is_active', false);
+            })->count(),
+            'revenue' => Subscription::where('status', 'active')
+                ->whereMonth('created_at', now()->month)
+                ->sum('amount') ?? 0,
+        ];
+        
+        return view('admin.subscriptions.published', compact('subscriptions', 'stats', 'search'));
+    }
+
+    /**
+     * Display subscription management dashboard.
      */
     public function index()
     {
-        // Get subscription stats for the dashboard
+        // Get all subscriptions with user and plan relationships
+        $subscriptions = Subscription::with(['user', 'plan'])
+            ->orderBy('created_at', 'desc')
+            ->paginate(20);
+            
+        // Get stats for dashboard
         $stats = [
             'total' => Subscription::count(),
-            'active' => Subscription::where('status', 'active')
-                ->where('ends_at', '>=', now())
-                ->count(),
-            'pending' => Subscription::where('status', 'pending')->count(),
-            'expiring_soon' => Subscription::where('status', 'active')
-                ->whereBetween('ends_at', [now(), now()->addDays(7)])
-                ->count(),
+            'active' => Subscription::where('status', 'ACTIVE')->count(),
+            'pending' => Subscription::where('status', 'PENDING')->count(),
+            'published' => Subscription::where('status', 'ACTIVE')->where('ends_at', '>=', now())->count(),
+            'unpublished' => Subscription::whereHas('plan', function($query) {
+                $query->where('is_active', false);
+            })->count(),
+            'revenue' => Subscription::where('status', 'ACTIVE')
+                ->whereMonth('created_at', now()->month)
+                ->sum('amount') ?? 0,
+            // Add plan stats
+            'total_plans' => SubscriptionPlan::where('is_active', true)->count(),
         ];
-
-        // Get recent subscriptions
-        $recentSubscriptions = Subscription::with(['user', 'plan'])
-            ->latest()
-            ->take(5)
-            ->get();
-
-        return view('admin.subscriptions.dashboard', [
-            'stats' => $stats,
-            'recentSubscriptions' => $recentSubscriptions
-        ]);
+            
+        return view('admin.subscriptions.index', compact('subscriptions', 'stats'));
     }
     
     /**
@@ -115,38 +257,17 @@ class SubscriptionController extends Controller
      */
     public function pending()
     {
-        // Get pending subscriptions
+        // Get pending subscriptions (including those with pending payment status)
         $subscriptions = Subscription::with(['user', 'plan'])
-            ->where('status', 'pending')
+            ->where(function($query) {
+                $query->where('status', 'PENDING')
+                      ->orWhere('payment_status', 'PENDING');
+            })
             ->orderBy('created_at', 'desc')
-            ->get()
-            ->map(function($subscription) {
-                $subscription->is_payment = false;
-                return $subscription;
-            });
+            ->paginate(20);
             
-        // Get pending payments that don't have a subscription yet
-        $pendingPayments = Payment::with(['user', 'plan'])
-            ->where('status', 'PENDING')
-            ->whereDoesntHave('subscription')
-            ->orderBy('created_at', 'desc')
-            ->get()
-            ->map(function($payment) {
-                $payment->is_payment = true;
-                $payment->payment_id = $payment->id;
-                return $payment;
-            });
-            
-        // Combine and paginate the results
-        $allItems = $subscriptions->merge($pendingPayments)->sortByDesc('created_at');
-        $perPage = 10;
-        $currentPage = \Illuminate\Pagination\LengthAwarePaginator::resolveCurrentPage();
-        $currentItems = $allItems->slice(($currentPage - 1) * $perPage, $perPage)->all();
-        $items = new \Illuminate\Pagination\LengthAwarePaginator($currentItems, $allItems->count(), $perPage, $currentPage);
-
         return view('admin.subscriptions.pending', [
-            'items' => $items,
-            'hasPendingPayments' => $pendingPayments->isNotEmpty()
+            'subscriptions' => $subscriptions
         ]);
     }
 
@@ -246,7 +367,7 @@ class SubscriptionController extends Controller
      */
     public function show(Subscription $subscription)
     {
-        $subscription->load(['user', 'plan', 'payment']);
+        $subscription->load(['user', 'plan']);
         
         return view('admin.subscriptions.show', [
             'subscription' => $subscription
@@ -320,187 +441,50 @@ class SubscriptionController extends Controller
         DB::beginTransaction();
         
         try {
-            // Update subscription status
+            // Update subscription status and payment status
             $subscription->update([
                 'status' => 'active',
+                'payment_status' => 'COMPLETED',
                 'approved_at' => now(),
             ]);
             
-            // If there's an associated payment, update it
-            if ($subscription->payment) {
-                $subscription->payment->update([
-                    'status' => 'COMPLETED',
-                    'completed_at' => now(),
-                    'subscription_id' => $subscription->id
-                ]);
-            }
-            
-            DB::commit();
-            return back()->with('success', 'Subscription approved successfully.');
-            
-        } catch (\Exception $e) {
-            DB::rollBack();
-            return back()->with('error', 'Failed to approve subscription: ' . $e->getMessage());
-        }
-    }
-
-    /**
-     * Approve a payment and create a subscription.
-     *
-     * @param  int  $id  The payment ID
-     * @return \Illuminate\Http\Response
-     */
-    public function approvePayment($locale, $id = null)
-    {
-        // Handle case where parameters might be swapped
-        if (!is_numeric($locale) && in_array($locale, ['en', 'rw'])) {
-            // If $locale is actually a locale and $id is not set, find the ID from route parameters
-            if ($id === null) {
-                $params = request()->route()->parameters();
-                $id = $params['id'] ?? null;
-            }
-        } else {
-            // If $locale is actually the ID and $id is the locale
-            if (is_numeric($locale) && in_array($id, ['en', 'rw'])) {
-                $temp = $id;
-                $id = $locale;
-                $locale = $temp;
-            } elseif (is_numeric($locale)) {
-                // If only one parameter was passed and it's numeric, it's the ID
-                $id = $locale;
-                $locale = app()->getLocale();
-            }
-        }
-        
-        // Log the payment ID and current request details
-        \Log::debug('Payment approval request', [
-            'payment_id' => $id,
-            'locale' => $locale,
-            'request_data' => request()->all(),
-            'url' => request()->fullUrl(),
-            'route_parameters' => request()->route()->parameters(),
-            'all_payments' => Payment::pluck('id')->toArray()
-        ]);
-        
-        try {
-            $payment = Payment::findOrFail($id);
-            
-            // The locale is already set by the RouteServiceProvider
-            
-            $result = $this->processPaymentApproval($payment, 'COMPLETED');
-            
-            if (request()->wantsJson() || request()->ajax()) {
-                return $result;
-            }
-            
-            return $result
-                ? back()->with('success', 'Payment approved and subscription created successfully.')
-                : back()->with('error', 'Failed to approve payment.');
-                
-        } catch (\Illuminate\Database\Eloquent\ModelNotFoundException $e) {
-            if (request()->wantsJson() || request()->ajax()) {
-                return response()->json([
-                    'success' => false,
-                    'message' => 'Payment not found.'
-                ], 404);
-            }
-            return back()->with('error', 'Payment not found.');
-        } catch (\Exception $e) {
-            Log::error('Error approving payment: ' . $e->getMessage(), [
-                'payment_id' => $id,
-                'exception' => $e
-            ]);
-            
-            if (request()->wantsJson() || request()->ajax()) {
-                return response()->json([
-                    'success' => false,
-                    'message' => 'An error occurred while approving the payment.'
-                ], 500);
-            }
-            
-            return back()->with('error', 'An error occurred while approving the payment.');
-        }
-    }
-    
-    /**
-     * Process payment approval.
-     *
-     * @param  \App\Models\Payment  $payment
-     * @param  string  $status
-     * @return bool|\Illuminate\Http\JsonResponse
-     */
-    protected function processPaymentApproval(Payment $payment, $status)
-    {
-        // Check if this payment already has a subscription
-        if ($payment->subscription_id) {
-            $message = 'This payment has already been processed.';
-            return request()->wantsJson() 
-                ? response()->json(['message' => $message], 400)
-                : false;
-        }
-        
-        DB::beginTransaction();
-        
-        try {
-            // Get the plan
-            $plan = $payment->plan;
-            
-            // Create a new subscription if approving
-            if ($status === 'COMPLETED') {
-                $subscription = Subscription::create([
-                    'user_id' => $payment->user_id,
-                    'plan_id' => $payment->plan_id,
-                    'subscription_plan_id' => $payment->plan_id,
+            // Log subscription approval activity
+            UserActivity::log(
+                $subscription->user_id,
+                UserActivity::TYPE_SUBSCRIPTION,
+                [
+                    'action' => 'approved',
+                    'subscription_id' => $subscription->id,
+                    'plan_name' => $subscription->plan->name['en'] ?? 'Unknown Plan',
+                    'amount' => $subscription->amount,
                     'status' => 'active',
-                    'starts_at' => now(),
-                    'ends_at' => now()->addMonths($plan->duration ?? 1),
-                    'payment_id' => $payment->id,
-                    'approved_at' => now(),
-                ]);
-                
-                $payment->update([
-                    'status' => $status,
-                    'completed_at' => now(),
-                    'subscription_id' => $subscription->id
-                ]);
-            } else {
-                // For rejections
-                $payment->update([
-                    'status' => $status,
-                    'completed_at' => now()
-                ]);
-            }
+                ],
+                request()->ip(),
+                request()->userAgent()
+            );
             
             DB::commit();
             
             if (request()->wantsJson() || request()->ajax()) {
                 return response()->json([
                     'success' => true,
-                    'message' => $status === 'COMPLETED' 
-                        ? 'Payment approved successfully' 
-                        : 'Payment rejected successfully',
-                    'payment' => $payment->fresh()
+                    'message' => 'Subscription approved successfully'
                 ]);
             }
             
-            return true;
+            return back()->with('success', 'Subscription approved successfully.');
             
         } catch (\Exception $e) {
             DB::rollBack();
-            Log::error(($status === 'COMPLETED' ? 'Approve' : 'Reject') . ' payment failed: ' . $e->getMessage(), [
-                'payment_id' => $payment->id,
-                'status' => $status,
-                'trace' => $e->getTraceAsString()
-            ]);
             
             if (request()->wantsJson() || request()->ajax()) {
                 return response()->json([
                     'success' => false,
-                    'message' => 'Failed to process payment: ' . $e->getMessage()
+                    'message' => 'Failed to approve subscription: ' . $e->getMessage()
                 ], 500);
             }
             
-            return false;
+            return back()->with('error', 'Failed to approve subscription: ' . $e->getMessage());
         }
     }
     
@@ -512,21 +496,37 @@ class SubscriptionController extends Controller
         DB::beginTransaction();
         
         try {
-            // Update subscription status
+            // Update subscription status and payment status
             $subscription->update([
                 'status' => 'rejected',
+                'payment_status' => 'REJECTED',
                 'rejected_at' => now()
             ]);
             
-            // Update payment status if exists
-            if ($subscription->payment) {
-                $subscription->payment->update([
-                    'status' => 'REJECTED',
-                    'completed_at' => now()
+            // Log subscription rejection activity
+            UserActivity::log(
+                $subscription->user_id,
+                UserActivity::TYPE_SUBSCRIPTION,
+                [
+                    'action' => 'rejected',
+                    'subscription_id' => $subscription->id,
+                    'plan_name' => $subscription->plan->name['en'] ?? 'Unknown Plan',
+                    'amount' => $subscription->amount,
+                    'status' => 'rejected',
+                ],
+                request()->ip(),
+                request()->userAgent()
+            );
+            
+            DB::commit();
+            
+            if (request()->wantsJson() || request()->ajax()) {
+                return response()->json([
+                    'success' => true,
+                    'message' => 'Subscription rejected successfully'
                 ]);
             }
             
-            DB::commit();
             return back()->with('success', 'Subscription rejected successfully.');
             
         } catch (\Exception $e) {
@@ -535,85 +535,15 @@ class SubscriptionController extends Controller
                 'subscription_id' => $subscription->id,
                 'trace' => $e->getTraceAsString()
             ]);
-            return back()->with('error', 'Failed to reject subscription: ' . $e->getMessage());
-        }
-    }
-    
-    /**
-     * Reject a payment.
-     *
-     * @param  int  $id  The payment ID
-     * @return \Illuminate\Http\Response
-     */
-    public function rejectPayment($locale, $id = null)
-    {
-        // Handle case where parameters might be swapped
-        if (!is_numeric($locale) && in_array($locale, ['en', 'rw'])) {
-            // If $locale is actually a locale and $id is not set, find the ID from route parameters
-            if ($id === null) {
-                $params = request()->route()->parameters();
-                $id = $params['id'] ?? null;
-            }
-        } else {
-            // If $locale is actually the ID and $id is the locale
-            if (is_numeric($locale) && in_array($id, ['en', 'rw'])) {
-                $temp = $id;
-                $id = $locale;
-                $locale = $temp;
-            } elseif (is_numeric($locale)) {
-                // If only one parameter was passed and it's numeric, it's the ID
-                $id = $locale;
-                $locale = app()->getLocale();
-            }
-        }
-        
-        // Log the payment ID and current request details
-        \Log::debug('Payment rejection request', [
-            'payment_id' => $id,
-            'locale' => $locale,
-            'request_data' => request()->all(),
-            'url' => request()->fullUrl(),
-            'route_parameters' => request()->route()->parameters(),
-            'all_payments' => Payment::pluck('id')->toArray()
-        ]);
-        
-        try {
-            $payment = Payment::findOrFail($id);
-            
-            // The locale is already set by the RouteServiceProvider
-            
-            $result = $this->processPaymentApproval($payment, 'REJECTED');
-            
-            if (request()->wantsJson() || request()->ajax()) {
-                return $result;
-            }
-            
-            return $result
-                ? back()->with('success', 'Payment rejected successfully.')
-                : back()->with('error', 'Failed to reject payment.');
-                
-        } catch (\Illuminate\Database\Eloquent\ModelNotFoundException $e) {
-            if (request()->wantsJson() || request()->ajax()) {
-                return response()->json([
-                    'success' => false,
-                    'message' => 'Payment not found.'
-                ], 404);
-            }
-            return back()->with('error', 'Payment not found.');
-        } catch (\Exception $e) {
-            Log::error('Error rejecting payment: ' . $e->getMessage(), [
-                'payment_id' => $id,
-                'exception' => $e
-            ]);
             
             if (request()->wantsJson() || request()->ajax()) {
                 return response()->json([
                     'success' => false,
-                    'message' => 'An error occurred while rejecting the payment.'
+                    'message' => 'Failed to reject subscription: ' . $e->getMessage()
                 ], 500);
             }
             
-            return back()->with('error', 'An error occurred while rejecting the payment.');
+            return back()->with('error', 'Failed to reject subscription: ' . $e->getMessage());
         }
     }
     
