@@ -123,6 +123,7 @@ return [
     ],
 
     'planTests' => [
+        'title' => 'Explore Quizzes',
         'more_tests' => 'More Tests',
         'subtitle' => 'Access premium driving tests and quizzes to prepare for your exam',
         'questions_count' => '{0} No questions|{1} :count Question|[2,*] :count Questions',
@@ -136,8 +137,8 @@ return [
     'guestQuiz' => [
         'practice_here' => 'Practice Here. Now.',
         'great_job' => 'Great job! Ready for more?',
-        'continue_streak' => 'Continue Your Winning Streak!',
-        'challenge_yourself' => 'Challenge Yourself with More!',
+        'trySampleQuiz' => 'Try a Sample Quiz',
+        'continueLearning' => 'Continue Learning',
         'challenging_questions' => '{0} No questions|{1} :count challenging question|[2,*] :count challenging questions',
         'no_registration' => 'No registration needed',
         'unlock_questions' => 'Unlock more questions and track your progress!',

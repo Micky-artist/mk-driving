@@ -5,6 +5,7 @@ namespace App\Http\Controllers\Web;
 use App\Http\Controllers\Controller;
 use App\Models\ForumQuestion;
 use App\Models\ForumAnswer;
+use App\Services\PointsService;
 use Illuminate\Http\Request;
 use Illuminate\Support\Str;
 use Illuminate\Support\Facades\Auth;
@@ -12,17 +13,37 @@ use Illuminate\Support\Facades\DB;
 
 class ForumController extends Controller
 {
+    public function __construct(private PointsService $pointsService)
+    {
+    }
+
     /**
-     * Display a listing of the forum questions.
+     * Display a listing of the forum questions with leaderboard.
      */
     public function index(Request $request)
     {
         $perPage = 10; // Number of questions per page
+        $search = $request->input('search');
         
-        $questions = ForumQuestion::with(['user', 'answers.user'])
-            ->orderBy('created_at', 'desc')
-            ->paginate($perPage)
-            ->withQueryString();
+        $query = ForumQuestion::with(['user', 'answers.user'])
+            ->orderBy('created_at', 'desc');
+        
+        // Apply search filter if provided
+        if ($search) {
+            $searchTerm = strtolower($search);
+            $query->where(function($q) use ($searchTerm) {
+                // Search in title JSON column for both 'en' and 'rw' locales
+                $q->whereRaw("LOWER(JSON_UNQUOTE(title)) LIKE ?", ["%{$searchTerm}%"])
+                  ->orWhereRaw("LOWER(JSON_UNQUOTE(title->'$.en')) LIKE ?", ["%{$searchTerm}%"])
+                  ->orWhereRaw("LOWER(JSON_UNQUOTE(title->'$.rw')) LIKE ?", ["%{$searchTerm}%"])
+                  // Search in content JSON column for both 'en' and 'rw' locales
+                  ->orWhereRaw("LOWER(JSON_UNQUOTE(content)) LIKE ?", ["%{$searchTerm}%"])
+                  ->orWhereRaw("LOWER(JSON_UNQUOTE(content->'$.en')) LIKE ?", ["%{$searchTerm}%"])
+                  ->orWhereRaw("LOWER(JSON_UNQUOTE(content->'$.rw')) LIKE ?", ["%{$searchTerm}%"]);
+            });
+        }
+        
+        $questions = $query->paginate($perPage)->withQueryString();
             
         // Transform the paginated collection
         $questions->getCollection()->transform(function($question) {
@@ -48,8 +69,8 @@ class ForumController extends Controller
                 'createdAt' => $question->created_at,
                 'updatedAt' => $question->updated_at,
                 'author' => [
-                    'firstName' => $question->user->first_name,
-                    'lastName' => $question->user->last_name,
+                    'firstName' => $question->user && $question->user->first_name ? $question->user->first_name : 'Anonymous',
+                    'lastName' => $question->user && $question->user->last_name ? $question->user->last_name : '',
                 ],
                 'answers' => $question->answers->map(function($answer) use ($locale, $fallbackLocale) {
                     // Ensure answer content is properly decoded if it's a JSON string
@@ -62,8 +83,8 @@ class ForumController extends Controller
                         'id' => $answer->id,
                         'content' => $answerContent,
                         'author' => [
-                            'firstName' => $answer->user->first_name,
-                            'lastName' => $answer->user->last_name,
+                            'firstName' => $answer->user && $answer->user->first_name ? $answer->user->first_name : 'Anonymous',
+                            'lastName' => $answer->user && $answer->user->last_name ? $answer->user->last_name : '',
                         ],
                         'createdAt' => $answer->created_at->toIso8601String(),
                     ];
@@ -71,14 +92,33 @@ class ForumController extends Controller
             ];
         });
 
+        // Get weekly leaderboard data (Duolingo-style)
+        $leaderboard = $this->pointsService->getLeaderboard(10, 'weekly');
+        
+        // Get user's rank if authenticated
+        $userRank = null;
+        $userPoints = null;
+        if (Auth::check()) {
+            $userRank = $this->pointsService->getUserRank(Auth::id(), 'weekly');
+            $userPoints = $this->pointsService->getUserPoints(Auth::id());
+        }
+
         if ($request->wantsJson()) {
-            return response()->json($questions);
+            return response()->json([
+                'questions' => $questions,
+                'leaderboard' => $leaderboard,
+                'userRank' => $userRank,
+                'userPoints' => $userPoints,
+            ]);
         }
 
         $topics = collect(config('forum.topics', []));
         return view('forum.index', [
             'questions' => $questions,
-            'topics' => $topics
+            'topics' => $topics,
+            'leaderboard' => $leaderboard,
+            'userRank' => $userRank,
+            'userPoints' => $userPoints,
         ]);
     }
 
@@ -126,14 +166,20 @@ class ForumController extends Controller
 
         $question->save();
 
+        // Award points for asking a question
+        $this->pointsService->awardPoints(Auth::id(), 'question_asked', [
+            'question_id' => $question->id,
+            'forum_question_id' => $question->id,
+        ]);
+
         if ($request->wantsJson()) {
             return response()->json([
                 'id' => $question->id,
                 'title' => $question->title,
                 'content' => $question->content,
                 'author' => [
-                    'firstName' => $question->user->first_name,
-                    'lastName' => $question->user->last_name,
+                    'firstName' => $question->user && $question->user->first_name ? $question->user->first_name : 'Anonymous',
+                    'lastName' => $question->user && $question->user->last_name ? $question->user->last_name : '',
                 ],
                 'createdAt' => $question->created_at->toIso8601String(),
                 'answers' => [],
@@ -160,13 +206,16 @@ class ForumController extends Controller
         $fallbackLocale = config('app.fallback_locale', 'rw');
         
         // Prepare question data with localized content
+        $titleData = is_string($question->title) ? json_decode($question->title, true) : $question->title;
+        $contentData = is_string($question->content) ? json_decode($question->content, true) : $question->content;
+        
         $questionData = [
             'id' => $question->id,
-            'title' => is_array($question->title) 
-                ? ($question->title[$locale] ?? $question->title[$fallbackLocale] ?? 'No title')
+            'title' => is_array($titleData) 
+                ? ($titleData[$locale] ?? $titleData[$fallbackLocale] ?? 'No title')
                 : $question->title,
-            'content' => is_array($question->content) 
-                ? ($question->content[$locale] ?? $question->content[$fallbackLocale] ?? 'No content')
+            'content' => is_array($contentData) 
+                ? ($contentData[$locale] ?? $contentData[$fallbackLocale] ?? 'No content')
                 : $question->content,
             'user' => $question->user,
             'created_at' => $question->created_at,
@@ -176,10 +225,13 @@ class ForumController extends Controller
         // Prepare answers with localized content
         $answers = $question->answers()->paginate(10);
         $answers->getCollection()->transform(function($answer) use ($locale, $fallbackLocale) {
+            // Ensure answer content is properly decoded if it's a JSON string
+            $answerContentData = is_string($answer->content) ? json_decode($answer->content, true) : $answer->content;
+            
             return [
                 'id' => $answer->id,
-                'content' => is_array($answer->content) 
-                    ? ($answer->content[$locale] ?? $answer->content[$fallbackLocale] ?? 'No content')
+                'content' => is_array($answerContentData) 
+                    ? ($answerContentData[$locale] ?? $answerContentData[$fallbackLocale] ?? 'No content')
                     : $answer->content,
                 'user' => $answer->user,
                 'created_at' => $answer->created_at,
@@ -206,17 +258,31 @@ class ForumController extends Controller
      */
     public function storeAnswer(Request $request, $questionId)
     {
+        // Check if questionId is a locale, if so get the actual question ID from route
+        if (in_array($questionId, ['rw', 'en'])) {
+            // Get all route parameters and find the one that's not a locale
+            $routeParams = $request->route()->parameters();
+            foreach ($routeParams as $key => $value) {
+                if (!in_array($value, ['rw', 'en']) && is_numeric($value)) {
+                    $questionId = $value;
+                    break;
+                }
+            }
+        }
+        
+        $locale = app()->getLocale();
+        $fallback = config('app.fallback_locale', 'en');
+        
         $validated = $request->validate([
             'content' => 'required|array',
-            'content.en' => 'required|string|min:10',
-            'content.rw' => 'required|string|min:10',
+            "content.{$locale}" => 'required|string|min:10',
             'parent_id' => 'nullable|exists:forum_answers,id',
         ]);
 
         $answer = new ForumAnswer([
             'content' => json_encode([
-                'en' => $validated['content']['en'],
-                'rw' => $validated['content']['rw']
+                $locale => $validated['content'][$locale],
+                $fallback => $validated['content'][$locale] // Use same content for fallback
             ]),
             'user_id' => Auth::id(),
             'question_id' => $questionId,
@@ -225,6 +291,12 @@ class ForumController extends Controller
         ]);
 
         $answer->save();
+
+        // Award points for answering a question
+        $this->pointsService->awardPoints(Auth::id(), 'question_answered', [
+            'answer_id' => $answer->id,
+            'question_id' => $questionId,
+        ]);
 
         if ($request->wantsJson()) {
             $locale = app()->getLocale();
@@ -238,8 +310,8 @@ class ForumController extends Controller
                 'id' => $answer->id,
                 'content' => $content,
                 'author' => [
-                    'firstName' => $answer->user->first_name,
-                    'lastName' => $answer->user->last_name,
+                    'firstName' => $answer->user && $answer->user->first_name ? $answer->user->first_name : 'Anonymous',
+                    'lastName' => $answer->user && $answer->user->last_name ? $answer->user->last_name : '',
                 ],
                 'createdAt' => $answer->created_at->toIso8601String(),
             ], 201);

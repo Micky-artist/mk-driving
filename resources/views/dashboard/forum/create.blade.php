@@ -1,7 +1,10 @@
-@extends('dashboard.layouts.app')
+@extends('layouts.app')
 
 @section('content')
-<div class="max-w-3xl mx-auto px-4 sm:px-6 lg:px-8 py-8">
+    <!-- Include unified navbar for dashboard -->
+    <x-unified-navbar :showUserStats="true" />
+    
+    <div class="pt-16"><div class="max-w-3xl mx-auto px-4 sm:px-6 lg:px-8 py-8">
     <div class="mb-6">
         <a href="{{ route('dashboard.forum.index') }}" class="inline-flex items-center text-sm font-medium text-blue-600 hover:text-blue-800">
             <svg class="mr-1 h-5 w-5" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 20 20" fill="currentColor">

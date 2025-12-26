@@ -1,9 +1,10 @@
-@extends('layouts.dashboard')
+@extends('layouts.app')
 
 @section('title', __('Payments'))
 
 @section('content')
-<div class="container mx-auto px-4 py-6">
+    
+    <div class="pt-16"><div class="container mx-auto px-4 py-6">
     <div class="flex justify-between items-center mb-6">
         <h1 class="text-2xl font-semibold text-gray-900">{{ __('Payment Requests') }}</h1>
     </div>

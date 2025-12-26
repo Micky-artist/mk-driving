@@ -315,12 +315,12 @@
 <body class="font-sans antialiased text-gray-900 dark:text-gray-100 min-h-screen transition-colors duration-200 bg-gradient-to-br from-white to-gray-50 dark:from-gray-900 dark:to-gray-800 bg-fixed overflow-x-hidden m-0 p-0">
     <!-- Header -->
     @if (!request()->is('dashboard*') && !request()->is('login'))
-        @include('components.navbar')
+        <x-unified-navbar :showUserStats="true" />
     @endif
 
     <!-- Page Content -->
     <main class="flex-grow">
-      <div class="md:pt-20">
+      <div class="md:pt-16">
         @yield('content')
       </div>
     </main>

@@ -1,4 +1,4 @@
-<div class="py-16 px-4 sm:px-6 lg:px-8 max-w-7xl mx-auto w-full">
+<div class="py-4 sm:py-6 lg:py-8 px-2 sm:px-4 lg:px-8 max-w-7xl mx-auto w-full">
     <div class="text-center mb-10 px-4 fade-in">
         <h2 class="text-2xl sm:text-3xl font-bold text-gray-900 dark:text-white mb-4">{{ __('home.blogs.title') }}</h2>
         <p class="text-gray-600 dark:text-gray-300 max-w-3xl mx-auto fade-in delay-100">

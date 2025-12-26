@@ -29,7 +29,7 @@
                         <svg class="w-4 h-4 mr-1" fill="none" stroke="currentColor" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg">
                             <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M8 7V3m8 4V3m-9 8h10M5 21h14a2 2 0 002-2V7a2 2 0 00-2-2H5a2 2 0 00-2 2v12a2 2 0 002 2z"></path>
                         </svg>
-                        <span>{{ \Carbon\Carbon::parse($news['created_at'])->format('F d, Y') }}</span>
+                        <span>{{ formatDate($news['created_at'], 'F d, Y') }}</span>
                     </div>
                     <div class="flex items-center">
                         <svg class="w-4 h-4 mr-1" fill="none" stroke="currentColor" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg">
@@ -88,7 +88,7 @@
                             @endif
                             <div class="p-6">
                                 <div class="text-sm text-gray-500 mb-2">
-                                    {{ \Carbon\Carbon::parse($related->created_at)->format('F d, Y') }} • {{ $related->read_time }}
+                                    {{ formatDate($related->created_at, 'F d, Y') }} • {{ $related->read_time }}
                                 </div>
                                 <h3 class="text-xl font-semibold mb-3">
                                     <a href="{{ route('news.show', $related->slug) }}" class="text-gray-900 hover:text-blue-600 transition-colors">

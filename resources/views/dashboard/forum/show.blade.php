@@ -1,7 +1,10 @@
-@extends('dashboard.layouts.app')
+@extends('layouts.app')
 
 @section('content')
-<div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-8">
+    <!-- Include unified navbar for dashboard -->
+    <x-unified-navbar :showUserStats="true" />
+    
+    <div class="pt-16"><div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-8">
     <!-- Back to questions -->
     <div class="mb-6">
         <a href="{{ route('dashboard.forum.index') }}" class="inline-flex items-center text-sm font-medium text-blue-600 hover:text-blue-800">
@@ -12,9 +15,8 @@
         </a>
     </div>
 
-    <div class="flex flex-col lg:flex-row gap-8">
+    <div class="w-full">
         <!-- Main Content -->
-        <div class="lg:w-2/3">
             <!-- Question -->
             <div class="bg-white shadow overflow-hidden sm:rounded-lg mb-6">
                 <div class="px-4 py-5 sm:px-6 flex items-start justify-between">
@@ -196,51 +198,7 @@
                 </form>
             </div>
         </div>
-
-        <!-- Sidebar -->
-        <div class="lg:w-1/3 space-y-6">
-            <!-- Related Questions -->
-            @if($relatedQuestions->count() > 0)
-                <div class="bg-white shadow overflow-hidden sm:rounded-lg">
-                    <div class="px-4 py-5 sm:px-6 border-b border-gray-200">
-                        <h3 class="text-lg leading-6 font-medium text-gray-900">Related Questions</h3>
-                    </div>
-                    <div class="px-4 py-5 sm:p-6">
-                        <div class="space-y-4">
-                            @foreach($relatedQuestions as $related)
-                                <div class="border-b border-gray-200 pb-4 last:border-0 last:pb-0">
-                                    <a href="{{ route('dashboard.forum.show', $related) }}" class="block">
-                                        <h4 class="text-sm font-medium text-blue-600 hover:text-blue-800">{{ $related->title }}</h4>
-                                        <div class="mt-1 flex items-center text-xs text-gray-500">
-                                            <span>{{ $related->answers_count }} {{ Str::plural('answer', $related->answers_count) }}</span>
-                                            <span class="mx-1">•</span>
-                                            <span>{{ $related->created_at->diffForHumans() }}</span>
-                                        </div>
-                                    </a>
-                                </div>
-                            @endforeach
-                        </div>
-                    </div>
-                </div>
-            @endif
-
-            <!-- Ask a Question -->
-            <div class="bg-blue-50 p-6 rounded-lg">
-                <div class="text-center">
-                    <svg class="mx-auto h-12 w-12 text-blue-400" fill="none" viewBox="0 0 24 24" stroke="currentColor">
-                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="1" d="M8.228 9c.549-1.165 2.03-2 3.772-2 2.21 0 4 1.343 4 3 0 1.4-1.278 2.575-3.006 2.907-.542.104-.994.54-.994 1.093m0 3h.01M21 12a9 9 0 11-18 0 9 9 0 0118 0z" />
-                    </svg>
-                    <h3 class="mt-2 text-sm font-medium text-gray-900">Have a question?</h3>
-                    <p class="mt-1 text-sm text-gray-500">Can't find what you're looking for? Ask a question to the community.</p>
-                    <div class="mt-6">
-                        <a href="{{ route('dashboard.forum.create') }}" class="inline-flex items-center px-4 py-2 border border-transparent shadow-sm text-sm font-medium rounded-md text-white bg-blue-600 hover:bg-blue-700 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-blue-500">
-                            Ask a Question
-                        </a>
-                    </div>
-                </div>
-            </div>
-        </div>
-    </div>
+</div>
 </div>
 
 @push('scripts')

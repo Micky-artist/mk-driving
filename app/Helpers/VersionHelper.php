@@ -2,7 +2,6 @@
 
 namespace App\Helpers;
 
-use Carbon\Carbon;
 use Illuminate\Support\Facades\File;
 use Illuminate\Support\Facades\Cache;
 
@@ -48,7 +47,7 @@ class VersionHelper
     public static function getReleaseDate()
     {
         self::init();
-        return Carbon::parse(self::$versionData['released_at']);
+        return self::$versionData['released_at'];
     }
 
     public static function incrementPatch(): void
@@ -89,12 +88,12 @@ class VersionHelper
         
         self::$versionData['version'] = $version;
         self::$versionData['build']++;
-        self::$versionData['released_at'] = now()->toIso8601String();
+        self::$versionData['released_at'] = date('c');
         
         // Add to changelog
         self::$versionData['changelog'][] = sprintf(
             '[%s] Version %s (%s) - %s',
-            now()->toDateString(),
+            date('Y-m-d'),
             self::getFullVersion(),
             $type,
             'Update description here' // This should be passed as parameter in a real scenario
@@ -116,9 +115,9 @@ class VersionHelper
         $initialData = [
             'version' => '1.0.0',
             'build' => 1,
-            'released_at' => now()->toIso8601String(),
+            'released_at' => date('c'),
             'changelog' => [
-                '[' . now()->toDateString() . '] Initial version created' 
+                '[' . date('Y-m-d') . '] Initial version created' 
             ]
         ];
         

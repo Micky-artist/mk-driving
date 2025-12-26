@@ -87,6 +87,12 @@ Route::group([], function () {
             Route::post('/', [AdminController::class, 'updateSettings'])->name('update');
         });
 
+        // Notifications
+        Route::prefix('notifications')->name('notifications.')->group(function () {
+            Route::post('/{id}/read', [AdminController::class, 'markNotificationAsRead'])->name('mark-read');
+            Route::post('/mark-all-read', [AdminController::class, 'markAllNotificationsAsRead'])->name('mark-all-read');
+        });
+
         // Guest Quiz Management
         Route::prefix('guest-quiz')->name('guest-quiz.')->group(function () {
             Route::get('/', [GuestQuizController::class, 'index'])->name('index');

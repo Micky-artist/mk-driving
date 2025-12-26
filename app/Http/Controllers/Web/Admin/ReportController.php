@@ -15,7 +15,6 @@ use App\Models\Visitor;
 use App\Models\News;
 use App\Models\ForumQuestion;
 use App\Models\ForumAnswer;
-use Carbon\Carbon;
 use Illuminate\Support\Facades\DB;
 use Maatwebsite\Excel\Facades\Excel;
 use App\Exports\ReportsExport;
@@ -34,11 +33,11 @@ class ReportController extends Controller
         // Key metrics for overview
         $metrics = [
             'total_revenue' => Subscription::where('status', 'ACTIVE')
-                ->where('created_at', '>=', Carbon::now()->subDays($period))
+                ->where('created_at', '>=', date('Y-m-d H:i:s', subDays($period)))
                 ->sum('amount'),
             'revenue_growth' => $this->calculateGrowth('revenue', $period),
             'active_users' => User::whereHas('quizAttempts', function ($query) use ($period) {
-                $query->where('created_at', '>=', Carbon::now()->subDays($period));
+                $query->where('created_at', '>=', date('Y-m-d H:i:s', subDays($period)));
             })->count(),
             'user_growth' => $this->calculateGrowth('users', $period),
             'completion_rate' => QuizAttempt::where('status', 'passed')->count() / 
@@ -54,7 +53,7 @@ class ReportController extends Controller
 
         // Revenue trends
         $revenueTrends = Subscription::selectRaw('DATE(created_at) as date, SUM(amount) as revenue')
-            ->where('created_at', '>=', Carbon::now()->subDays($period))
+            ->where('created_at', '>=', date('Y-m-d H:i:s', subDays($period)))
             ->where('status', '!=', 'CANCELLED')
             ->groupBy('date')
             ->orderBy('date')
@@ -62,21 +61,21 @@ class ReportController extends Controller
 
         // User activity trends
         $userActivityTrends = User::whereHas('quizAttempts', function ($query) use ($period) {
-                $query->where('created_at', '>=', Carbon::now()->subDays($period));
+                $query->where('created_at', '>=', date('Y-m-d H:i:s', subDays($period)));
             })
             ->selectRaw('DATE(quiz_attempts.created_at) as date, COUNT(DISTINCT users.id) as active_users')
             ->join('quiz_attempts', 'users.id', '=', 'quiz_attempts.user_id')
-            ->where('quiz_attempts.created_at', '>=', Carbon::now()->subDays($period))
+            ->where('quiz_attempts.created_at', '>=', date('Y-m-d H:i:s', subDays($period)))
             ->groupBy('date')
             ->orderBy('date')
             ->get();
 
         // Top performing quizzes
         $topQuizzes = Quiz::withCount(['attempts' => function ($query) use ($period) {
-                $query->where('created_at', '>=', Carbon::now()->subDays($period));
+                $query->where('created_at', '>=', date('Y-m-d H:i:s', subDays($period)));
             }])
             ->with(['attempts' => function ($query) use ($period) {
-                $query->where('created_at', '>=', Carbon::now()->subDays($period));
+                $query->where('created_at', '>=', date('Y-m-d H:i:s', subDays($period)));
             }])
             ->having('attempts_count', '>', 0)
             ->get()
@@ -99,10 +98,10 @@ class ReportController extends Controller
         // Revenue metrics
         $revenueMetrics = [
             'mrr' => Subscription::where('status', 'ACTIVE')
-                ->where('ends_at', '>', Carbon::now())
+                ->where('ends_at', '>', date('Y-m-d H:i:s', currentTimestamp()))
                 ->sum('amount'),
             'annual_revenue' => Subscription::where('status', 'ACTIVE')
-                ->where('ends_at', '>', Carbon::now())
+                ->where('ends_at', '>', date('Y-m-d H:i:s', currentTimestamp()))
                 ->sum('amount') * 12,
             'arpu' => User::count() > 0 ? 
                 Subscription::where('status', 'ACTIVE')->sum('amount') / User::count() : 0,
@@ -125,9 +124,9 @@ class ReportController extends Controller
         // User metrics
         $userMetrics = [
             'total_users' => User::count(),
-            'new_users_30d' => User::where('created_at', '>=', Carbon::now()->subDays(30))->count(),
+            'new_users_30d' => User::where('created_at', '>=', date('Y-m-d H:i:s', subDays(30)))->count(),
             'active_users_30d' => User::whereHas('quizAttempts', function ($query) {
-                $query->where('created_at', '>=', Carbon::now()->subDays(30));
+                $query->where('created_at', '>=', date('Y-m-d H:i:s', subDays(30)));
             })->count(),
             'retention_rate' => $this->calculateRetentionRate(),
         ];
@@ -145,7 +144,7 @@ class ReportController extends Controller
         $subscriptionMetrics = [
             'active_subscriptions' => Subscription::where('status', 'ACTIVE')->count(),
             'churn_rate' => $this->calculateChurnRate(),
-            'new_subscriptions_30d' => Subscription::where('created_at', '>=', Carbon::now()->subDays(30))->count(),
+            'new_subscriptions_30d' => Subscription::where('created_at', '>=', date('Y-m-d H:i:s', subDays(30)))->count(),
             'mrr_growth' => $this->calculateMRRGrowth(),
         ];
 
@@ -295,7 +294,7 @@ class ReportController extends Controller
 
         return response()->json([
             'data' => $csvData,
-            'filename' => 'visitors_export_' . Carbon::now()->format('Y-m-d_H-i-s') . '.csv'
+            'filename' => 'visitors_export_' . date('Y-m-d_H-i-s') . '.csv'
         ]);
     }
 
@@ -307,7 +306,7 @@ class ReportController extends Controller
      */
     public function export(string $type)
     {
-        $filename = 'driving-school-report-' . Carbon::now()->format('Y-m-d') . '.xlsx';
+        $filename = 'driving-school-report-' . date('Y-m-d') . '.xlsx';
         
         return Excel::download(new ReportsExport($type), $filename);
     }
@@ -315,8 +314,8 @@ class ReportController extends Controller
     // Helper methods for calculations
     private function calculateGrowth($type, $period): float
     {
-        $current = Carbon::now();
-        $previous = Carbon::now()->subDays($period);
+        $current = currentTimestamp();
+        $previous = subDays($period);
         
         switch ($type) {
             case 'revenue':
@@ -349,7 +348,7 @@ class ReportController extends Controller
     {
         // Simplified engagement score calculation
         $activeUsers = User::whereHas('quizAttempts', function ($query) use ($period) {
-            $query->where('created_at', '>=', Carbon::now()->subDays($period));
+            $query->where('created_at', '>=', date('Y-m-d H:i:s', subDays($period)));
         })->count();
         
         $totalUsers = User::count();
@@ -391,8 +390,8 @@ class ReportController extends Controller
 
     private function calculateRetentionRate(): float
     {
-        $thirtyDaysAgo = Carbon::now()->subDays(30);
-        $sixtyDaysAgo = Carbon::now()->subDays(60);
+        $thirtyDaysAgo = subDays(30);
+        $sixtyDaysAgo = subDays(60);
         
         $users30DaysAgo = User::where('created_at', '<=', $thirtyDaysAgo)->count();
         $activeUsers = User::where('created_at', '<=', $thirtyDaysAgo)
@@ -412,11 +411,11 @@ class ReportController extends Controller
 
     private function calculateChurnRate(): float
     {
-        $thirtyDaysAgo = Carbon::now()->subDays(30);
+        $thirtyDaysAgo = subDays(30);
         $cancelledSubscriptions = Subscription::where('status', 'CANCELLED')
-            ->where('updated_at', '>=', $thirtyDaysAgo)
+            ->where('updated_at', '>=', date('Y-m-d H:i:s', $thirtyDaysAgo))
             ->count();
-        $totalSubscriptions = Subscription::where('created_at', '<=', $thirtyDaysAgo)->count();
+        $totalSubscriptions = Subscription::where('created_at', '<=', date('Y-m-d H:i:s', $thirtyDaysAgo))->count();
             
         return $totalSubscriptions > 0 ? ($cancelledSubscriptions / $totalSubscriptions) * 100 : 0;
     }
@@ -424,11 +423,11 @@ class ReportController extends Controller
     private function calculateMRRGrowth(): float
     {
         $currentMRR = Subscription::where('status', 'ACTIVE')
-            ->where('ends_at', '>', Carbon::now())
+            ->where('ends_at', '>', date('Y-m-d H:i:s', currentTimestamp()))
             ->sum('amount');
             
         $previousMRR = Subscription::where('status', 'ACTIVE')
-            ->where('ends_at', '>', Carbon::now()->subMonth())
+            ->where('ends_at', '>', date('Y-m-d H:i:s', subMonths(1)))
             ->sum('amount');
             
         return $previousMRR > 0 ? (($currentMRR - $previousMRR) / $previousMRR) * 100 : 0;

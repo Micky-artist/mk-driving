@@ -1,4 +1,9 @@
-<div class="relative w-full overflow-hidden bg-gradient-to-br from-[#f5f5f7] via-white to-[#f5f5f7] dark:from-gray-900 dark:via-gray-800 dark:to-gray-900">
+<div class="py-12 bg-gray-50 dark:bg-gray-800/50">
+    <!-- Section Header -->
+    <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+        <x-section-header :title="__('hero.trust_section_title', ['default' => 'You can trust us'])" href="#" onclick="window.scrollTo({top: 0, behavior: 'smooth'}); return false;" />
+    </div>
+    
     <!-- Decorative Background Elements -->
     <div class="absolute inset-0 overflow-hidden pointer-events-none">
         <div class="absolute top-0 right-0 w-96 h-96 bg-blue-100 dark:bg-blue-900/20 rounded-full filter blur-3xl opacity-30 animate-pulse"></div>
@@ -63,7 +68,7 @@
                 <!-- CTA Buttons - Stacked on mobile -->
                 <div class="flex flex-col sm:flex-row gap-4 sm:gap-5 justify-center lg:justify-start mb-6 sm:mb-8 fade-in delay-400">
                     @if($guestQuiz)
-                        <a href="{{ route('guest-quiz.show', ['locale' => app()->getLocale(), 'quiz' => $guestQuiz->id]) }}"
+                        <a href="{{ route('guest-quiz.show', ['locale' => app()->getLocale(), 'quiz' => $guestQuiz['id']]) }}"
                            class="group relative inline-flex items-center justify-center gap-2 bg-gradient-to-r from-cyan-500 to-blue-600 hover:from-cyan-600 hover:to-blue-700 rounded-full text-sm sm:text-base lg:text-lg px-7 py-3.5 sm:px-9 sm:py-4 text-white font-semibold transition-all duration-300 transform hover:scale-105 shadow-lg hover:shadow-xl hover:shadow-cyan-500/30">
                             <span class="relative z-10">{{ __('hero.sign_up_free', ['default' => 'Sign Up Free']) }}</span>
                             <svg class="w-4 h-4 sm:w-5 sm:h-5 transform group-hover:translate-x-1 transition-transform relative z-10" fill="none" stroke="currentColor" viewBox="0 0 24 24">
@@ -150,7 +155,7 @@
                         <!-- Start Test Button - Bottom Right -->
                         @if($guestQuiz ?? false)
                             <a
-                                href="{{ route('guest-quiz.show', ['locale' => app()->getLocale(), 'quiz' => $guestQuiz->id]) }}"
+                                href="{{ route('guest-quiz.show', ['locale' => app()->getLocale(), 'quiz' => $guestQuiz['id']]) }}"
                                 class="absolute bottom-2 right-2 sm:bottom-4 sm:right-4 group rounded-xl sm:rounded-2xl border-2 border-white/80 px-3 py-2 sm:px-5 sm:py-3 bg-gradient-to-r from-[#FF7B00] to-[#ff9a3c] hover:from-[#ff9a3c] hover:to-[#FF7B00] backdrop-blur-xl text-white transition-all duration-300 transform hover:scale-110 shadow-xl fade-in delay-400"
                             >
                                 <div class="flex items-center gap-1.5 sm:gap-2">

@@ -33,7 +33,7 @@ class TrackVisitor
         $skipPatterns = [
             'admin/*',
             'api/*',
-            'sanctum/*',
+            'api/*',
             '_debugbar/*',
             'telescope/*',
             'horizon/*',

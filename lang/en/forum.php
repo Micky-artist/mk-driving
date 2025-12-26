@@ -91,6 +91,34 @@ return [
         'answer_min' => 'The answer must be at least :min characters',
     ],
     
+    // Leaderboard
+    'discussions' => 'Discussions',
+    'leaderboard' => 'Leaderboard',
+    'weekly_leaderboard' => 'Weekly Leaderboard',
+    'top_performers' => 'Top Performers This Week',
+    'view_full_leaderboard' => 'View Full Leaderboard',
+    'all_time' => 'All Time',
+    'weekly' => 'Weekly',
+    'monthly' => 'Monthly',
+    'points' => 'points',
+    'your_rank' => 'Your Rank',
+    'your_weekly_rank' => 'Your Rank',
+    'you' => 'You',
+    'no_leaderboard_data' => 'No leaderboard data available yet.',
+    'leaderboard_resets_weekly' => 'Leaderboard resets every Monday',
+    
+    // Forum Introduction
+    'community_discussions' => 'Community Discussions',
+    'join_community' => 'Join our driving community, ask questions, and share your experience with fellow learners and instructors.',
+    'popular' => 'Popular',
+    'top_answer' => 'Top Answer',
+    'more_replies' => 'more replies',
+    'top_answers' => 'Top Answers',
+    'read_more' => 'Read More',
+    'view_all_questions' => 'View All Questions',
+    'explore_forum' => 'Explore Forum',
+    'views' => 'views',
+    
     // Footer
     'footer' => [
         'tagline' => 'Your trusted partner for professional driving education and road safety in Rwanda',

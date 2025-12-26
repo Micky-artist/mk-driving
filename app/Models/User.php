@@ -6,6 +6,7 @@ namespace App\Models;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Relations\BelongsTo;
 use Illuminate\Database\Eloquent\Relations\HasMany;
+use Illuminate\Database\Eloquent\Relations\HasOne;
 use App\Models\QuizAttempt;
 use App\Models\Quiz;
 use App\Models\Subscription;
@@ -15,7 +16,6 @@ use Illuminate\Auth\Passwords\CanResetPassword;
 use Illuminate\Foundation\Auth\User as Authenticatable;
 use Illuminate\Notifications\Notifiable;
 use Illuminate\Support\Facades\Mail;
-use Laravel\Sanctum\HasApiTokens;
 
 class User extends Authenticatable
 {
@@ -24,7 +24,7 @@ class User extends Authenticatable
     public const ROLE_STUDENT = 'student';
 
     /** @use HasFactory<\Database\Factories\UserFactory> */
-    use HasApiTokens, HasFactory, Notifiable, CanResetPassword;
+    use HasFactory, Notifiable, CanResetPassword;
 
     /**
      * The attributes that are mass assignable.
@@ -43,6 +43,8 @@ class User extends Authenticatable
         'is_active',
         'subscription_plan_id',
         'points',
+        'average_score',
+        'leaderboard_position',
         'streak_days',
         'last_activity_date',
         'quiz_completion_streak',
@@ -94,6 +96,7 @@ class User extends Authenticatable
             'achievement_badges' => 'array',
             'registered_at' => 'datetime',
             'last_seen_at' => 'datetime',
+            'average_score' => 'decimal:2',
         ];
     }
 
@@ -190,19 +193,21 @@ class User extends Authenticatable
             ->toArray();
 
         $streak = 0;
-        $yesterday = now()->subDay()->startOfDay();
+        $yesterday = strtotime('yesterday');
         
         foreach ($dates as $date) {
-            $attemptDate = \Carbon\Carbon::parse($date)->startOfDay();
+            $attemptDate = strtotime($date);
+            $attemptStartOfDay = strtotime(date('Y-m-d 00:00:00', $attemptDate));
+            $todayStartOfDay = strtotime(date('Y-m-d 00:00:00'));
             
-            if ($attemptDate->isToday()) {
+            if ($attemptStartOfDay === $todayStartOfDay) {
                 // Count today's attempts towards the streak
                 $streak++;
-            } elseif ($attemptDate->equalTo($yesterday)) {
+            } elseif ($attemptStartOfDay === $yesterday) {
                 // If the last attempt was yesterday, continue the streak
                 $streak++;
-                $yesterday->subDay();
-            } elseif ($attemptDate->lessThan($yesterday)) {
+                $yesterday = strtotime('-1 day', $yesterday);
+            } elseif ($attemptStartOfDay < $yesterday) {
                 // If there's a gap of more than one day, break the streak
                 break;
             }
@@ -489,6 +494,26 @@ class User extends Authenticatable
     public function isSuspended(): bool
     {
         return (bool) $this->is_suspended;
+    }
+
+    /**
+     * Get the user's points record.
+     *
+     * @return \Illuminate\Database\Eloquent\Relations\HasOne<UserPoint>
+     */
+    public function userPoints(): HasOne
+    {
+        return $this->hasOne(UserPoint::class);
+    }
+
+    /**
+     * Get all activity logs for the user.
+     *
+     * @return \Illuminate\Database\Eloquent\Relations\HasMany<ActivityLog>
+     */
+    public function activityLogs(): HasMany
+    {
+        return $this->hasMany(ActivityLog::class);
     }
 
     /**

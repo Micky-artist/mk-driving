@@ -6,6 +6,7 @@ use App\Http\Controllers\Controller;
 use App\Http\Requests\User\UpdateUserRequest;
 use App\Models\User;
 use App\Services\UploadService;
+use App\Services\PointsService;
 use Illuminate\Http\JsonResponse;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
@@ -19,7 +20,7 @@ class UserController extends Controller
     public function __construct(UploadService $uploadService)
     {
         $this->uploadService = $uploadService;
-        $this->middleware('auth:sanctum');
+        $this->middleware('auth:web')->only(['getUserStats']);
     }
 
     /**
@@ -162,6 +163,105 @@ class UserController extends Controller
         $user->update($data);
 
         return response()->json($user->fresh(['subscriptions.subscriptionPlan']));
+    }
+
+    /**
+     * Get current user statistics for quiz completion flow
+     */
+    public function getUserStats(): JsonResponse
+    {
+        $user = Auth::user();
+        
+        // Use the unified PointsService to get consistent data
+        $pointsService = app(PointsService::class);
+        $userPoints = $pointsService->getUserPoints($user->id);
+        
+        // Get the most recent quiz attempt to calculate XP gained
+        $latestAttempt = $user->quizAttempts()
+            ->where('status', 'completed')
+            ->latest('completed_at')
+            ->first();
+            
+        // Calculate XP gained with gamification
+        $xpGained = 0;
+        if ($latestAttempt) {
+            $correctAnswers = $latestAttempt->answers->where('is_correct', true)->count();
+            $totalQuestions = $latestAttempt->answers->count();
+            $score = ($correctAnswers / $totalQuestions) * 100;
+            
+            // Base XP: 5 points per correct answer
+            $xpGained = $correctAnswers * 5;
+            
+            // Performance bonuses
+            if ($score >= 90) {
+                $xpGained += 30; // Excellent performance bonus
+            } elseif ($score >= 80) {
+                $xpGained += 20; // Great performance bonus
+            } elseif ($score >= 70) {
+                $xpGained += 10; // Good performance bonus
+            }
+            
+            // Perfect score bonus
+            if ($score === 100) {
+                $xpGained += 25; // Perfect score bonus
+            }
+            
+            // Speed bonus (if completed under half the time limit)
+            if ($latestAttempt->time_spent && $latestAttempt->quiz) {
+                $timeLimit = $latestAttempt->quiz->time_limit_minutes * 60;
+                if ($latestAttempt->time_spent < $timeLimit / 2) {
+                    $xpGained += 15; // Speed bonus
+                }
+            }
+            
+            // Add XP to user's total if not already awarded
+            if (!$latestAttempt->xp_awarded) {
+                $pointsService->addPoints($user->id, $xpGained, 'quiz_completion', 'Completed quiz: ' . ($latestAttempt->quiz->title ?? 'Quiz'));
+                $latestAttempt->update(['xp_awarded' => true]);
+            }
+        }
+        
+        // Calculate or get user stats
+        $stats = [
+            'averageScore' => round($user->average_score ?? 0, 1),
+            'leaderboardPosition' => $pointsService->getUserRank($user->id), // Use PointsService for consistent ranking
+            'streak' => $user->quiz_completion_streak ?? 0,
+            'xp' => $userPoints['total'], // Use unified points system
+            'xpGained' => $xpGained, // XP gained from this quiz
+            'hasPlan' => $user->hasActiveSubscription(),
+            'quizComparison' => $this->getQuizComparison($user),
+            'weeklyPoints' => $userPoints['weekly'],
+            'monthlyPoints' => $userPoints['monthly'],
+        ];
+
+        return response()->json($stats);
+    }
+
+    /**
+     * Get quiz comparison data for improvement tracking
+     */
+    private function getQuizComparison(User $user): ?array
+    {
+        // Get the last 2 completed quiz attempts for comparison
+        $recentAttempts = $user->quizAttempts()
+            ->where('status', 'completed')
+            ->orderBy('completed_at', 'desc')
+            ->take(2)
+            ->get(['score', 'completed_at']);
+
+        if ($recentAttempts->count() < 2) {
+            return null;
+        }
+
+        $latestScore = $recentAttempts->first()->score;
+        $previousScore = $recentAttempts->last()->score;
+        $improvement = $latestScore - $previousScore;
+
+        return [
+            'improvement' => $improvement,
+            'latestScore' => $latestScore,
+            'previousScore' => $previousScore
+        ];
     }
 
     /**

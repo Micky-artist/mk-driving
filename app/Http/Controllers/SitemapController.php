@@ -3,7 +3,6 @@
 namespace App\Http\Controllers;
 
 use App\Models\Blog;
-use Carbon\Carbon;
 use Illuminate\Http\Response;
 use Illuminate\Routing\Controller;
 use Illuminate\Support\Facades\URL;
@@ -21,7 +20,7 @@ class SitemapController extends Controller
     private function generateSitemap(): string
     {
         $baseUrl = config('app.url');
-        $now = Carbon::now()->toAtomString();
+        $now = atomString();
         
         $urls = [
             // Homepage
@@ -40,7 +39,7 @@ class SitemapController extends Controller
             foreach ($blogs as $blog) {
                 $urls[] = $this->generateUrl(
                     "{$baseUrl}/blog/{$blog->slug}",
-                    $blog->updated_at->toAtomString(),
+                    date('c', strtotime($blog->updated_at)),
                     '0.8',
                     'monthly'
                 );

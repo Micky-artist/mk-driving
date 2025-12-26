@@ -50,7 +50,7 @@ Route::prefix('payments')->group(function () {
 });
 
 // Bookmark routes
-Route::middleware('auth:sanctum')->group(function () {
+Route::middleware('auth:web')->group(function () {
     Route::post('/quizzes/{quiz}/bookmark', [BookmarkController::class, 'toggle']);
     Route::get('/quizzes/{quiz}/bookmark/check', [BookmarkController::class, 'check']);
     Route::get('/bookmarks', [BookmarkController::class, 'index']);
@@ -70,7 +70,7 @@ Route::middleware('auth:sanctum')->group(function () {
 });
 
 // Public upload routes
-Route::middleware('auth:sanctum')->group(function () {
+Route::middleware('auth:web')->group(function () {
     Route::post('/upload/image', [UploadController::class, 'uploadImage']);
     Route::post('/upload/document', [UploadController::class, 'uploadDocument']);
     Route::delete('/upload/delete', [UploadController::class, 'deleteFile']);
@@ -86,8 +86,14 @@ Route::middleware('auth:sanctum')->group(function () {
     Route::delete('/users/{user}', [UserController::class, 'destroy']);
 });
 
+// Web authenticated routes for components that use web auth middleware  
+Route::middleware('auth:web')->group(function () {
+    Route::get('/user/stats', [UserController::class, 'getUserStats']);
+    Route::get('/subscriptions/active', [SubscriptionController::class, 'getActiveUserSubscriptions']);
+});
+
 // Protected routes
-Route::middleware('auth:sanctum')->group(function () {
+Route::middleware('auth:web')->group(function () {
     // Authentication routes
     Route::get('/user', [AuthController::class, 'user']);
     Route::post('/logout', [AuthController::class, 'logout']);
@@ -107,6 +113,9 @@ Route::middleware('auth:sanctum')->group(function () {
     Route::post('/quizzes/start', [QuizAttemptController::class, 'start']);
     Route::get('/attempts/{attemptId}', [QuizAttemptController::class, 'getAttempt']);
     Route::put('/attempts/{attemptId}', [QuizAttemptController::class, 'updateAttempt']);
+    
+    // Quiz submission only (stats route moved above)
+    Route::post('/quiz/submit', [QuizAttemptController::class, 'submitQuiz']);
 
     // Forum routes
     Route::prefix('forum')->group(function () {
@@ -116,7 +125,7 @@ Route::middleware('auth:sanctum')->group(function () {
     });
 
     // Admin routes
-    Route::prefix('admin')->middleware(['auth:sanctum', 'admin'])->group(function () {
+    Route::prefix('admin')->middleware(['auth:web', 'admin'])->group(function () {
         // Dashboard
         Route::get('/stats', [AdminController::class, 'getDashboardStats']);
         Route::get('/revenue/plans', [AdminController::class, 'getRevenueByPlan']);

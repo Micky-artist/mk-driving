@@ -1,9 +1,10 @@
-@extends('layouts.dashboard')
+@extends('layouts.app')
 
 @section('title', __('Payment Details'))
 
 @section('content')
-<div class="container mx-auto px-4 py-6">
+    
+    <div class="pt-16"><div class="container mx-auto px-4 py-6">
     <div class="mb-6">
         <a href="{{ route('dashboard.payments.index') }}" class="text-blue-600 hover:text-blue-900 flex items-center">
             <svg class="h-5 w-5 mr-1" fill="none" viewBox="0 0 24 24" stroke="currentColor">

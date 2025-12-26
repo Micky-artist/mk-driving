@@ -1,7 +1,10 @@
 @extends('layouts.app')
 
 @section('content')
-<div class="container mx-auto px-4 py-8">
+    <!-- Include unified navbar for dashboard -->
+    <x-unified-navbar :showUserStats="true" />
+    
+    <div class="pt-16"><div class="container mx-auto px-4 py-8">
     <div class="flex justify-between items-center mb-8">
         <h1 class="text-3xl font-bold">Subscription Plans</h1>
         <a href="{{ route('dashboard') }}" class="text-blue-600 hover:text-blue-800">

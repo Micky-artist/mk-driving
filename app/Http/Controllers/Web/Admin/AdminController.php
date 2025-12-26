@@ -3,14 +3,15 @@
 namespace App\Http\Controllers\Web\Admin;
 
 use App\Http\Controllers\Controller;
+use App\Models\Notification;
 use Illuminate\Http\Request;
+use Illuminate\Http\JsonResponse;
 use Illuminate\View\View;
 use App\Models\User;
 use App\Models\Subscription;
 use App\Models\QuizAttempt;
 use App\Models\SubscriptionPlan;
 use App\Models\Setting;
-use Carbon\Carbon;
 use Illuminate\Support\Facades\Artisan;
 
 class AdminController extends Controller
@@ -24,14 +25,14 @@ class AdminController extends Controller
     {
         // Revenue & Business Metrics
         $monthlyRevenue = Subscription::where('status', 'ACTIVE')
-            ->whereMonth('subscriptions.created_at', Carbon::now()->month)
-            ->whereYear('subscriptions.created_at', Carbon::now()->year)
+            ->whereMonth('subscriptions.created_at', date('n'))
+            ->whereYear('subscriptions.created_at', date('Y'))
             ->join('subscription_plans', 'subscriptions.subscription_plan_id', '=', 'subscription_plans.id')
             ->sum('subscription_plans.price');
             
         $lastMonthRevenue = Subscription::where('status', 'ACTIVE')
-            ->whereMonth('subscriptions.created_at', Carbon::now()->subMonth()->month)
-            ->whereYear('subscriptions.created_at', Carbon::now()->subMonth()->year)
+            ->whereMonth('subscriptions.created_at', date('n', subMonths(1)))
+            ->whereYear('subscriptions.created_at', date('Y', subMonths(1)))
             ->join('subscription_plans', 'subscriptions.subscription_plan_id', '=', 'subscription_plans.id')
             ->sum('subscription_plans.price');
             
@@ -40,16 +41,16 @@ class AdminController extends Controller
         // User Statistics
         $totalUsers = User::count();
         $activeUsersThisMonth = User::whereHas('quizAttempts', function ($query) {
-            $query->where('created_at', '>=', Carbon::now()->startOfMonth());
+            $query->where('created_at', '>=', date('Y-m-d H:i:s', startOfMonth()));
         })->count();
-        $newUsersThisMonth = User::where('created_at', '>=', Carbon::now()->startOfMonth())->count();
+        $newUsersThisMonth = User::where('created_at', '>=', date('Y-m-d H:i:s', startOfMonth()))->count();
         $userGrowthRate = $totalUsers > 0 ? round(($newUsersThisMonth / $totalUsers) * 100, 1) : 0;
         
         // Subscription Statistics
         $totalSubscriptions = Subscription::count();
         $activeSubscriptions = Subscription::where('status', 'ACTIVE')->count();
         $pendingSubscriptions = Subscription::where('status', 'PENDING')->count();
-        $newSubscriptionsThisMonth = Subscription::where('created_at', '>=', Carbon::now()->startOfMonth())->count();
+        $newSubscriptionsThisMonth = Subscription::where('created_at', '>=', date('Y-m-d H:i:s', startOfMonth()))->count();
         
         // Subscription breakdown by plan
         $subscriptionBreakdown = Subscription::join('subscription_plans', 'subscriptions.subscription_plan_id', '=', 'subscription_plans.id')
@@ -67,7 +68,7 @@ class AdminController extends Controller
         // Engagement & Learning Metrics
         $totalQuizAttempts = QuizAttempt::count();
         $completedQuizAttempts = QuizAttempt::where('status', 'completed')->count();
-        $quizAttemptsThisMonth = QuizAttempt::where('created_at', '>=', Carbon::now()->startOfMonth())->count();
+        $quizAttemptsThisMonth = QuizAttempt::where('created_at', '>=', date('Y-m-d H:i:s', startOfMonth()))->count();
         $averageQuizScore = QuizAttempt::where('status', 'completed')->avg('score_percentage');
         $passedQuizzes = QuizAttempt::where('status', 'completed')->where('score_percentage', '>=', 70)->count();
         $passRate = $completedQuizAttempts > 0 ? round(($passedQuizzes / $completedQuizAttempts) * 100, 1) : 0;
@@ -76,21 +77,21 @@ class AdminController extends Controller
         // Customer Metrics
         $churnedUsers = User::whereHas('subscriptions', function ($query) {
             $query->where('status', '!=', 'ACTIVE')
-                  ->where('updated_at', '>=', Carbon::now()->subMonth());
+                  ->where('updated_at', '>=', date('Y-m-d H:i:s', subMonths(1)));
         })->count();
         $churnRate = $activeSubscriptions > 0 ? round(($churnedUsers / $activeSubscriptions) * 100, 1) : 0;
         
         // Revenue trends for last 6 months
         $revenueTrends = [];
         for ($i = 5; $i >= 0; $i--) {
-            $month = Carbon::now()->subMonths($i);
+            $month = subMonths($i);
             $revenue = Subscription::where('status', 'ACTIVE')
-                ->whereMonth('subscriptions.created_at', $month->month)
-                ->whereYear('subscriptions.created_at', $month->year)
+                ->whereMonth('subscriptions.created_at', date('n', $month))
+                ->whereYear('subscriptions.created_at', date('Y', $month))
                 ->join('subscription_plans', 'subscriptions.subscription_plan_id', '=', 'subscription_plans.id')
                 ->sum('subscription_plans.price');
             $revenueTrends[] = [
-                'month' => $month->format('M'),
+                'month' => date('M', $month),
                 'revenue' => $revenue
             ];
         }
@@ -184,5 +185,31 @@ class AdminController extends Controller
         
         return redirect()->route('admin.settings.index')
             ->with('success', 'Settings updated successfully.');
+    }
+
+    /**
+     * Mark a specific notification as read.
+     *
+     * @param  int  $id
+     * @return \Illuminate\Http\JsonResponse
+     */
+    public function markNotificationAsRead(int $id): JsonResponse
+    {
+        $notification = Notification::findOrFail($id);
+        $notification->update(['is_read' => true]);
+
+        return response()->json(['success' => true]);
+    }
+
+    /**
+     * Mark all notifications as read for the current user.
+     *
+     * @return \Illuminate\Http\JsonResponse
+     */
+    public function markAllNotificationsAsRead(): JsonResponse
+    {
+        Notification::where('is_read', false)->update(['is_read' => true]);
+
+        return response()->json(['success' => true]);
     }
 }

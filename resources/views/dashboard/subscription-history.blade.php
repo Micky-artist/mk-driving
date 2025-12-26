@@ -1,4 +1,4 @@
-@extends('layouts.dashboard')
+@extends('layouts.app')
 
 @section('title', __('dashboard.subscription_history'))
 
@@ -22,8 +22,11 @@
 </style>
 @endpush
 
-@section('dashboard-content')
-<div class="space-y-4 sm:space-y-6">
+@section('content')
+    <!-- Include unified navbar for dashboard -->
+    <x-unified-navbar :showUserStats="true" />
+    
+    <div class="pt-16"><div class="space-y-4 sm:space-y-6">
     <!-- Page Header -->
     <div class="bg-white rounded-lg shadow overflow-hidden">
         <div class="px-4 py-5 sm:px-6 border-b border-gray-200">

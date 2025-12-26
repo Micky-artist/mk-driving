@@ -6,7 +6,6 @@ use App\Http\Controllers\Controller;
 use App\Models\Quiz;
 use App\Models\QuizAttempt;
 use App\Models\Subscription;
-use Carbon\Carbon;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Pagination\LengthAwarePaginator;
@@ -179,6 +178,7 @@ class DashboardController extends Controller
             'inProgressQuizzes' => $inProgressQuizzes,
             'completedQuizzes' => $completedQuizzes,
             'stats' => $stats,
+            'activeRoute' => 'dashboard',
         ]);
     }
     

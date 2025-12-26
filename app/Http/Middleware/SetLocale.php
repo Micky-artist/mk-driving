@@ -45,11 +45,6 @@ class SetLocale
         $validatedLocale = $this->localeService->validateLocale($locale);
         $this->localeService->setLocale($validatedLocale);
         
-        // Set Carbon locale for date formatting (skip 'rw' to avoid bad translations)
-        if (class_exists('Carbon\Carbon') && $validatedLocale !== 'rw') {
-            \Carbon\Carbon::setLocale($validatedLocale);
-        }
-        
         // Set system locale for date formatting
         if (function_exists('setlocale')) {
             setlocale(LC_TIME, $validatedLocale . '.UTF-8');

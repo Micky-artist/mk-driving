@@ -159,38 +159,12 @@ Route::prefix('{locale}')
                     ];
                 });
 
-            // Get recent forum questions with top answer and answers count
-            $recentQuestions = \App\Models\ForumQuestion::withCount('answers')
-                ->with(['answers' => function($query) {
-                    // Get the top-voted answer for each question
-                    $query->where('is_approved', true)
-                        ->orderBy('votes', 'desc')
-                        ->limit(1);
-                }, 'answers.user', 'user'])
-                ->where('is_approved', true)
-                ->orderBy('created_at', 'desc')
-                ->take(5)
-                ->get()
-                ->map(function($question) use ($locale) {
-                    $title = $question->title;
-                    $content = $question->content;
-                    
-                    return [
-                        'id' => $question->id,
-                        'title' => $title[$locale] ?? $title[config('app.fallback_locale', 'rw')] ?? 'No title',
-                        'content' => $content[$locale] ?? $content[config('app.fallback_locale', 'rw')] ?? '',
-                        'created_at' => $question->created_at,
-                        'user' => $question->user,
-                        'answers_count' => $question->answers_count,
-                        'top_answer' => $question->answers->first() ? [
-                            'content' => $question->answers->first()->content[$locale] ?? $question->answers->first()->content[config('app.fallback_locale', 'rw')] ?? '',
-                            'user' => $question->answers->first()->user,
-                            'created_at' => $question->answers->first()->created_at,
-                            'votes' => $question->answers->first()->votes ?? 0
-                        ] : null,
-                        'topics' => $question->topics
-                    ];
-                });
+            // Get forum data using ForumService
+            \Illuminate\Support\Facades\Log::debug('Attempting to get forum data');
+            $forumService = app(\App\Services\ForumService::class);
+            \Illuminate\Support\Facades\Log::debug('ForumService instantiated');
+            $forumData = $forumService->getHomepageData($locale, 3);
+            \Illuminate\Support\Facades\Log::debug('Forum data retrieved', ['forumData' => $forumData]);
 
             // Get active quizzes with relationships
             \Illuminate\Support\Facades\Log::debug('Starting quizzes query');
@@ -235,14 +209,40 @@ Route::prefix('{locale}')
                 }
                 $quizzes = $quizzes->merge($planQuizzes);
 
+                // Format quiz data for unified component
+                $quizzes = $quizzes->map(function($quiz) use ($locale) {
+                    return [
+                        'id' => $quiz->id,
+                        'title' => $quiz->getTranslation('title', $locale),
+                        'description' => $quiz->getTranslation('description', $locale),
+                        'time_limit_minutes' => $quiz->time_limit_minutes,
+                        'is_guest_quiz' => $quiz->is_guest_quiz,
+                        'questions' => $quiz->questions->map(function($question) use ($locale) {
+                            return [
+                                'id' => $question->id,
+                                'text' => $question->getTranslation('text', $locale),
+                                'image_path' => $question->image_path ? asset('storage/' . $question->image_path) : null,
+                                'options' => $question->options->map(function($option) use ($locale) {
+                                    return [
+                                        'id' => $option->id,
+                                        'text' => $option->getTranslation('option_text', $locale),
+                                        'is_correct' => (bool)$option->is_correct,
+                                        'explanation' => $option->getTranslation('explanation', $locale)
+                                    ];
+                                })->toArray()
+                            ];
+                        })->toArray()
+                    ];
+                });
+
                 // Log the actual number of questions loaded for each quiz
                 foreach ($quizzes as $quiz) {
                     \Illuminate\Support\Facades\Log::debug('Quiz questions loaded', [
-                        'quiz_id' => $quiz->id,
-                        'quiz_title' => $quiz->title,
-                        'questions_count' => $quiz->questions_count,
-                        'questions_loaded' => $quiz->questions->count(),
-                        'sample_question' => $quiz->questions->isNotEmpty() ? 'exists' : 'none'
+                        'quiz_id' => $quiz['id'],
+                        'quiz_title' => $quiz['title'],
+                        'questions_count' => count($quiz['questions']),
+                        'questions_loaded' => count($quiz['questions']),
+                        'sample_question' => !empty($quiz['questions']) ? 'exists' : 'none'
                     ]);
                 }
                 
@@ -250,7 +250,7 @@ Route::prefix('{locale}')
                 \Illuminate\Support\Facades\Log::debug('Homepage - Quizzes loaded:', [
                     'count' => $quizzes->count(),
                     'quiz_ids' => $quizzes->pluck('id'),
-                    'has_questions' => $quizzes->every(fn($q) => $q->questions->isNotEmpty())
+                    'has_questions' => $quizzes->every(fn($q) => !empty($q['questions']))
                 ]);
             } catch (\Exception $e) {
                 \Illuminate\Support\Facades\Log::error('Error in quizzes query: ' . $e->getMessage(), [
@@ -268,7 +268,7 @@ Route::prefix('{locale}')
                 'blogs' => $blogs,
                 'quizzes' => $quizzes,
                 'currentLocale' => $locale,
-                'recentQuestions' => $recentQuestions ?? collect()
+                'forumData' => $forumData
             ]);
         })->name('home');
         
@@ -499,6 +499,10 @@ Route::prefix('{locale}')
             // In Progress quizzes
             Route::get('/in-progress', [\App\Http\Controllers\Web\Dashboard\QuizController::class, 'inProgress'])
                 ->name('in-progress');
+                
+            // Progress quizzes
+            Route::get('/progress', [\App\Http\Controllers\Web\Dashboard\QuizController::class, 'progress'])
+                ->name('progress');
                 
             // Completed quizzes
             Route::get('/completed', [\App\Http\Controllers\Web\Dashboard\QuizController::class, 'completed'])

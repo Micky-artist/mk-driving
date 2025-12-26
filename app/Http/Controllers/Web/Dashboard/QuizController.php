@@ -8,6 +8,7 @@ use App\Models\Quiz;
 use App\Models\Bookmark;
 use App\Models\QuizAttempt;
 use App\Models\SubscriptionPlan;
+use App\Models\User;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\Log;
 use Illuminate\Support\Facades\DB;
@@ -22,12 +23,133 @@ class QuizController extends Controller
      */
     public function index()
     {
-        return $this->getQuizzesByStatus();
+        $status = request()->get('see', null);
+        return $this->getQuizzesByStatus($status);
     }
     
     public function inProgress()
     {
         return $this->getQuizzesByStatus('in_progress');
+    }
+    
+    /**
+     * Display user's quiz progress and performance analytics
+     */
+    public function progress()
+    {
+        $user = Auth::user();
+        
+        // Get user's quiz statistics
+        $totalAttempts = $user->quizAttempts()->count();
+        $completedAttempts = $user->quizAttempts()->whereNotNull('completed_at')->count();
+        $averageScore = $user->quizAttempts()
+            ->whereNotNull('completed_at')
+            ->whereNotNull('score')
+            ->avg('score') ?? 0;
+        
+        // Get quiz attempts over time (last 30 days)
+        $attemptsOverTime = $user->quizAttempts()
+            ->where('created_at', '>=', now()->subDays(30))
+            ->orderBy('created_at', 'asc')
+            ->get()
+            ->groupBy(function($attempt) {
+                return $attempt->created_at->format('Y-m-d');
+            });
+        
+        // Get performance by quiz category/topic
+        $performanceByCategory = $user->quizAttempts()
+            ->with('quiz')
+            ->whereNotNull('completed_at')
+            ->whereNotNull('score')
+            ->get()
+            ->groupBy(function($attempt) {
+                return $attempt->quiz->title ?? 'Unknown';
+            })
+            ->map(function($attempts) {
+                return [
+                    'attempts' => $attempts->count(),
+                    'average_score' => $attempts->avg('score'),
+                    'best_score' => $attempts->max('score'),
+                    'latest_score' => $attempts->last()->score
+                ];
+            });
+        
+        // Get leaderboard position (top 10 users by average score)
+        $leaderboard = User::withCount(['quizAttempts' => function($query) {
+                $query->whereNotNull('completed_at');
+            }])
+            ->whereHas('quizAttempts', function($query) {
+                $query->whereNotNull('completed_at');
+            })
+            ->get()
+            ->map(function($user) {
+                $avgScore = $user->quizAttempts()
+                    ->whereNotNull('completed_at')
+                    ->whereNotNull('score')
+                    ->avg('score') ?? 0;
+                
+                return [
+                    'user' => $user,
+                    'average_score' => $avgScore,
+                    'completed_quizzes' => $user->quizAttempts()->whereNotNull('completed_at')->count()
+                ];
+            })
+            ->sortByDesc('average_score')
+            ->take(10)
+            ->values();
+        
+        // Find current user's position
+        $userPosition = $leaderboard->search(function($entry) use ($user) {
+            return $entry['user']->id === $user->id;
+        }) + 1;
+        
+        // Get recent activity
+        $recentAttempts = $user->quizAttempts()
+            ->with('quiz')
+            ->orderBy('created_at', 'desc')
+            ->take(10)
+            ->get();
+        
+        // Calculate streak information
+        $currentStreak = $user->getCurrentStreak();
+        $bestStreak = $user->streak_days ?? 0;
+        
+        // Get improvement metrics
+        $lastWeekScore = $user->quizAttempts()
+            ->whereNotNull('completed_at')
+            ->where('completed_at', '>=', now()->subWeek())
+            ->whereNotNull('score')
+            ->avg('score') ?? 0;
+            
+        $previousWeekScore = $user->quizAttempts()
+            ->whereNotNull('completed_at')
+            ->whereBetween('completed_at', [now()->subWeeks(2), now()->subWeek()])
+            ->whereNotNull('score')
+            ->avg('score') ?? 0;
+        
+        $scoreImprovement = $previousWeekScore > 0 ? (($lastWeekScore - $previousWeekScore) / $previousWeekScore) * 100 : 0;
+        
+        return view('dashboard.quizzes.progress', [
+            'user' => $user,
+            'stats' => [
+                'total_attempts' => $totalAttempts,
+                'completed_attempts' => $completedAttempts,
+                'average_score' => round($averageScore, 1),
+                'completion_rate' => $totalAttempts > 0 ? round(($completedAttempts / $totalAttempts) * 100, 1) : 0,
+                'current_streak' => $currentStreak,
+                'best_streak' => $bestStreak,
+            ],
+            'attemptsOverTime' => $attemptsOverTime,
+            'performanceByCategory' => $performanceByCategory,
+            'leaderboard' => $leaderboard,
+            'userPosition' => $userPosition,
+            'recentAttempts' => $recentAttempts,
+            'improvement' => [
+                'current_week' => round($lastWeekScore, 1),
+                'previous_week' => round($previousWeekScore, 1),
+                'improvement_percentage' => round($scoreImprovement, 1)
+            ]
+        ]);
     }
     
     /**

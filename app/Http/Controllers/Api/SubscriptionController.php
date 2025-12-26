@@ -9,7 +9,6 @@ use App\Models\Subscription;
 use App\Models\SubscriptionPlan;
 use App\Models\Quiz;
 use App\Models\User;
-use Carbon\Carbon;
 use Illuminate\Http\JsonResponse;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
@@ -299,7 +298,7 @@ class SubscriptionController extends Controller
         
         // Calculate start and end dates
         $startsAt = $data['starts_at'] ?? now();
-        $endsAt = $data['ends_at'] ?? Carbon::parse($startsAt)->addDays($plan->duration);
+        $endsAt = $data['ends_at'] ?? date('Y-m-d H:i:s', addDays($startsAt, $plan->duration));
         
         // Create the subscription
         $subscription = $user->subscriptions()->create([

@@ -1,4 +1,4 @@
-@extends('layouts.dashboard')
+@extends('layouts.app')
 
 @section('title', __('Completed Quizzes'))
 
@@ -21,8 +21,9 @@
 </style>
 @endpush
 
-@section('dashboard-content')
-    <div class="min-h-screen bg-gray-50">
+@section('content')
+    
+    <div class="pt-16">    <div class="min-h-screen bg-gray-50">
         <!-- Header -->
         <div class="bg-white border-b border-gray-100">
             <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">

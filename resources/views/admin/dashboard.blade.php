@@ -56,7 +56,7 @@
                         {{ $revenueGrowth >= 0 ? '+' : '' }}{{ $revenueGrowth }}%
                     </span>
                 </div>
-                <h3 class="text-2xl font-bold text-gray-900 dark:text-white mb-1">${{ number_format($monthlyRevenue, 0) }}</h3>
+                <h3 class="text-2xl font-bold text-gray-900 dark:text-white mb-1">RWF {{ number_format($monthlyRevenue, 0) }}</h3>
                 <p class="text-sm text-gray-600 dark:text-gray-400">Monthly Revenue</p>
             </div>
         </div>
@@ -128,7 +128,7 @@
                 @foreach($revenueTrends as $trend)
                     <div class="flex items-center justify-between">
                         <span class="text-sm text-gray-600 dark:text-gray-400">{{ $trend['month'] }}</span>
-                        <span class="text-sm font-semibold text-gray-900 dark:text-white">${{ number_format($trend['revenue'], 0) }}</span>
+                        <span class="text-sm font-semibold text-gray-900 dark:text-white">RWF {{ number_format($trend['revenue'], 0) }}</span>
                     </div>
                 @endforeach
             </div>
@@ -391,15 +391,6 @@
             </div>
             
             <div class="flex items-center space-x-3">
-                <!-- Add New User -->
-                <a href="{{ route('admin.users.create') }}" 
-                   class="group inline-flex items-center px-4 py-2 bg-gradient-to-r from-blue-600 to-blue-700 hover:from-blue-700 hover:to-blue-800 text-white text-sm font-medium rounded-lg shadow-md hover:shadow-lg transform hover:scale-105 transition-all duration-200 border border-blue-500/20">
-                    <svg class="w-4 h-4 mr-2 group-hover:rotate-90 transition-transform duration-200" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M18 9v3m0 0v3m0-3h3m-3 0h-3m-2-5a4 4 0 11-8 0 4 4 0 018 0zM3 20a6 6 0 0112 0v1H3v-1z"></path>
-                    </svg>
-                    <span>Add User</span>
-                </a>
-                
                 <!-- Add New Quiz -->
                 <a href="{{ route('admin.quizzes.create', ['locale' => app()->getLocale()]) }}" 
                    class="group inline-flex items-center px-4 py-2 bg-gradient-to-r from-green-600 to-green-700 hover:from-green-700 hover:to-green-800 text-white text-sm font-medium rounded-lg shadow-md hover:shadow-lg transform hover:scale-105 transition-all duration-200 border border-green-500/20">
@@ -419,7 +410,7 @@
                 </a>
                 
                 <!-- Add New Announcement -->
-                <a href="{{ route('admin.news.create', ['locale' => app()->getLocale()]) }}" 
+                <a href="{{ route('admin.forum.announcement.create', ['locale' => app()->getLocale()]) }}" 
                    class="group inline-flex items-center px-4 py-2 bg-gradient-to-r from-orange-600 to-orange-700 hover:from-orange-700 hover:to-orange-800 text-white text-sm font-medium rounded-lg shadow-md hover:shadow-lg transform hover:scale-105 transition-all duration-200 border border-orange-500/20">
                     <svg class="w-4 h-4 mr-2 group-hover:rotate-90 transition-transform duration-200" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                         <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 6.253v13m0-13C10.832 5.477 9.246 5 7.5 5S4.168 5.477 3 6.253v13C4.168 18.477 5.754 18 7.5 18s3.332-.477 4.5-1.253m0-13C13.168 5.477 14.754 5 16.5 5c1.747 0 3.332.477 4.5 1.253v13C19.832 18.477 18.247 18 16.5 18c-1.746 0-3.332-.477-4.5-1.253"></path>

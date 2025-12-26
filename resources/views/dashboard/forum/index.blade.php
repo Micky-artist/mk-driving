@@ -1,7 +1,10 @@
-@extends('dashboard.layouts.app')
+@extends('layouts.app')
 
 @section('content')
-<div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-8">
+    <!-- Include unified navbar for dashboard -->
+    <x-unified-navbar :showUserStats="true" />
+    
+    <div class="pt-16"><div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-8">
     <div class="flex flex-col md:flex-row justify-between items-start md:items-center mb-8">
         <div>
             <h1 class="text-2xl font-bold text-gray-900">Community Forum</h1>
@@ -13,9 +16,8 @@
         </a>
     </div>
 
-    <div class="flex flex-col lg:flex-row gap-8">
+    <div class="w-full">
         <!-- Main Content -->
-        <div class="lg:w-3/4">
             <!-- Search and Filter -->
             <div class="bg-white rounded-lg shadow overflow-hidden mb-6">
                 <div class="p-4 border-b border-gray-200">
@@ -133,55 +135,7 @@
                 @endif
             </div>
         </div>
-
-        <!-- Sidebar -->
-        <div class="lg:w-1/4 space-y-6">
-            <!-- Popular Topics -->
-            <div class="bg-white shadow overflow-hidden sm:rounded-lg">
-                <div class="px-4 py-5 sm:px-6 border-b border-gray-200">
-                    <h3 class="text-lg leading-6 font-medium text-gray-900">Popular Topics</h3>
-                </div>
-                <div class="px-4 py-5 sm:p-6">
-                    <div class="flow-root">
-                        <ul class="-my-5 divide-y divide-gray-200">
-                            @foreach($topics->take(10) as $topic => $count)
-                                <li class="py-4">
-                                    <div class="flex items-center space-x-4">
-                                        <div class="flex-1 min-w-0">
-                                            <a href="{{ route('dashboard.forum.index', ['topic' => $topic]) }}" class="text-sm font-medium text-gray-900 hover:text-blue-600 truncate">
-                                                {{ $topic }}
-                                            </a>
-                                        </div>
-                                        <div>
-                                            <span class="inline-flex items-center px-2.5 py-0.5 rounded-full text-xs font-medium bg-gray-100 text-gray-800">
-                                                {{ $count }}
-                                            </span>
-                                        </div>
-                                    </div>
-                                </li>
-                            @endforeach
-                        </ul>
-                    </div>
-                </div>
-            </div>
-
-            <!-- Ask a Question -->
-            <div class="bg-blue-50 p-6 rounded-lg">
-                <div class="text-center">
-                    <svg class="mx-auto h-12 w-12 text-blue-400" fill="none" viewBox="0 0 24 24" stroke="currentColor">
-                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="1" d="M8.228 9c.549-1.165 2.03-2 3.772-2 2.21 0 4 1.343 4 3 0 1.4-1.278 2.575-3.006 2.907-.542.104-.994.54-.994 1.093m0 3h.01M21 12a9 9 0 11-18 0 9 9 0 0118 0z" />
-                    </svg>
-                    <h3 class="mt-2 text-sm font-medium text-gray-900">Need help?</h3>
-                    <p class="mt-1 text-sm text-gray-500">Can't find what you're looking for? Ask a question to the community.</p>
-                    <div class="mt-6">
-                        <a href="{{ route('forum.create') }}" class="inline-flex items-center px-4 py-2 border border-transparent shadow-sm text-sm font-medium rounded-md text-white bg-blue-600 hover:bg-blue-700 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-blue-500">
-                            Ask a Question
-                        </a>
-                    </div>
-                </div>
-            </div>
-        </div>
-    </div>
+</div>
 </div>
 
 @push('scripts')

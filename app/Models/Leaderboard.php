@@ -109,12 +109,13 @@ class Leaderboard extends Model
                 'badges' => $user->achievement_badges ?? []
             ];
 
-            // Update user's current rank
-            $user->update([
-                'previous_rank' => $user->current_rank,
-                'current_rank' => $rank - 1
-            ]);
+            // Update user's leaderboard position directly in the database
+            $user->update(['leaderboard_position' => $rank - 1]);
         }
+
+        // For users not in top 100, set their position to null or a high number
+        User::whereNotIn('id', $users->pluck('id'))
+            ->update(['leaderboard_position' => null]);
 
         $this->update(['leaderboard_data' => $rankings]);
     }

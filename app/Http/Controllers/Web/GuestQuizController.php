@@ -28,19 +28,41 @@ class GuestQuizController extends Controller
     public function show($locale, $quiz)
     {
         // Fetch the quiz with relationships
-        $quiz = Quiz::with(['questions.options'])
+        $quizModel = Quiz::with(['questions.options'])
             ->where('is_guest_quiz', true)
             ->where('is_active', true)
             ->findOrFail($quiz);
 
         // If no questions are found, redirect back with an error
-        if ($quiz->questions->isEmpty()) {
+        if ($quizModel->questions->isEmpty()) {
             return redirect()->back()->with('error', 'This quiz has no questions available.');
         }
         
-        // Verify relationships after fix
-        $firstQuestion = $quiz->questions->first();
-        $optionsCount = $firstQuestion ? $firstQuestion->options()->count() : 0;
+        // Format quiz data for the unified component
+        $questions = $quizModel->questions->shuffle(); // Randomize question order on each refresh
+        
+        $quiz = [
+            'id' => $quizModel->id,
+            'title' => $quizModel->getTranslation('title', app()->getLocale()),
+            'description' => $quizModel->getTranslation('description', app()->getLocale()),
+            'time_limit_minutes' => $quizModel->time_limit_minutes,
+            'is_guest_quiz' => $quizModel->is_guest_quiz,
+            'questions' => $questions->map(function($question) {
+                return [
+                    'id' => $question->id,
+                    'text' => $question->getTranslation('text', app()->getLocale()),
+                    'image_path' => $question->image_path ? asset('storage/' . $question->image_path) : null,
+                    'options' => $question->options->map(function($option) {
+                        return [
+                            'id' => $option->id,
+                            'text' => $option->getTranslation('option_text', app()->getLocale()),
+                            'is_correct' => (bool)$option->is_correct,
+                            'explanation' => $option->getTranslation('explanation', app()->getLocale())
+                        ];
+                    })->toArray()
+                ];
+            })->toArray()
+        ];
 
         // Store the quiz start time in the session
         if (!session()->has('quiz_start_time')) {
@@ -49,8 +71,8 @@ class GuestQuizController extends Controller
 
         return view('guest-quiz.show', [
             'quiz' => $quiz,
-            'meta_title' => $quiz->getTranslation('title', app()->getLocale()),
-            'meta_description' => $quiz->getTranslation('description', app()->getLocale())
+            'meta_title' => $quiz['title'],
+            'meta_description' => $quiz['description']
         ]);
     }
 

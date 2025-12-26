@@ -16,6 +16,7 @@ Route::prefix('{locale}')->where(['locale' => '(rw|en)'])
     // Quiz Routes
     Route::prefix('dashboard/quizzes')->name('dashboard.quizzes.')->group(function () {
         Route::get('/', [QuizController::class, 'index'])->name('index');
+        Route::get('/progress', [QuizController::class, 'progress'])->name('progress');
         Route::get('/{quiz}', [QuizController::class, 'show'])->name('show');
         Route::post('/{quiz}/start', [QuizController::class, 'start'])->name('start');
         

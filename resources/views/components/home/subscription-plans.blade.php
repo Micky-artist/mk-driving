@@ -156,22 +156,12 @@
     };
 @endphp
 
-<div class="relative py-4 bg-gradient-to-br from-blue-50 to-indigo-50 dark:from-gray-900 dark:to-gray-800">
-    <div class="relative max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
-        <!-- Premium billboard header -->
-        <div class="text-center mb-8 fade-in">
-            <div
-                class="inline-block bg-gradient-to-r from-blue-600 to-blue-700 dark:from-blue-800 dark:to-blue-900 rounded-xl px-8 py-6 shadow-lg">
-                <h2 class="text-3xl sm:text-4xl font-bold text-white mb-2">
-                    {{ __('home.subscriptionPlans.title') }}
-                </h2>
-                <div class="w-16 h-1 bg-blue-400/50 mx-auto my-3 rounded-full"></div>
-                <p class="text-blue-100 dark:text-blue-200 max-w-2xl mx-auto text-sm sm:text-base">
-                    {{ __('home.subscriptionPlans.subtitle') }}
-                </p>
-            </div>
-        </div>
-        <div class="mt-4">
+<div class="py-4 sm:py-6 lg:py-8 bg-gray-50 dark:bg-gray-800/50">
+    <div class="max-w-7xl mx-auto px-2 sm:px-4 lg:px-8">
+        <!-- Section Header -->
+        <x-section-header :title="__('home.subscriptionPlans.title')" :href="route('subscriptions', app()->getLocale())" />
+        
+        <div class="mt-8">
 
             <div class="grid md:grid-cols-2 lg:grid-cols-4 gap-6">
                 @foreach ($plans ?? [] as $plan)

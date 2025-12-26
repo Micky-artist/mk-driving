@@ -7,7 +7,11 @@ use App\Models\Quiz;
 use App\Models\QuizAttempt;
 use App\Models\Question;
 use App\Models\Option;
+use App\Models\User;
+use App\Models\Leaderboard;
+use App\Models\PointConfiguration;
 use App\Services\QuizAttemptService;
+use App\Services\PointsService;
 use Illuminate\Http\JsonResponse;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
@@ -21,7 +25,7 @@ class QuizAttemptController extends Controller
     public function __construct(QuizAttemptService $quizAttemptService)
     {
         $this->quizAttemptService = $quizAttemptService;
-        $this->middleware('auth:api');
+        $this->middleware('auth:web');
     }
 
     /**
@@ -271,6 +275,189 @@ class QuizAttemptController extends Controller
                 'message' => $e->getMessage()
             ], 422);
         }
+    }
+
+    /**
+     * Submit quiz results and update user stats
+     */
+    public function submitQuiz(Request $request): JsonResponse
+    {
+        Log::debug('Submitting quiz results', [
+            'user_id' => $request->user()->id,
+            'quiz_id' => $request->quiz_id,
+            'score' => $request->score,
+            'ip' => $request->ip()
+        ]);
+
+        $request->validate([
+            'quiz_id' => 'required|exists:quizzes,id',
+            'score' => 'required|integer|min:0|max:100',
+            'correct_answers' => 'required|integer|min:0',
+            'total_questions' => 'required|integer|min:1',
+            'time_spent' => 'required|integer|min:0',
+            'answers' => 'sometimes|array'
+        ]);
+
+        DB::beginTransaction();
+        try {
+            $user = $request->user();
+            $quiz = Quiz::findOrFail($request->quiz_id);
+
+            // Create or update quiz attempt
+            $attempt = $user->quizAttempts()->create([
+                'quiz_id' => $quiz->id,
+                'score' => $request->score,
+                'passed' => $request->score >= $quiz->passing_score,
+                'started_at' => now()->subSeconds($request->time_spent),
+                'completed_at' => now(),
+                'time_spent_seconds' => $request->time_spent,
+                'answers' => $request->answers ?? [],
+                'status' => 'completed'
+            ]);
+
+            // Update user stats
+            $this->updateUserStats($user, $request->score, $request->correct_answers, $request->total_questions, $attempt);
+
+            // Award points based on performance
+            $pointsAwarded = $this->awardPoints($user, $request->score, $quiz);
+
+            DB::commit();
+
+            Log::info('Quiz submitted successfully', [
+                'attempt_id' => $attempt->id,
+                'user_id' => $user->id,
+                'quiz_id' => $quiz->id,
+                'score' => $request->score,
+                'points_awarded' => $pointsAwarded
+            ]);
+
+            return response()->json([
+                'success' => true,
+                'message' => 'Quiz submitted successfully',
+                'attempt_id' => $attempt->id,
+                'points_awarded' => $pointsAwarded
+            ]);
+
+        } catch (\Exception $e) {
+            DB::rollBack();
+            
+            Log::error('Error submitting quiz', [
+                'error' => $e->getMessage(),
+                'trace' => $e->getTraceAsString(),
+                'user_id' => $request->user()->id,
+                'quiz_id' => $request->quiz_id
+            ]);
+
+            return response()->json([
+                'success' => false,
+                'message' => 'Failed to submit quiz: ' . $e->getMessage()
+            ], 500);
+        }
+    }
+
+    /**
+     * Update user statistics after quiz completion
+     */
+    private function updateUserStats(User $user, int $score, int $correctAnswers, int $totalQuestions, QuizAttempt $currentAttempt): void
+    {
+        // Update average score
+        $allAttempts = $user->quizAttempts()->where('status', 'completed')->get();
+        $totalScore = $allAttempts->sum('score');
+        $averageScore = $allAttempts->count() > 0 ? round($totalScore / $allAttempts->count(), 1) : 0;
+
+        // Update streak (quiz completion streak) - using 24-hour periods
+        $lastQuizDate = $user->quizAttempts()
+            ->where('status', 'completed')
+            ->where('id', '!=', $currentAttempt->id) // Exclude current attempt
+            ->latest('completed_at')
+            ->value('completed_at');
+
+        $streakDays = $user->quiz_completion_streak ?? 0;
+        if ($lastQuizDate) {
+            $lastQuizDate = \Carbon\Carbon::parse($lastQuizDate);
+            $hoursSinceLastQuiz = $lastQuizDate->diffInHours(now());
+            
+            if ($hoursSinceLastQuiz < 24) {
+                // Last quiz was less than 24 hours ago - continue streak
+                $streakDays++;
+            } else {
+                // More than 24 hours since last quiz - reset streak to 1
+                $streakDays = 1;
+            }
+        } else {
+            // First quiz completion
+            $streakDays = 1;
+        }
+
+        $user->update([
+            'average_score' => $averageScore,
+            'quiz_completion_streak' => $streakDays,
+            'last_streak_date' => now()
+        ]);
+
+        // Trigger leaderboard update - this will recalculate and update leaderboard_position for all users
+        $this->updateLeaderboardAsync();
+    }
+
+    /**
+     * Update leaderboard asynchronously
+     */
+    private function updateLeaderboardAsync(): void
+    {
+        // In production, this should be queued as a job
+        // For now, we'll update it immediately but keep it fast
+        try {
+            // Update all-time leaderboard (this will set leaderboard_position for all users)
+            $allTimeLeaderboard = Leaderboard::getAllTime();
+            $allTimeLeaderboard->updateRankings();
+            
+            // Also update weekly leaderboard for weekly rankings
+            $weeklyLeaderboard = Leaderboard::getWeekly();
+            $weeklyLeaderboard->updateRankings();
+        } catch (\Exception $e) {
+            Log::warning('Failed to update leaderboard asynchronously', [
+                'error' => $e->getMessage()
+            ]);
+        }
+    }
+
+    /**
+     * Award points based on quiz performance
+     */
+    private function awardPoints(User $user, int $score, Quiz $quiz): int
+    {
+        $pointsService = app(PointsService::class);
+        $totalPoints = 0;
+        
+        // Base points for completion
+        if ($pointsService->awardPoints($user->id, 'quiz_completed', [
+            'quiz_id' => $quiz->id,
+            'score' => $score,
+        ])) {
+            $totalPoints += PointConfiguration::getPointsForActivity('quiz_completed');
+        }
+        
+        // Bonus points for passing
+        if ($score >= $quiz->passing_score) {
+            if ($pointsService->awardPoints($user->id, 'quiz_passed', [
+                'quiz_id' => $quiz->id,
+                'score' => $score,
+            ])) {
+                $totalPoints += PointConfiguration::getPointsForActivity('quiz_passed');
+            }
+        }
+        
+        // Bonus points for perfect score
+        if ($score === 100) {
+            if ($pointsService->awardPoints($user->id, 'quiz_perfect', [
+                'quiz_id' => $quiz->id,
+                'score' => $score,
+            ])) {
+                $totalPoints += PointConfiguration::getPointsForActivity('quiz_perfect');
+            }
+        }
+        
+        return $totalPoints;
     }
 
     /**

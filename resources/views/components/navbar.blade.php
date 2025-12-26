@@ -1,4 +1,4 @@
-<nav class="w-full bg-[#0640d4] dark:bg-blue-900 shadow-lg z-50 overflow-hidden md:fixed transition-colors duration-200"
+<nav class="w-full bg-[#2563eb] dark:bg-blue-900 shadow-lg z-50 overflow-hidden md:overflow-visible md:fixed transition-colors duration-200"
     x-data="{ open: false, mobileMenuOpen: false }">
     <div class="w-full max-w-full md:max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
         <div class="flex items-center justify-between h-20">
@@ -20,17 +20,20 @@
 
             <!-- Logo (centered on mobile, left on desktop) -->
             <div class="flex-1 flex justify-center md:justify-start">
-                <a href="{{ route('home', ['locale' => app()->getLocale()]) }}" class="flex items-center space-x-2">
+                <a href="{{ route('home', ['locale' => app()->getLocale()]) }}" class="flex items-center space-x-1">
                     <img src="{{ asset('logo.png') }}" alt="MK Driving School Logo"
-                        class="h-12 w-12 sm:h-14 sm:w-14 md:h-14 md:w-14 rounded-lg shadow-md"
+                        class="h-10 w-10 sm:h-12 sm:w-12 md:h-10 md:w-12 rounded-lg shadow-md"
                         onerror="this.onerror=null; this.src='{{ asset('images/logo.png') }}'">
-                    <div class="hidden sm:block ml-2">
-                        <span class="text-2xl font-bold text-white leading-tight">
-                            MK Driving School
+                    <div class="hidden sm:block ml-1">
+                        <span class="text-2xl font-bold text-white leading-none">
+                            MK DRIVING
                         </span>
-                        <div class="text-xs  text-blue-200 font-medium mt-1">{{ __('navigation.tagline') }}</div>
                     </div>
                 </a>
+                <!-- Language Switcher -->
+                <div class="hidden md:block ml-3">
+                    <x-language-switcher :currentLocale="app()->getLocale()" />
+                </div>
             </div>
 
             <!-- Desktop Navigation -->
@@ -51,13 +54,6 @@
                             'fragment' => null,
                             'is_home' => false,
                         ],
-                        // [
-                        //     'route' => 'news.index',
-                        //     'text' => __('navigation.news'),
-                        //     'routes' => ['news.*', 'news.show'],
-                        //     'fragment' => null,
-                        //     'is_home' => false
-                        // ],
                         [
                             'route' => 'forum.index',
                             'text' => __('forum.page_title'),
@@ -88,7 +84,7 @@
     }
 }
 $classes = $isActive
-    ? 'text-white border-white'
+    ? 'text-white font-semibold border-white'
     : 'text-blue-200 hover:text-white hover:border-blue-200 border-transparent';
                     @endphp
                     @php
@@ -116,12 +112,8 @@ $classes = $isActive
                 @endforeach
             </div>
 
-            <!-- Right side navigation (auth, language switcher) -->
+            <!-- Right side navigation (auth) -->
             <div class="hidden md:flex md:items-center md:space-x-4">
-                <!-- Language Switcher -->
-                <div class="ml-4">
-                    <x-language-switcher :currentLocale="app()->getLocale()" />
-                </div>
 
                 @auth
                     <div class="ml-6 relative">
@@ -129,18 +121,18 @@ $classes = $isActive
                             @php
                                 $isDashboardActive = request()->routeIs('dashboard*');
                                 $dashboardClasses = $isDashboardActive
-                                    ? 'bg-white text-blue-600 hover:bg-gray-50'
-                                    : 'bg-white text-blue-600 hover:bg-gray-50';
+                                    ? 'text-white font-semibold border-white'
+                                    : 'text-blue-200 hover:text-white hover:border-blue-200 border-transparent';
                             @endphp
                             <a href="{{ route('dashboard', ['locale' => app()->getLocale()]) }}"
-                                class="{{ $dashboardClasses }} inline-flex items-center px-4 py-2 rounded-full text-sm font-medium transition-colors duration-200 shadow-sm">
+                                class="{{ $dashboardClasses }} inline-flex items-center px-1 pt-1 border-b-2 text-sm font-medium transition-colors duration-200">
                                 {{ __('navigation.dashboard') }}
                             </a>
                             <form method="POST" action="{{ route('logout', ['locale' => app()->getLocale()]) }}"
                                 class="ml-2">
                                 @csrf
                                 <button type="submit"
-                                    class="bg-[#023047] text-white px-4 py-2 rounded-full text-sm font-medium hover:bg-[#023047]/90">
+                                    class="text-blue-200 hover:text-white hover:border-blue-200 border-transparent border-b-2 px-1 pt-1 text-sm font-medium transition-colors duration-200">
                                     {{ __('navigation.logout') }}
                                 </button>
                             </form>
@@ -149,11 +141,11 @@ $classes = $isActive
                 @else
                     <div class="flex items-center space-x-3">
                         <a href="{{ route('login', app()->getLocale()) }}"
-                            class="bg-white text-[#023047] px-4 py-2 rounded-full text-sm font-medium hover:bg-gray-100 border border-[#023047] transition-colors duration-200">
+                            class="text-blue-200 hover:text-white hover:border-blue-200 border-transparent border-b-2 px-1 pt-1 text-sm font-medium transition-colors duration-200">
                             {{ __('navigation.login') }}
                         </a>
                         <a href="{{ route('register', app()->getLocale()) }}"
-                            class="bg-[#023047] text-white px-4 py-2 rounded-full text-sm font-medium hover:bg-[#023047]/90 transition-colors duration-200">
+                            class="text-blue-200 hover:text-white hover:border-blue-200 border-transparent border-b-2 px-1 pt-1 text-sm font-medium transition-colors duration-200">
                             {{ __('navigation.register') }}
                         </a>
                     </div>

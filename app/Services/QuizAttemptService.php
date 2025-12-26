@@ -5,7 +5,6 @@ namespace App\Services;
 use App\Models\Quiz;
 use App\Models\QuizAttempt;
 use App\Models\User;
-use Carbon\Carbon;
 use Illuminate\Support\Facades\DB;
 
 class QuizAttemptService

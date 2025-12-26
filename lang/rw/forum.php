@@ -92,6 +92,34 @@ return [
         'answer_min' => 'Igisubizo kigomba kugira byibura inyuguti :min',
     ],
     
+    // Leaderboard
+    'discussions' => 'Ibiganiro',
+    'leaderboard' => 'Leaderboard',
+    'weekly_leaderboard' => 'Leaderboard y\'Icyumweru',
+    'top_performers' => 'Iki Cyumweru',
+    'view_full_leaderboard' => 'Reba Leaderboard Yose',
+    'all_time' => 'Ibihe byose',
+    'weekly' => 'Icyumweru',
+    'monthly' => 'Ukwezi',
+    'points' => 'Amanota',
+    'your_rank' => 'Umwanya wawe',
+    'your_weekly_rank' => 'Umwanya wawe',
+    'you' => 'Wowe',
+    'no_leaderboard_data' => 'Nta makuru kuri leaderboard.',
+    'leaderboard_resets_weekly' => 'Leaderboard ihinduka buri wambere',
+    
+    // Forum Introduction
+    'community_discussions' => 'Ibiganiro',
+    'join_community' => 'Baza ikibazo cyawe mu ihuriro.',
+    'popular' => 'Ikunzwe',
+    'top_answer' => 'Igisubizo Cyiza',
+    'more_replies' => 'ibindi bisubizo',
+    'top_answers' => 'Ibisubizo Byiza',
+    'read_more' => 'Soma Birambuye',
+    'view_all_questions' => 'Reba Ibibazo Byose',
+    'explore_forum' => 'Reba n\'ibindi',
+    'views' => 'incuro birebwe',
+    
     // Footer
     'footer' => [
         'tagline' => 'Umutekano wawe mu muhanda ni intego yacu. Twishimira kubaha serivisi nziza kandi zizewe mu kwiga amategeko y\'umuhanda.',

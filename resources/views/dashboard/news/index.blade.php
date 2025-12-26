@@ -1,4 +1,4 @@
-@extends('dashboard.layouts.app')
+@extends('layouts.app')
 
 @section('title', __('News'))
 
@@ -35,7 +35,10 @@
 @endpush
 
 @section('content')
-<div class="py-6 px-4 sm:px-6 lg:px-8">
+    <!-- Include unified navbar for dashboard -->
+    <x-unified-navbar :showUserStats="true" />
+    
+    <div class=""><div class="py-6 px-4 sm:px-6 lg:px-8">
     <div class="mb-6">
         <h1 class="text-2xl font-bold text-gray-900">{{ __('Latest News') }}</h1>
         <p class="mt-1 text-sm text-gray-500">

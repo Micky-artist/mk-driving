@@ -19,3 +19,17 @@
     RewriteCond %{REQUEST_FILENAME} !-f
     RewriteRule ^ index.php [L]
 </IfModule>
+
+# Cache static assets for 1 day
+<FilesMatch "\.(json|png|jpg|jpeg|gif|ico|svg|css|js)$">
+    Header set Cache-Control "public, max-age=86400"
+    Header set Expires "access plus 1 day"
+</FilesMatch>
+
+# Cache Lottie animations specifically for 1 day
+<FilesMatch "car-moving\.json|bike-moving\.json">
+    Header set Cache-Control "public, max-age=86400, must-revalidate"
+    Header set Expires "access plus 1 day"
+    Header set Last-Modified "Tue, 15 Dec 2024 12:00:00 GMT"
+    Header set ETag "\"animation-v1\""
+</FilesMatch>

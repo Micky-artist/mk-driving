@@ -15,13 +15,10 @@ return Application::configure(basePath: dirname(__DIR__))
         health: '/up',
     )
     ->withMiddleware(function (Middleware $middleware): void {
-        $middleware->api(prepend: [
-            \Laravel\Sanctum\Http\Middleware\EnsureFrontendRequestsAreStateful::class,
-        ]);
-
         $middleware->alias([
             'verified' => \App\Http\Middleware\EnsureEmailIsVerified::class,
             'localize' => \App\Http\Middleware\SetLocale::class,
+            'track.activity' => \App\Http\Middleware\TrackUserActivity::class,
         ]);
 
         // Add SetLocale middleware to web group
@@ -29,6 +26,9 @@ return Application::configure(basePath: dirname(__DIR__))
         
         // Add TrackVisitor middleware to web group
         $middleware->web(\App\Http\Middleware\TrackVisitor::class);
+        
+        // Add TrackNotifications middleware to web group for admin users
+        $middleware->web(\App\Http\Middleware\TrackNotifications::class);
     })
     ->withExceptions(function (Exceptions $exceptions): void {
         //

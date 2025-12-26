@@ -1,4 +1,4 @@
-@extends('dashboard.layouts.app')
+@extends('layouts.app')
 
 @section('title', __('Help Center'))
 
@@ -88,7 +88,10 @@
 @endpush
 
 @section('content')
-<div class="flex-1 bg-slate-50">
+    <!-- Include unified navbar for dashboard -->
+    <x-unified-navbar :showUserStats="true" />
+    
+    <div class="pt-16"><div class="flex-1 bg-slate-50">
     <main class="container mx-auto py-6 sm:py-8 px-3 sm:px-4 lg:px-6">
         <!-- Hero Section -->
         <section class="text-center py-8 sm:py-12">

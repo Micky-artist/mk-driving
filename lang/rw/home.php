@@ -123,6 +123,7 @@ return [
     ],
 
     'planTests' => [
+        'title' => 'Reba Imyitozo',
         'more_tests' => 'Indi Myitozo',
         'subtitle' => 'Ongera ifatabuguzi na Mobile Money.',
         'questions_count' => '{0} Nta kibazo|{1} Ikibazo kimwe|[2,*] Ibibazo :count',
@@ -136,6 +137,8 @@ return [
     'guestQuiz' => [
         'practice_here' => 'Itoze Hano.',
         'great_job' => 'Ukoze neza! Witeguye kongera?',
+        'trySampleQuiz' => 'Gerageza Umwitozo',
+        'continueLearning' => 'Komeza Kwitoza',
         'challenging_questions' => '{0} Nta kibazo|{1} :count ikibazo gikomeye|[2,*] :count ibibazo bikomeye',
         'no_registration' => 'Iyandikishe ukore umwitozo w\'ubuntu!',
         'unlock_questions' => 'Fungura ibibazo byose wongere ubumenyi!',
