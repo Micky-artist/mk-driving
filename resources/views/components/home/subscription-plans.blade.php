@@ -197,12 +197,12 @@ $isCurrentPlan = is_callable($plan['is_current'] ?? null)
 
                         <div class="h-full flex flex-col">
                             <div class="p-4 pb-2 fade-in delay-100">
-                                <div class="mb-2">
+                                <div class="mb-2 text-center">
                                     <h3 class="text-2xl font-extrabold {{ $getTextClass($planType) }} mb-1">
                                         {{ $plan['display_name'] }}
                                     </h3>
                                     <div
-                                        class="h-1 w-12 rounded-full bg-gradient-to-r {{ $getGradientClass($planType) }} mb-2">
+                                        class="h-1 w-12 rounded-full bg-gradient-to-r {{ $getGradientClass($planType) }} mb-2 mx-auto">
                                     </div>
                                 </div>
                                 <p class="text-4xl font-black {{ $getTextClass($planType) }} mb-1">
