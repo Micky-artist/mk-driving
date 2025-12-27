@@ -24,6 +24,10 @@ class QuizController extends Controller
     public function index()
     {
         $status = request()->get('see', null);
+        // Convert URL parameter from hyphen to underscore
+        if ($status === 'in-progress') {
+            $status = 'in_progress';
+        }
         return $this->getQuizzesByStatus($status);
     }
     
@@ -358,9 +362,14 @@ class QuizController extends Controller
         $user = Auth::user();
         
         $query = Quiz::where('is_active', true)
-            ->with(['attempts' => function($query) use ($user) {
+            ->with(['attempts' => function($query) use ($user, $status) {
                 $query->where('user_id', $user->id)
                       ->orderBy('created_at', 'desc');
+                if ($status === 'in_progress') {
+                    $query->where('status', 'IN_PROGRESS');
+                } elseif ($status === 'completed') {
+                    $query->where('status', 'COMPLETED');
+                }
             }, 'subscriptionPlan'])
             ->withCount('questions');
             
@@ -368,12 +377,12 @@ class QuizController extends Controller
         if ($status === 'in_progress') {
             $query->whereHas('attempts', function($q) use ($user) {
                 $q->where('user_id', $user->id)
-                  ->whereNull('completed_at');
+                  ->where('status', 'IN_PROGRESS');
             });
         } elseif ($status === 'completed') {
             $query->whereHas('attempts', function($q) use ($user) {
                 $q->where('user_id', $user->id)
-                  ->whereNotNull('completed_at');
+                  ->where('status', 'COMPLETED');
             });
         }
 
@@ -403,10 +412,22 @@ class QuizController extends Controller
             ['path' => request()->url(), 'query' => request()->query()]
         );
 
+        // Get user's quiz statistics (same logic as main dashboard)
+        $userAttempts = $user->quizAttempts;
+        $completedQuizzes = $userAttempts->where('status', 'COMPLETED');
+        $inProgressQuizzes = $userAttempts->where('status', 'IN_PROGRESS');
+        
+        $stats = [
+            'completed_count' => $completedQuizzes->count(),
+            'in_progress_count' => $inProgressQuizzes->count(),
+            'average_score' => round($completedQuizzes->avg('score') ?? 0, 1),
+        ];
+
         return view('dashboard.quizzes.index', [
             'quizzes' => $quizzes,
             'user' => $user,
-            'currentStatus' => $status
+            'currentStatus' => $status,
+            'stats' => $stats
         ]);
     }
     

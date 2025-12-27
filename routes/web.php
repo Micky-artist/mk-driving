@@ -51,8 +51,11 @@ Route::get('/api/subscription-plans', function (LocaleService $localeService) {
                 'duration' => $plan->duration,
                 'features' => $plan->features,
                 'color' => $plan->color,
-                'is_current' => \Illuminate\Support\Facades\Auth::check() && 
-                              \Illuminate\Support\Facades\Auth::user()->subscription_plan_id === $plan->id,
+                'is_current' => \Illuminate\Support\Facades\Auth::check() ? 
+                              \Illuminate\Support\Facades\Auth::user()->subscriptions()
+                                  ->where('subscription_plan_id', $plan->id)
+                                  ->whereIn('status', ['ACTIVE', 'PENDING'])
+                                  ->exists() : false,
             ];
         });
         
@@ -135,7 +138,25 @@ Route::prefix('{locale}')
                         'features' => $features,
                         'display_features' => $features,
                         'color' => $plan->color,
-                        'max_quizzes' => $plan->max_quizzes
+                        'max_quizzes' => $plan->max_quizzes,
+                        'is_current' => \Illuminate\Support\Facades\Auth::check() ? 
+                              (function() use ($plan) {
+                                  $user = \Illuminate\Support\Facades\Auth::user();
+                                  $hasSubscription = $user->subscriptions()
+                                      ->where('subscription_plan_id', $plan->id)
+                                      ->whereIn('status', ['ACTIVE', 'PENDING'])
+                                      ->exists();
+                                  
+                                  // Debug logging
+                                  \Illuminate\Support\Facades\Log::debug('Subscription check', [
+                                      'plan_id' => $plan->id,
+                                      'user_id' => $user->id,
+                                      'has_subscription' => $hasSubscription,
+                                      'user_subscriptions' => $user->subscriptions()->get(['subscription_plan_id', 'status'])->toArray()
+                                  ]);
+                                  
+                                  return $hasSubscription;
+                              })() : false,
                     ];
                 });
 
@@ -386,6 +407,8 @@ Route::prefix('{locale}')
     
     // Plans Page
     Route::get('plans', function (LocaleService $localeService) {
+        error_log('=== PLANS ROUTE HIT ===');
+        \Illuminate\Support\Facades\Log::debug('PLANS ROUTE HIT - Starting execution');
         $locale = $localeService->getLocale();
         $fallbackLocale = config('app.fallback_locale', 'en');
         
@@ -427,6 +450,33 @@ Route::prefix('{locale}')
                     $displayFeatures = array_values($features);
                 }
                 
+                // Debug: Check what we're working with
+                \Illuminate\Support\Facades\Log::debug('Plans route - processing plan', [
+                    'plan_id' => $plan->id,
+                    'auth_check' => \Illuminate\Support\Facades\Auth::check()
+                ]);
+                
+                $isCurrentResult = false;
+                if (\Illuminate\Support\Facades\Auth::check()) {
+                    $user = \Illuminate\Support\Facades\Auth::user();
+                    $hasSubscription = $user->subscriptions()
+                        ->where('subscription_plan_id', $plan->id)
+                        ->whereIn('status', ['ACTIVE', 'PENDING'])
+                        ->where(function($query) {
+                            $query->where('ends_at', '>=', now())
+                                  ->orWhere('status', 'PENDING');
+                        })
+                        ->exists();
+                    
+                    \Illuminate\Support\Facades\Log::debug('Plans route - subscription result', [
+                        'plan_id' => $plan->id,
+                        'user_id' => $user->id,
+                        'has_subscription' => $hasSubscription
+                    ]);
+                    
+                    $isCurrentResult = $hasSubscription;
+                }
+                
                 return [
                     'id' => $plan->id,
                     'slug' => $slug,
@@ -442,12 +492,7 @@ Route::prefix('{locale}')
                     'color' => $plan->color,
                     'features' => $features, // Keep full features object
                     'display_features' => $displayFeatures, // Add pre-formatted features for current locale
-                    'is_current' => function() use ($plan) {
-                        if (!\Illuminate\Support\Facades\Auth::check()) {
-                            return false;
-                        }
-                        return \Illuminate\Support\Facades\Auth::user()->subscription_plan_id === $plan->id;
-                    }
+                    'is_current' => $isCurrentResult,
                 ];
             });
             

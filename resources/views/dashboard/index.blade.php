@@ -19,8 +19,8 @@
                 
                 // Simple status badge
                 $statusBadge = $currentPlan->status === 'ACTIVE' 
-                    ? '<span class="px-2 py-1 text-xs font-medium rounded-full bg-green-100 text-green-800 dark:bg-green-900/20 dark:text-green-400">Active</span>'
-                    : '<span class="px-2 py-1 text-xs font-medium rounded-full bg-yellow-100 text-yellow-800 dark:bg-yellow-900/20 dark:text-yellow-400">Pending</span>';
+                    ? '<span class="px-2 py-1 text-xs font-medium rounded-full bg-green-100 text-green-800 dark:bg-green-900/20 dark:text-green-400">' . __('dashboard.active') . '</span>'
+                    : '<span class="px-2 py-1 text-xs font-medium rounded-full bg-yellow-100 text-yellow-800 dark:bg-yellow-900/20 dark:text-yellow-400">' . __('dashboard.pending') . '</span>';
             @endphp
             <div class="relative -mb-4">
                 <div class="bg-gradient-to-r from-blue-600 to-blue-700 rounded-xl p-4 text-white">
@@ -217,15 +217,16 @@
                             $quizTitle = is_array($quiz->title)
                                 ? $quiz->title[app()->getLocale()] ?? ($quiz->title['en'] ?? 'Untitled Quiz')
                                 : $quiz->title;
-                            $score = $attempt->score ?? 0;
-                            $totalMarks = $quiz->questions->sum('marks');
-                            $percentage = $totalMarks > 0 ? round(($score / $totalMarks) * 100) : 0;
+                            
+                            $totalQuestions = $attempt->total_questions > 0 ? $attempt->total_questions : ($quiz->questions_count ?? $quiz->questions->count() ?? 0);
+                            $percentage = $attempt->score_percentage ?? 0;
+                            $correctAnswers = $totalQuestions > 0 ? round(($percentage / 100) * $totalQuestions) : 0;
                         @endphp
                         <div class="flex items-center justify-between p-3 bg-gray-50 dark:bg-gray-700 rounded-lg border border-gray-200 dark:border-gray-600">
                             <div class="flex-1 min-w-0">
                                 <h3 class="font-medium text-gray-900 dark:text-white truncate">{{ $quizTitle }}</h3>
                                 <p class="text-sm text-gray-600 dark:text-gray-400 mt-1">
-                                    {{ __('dashboard.quizzes.score') }}: {{ $score }}/{{ $totalMarks }} ({{ $percentage }}%)
+                                    {{ __('dashboard.quizzes.score') }}: {{ $correctAnswers }}/{{ $totalQuestions }} ({{ $percentage }}%)
                                 </p>
                             </div>
                             <div class="ml-3 flex-shrink-0">

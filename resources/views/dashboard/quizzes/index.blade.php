@@ -63,7 +63,7 @@
                     <div class="bg-white dark:bg-gray-800 rounded-xl p-4 border border-gray-200 dark:border-gray-700">
                         <div class="flex items-center justify-between">
                             <div>
-                                <p class="text-sm text-gray-600 dark:text-gray-400">{{ __('dashboard.quizzes.total_quizzes') }}</p>
+                                <p class="text-sm text-gray-600 dark:text-gray-400">{{ __('dashboard.stats.total_quizzes') }}</p>
                                 <p class="text-2xl font-bold text-gray-900 dark:text-white">{{ $quizzes->total() }}</p>
                             </div>
                             <div class="w-10 h-10 bg-blue-100 dark:bg-blue-900/20 rounded-lg flex items-center justify-center">
@@ -78,7 +78,7 @@
                         <div class="flex items-center justify-between">
                             <div>
                                 <p class="text-sm text-gray-600 dark:text-gray-400">{{ __('dashboard.quizzes.completed') }}</p>
-                                <p class="text-2xl font-bold text-green-600 dark:text-green-400">{{ $quizzes->where('status', 'completed')->count() }}</p>
+                                <p class="text-2xl font-bold text-green-600 dark:text-green-400">{{ $stats['completed_count'] }}</p>
                             </div>
                             <div class="w-10 h-10 bg-green-100 dark:bg-green-900/20 rounded-lg flex items-center justify-center">
                                 <svg class="w-5 h-5 text-green-600 dark:text-green-400" fill="none" stroke="currentColor" viewBox="0 0 24 24">
@@ -92,7 +92,7 @@
                         <div class="flex items-center justify-between">
                             <div>
                                 <p class="text-sm text-gray-600 dark:text-gray-400">{{ __('dashboard.quizzes.in_progress') }}</p>
-                                <p class="text-2xl font-bold text-yellow-600 dark:text-yellow-400">{{ $quizzes->where('status', 'in_progress')->count() }}</p>
+                                <p class="text-2xl font-bold text-yellow-600 dark:text-yellow-400">{{ $stats['in_progress_count'] }}</p>
                             </div>
                             <div class="w-10 h-10 bg-yellow-100 dark:bg-yellow-900/20 rounded-lg flex items-center justify-center">
                                 <svg class="w-5 h-5 text-yellow-600 dark:text-yellow-400" fill="none" stroke="currentColor" viewBox="0 0 24 24">
@@ -106,7 +106,7 @@
                         <div class="flex items-center justify-between">
                             <div>
                                 <p class="text-sm text-gray-600 dark:text-gray-400">{{ __('dashboard.quizzes.average_score') }}</p>
-                                <p class="text-2xl font-bold text-purple-600 dark:text-purple-400">85%</p>
+                                <p class="text-2xl font-bold text-purple-600 dark:text-purple-400">{{ $stats['average_score'] }}%</p>
                             </div>
                             <div class="w-10 h-10 bg-purple-100 dark:bg-purple-900/20 rounded-lg flex items-center justify-center">
                                 <svg class="w-5 h-5 text-purple-600 dark:text-purple-400" fill="none" stroke="currentColor" viewBox="0 0 24 24">

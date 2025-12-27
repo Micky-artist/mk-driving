@@ -30,6 +30,7 @@ return [
         'subscribe' => 'Subscribe',
         'loginToSubscribe' => 'Login to Subscribe',
         'currentPlan' => 'Current Plan',
+        'active' => 'Active',
         'mostPopular' => 'Most Popular',
         'contact_us' => 'Contact Us',
         'noFeatures' => 'No features available',

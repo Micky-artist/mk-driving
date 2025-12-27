@@ -246,7 +246,7 @@
                                             </div>
                                         </div>
                                         <div class="text-sm text-gray-500 dark:text-gray-400">
-                                            {{ $attempt->completed_at->diffForHumans() }}
+                                            {{ $attempt->completed_at?->diffForHumans() ?? 'In progress' }}
                                         </div>
                                     </div>
                                 @endforeach

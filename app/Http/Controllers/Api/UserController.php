@@ -184,10 +184,10 @@ class UserController extends Controller
             
         // Calculate XP gained with gamification
         $xpGained = 0;
-        if ($latestAttempt) {
+        if ($latestAttempt && $latestAttempt->answers) {
             $correctAnswers = $latestAttempt->answers->where('is_correct', true)->count();
             $totalQuestions = $latestAttempt->answers->count();
-            $score = ($correctAnswers / $totalQuestions) * 100;
+            $score = $totalQuestions > 0 ? ($correctAnswers / $totalQuestions) * 100 : 0;
             
             // Base XP: 5 points per correct answer
             $xpGained = $correctAnswers * 5;

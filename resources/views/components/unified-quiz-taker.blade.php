@@ -334,7 +334,8 @@
 
                     <button @click="nextQuestion"
                         class="px-3 py-2 sm:px-4 sm:py-2 border border-transparent rounded-md shadow-sm text-sm font-medium text-white bg-blue-600 hover:bg-blue-700 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-blue-500 disabled:opacity-50 disabled:cursor-not-allowed flex-1 sm:flex-none">
-                        <span x-text="isGuest ? '{{ __('quiz.signUpToContinue') }}' : (isLastQuestion ? '{{ __('quiz.finish') }}' : '{{ __('quiz.next') }}')"></span>
+                        <span
+                            x-text="isGuest ? '{{ __('quiz.signUpToContinue') }}' : (isLastQuestion ? '{{ __('quiz.finish') }}' : '{{ __('quiz.next') }}')"></span>
                         <svg class="w-4 h-4 ml-1 -mr-1 sm:inline hidden" fill="none" stroke="currentColor"
                             viewBox="0 0 24 24">
                             <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 5l7 7-7 7" />
@@ -469,13 +470,13 @@
                                             Math.random() * 5)
                                     ]"
                                     :style="`
-                                                                                                                             left: ${Math.random() * 100}%;
-                                                                                                                             top: ${Math.random() * 100}%;
-                                                                                                                             animation: confetti ${1 + Math.random() * 3}s linear infinite;
-                                                                                                                             transform: scale(${0.5 + Math.random()});
-                                                                                                                             opacity: ${0.2 + Math.random() * 0.8};
-                                                                                                                             animation-delay: ${Math.random() * 2}s;
-                                                                                                                         `">
+                                                                                                                                                                 left: ${Math.random() * 100}%;
+                                                                                                                                                                 top: ${Math.random() * 100}%;
+                                                                                                                                                                 animation: confetti ${1 + Math.random() * 3}s linear infinite;
+                                                                                                                                                                 transform: scale(${0.5 + Math.random()});
+                                                                                                                                                                 opacity: ${0.2 + Math.random() * 0.8};
+                                                                                                                                                                 animation-delay: ${Math.random() * 2}s;
+                                                                                                                                                             `">
                                 </div>
                             </template>
                         </div>
@@ -701,6 +702,8 @@
                         // Fetch user plan info if not guest
                         if (!this.isGuest) {
                             this.fetchUserPlan();
+                            // Check for existing attempt or create new one
+                            this.initializeAttempt();
                         }
 
                         this.startTime = new Date();
@@ -915,7 +918,7 @@
                                 if (contentType && contentType.includes('application/json')) {
                                     const data = await response.json();
                                     this.hasPlan = data.length >
-                                    0; // Has active subscription if array is not empty
+                                        0; // Has active subscription if array is not empty
                                 } else {
                                     console.warn('Subscriptions API returned non-JSON response');
                                     this.hasPlan = false;
@@ -1092,7 +1095,7 @@
                         return '#ef4444'; // Red
                     },
 
-                    
+
                     // Load question state
                     loadQuestionState() {
                         const savedAnswer = this.userAnswers[this.currentQuestion.id];
@@ -1134,7 +1137,101 @@
                     },
 
                     saveQuestionState() {
-                        // Already handled in submitAnswer
+                        if (this.isGuest || !this.currentAttempt) return;
+
+                        // Save current answer to backend
+                        this.saveCurrentAnswer();
+                    },
+
+                    async initializeAttempt() {
+                        // If we already have an attempt from config, use it
+                        if (this.currentAttempt) {
+                            this.loadAttemptState();
+                            return;
+                        }
+
+                        // Otherwise, create a new attempt
+                        try {
+                            const response = await fetch('/api/quizzes/start', {
+                                method: 'POST',
+                                credentials: 'same-origin',
+                                headers: {
+                                    'Content-Type': 'application/json',
+                                    'X-CSRF-TOKEN': document.querySelector(
+                                        'meta[name="csrf-token"]').content
+                                },
+                                body: JSON.stringify({
+                                    quizId: this.quizId
+                                })
+                            });
+
+                            if (response.ok) {
+                                const data = await response.json();
+                                this.currentAttempt = data.attempt;
+                                console.log('New attempt created:', this.currentAttempt.id);
+                            } else {
+                                console.error('Failed to create attempt');
+                            }
+                        } catch (error) {
+                            console.error('Error creating attempt:', error);
+                        }
+                    },
+
+                    loadAttemptState() {
+                        if (!this.currentAttempt || !this.currentAttempt.user_answers) return;
+
+                        // Load existing answers
+                        this.currentAttempt.user_answers.forEach(answer => {
+                            this.userAnswers[answer.question_id] = answer.option_id;
+                        });
+
+                        // Find the last unanswered question to resume from
+                        const answeredQuestions = Object.keys(this.userAnswers);
+                        if (answeredQuestions.length > 0) {
+                            // Find the index of the last answered question
+                            const lastAnsweredQuestionId = answeredQuestions[answeredQuestions.length - 1];
+                            const lastAnsweredIndex = this.questions.findIndex(q => q.id ==
+                                lastAnsweredQuestionId);
+
+                            if (lastAnsweredIndex !== -1) {
+                                // Resume from the next unanswered question
+                                this.currentQuestionIndex = Math.min(lastAnsweredIndex + 1, this
+                                    .totalQuestions - 1);
+                            }
+                        }
+
+                        console.log('Resumed attempt from question', this.currentQuestionIndex + 1);
+                    },
+
+                    async saveCurrentAnswer() {
+                        if (!this.selectedOption || this.isGuest) return;
+
+                        try {
+                            const currentQuestion = this.questions[this.currentQuestionIndex];
+                            const response = await fetch(`/api/attempts/${this.currentAttempt.id}`, {
+                                method: 'PUT',
+                                credentials: 'same-origin',
+                                headers: {
+                                    'Content-Type': 'application/json',
+                                    'X-CSRF-TOKEN': document.querySelector(
+                                        'meta[name="csrf-token"]').content
+                                },
+                                body: JSON.stringify({
+                                    answers: {
+                                        [currentQuestion.id]: this.selectedOption
+                                    },
+                                    time_taken: this.timeTaken
+                                })
+                            });
+
+                            if (response.ok) {
+                                console.log('Answer saved successfully');
+                            } else {
+                                console.warn('Failed to save answer:', response.status);
+                            }
+                        } catch (error) {
+                            console.error('Error saving answer:', error);
+                        }
                     },
 
                     // Quiz completion

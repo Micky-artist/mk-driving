@@ -34,16 +34,24 @@ class DashboardController extends Controller
         // Get user's quiz attempts from loaded relationship
         $quizAttempts = $user->quizAttempts->sortByDesc('created_at');
 
-        // Calculate stats
-        $totalQuizzes = Quiz::where('is_active', true)->count();
-        $completedQuizzes = $quizAttempts->where('status', 'completed');
-        $inProgressQuizzes = $quizAttempts->where('status', 'in_progress');
+        // Calculate stats based on user's subscription access
+        $accessiblePlanIds = $currentSubscriptions->pluck('subscription_plan_id')->unique();
+        $accessiblePlanIds->push(null); // Include guest quizzes (subscription_plan_id = null)
+        
+        $totalQuizzes = Quiz::where('is_active', true)
+            ->where(function ($query) use ($accessiblePlanIds) {
+                $query->whereIn('subscription_plan_id', $accessiblePlanIds)
+                      ->orWhereNull('subscription_plan_id'); // Include guest quizzes
+            })
+            ->count();
+        $completedQuizzes = $quizAttempts->where('status', 'COMPLETED');
+        $inProgressQuizzes = $quizAttempts->where('status', 'IN_PROGRESS');
         
         $stats = [
             'total_quizzes' => $totalQuizzes,
             'completed_count' => $completedQuizzes->count(),
             'in_progress_count' => $inProgressQuizzes->count(),
-            'average_score' => $completedQuizzes->avg('score') ?? 0,
+            'average_score' => round($completedQuizzes->avg('score') ?? 0, 1),
         ];
 
         // Get new quizzes (not attempted by user)

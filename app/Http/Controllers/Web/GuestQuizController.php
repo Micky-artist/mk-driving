@@ -113,7 +113,7 @@ class GuestQuizController extends Controller
 
         // Create quiz attempt
         $attempt = QuizAttempt::create([
-            'user_id' => auth()->id(),
+            'user_id' => auth()->check() ? auth()->id() : null,
             'quiz_id' => $quiz->id,
             'status' => 'COMPLETED',
             'score' => 0,
@@ -123,22 +123,11 @@ class GuestQuizController extends Controller
             'total_questions' => $quiz->questions()->count()
         ]);
 
-        // Calculate results and save answers
-        $results = $this->calculateResults($quiz, $validated['answers'], $attempt->id);
-
-        // Update attempt with final score
-        $attempt->update([
-            'score' => $results['correct_answers'],
-            'score_percentage' => $results['score']
-        ]);
-        
         // Clear the quiz start time from the session
         session()->forget('quiz_start_time');
         
         return response()->json([
             'success' => true,
-            'results' => $results,
-            'passed' => $results['score'] >= $results['passing_score'],
             'message' => __('Quiz submitted successfully!')
         ]);
     }
@@ -159,60 +148,5 @@ class GuestQuizController extends Controller
             'success' => true,
             'message' => 'Quiz has been reset successfully.'
         ]);
-    }
-
-    /**
-     * Calculate quiz results
-     */
-    protected function calculateResults(Quiz $quiz, array $userAnswers, $attemptId = null): array
-    {
-        $questions = $quiz->questions;
-        $totalQuestions = $questions->count();
-        $correctAnswers = 0;
-        $results = [];
-
-        foreach ($questions as $question) {
-            $correctOption = $question->options()->where('is_correct', true)->first();
-            $userSelectedOption = $userAnswers[$question->id] ?? null;
-            $isCorrect = $userSelectedOption && $userSelectedOption == $correctOption->id;
-            
-            if ($isCorrect) {
-                $correctAnswers++;
-            }
-
-            // Save user answer if attempt ID is provided
-            if ($attemptId) {
-                \App\Models\UserAnswer::create([
-                    'quiz_attempt_id' => $attemptId,
-                    'question_id' => $question->id,
-                    'option_id' => $userSelectedOption,
-                    'is_correct' => $isCorrect,
-                    'points_earned' => $isCorrect ? 1 : 0,
-                    'created_at' => now(),
-                    'updated_at' => now()
-                ]);
-            }
-
-            $results[] = [
-                'question_id' => $question->id,
-                'question' => $question->getTranslation('text', app()->getLocale()),
-                'correct' => $isCorrect,
-                'selected_option' => $userSelectedOption,
-                'correct_option' => $correctOption->id,
-                'explanation' => $question->getTranslation('explanation', app()->getLocale())
-            ];
-        }
-
-        $score = $totalQuestions > 0 ? ($correctAnswers / $totalQuestions) * 100 : 0;
-        $passingScore = $quiz->passing_score ?? 70;
-
-        return [
-            'score' => round($score, 2),
-            'correct_answers' => $correctAnswers,
-            'total_questions' => $totalQuestions,
-            'passing_score' => $passingScore,
-            'passed' => $score >= $passingScore,
-            'details' => $results
-        ];
     }
 }

@@ -170,10 +170,11 @@
                         $isPopular = $planType === 'premium';
                         // Use display_features which is already processed for the current locale
                         $features = is_array($plan['display_features'] ?? null) ? $plan['display_features'] : [];
-                        // Check if current plan (call the closure if it's a closure)
-$isCurrentPlan = is_callable($plan['is_current'] ?? null)
-    ? $plan['is_current']()
-    : $plan['is_current'] ?? false;
+                        // Check if current plan
+$isCurrentPlan = $plan['is_current'] ?? false;
+                        
+                        // Debug logging
+                        error_log('SUBSCRIPTION PLANS COMPONENT: Plan ' . ($plan['id'] ?? 'unknown') . ' (' . ($plan['slug'] ?? 'unknown') . ') is_current = ' . ($isCurrentPlan ? 'TRUE' : 'FALSE'));
                     @endphp
 
                     <div class="group relative pt-6 h-full rounded-2xl overflow-visible shadow-lg hover:shadow-2xl transition-all duration-300 transform hover:-translate-y-2 {{ $isCurrentPlan ? 'border-4 border-green-500 bg-gradient-to-br from-green-50 to-green-100 dark:from-green-950/60 dark:to-green-900/50 shadow-green-200/40 dark:shadow-green-900/20' : $getCardBgClass($planType) }} fade-in"
@@ -184,16 +185,6 @@ $isCurrentPlan = is_callable($plan['is_current'] ?? null)
                                 {{ __('home.subscriptionPlans.mostPopular') }}
                             </div>
                         @endif
-                        @if ($isCurrentPlan)
-                            <div
-                                class="absolute -top-4 left-1/2 -translate-x-1/2 bg-gradient-to-r from-green-600 to-green-700 text-white text-sm font-extrabold px-6 py-1.5 rounded-full shadow-lg z-50 whitespace-nowrap transform group-hover:scale-105 transition-transform duration-300 flex items-center">
-                                <svg class="w-4 h-4 mr-2" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
-                                        d="M5 13l4 4L19 7"></path>
-                                </svg>
-                                {{ __('home.subscriptionPlans.currentPlan') }}
-                            </div>
-                        @endif
 
                         <div class="h-full flex flex-col">
                             <div class="p-4 pb-2 fade-in delay-100">
@@ -202,7 +193,7 @@ $isCurrentPlan = is_callable($plan['is_current'] ?? null)
                                         {{ $plan['display_name'] }}
                                     </h3>
                                     <div
-                                        class="h-1 w-12 rounded-full bg-gradient-to-r {{ $getGradientClass($planType) }} mb-2 mx-auto">
+                                        class="h-1 w-12 rounded-full bg-gradient-to-r {{ $isCurrentPlan ? 'from-green-500 to-green-600' : $getGradientClass($planType) }} mb-2 mx-auto">
                                     </div>
                                 </div>
                                 <p class="text-4xl font-black {{ $getTextClass($planType) }} mb-1">
@@ -259,18 +250,17 @@ $isCurrentPlan = is_callable($plan['is_current'] ?? null)
                             <div class="p-6 pt-0 mt-auto fade-in delay-300">
                                 @if ($isCurrentPlan)
                                     <div class="w-full">
-                                        <button
-                                            class="w-full text-center bg-gradient-to-r from-green-600 to-green-700 hover:from-green-700 hover:to-green-800 text-white font-semibold py-3 px-6 rounded-lg border-2 border-white/20 shadow-md transition-all duration-300 transform hover:scale-[1.02]"
-                                            disabled>
+                                        <a href="{{ route('dashboard.quizzes.index', app()->getLocale()) }}"
+                                            class="block w-full text-center bg-gradient-to-r from-green-600 to-green-700 hover:from-green-700 hover:to-green-800 text-white font-semibold py-3 px-6 rounded-lg border-2 border-white/20 shadow-md transition-all duration-300 transform hover:scale-[1.02]">
                                             <span class="flex items-center justify-center">
                                                 <svg class="w-5 h-5 mr-2" fill="none" stroke="currentColor"
                                                     viewBox="0 0 24 24">
                                                     <path stroke-linecap="round" stroke-linejoin="round"
                                                         stroke-width="2" d="M5 13l4 4L19 7" />
                                                 </svg>
-                                                {{ __('home.subscriptionPlans.currentPlan') }}
+                                                {{ __('home.subscriptionPlans.active') }}
                                             </span>
-                                        </button>
+                                        </a>
                                     </div>
                                 @else
                                     <div class="w-full">
