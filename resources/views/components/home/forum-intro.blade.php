@@ -13,8 +13,8 @@
                 <!-- Leaderboard Header -->
                 <div class="p-2 sm:p-6 border-b border-gray-100 dark:border-gray-700/50">
                     <div class="flex items-center space-x-3 mb-4">
-                        <div class="w-12 h-12 rounded-full bg-gradient-to-r from-blue-500 to-orange-500 flex items-center justify-center">
-                            <svg class="w-6 h-6 text-white" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                        <div class="w-12 h-12 rounded-full border-2 border-blue-500 bg-white dark:bg-gray-800 flex items-center justify-center">
+                            <svg class="w-6 h-6 text-blue-500" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                                 <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 19v-6a2 2 0 00-2-2H5a2 2 0 00-2 2v6a2 2 0 002 2h2a2 2 0 002-2zm0 0V9a2 2 0 012-2h2a2 2 0 012 2v10m-6 0a2 2 0 002 2h2a2 2 0 002-2m0 0V5a2 2 0 012-2h2a2 2 0 012 2v14a2 2 0 01-2 2h-2a2 2 0 01-2-2z" />
                             </svg>
                         </div>
@@ -110,7 +110,7 @@
                 <div class="p-6 border-t border-gray-100 dark:border-gray-700/50">
                     <div class="text-center">
                         <a href="{{ route('forum.index', app()->getLocale()) }}" 
-                           class="inline-flex items-center px-4 py-2 text-sm font-medium text-white bg-gradient-to-r from-blue-600 to-orange-600 hover:from-blue-700 hover:to-orange-700 rounded-lg transition-colors">
+                           class="inline-flex items-center px-4 py-2 text-sm font-medium text-blue-600 dark:text-blue-400 hover:text-blue-700 dark:hover:text-blue-300 transition-colors">
                             {{ __('forum.view_full_leaderboard') }}
                             <svg class="ml-2 w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                                 <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 5l7 7-7 7" />
@@ -145,7 +145,7 @@
                     
                     <div class="flex items-center space-x-3 text-sm text-gray-500 dark:text-gray-400">
                         <div class="flex items-center space-x-2">
-                            <div class="w-8 h-8 rounded-full bg-gradient-to-r from-blue-500 to-orange-500 flex items-center justify-center text-white font-bold text-xs">
+                            <div class="w-8 h-8 rounded-full border-2 border-blue-500 bg-white dark:bg-gray-800 flex items-center justify-center text-blue-500 font-bold text-xs">
                                 {{ $forumData['topQuestion']['author']['initials'] }}
                             </div>
                             <span>{{ $forumData['topQuestion']['author']['fullName'] }}</span>
@@ -218,7 +218,7 @@
                 <div class="p-4 sm:p-6 border-t border-gray-100 dark:border-gray-700/50">
                     <div class="flex flex-col sm:flex-row sm:items-center sm:justify-between gap-3 sm:gap-0">
                         <a href="{{ route('forum.show', ['locale' => app()->getLocale(), 'id' => $forumData['topQuestion']['id']]) }}" 
-                           class="inline-flex items-center justify-center px-4 py-2.5 text-sm font-medium text-white bg-gradient-to-r from-blue-600 to-orange-600 hover:from-blue-700 hover:to-orange-700 rounded-lg transition-all duration-300 shadow-md hover:shadow-lg transform hover:scale-[1.02] w-full sm:w-auto">
+                           class="inline-flex items-center justify-center px-4 py-2.5 text-sm font-medium text-blue-600 dark:text-blue-400 hover:text-blue-700 dark:hover:text-blue-300 transition-all duration-300 transform hover:scale-[1.02] w-full sm:w-auto">
                             <span>{{ __('forum.read_more') }}</span>
                             <svg class="ml-2 w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                                 <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 5l7 7-7 7" />
@@ -240,7 +240,7 @@
     <!-- Section Footer -->
     <div class="text-center my-8">
         <a href="{{ route('forum.index', app()->getLocale()) }}" 
-           class="inline-flex items-center px-6 py-3 text-base font-medium text-white bg-gradient-to-r from-blue-600 to-orange-600 hover:from-blue-700 hover:to-orange-700 rounded-lg transition-colors shadow-lg">
+           class="inline-flex items-center px-6 py-3 text-base font-medium text-blue-600 dark:text-blue-400 border-2 border-blue-500 hover:bg-blue-50 dark:hover:bg-blue-900/20 rounded-lg transition-colors shadow-lg">
             {{ __('forum.explore_forum') }}
             <svg class="ml-2 w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                 <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M17 8l4 4m0 0l-4 4m4-4H3" />

@@ -258,12 +258,9 @@ $isCurrentPlan = is_callable($plan['is_current'] ?? null)
 
                             <div class="p-6 pt-0 mt-auto fade-in delay-300">
                                 @if ($isCurrentPlan)
-                                    <div class="relative group">
-                                        <div
-                                            class="absolute -inset-0.5 bg-gradient-to-r from-green-500 to-green-600 rounded-lg opacity-70 group-hover:opacity-100 blur transition duration-1000 group-hover:duration-300">
-                                        </div>
+                                    <div class="w-full">
                                         <button
-                                            class="relative w-full text-center bg-gradient-to-r from-green-600 to-green-700 hover:from-green-700 hover:to-green-800 text-white font-semibold py-3 px-6 rounded-lg border-2 border-white/20 shadow-lg transition-all duration-300 transform hover:scale-[1.02]"
+                                            class="w-full text-center bg-gradient-to-r from-green-600 to-green-700 hover:from-green-700 hover:to-green-800 text-white font-semibold py-3 px-6 rounded-lg border-2 border-white/20 shadow-md transition-all duration-300 transform hover:scale-[1.02]"
                                             disabled>
                                             <span class="flex items-center justify-center">
                                                 <svg class="w-5 h-5 mr-2" fill="none" stroke="currentColor"
@@ -298,20 +295,16 @@ $isCurrentPlan = is_callable($plan['is_current'] ?? null)
                                                         __('home.subscriptionPlans.days');
                                                 }
                                             @endphp
-                                            <div class="relative group">
-                                                <div
-                                                    class="absolute -inset-0.5 bg-gradient-to-r {{ $getButtonGlow($planType) }} rounded-lg opacity-70 group-hover:opacity-100 blur transition duration-1000 group-hover:duration-300">
-                                                </div>
-                                                <button x-data="{}"
-                                                    @click="$dispatch('open-payment-modal', { 
-                                                planId: '{{ $plan['id'] }}',
-                                                planName: '{{ $planName }}',
-                                                price: '{{ $price }} RWF{{ $durationText }}',
-                                                amount: {{ $plan['price'] }},
-                                                currency: 'RWF',
-                                                duration: {{ $duration }}
-                                            })"
-                                                    class="relative w-full text-center bg-gradient-to-r {{ $getButtonGradient($planType) }} text-white font-semibold py-3 px-6 rounded-lg border-2 border-white/20 shadow-lg transform transition-all duration-300 hover:scale-[1.02]">
+                                            <button x-data="{}"
+                                                @click="$dispatch('open-payment-modal', { 
+                                            planId: '{{ $plan['id'] }}',
+                                            planName: '{{ $planName }}',
+                                            price: '{{ $price }} RWF{{ $durationText }}',
+                                            amount: {{ $plan['price'] }},
+                                            currency: 'RWF',
+                                            duration: {{ $duration }}
+                                        })"
+                                                class="w-full text-center bg-gradient-to-r {{ $getButtonGradient($planType) }} text-white font-semibold py-3 px-6 rounded-lg border-2 border-white/20 shadow-md transform transition-all duration-300 hover:scale-[1.02]">
                                                     <span class="flex items-center justify-center">
                                                         <svg class="w-5 h-5 mr-2 text-white" fill="none"
                                                             stroke="currentColor" viewBox="0 0 24 24"
@@ -327,16 +320,12 @@ $isCurrentPlan = is_callable($plan['is_current'] ?? null)
                                                                 stroke-width="2" d="M14 5l7 7m0 0l-7 7m7-7H3" />
                                                         </svg>
                                                     </span>
-                                                </button>
-                                            </div>
+                                            </button>
                                         @else
-                                            <div class="relative group">
-                                                <div
-                                                    class="absolute -inset-0.5 bg-gradient-to-r {{ $getButtonGlow($planType) }} rounded-lg opacity-70 group-hover:opacity-100 blur transition duration-1000 group-hover:duration-300">
-                                                </div>
+                                            <div class="w-full">
                                                 <a href="{{ route('login') }}"
                                                     onclick="localStorage.setItem('intended_url', window.location.href);"
-                                                    class="relative block w-full text-center bg-gradient-to-r {{ $getButtonGradient($planType) }} text-white font-semibold py-3 px-6 rounded-lg border-2 border-white/20 shadow-lg transform transition-all duration-300 hover:scale-[1.02]">
+                                                    class="block w-full text-center bg-gradient-to-r {{ $getButtonGradient($planType) }} text-white font-semibold py-3 px-6 rounded-lg border-2 border-white/20 shadow-md transform transition-all duration-300 hover:scale-[1.02]">
                                                     <span class="flex items-center justify-center">
                                                         <svg class="w-5 h-5 mr-2 text-white" fill="none"
                                                             stroke="currentColor" viewBox="0 0 24 24"
@@ -372,14 +361,13 @@ $isCurrentPlan = is_callable($plan['is_current'] ?? null)
                     </p>
                     <div class="flex flex-col sm:flex-row items-center justify-center gap-4 sm:gap-8">
                         <a href="mailto:mkscholars250@gmail.com"
-                            class="group relative inline-flex items-center px-6 py-3 bg-gradient-to-r from-blue-600 to-blue-700 hover:from-blue-700 hover:to-blue-800 text-white font-medium rounded-xl shadow-md hover:shadow-lg transform transition-all duration-300 hover:scale-105 hover:-translate-y-0.5">
-                            <div class="absolute inset-0 bg-gradient-to-r from-blue-400/20 to-blue-500/20 rounded-xl opacity-0 group-hover:opacity-100 transition-opacity duration-300"></div>
-                            <svg class="w-5 h-5 mr-2 relative z-10" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                            class="group inline-flex items-center px-6 py-3 text-base font-medium text-blue-600 dark:text-blue-400 border-2 border-blue-500 hover:bg-blue-50 dark:hover:bg-blue-900/20 rounded-lg transition-colors">
+                            <svg class="w-5 h-5 mr-2" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                                 <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
                                     d="M3 8l7.89 5.26a2 2 0 002.22 0L21 8M5 19h14a2 2 0 002-2V7a2 2 0 00-2-2H5a2 2 0 00-2 2v10a2 2 0 002 2z" />
                             </svg>
-                            <span class="relative z-10">{{ __('home.subscriptionPlans.contact_us') }}</span>
-                            <svg class="w-4 h-4 ml-2 transform group-hover:translate-x-1 transition-transform duration-300 relative z-10" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                            <span>{{ __('home.subscriptionPlans.contact_us') }}</span>
+                            <svg class="w-4 h-4 ml-2" fill="none" viewBox="0 0 24 24" stroke="currentColor">
                                 <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 5l7 7-7 7" />
                             </svg>
                         </a>
@@ -393,11 +381,10 @@ $isCurrentPlan = is_callable($plan['is_current'] ?? null)
                         </div>
                         
                         <a href="https://wa.me/250798611161" target="_blank" rel="noopener noreferrer"
-                            class="group relative inline-flex items-center px-6 py-3 bg-gradient-to-r from-green-500 to-green-600 hover:from-green-600 hover:to-green-700 text-white font-medium rounded-xl shadow-md hover:shadow-lg transform transition-all duration-300 hover:scale-105 hover:-translate-y-0.5">
-                            <div class="absolute inset-0 bg-gradient-to-r from-green-400/20 to-green-500/20 rounded-xl opacity-0 group-hover:opacity-100 transition-opacity duration-300"></div>
-                            <i class="fab fa-whatsapp text-xl mr-2 relative z-10"></i>
-                            <span class="relative z-10">WhatsApp</span>
-                            <svg class="w-4 h-4 ml-2 transform group-hover:translate-x-1 transition-transform duration-300 relative z-10" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                            class="group inline-flex items-center px-6 py-3 text-base font-medium text-green-600 dark:text-green-400 border-2 border-green-500 hover:bg-green-50 dark:hover:bg-green-900/20 rounded-lg transition-colors">
+                            <i class="fab fa-whatsapp text-xl mr-2"></i>
+                            <span>WhatsApp</span>
+                            <svg class="w-4 h-4 ml-2" fill="none" viewBox="0 0 24 24" stroke="currentColor">
                                 <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 5l7 7-7 7" />
                             </svg>
                         </a>

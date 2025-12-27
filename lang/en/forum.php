@@ -2,6 +2,7 @@
 
 return [
     // Forum index page
+    'general' => 'general',
     'page_title' => 'Forum',
     'page_description' => 'Ask questions and share knowledge with other drivers',
     'ask_question' => 'Ask Question',

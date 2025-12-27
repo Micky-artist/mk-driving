@@ -2,6 +2,7 @@
 
 return [
     // Forum index page
+    'general' => 'rusange',
     'page_title' => 'Ihuriro',
     'page_description' => 'Baza ibibazo kandi wungurane ubumenyi n\'abandi',
     'ask_question' => 'Baza Ikibazo',
