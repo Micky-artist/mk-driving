@@ -174,25 +174,25 @@
                     <div class="flex items-center gap-1">
                         <button @click="togglePause" :disabled="isGuest"
                             class="p-2 sm:p-2.5 rounded-full hover:bg-gray-200 dark:hover:bg-gray-700 text-gray-600 dark:text-gray-300 disabled:opacity-50 disabled:cursor-not-allowed"
-                            :title="isGuest ? 'Login to use pause' : (isPaused ? 'Resume' : 'Pause')">
+                            :title="isGuest ? __('quiz.loginToUsePause') : (isPaused ? __('quiz.resume') : __('quiz.pause'))">
                             <i x-show="!isPaused" class="fas fa-pause"></i>
                             <i x-show="isPaused" class="fas fa-play"></i>
                         </button>
                         <button @click="resetQuiz" x-show="hasPlan && !isGuest"
                             class="p-2 sm:p-2.5 rounded-full hover:bg-gray-200 dark:hover:bg-gray-700 text-red-600 dark:text-red-400"
-                            title="Reset quiz">
+                            title="{{ __('quiz.resetQuiz') }}">
                             <i class="fas fa-sync-alt"></i>
                         </button>
                         <button @click="flagQuestion" :disabled="isGuest"
                             class="p-2 sm:p-2.5 rounded-full hover:bg-gray-200 dark:hover:bg-gray-700 disabled:opacity-50 disabled:cursor-not-allowed"
                             :class="isQuestionFlagged ? 'text-yellow-500' : 'text-gray-600 dark:text-gray-300'"
-                            :title="isGuest ? 'Login to flag questions' : 'Flag question'">
+                            :title="isGuest ? __('quiz.loginToFlagQuestions') : __('quiz.flagQuestion')">
                             <i class="fas fa-flag"></i>
                         </button>
                         <button @click="autoAdvance = !autoAdvance" :disabled="isGuest"
                             class="p-2 sm:p-2.5 rounded-full hover:bg-gray-200 dark:hover:bg-gray-700 disabled:opacity-50 disabled:cursor-not-allowed"
                             :class="autoAdvance ? 'text-blue-500' : 'text-gray-600 dark:text-gray-300'"
-                            :title="isGuest ? 'Login to use auto-advance' : 'Toggle auto-next'">
+                            :title="isGuest ? __('quiz.loginToUseAutoAdvance') : __('quiz.toggleAutoNext')">
                             <i class="fas fa-forward"></i>
                         </button>
                     </div>
@@ -205,7 +205,7 @@
                 <div x-show="isGuest"
                     class="mb-4 p-4 bg-yellow-50 dark:bg-yellow-900/20 border-l-4 border-yellow-400">
                     <p class="text-yellow-800 dark:text-yellow-200">
-                        {{ __('Please login to save your progress and access all features.') }}
+                        {{ __('quiz.loginToSaveProgress') }}
                     </p>
                 </div>
 
@@ -216,7 +216,7 @@
 
                     <!-- Question Image -->
                     <div x-show="currentQuestion.image" class="mb-4">
-                        <img :src="currentQuestion.image" alt="Question image"
+                        <img :src="currentQuestion.image" alt="{{ __('quiz.questionImage') }}"
                             class="max-w-full h-auto rounded-lg border border-gray-200 dark:border-gray-700">
                     </div>
 
@@ -320,7 +320,7 @@
                 <div class="flex justify-between items-center gap-2">
                     <button @click="previousQuestion" :disabled="currentQuestionIndex === 0"
                         class="px-3 py-2 sm:px-4 sm:py-2 border border-gray-300 dark:border-gray-600 rounded-md text-sm font-medium text-gray-700 dark:text-gray-200 bg-white dark:bg-gray-700 hover:bg-gray-50 dark:hover:bg-gray-600 disabled:opacity-50 disabled:cursor-not-allowed">
-                        <span class="hidden sm:inline">Previous</span>
+                        <span class="hidden sm:inline">{{ __('quiz.previous') }}</span>
                         <svg class="w-4 h-4 sm:hidden" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                             <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
                                 d="M15 19l-7-7 7-7" />
@@ -334,7 +334,7 @@
 
                     <button @click="nextQuestion"
                         class="px-3 py-2 sm:px-4 sm:py-2 border border-transparent rounded-md shadow-sm text-sm font-medium text-white bg-blue-600 hover:bg-blue-700 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-blue-500 disabled:opacity-50 disabled:cursor-not-allowed flex-1 sm:flex-none">
-                        <span x-text="isGuest ? 'Sign Up to Continue' : (isLastQuestion ? 'Finish' : 'Next')"></span>
+                        <span x-text="isGuest ? '{{ __('quiz.signUpToContinue') }}' : (isLastQuestion ? '{{ __('quiz.finish') }}' : '{{ __('quiz.next') }}')"></span>
                         <svg class="w-4 h-4 ml-1 -mr-1 sm:inline hidden" fill="none" stroke="currentColor"
                             viewBox="0 0 24 24">
                             <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 5l7 7-7 7" />
@@ -360,10 +360,10 @@
                         </div>
                         <h3
                             class="text-xl font-bold bg-gradient-to-r from-blue-700 to-blue-900 dark:from-blue-300 dark:to-blue-500 bg-clip-text text-transparent mb-3">
-                            Sign Up Required
+                            {{ __('quiz.signUpRequired') }}
                         </h3>
                         <p class="text-gray-600 dark:text-gray-300 text-sm leading-relaxed">
-                            Please login or sign up to continue with the quiz and save your progress.
+                            {{ __('quiz.signUpRequiredMessage') }}
                         </p>
                     </div>
 
@@ -379,7 +379,7 @@
                                 <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
                                     d="M18 9v3m0 0v3m0-3h3m-3 0h-3m-2-5a4 4 0 11-8 0 4 4 0 018 0zM3 20a6 6 0 0112 0v1H3v-1z" />
                             </svg>
-                            <span class="relative z-10">Sign Up</span>
+                            <span class="relative z-10">{{ __('quiz.signUp') }}</span>
                             <svg class="w-4 h-4 ml-2 transform group-hover:translate-x-1 transition-transform duration-300 relative z-10"
                                 fill="none" viewBox="0 0 24 24" stroke="currentColor">
                                 <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
@@ -397,7 +397,7 @@
                                 <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
                                     d="M11 16l-4-4m0 0l4-4m-4 4h14m-5 4v1a3 3 0 01-3 3H6a3 3 0 01-3-3V7a3 3 0 013-3h7a3 3 0 013 3v1" />
                             </svg>
-                            <span class="relative z-10">Login</span>
+                            <span class="relative z-10">{{ __('quiz.login') }}</span>
                             <svg class="w-4 h-4 ml-2 transform group-hover:translate-x-1 transition-transform duration-300 relative z-10"
                                 fill="none" viewBox="0 0 24 24" stroke="currentColor">
                                 <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
@@ -407,14 +407,14 @@
 
                         <button @click="showLoginModal = false"
                             class="w-full px-6 py-3 border border-gray-300 dark:border-gray-600 rounded-xl text-sm font-medium text-gray-700 dark:text-gray-200 bg-gray-50 dark:bg-gray-700 hover:bg-gray-100 dark:hover:bg-gray-600 transform transition-all duration-300 hover:scale-[1.02]">
-                            Cancel
+                            {{ __('quiz.cancel') }}
                         </button>
                     </div>
 
                     <!-- Additional info -->
                     <div class="mt-6 text-center">
                         <p class="text-xs text-gray-500 dark:text-gray-400">
-                            By signing up, you agree to our Terms of Service and Privacy Policy
+                            {{ __('quiz.termsAndPrivacy') }}
                         </p>
                     </div>
                 </div>
@@ -485,18 +485,18 @@
                     <div class="space-y-3 mb-6">
                         <div class="bg-green-50 dark:bg-green-900/20 p-3 rounded-lg">
                             <p class="text-green-800 dark:text-green-200 font-medium">
-                                {{ __('Score Earned') }}: <span x-text="currentScore"></span>%
+                                {{ __('quiz.scoreEarned') }}: <span x-text="currentScore"></span>%
                             </p>
                         </div>
                         <div x-show="updatedStats" class="bg-blue-50 dark:bg-blue-900/20 p-3 rounded-lg">
                             <p class="text-blue-800 dark:text-blue-200">
-                                {{ __('Average Score') }}: <span x-text="updatedStats.averageScore"></span>%
+                                {{ __('quiz.averageScore') }}: <span x-text="updatedStats.averageScore"></span>%
                             </p>
                         </div>
                         <div x-show="updatedStats && updatedStats.quizComparison"
                             class="bg-purple-50 dark:bg-purple-900/20 p-3 rounded-lg">
                             <p class="text-purple-800 dark:text-purple-200">
-                                {{ __('Improvement') }}:
+                                {{ __('quiz.improvement') }}:
                                 <span x-show="updatedStats.quizComparison.improvement > 0" class="text-green-600">
                                     +<span x-text="updatedStats.quizComparison.improvement"></span>%
                                 </span>
@@ -511,19 +511,19 @@
                     <div x-show="updatedStats && updatedStats.hasPlan" class="space-y-2">
                         <a href="#" @click="showResultsModal = false"
                             class="block w-full text-center px-4 py-2 bg-blue-600 text-white rounded-lg hover:bg-blue-700">
-                            {{ __('Practice Again') }}
+                            {{ __('quiz.practiceAgain') }}
                         </a>
                         <a href="{{ route('dashboard.quizzes.index') }}"
                             class="block w-full text-center px-4 py-2 bg-gray-600 text-white rounded-lg hover:bg-gray-700">
-                            {{ __('More Quizzes') }}
+                            {{ __('quiz.moreQuizzes') }}
                         </a>
                         <a href="{{ route('plans') }}"
                             class="block w-full text-center px-4 py-2 bg-yellow-600 text-white rounded-lg hover:bg-yellow-700">
-                            {{ __('Upgrade Subscription') }}
+                            {{ __('quiz.upgradeSubscription') }}
                         </a>
                         <a href="{{ route('dashboard.quizzes.progress') }}"
                             class="block w-full text-center px-4 py-2 bg-green-600 text-white rounded-lg hover:bg-green-700">
-                            {{ __('Check Progress') }}
+                            {{ __('quiz.checkProgress') }}
                         </a>
                     </div>
 
@@ -532,14 +532,14 @@
                         <div
                             class="bg-yellow-50 dark:bg-yellow-900/20 p-4 rounded-lg border border-yellow-200 dark:border-yellow-800">
                             <h4 class="text-yellow-800 dark:text-yellow-200 font-semibold mb-2">
-                                {{ __('Unlock More Features!') }}
+                                {{ __('quiz.unlockMoreFeatures') }}
                             </h4>
                             <p class="text-yellow-700 dark:text-yellow-300 text-sm mb-3">
-                                {{ __('Get a subscription to practice unlimited quizzes and track your progress.') }}
+                                {{ __('quiz.subscriptionMessage') }}
                             </p>
                             <a href="{{ route('plans') }}"
                                 class="block w-full text-center px-4 py-2 bg-yellow-600 text-white rounded-lg hover:bg-yellow-700">
-                                {{ __('Get Plan to Practice More') }}
+                                {{ __('quiz.getPlanToPractice') }}
                             </a>
                         </div>
                     </div>
@@ -548,7 +548,7 @@
                     <div class="mt-6 flex justify-end">
                         <button @click="showResultsModal = false"
                             class="px-4 py-2 border border-gray-300 dark:border-gray-600 rounded-md text-sm font-medium text-gray-700 dark:text-gray-200 bg-white dark:bg-gray-700 hover:bg-gray-50 dark:hover:bg-gray-600">
-                            {{ __('Close') }}
+                            {{ __('quiz.close') }}
                         </button>
                     </div>
                 </div>
@@ -932,8 +932,7 @@
 
                     // Reset quiz to start
                     resetQuiz() {
-                        if (!confirm(
-                                'Are you sure you want to reset the quiz? All progress will be lost.')) {
+                        if (!confirm('{{ __('quiz.resetConfirmation') }}')) {
                             return;
                         }
 

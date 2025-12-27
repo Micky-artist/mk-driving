@@ -242,5 +242,39 @@ return [
     
     // Subscription Plans
     'wantMorePractice' => 'Ukeneye kwitoza byimbitse?',
-    'unlockFullAccess' => 'Andikisha ifatabuguzi ukomeze kwitoza mpaka witeguye ikizami!'
+    'unlockFullAccess' => 'Andikisha ifatabuguzi ukomeze kwitoza kugeza witeguye ikizami!',
+    
+    // Unified Quiz Taker Component
+    'previous' => 'Ikibanza',
+    'signUpToContinue' => 'Iyandikishe ukomeze',
+    'finish' => 'Ohereza',
+    'next' => 'Igikurikira',
+    'signUpRequired' => 'Kiyandikisha birakenewe',
+    'signUpRequiredMessage' => 'Iyandikishe cyangwa winjire kugirango ukomeze umwitozo.',
+    'signUp' => 'Iyandikishe',
+    'login' => 'Injira',
+    'cancel' => 'Hagarika',
+    'termsAndPrivacy' => 'Amategeko n\'Amabwiriza',
+    'questionImage' => 'Ishusho y\'ikibazo',
+    'loginToUsePause' => 'Injira ubashe guhagarika',
+    'resume' => 'Komeza',
+    'pause' => 'Hagarika',
+    'resetQuiz' => 'Subiramo umwitozo',
+    'loginToFlagQuestions' => 'Injira utange ibibazo',
+    'flagQuestion' => 'Tanga ikibazo',
+    'loginToUseAutoAdvance' => 'Injira ukoreshe ikurikira ryihuse',
+    'toggleAutoNext' => 'Hindura ikurikira ryihuse',
+    'loginToSaveProgress' => 'Iyandikishe wibuke aho wageze.',
+    
+    // Results Modal
+    'scoreEarned' => 'Amanota',
+    'averageScore' => 'Amanota Rusange',
+    'practiceAgain' => 'Komeza Kwitoza',
+    'moreQuizzes' => 'Indi Myitozo',
+    'upgradeSubscription' => 'Ongera Ifatabuguzi',
+    'checkProgress' => 'Reba Uko Wiyongera',
+    'unlockMoreFeatures' => 'Itoze Byisumbuye!',
+    'subscriptionMessage' => 'Imyitozo idashira, igihe cyose kugeza utsinze.',
+    'getPlanToPractice' => 'Ongera Ifatabuguzi',
+    'close' => 'Funga',
 ];

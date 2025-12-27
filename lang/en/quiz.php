@@ -241,5 +241,39 @@ return [
     
     // Subscription Plans
     'wantMorePractice' => 'Want more practice?',
-    'unlockFullAccess' => 'Unlock full access to all practice tests, detailed explanations, and track your progress!'
+    'unlockFullAccess' => 'Unlock full access to all practice tests, detailed explanations, and track your progress!',
+    
+    // Unified Quiz Taker Component
+    'previous' => 'Previous',
+    'signUpToContinue' => 'Sign Up to Continue',
+    'finish' => 'Finish',
+    'next' => 'Next',
+    'signUpRequired' => 'Sign Up Required',
+    'signUpRequiredMessage' => 'Please login or sign up to continue with the quiz and save your progress.',
+    'signUp' => 'Sign Up',
+    'login' => 'Login',
+    'cancel' => 'Cancel',
+    'termsAndPrivacy' => 'By signing up, you agree to our Terms of Service and Privacy Policy',
+    'questionImage' => 'Question image',
+    'loginToUsePause' => 'Login to use pause',
+    'resume' => 'Resume',
+    'pause' => 'Pause',
+    'resetQuiz' => 'Reset quiz',
+    'loginToFlagQuestions' => 'Login to flag questions',
+    'flagQuestion' => 'Flag question',
+    'loginToUseAutoAdvance' => 'Login to use auto-advance',
+    'toggleAutoNext' => 'Toggle auto-next',
+    'loginToSaveProgress' => 'Please login to save your progress and access all features.',
+    
+    // Results Modal
+    'scoreEarned' => 'Score Earned',
+    'averageScore' => 'Average Score',
+    'practiceAgain' => 'Practice Again',
+    'moreQuizzes' => 'More Quizzes',
+    'upgradeSubscription' => 'Upgrade Subscription',
+    'checkProgress' => 'Check Progress',
+    'unlockMoreFeatures' => 'Unlock More Features!',
+    'subscriptionMessage' => 'Get a subscription to practice unlimited quizzes and track your progress.',
+    'getPlanToPractice' => 'Get Plan to Practice More',
+    'close' => 'Close',
 ];
