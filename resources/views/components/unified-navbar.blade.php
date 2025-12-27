@@ -98,7 +98,7 @@
                         [
                             'route' => 'dashboard.quizzes.index',
                             'text' => __('navigation.quizzes'),
-                            'routes' => ['dashboard.quizzes.*'],
+                            'routes' => ['dashboard.quizzes.*', 'guest-quiz.*'],
                             'fragment' => null,
                             'is_home' => false,
                         ],
@@ -226,9 +226,17 @@
                                             ? 'bg-white/20 text-white border border-white/30'
                                             : 'text-blue-200 hover:text-white hover:bg-white/10 border border-transparent',
                                     ];
+                                    
+                                    // Build URL to stay on current page with new locale
+                                    $routeName = request()->route() ? request()->route()->getName() : 'home';
+                                    $baseRouteParams = request()->route() ? request()->route()->parameters() : [];
+                                    $routeParams = $baseRouteParams;
+                                    $routeParams['locale'] = $locale;
+                                    $url = route($routeName, $routeParams, false);
+                                    $url = '/' . ltrim($url, '/');
                                 @endphp
-                                <a href="{{ route('language.switch', $locale) }}" class="{{ implode(' ', $languageClasses) }}"
-                                    title="{{ $name }}">
+                                <a href="{{ $url }}" class="{{ implode(' ', $languageClasses) }}"
+                                   title="{{ $name }}" hreflang="{{ $locale }}">
                                     {{ strtoupper($locale) }}
                                 </a>
                             @endforeach
@@ -254,9 +262,17 @@
                                             ? 'bg-white/20 text-white border border-white/30'
                                             : 'text-blue-200 hover:text-white hover:bg-white/10 border border-transparent',
                                     ];
+                                    
+                                    // Build URL to stay on current page with new locale
+                                    $routeName = request()->route() ? request()->route()->getName() : 'home';
+                                    $baseRouteParams = request()->route() ? request()->route()->parameters() : [];
+                                    $routeParams = $baseRouteParams;
+                                    $routeParams['locale'] = $locale;
+                                    $url = route($routeName, $routeParams, false);
+                                    $url = '/' . ltrim($url, '/');
                                 @endphp
-                                <a href="{{ route('language.switch', $locale) }}" class="{{ implode(' ', $languageClasses) }}"
-                                    title="{{ $name }}">
+                                <a href="{{ $url }}" class="{{ implode(' ', $languageClasses) }}"
+                                   title="{{ $name }}" hreflang="{{ $locale }}">
                                     {{ strtoupper($locale) }}
                                 </a>
                             @endforeach
@@ -379,7 +395,7 @@
 
             <!-- Language Switcher -->
             <div class="border-t border-gray-200 dark:border-gray-700 px-6 py-4">
-                <div class="flex items-center space-x-2">
+                <div class="space-y-2">
                     @foreach (config('app.available_locales') as $locale => $name)
                         @php
                             $isCurrent = app()->getLocale() === $locale;
@@ -389,21 +405,26 @@
                                     ? 'bg-blue-100 text-blue-800 dark:bg-blue-900/50 dark:text-blue-100'
                                     : 'bg-gray-100 text-gray-700 hover:bg-gray-200 dark:bg-gray-700 dark:text-gray-300 dark:hover:bg-gray-600',
                             ];
+                            
+                            // Build URL to stay on current page with new locale
+                            $routeName = request()->route() ? request()->route()->getName() : 'home';
+                            $baseRouteParams = request()->route() ? request()->route()->parameters() : [];
+                            $routeParams = $baseRouteParams;
+                            $routeParams['locale'] = $locale;
+                            $url = route($routeName, $routeParams, false);
+                            $url = '/' . ltrim($url, '/');
                         @endphp
-                        <form method="POST" action="{{ route('language.switch', $locale) }}" class="w-full">
-                            @csrf
-                            <button type="submit" class="{{ implode(' ', $languageClasses) }}" title="{{ $name }}">
-                                {{ strtoupper($locale) }}
-                                @if ($isCurrent)
-                                    <svg class="ml-1.5 h-4 w-4 text-blue-500" fill="currentColor"
-                                        viewBox="0 0 20 20">
-                                        <path fill-rule="evenodd"
-                                            d="M16.707 5.293a1 1 0 010 1.414l-8 8a1 1 0 01-1.414 0l-4-4a1 1 0 011.414-1.414L8 12.586l7.293-7.293a1 1 0 011.414 0z"
-                                            clip-rule="evenodd" />
-                                    </svg>
-                                @endif
-                            </button>
-                        </form>
+                        <a href="{{ $url }}" class="{{ implode(' ', $languageClasses) }}" title="{{ $name }}" hreflang="{{ $locale }}">
+                            {{ strtoupper($locale) }}
+                            @if ($isCurrent)
+                                <svg class="ml-1.5 h-4 w-4 text-blue-500" fill="currentColor"
+                                    viewBox="0 0 20 20">
+                                    <path fill-rule="evenodd"
+                                        d="M16.707 5.293a1 1 0 010 1.414l-8 8a1 1 0 01-1.414 0l-4-4a1 1 0 011.414-1.414L8 12.586l7.293-7.293a1 1 0 011.414 0z"
+                                        clip-rule="evenodd" />
+                                </svg>
+                            @endif
+                        </a>
                     @endforeach
                 </div>
             </div>

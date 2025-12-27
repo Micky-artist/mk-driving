@@ -51,7 +51,7 @@ return [
                 'month' => '{1} :count ukwezi|{2,*} :count amezi',
                 'year' => '{1} :count umwaka|{2,*} :count imyaka',
                 'hour' => '{1} :count isaha|{2,*} :count amasaha',
-                'no_limit' => 'Kugira ubushobozi butazira',
+                'no_limit' => 'Itoze Bitarangira',
             ],
         ],
         'paymentModal' => [

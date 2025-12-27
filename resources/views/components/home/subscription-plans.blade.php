@@ -442,9 +442,7 @@ $isCurrentPlan = is_callable($plan['is_current'] ?? null)
                     method: 'POST',
                     headers: {
                         'Content-Type': 'application/json',
-                        'X-CSRF-TOKEN': '{{ csrf_token() }}',
-                        'Accept': 'application/json',
-                        'X-Requested-With': 'XMLHttpRequest'
+                        'Accept': 'application/json'
                     },
                     body: JSON.stringify({
                         plan_id: this.planId,

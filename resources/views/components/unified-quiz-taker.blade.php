@@ -426,7 +426,7 @@
                 <div
                     class="bg-white dark:bg-gray-800 rounded-lg p-6 max-w-md w-full mx-4 max-h-[90vh] overflow-y-auto">
                     <h3 class="text-xl font-semibold text-gray-900 dark:text-white mb-4">
-                        {{ __('Quiz Completed!') }}
+                        {{ __('quiz.quizCompleted') }}
                     </h3>
 
                     <!-- XP Animation Container -->

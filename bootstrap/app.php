@@ -3,6 +3,11 @@
 use Illuminate\Foundation\Application;
 use Illuminate\Foundation\Configuration\Exceptions;
 use Illuminate\Foundation\Configuration\Middleware;
+use Illuminate\Session\Middleware\StartSession;
+use Illuminate\Cookie\Middleware\AddQueuedCookiesToResponse;
+use Illuminate\View\Middleware\ShareErrorsFromSession;
+use App\Http\Middleware\VerifyCsrfToken;
+use App\Http\Middleware\EncryptCookies;
 
 return Application::configure(basePath: dirname(__DIR__))
     ->withProviders([
@@ -29,6 +34,14 @@ return Application::configure(basePath: dirname(__DIR__))
         
         // Add TrackNotifications middleware to web group for admin users
         $middleware->web(\App\Http\Middleware\TrackNotifications::class);
+        
+        // Add session middleware to API group for web auth compatibility
+        $middleware->api([
+            EncryptCookies::class,
+            AddQueuedCookiesToResponse::class,
+            StartSession::class,
+            ShareErrorsFromSession::class,
+        ]);
     })
     ->withExceptions(function (Exceptions $exceptions): void {
         //

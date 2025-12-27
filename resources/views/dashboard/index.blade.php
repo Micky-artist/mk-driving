@@ -7,8 +7,7 @@
 @section('content')
     
     <div class="px-2 sm:px-6 lg:px-8 py-2">
-        <div class="space-y-6">
-        <!-- Subscription Info -->
+        <!-- Subscription Info positioned behind main content -->
         @if ($currentSubscriptions->count() > 0)
             @php
                 $nearestExpiry = $currentSubscriptions->min('ends_at');
@@ -17,26 +16,56 @@
                     ? json_decode($currentPlan->plan->name, true)
                     : $currentPlan->plan->name;
                 $planDisplayName = $planName[app()->getLocale()] ?? ($planName['en'] ?? 'N/A');
+                
+                // Simple status badge
+                $statusBadge = $currentPlan->status === 'ACTIVE' 
+                    ? '<span class="px-2 py-1 text-xs font-medium rounded-full bg-green-100 text-green-800 dark:bg-green-900/20 dark:text-green-400">Active</span>'
+                    : '<span class="px-2 py-1 text-xs font-medium rounded-full bg-yellow-100 text-yellow-800 dark:bg-yellow-900/20 dark:text-yellow-400">Pending</span>';
             @endphp
-            <div class="bg-gradient-to-r from-blue-600 to-blue-700 rounded-xl p-4 text-white">
-                <div class="flex flex-col sm:flex-row sm:items-center sm:justify-between gap-2">
-                    <div>
-                        <h2 class="text-lg font-bold">{{ $planDisplayName }}</h2>
-                        <p class="text-blue-100 text-sm">{{ __('dashboard.current_subscription') }}</p>
-                    </div>
-                    <div class="text-right">
-                        <p class="text-blue-100 text-sm">{{ __('dashboard.valid_until') }}</p>
-                        <p class="font-semibold">
+            <div class="relative -mb-4">
+                <div class="bg-gradient-to-r from-blue-600 to-blue-700 rounded-xl p-4 text-white">
+                    <!-- Mobile layout: row approach -->
+                    <div class="flex flex-col gap-2 sm:hidden">
+                        <div class="flex items-center justify-between">
+                            <h2 class="text-base font-bold">{{ $planDisplayName }}</h2>
+                            {!! $statusBadge !!}
+                        </div>
+                        <div class="flex items-center justify-between">
+                            <p class="text-blue-100 text-xs">{{ __('dashboard.valid_until') }}</p>
                             @if ($nearestExpiry)
-                                {{ $nearestExpiry->format('M d, Y') }}
+                                <p class="font-semibold text-sm">{{ $nearestExpiry->format('M d - g:i A') }}</p>
                             @else
-                                {{ __('dashboard.no_end_date') }}
+                                <p class="font-semibold text-sm">{{ __('dashboard.no_end_date') }}</p>
                             @endif
-                        </p>
+                        </div>
+                    </div>
+                    
+                    <!-- Desktop layout: column approach -->
+                    <div class="hidden sm:flex flex-col sm:flex-row sm:items-center sm:justify-between gap-2">
+                        <div>
+                            <div class="flex items-center gap-2 mb-1">
+                                <h2 class="text-lg font-bold">{{ $planDisplayName }}</h2>
+                                {!! $statusBadge !!}
+                            </div>
+                            <p class="text-blue-100 text-sm">{{ __('dashboard.current_subscription') }}</p>
+                        </div>
+                        <div class="text-right">
+                            <p class="text-blue-100 text-sm">{{ __('dashboard.valid_until') }}</p>
+                            <p class="font-semibold">
+                                @if ($nearestExpiry)
+                                    {{ $nearestExpiry->format('M d, Y - g:i A') }}
+                                @else
+                                    {{ __('dashboard.no_end_date') }}
+                                @endif
+                            </p>
+                        </div>
                     </div>
                 </div>
             </div>
         @endif
+
+        <!-- Main Content Area that overlays the subscription section -->
+        <div class="relative z-10 space-y-6">
 
         <!-- Current/Recently Opened Quiz -->
         @if ($inProgressQuizzes->count() > 0)
