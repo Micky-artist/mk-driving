@@ -1,44 +1,43 @@
 @extends('layouts.app')
 
 @section('content')
-<div class="min-h-screen bg-gray-50 dark:bg-gray-900 transition-colors duration-300" x-data="forumTabs()">
-    <!-- Mobile Tab Navigation -->
-    <div class="lg:hidden sticky top-0 z-40 bg-white dark:bg-gray-800 border-b border-gray-200 dark:border-gray-700">
-        <div class="flex">
-            <button 
-                @click="activeTab = 'discussions'"
-                class="flex-1 px-3 py-2 text-center font-medium transition-colors duration-200 border-b-2"
-                :class="activeTab === 'discussions' 
-                    ? 'text-blue-600 dark:text-blue-400 border-blue-600 dark:border-blue-400' 
-                    : 'text-gray-500 dark:text-gray-400 border-transparent hover:text-gray-700 dark:hover:text-gray-300'">
-                <div class="flex items-center justify-center space-x-2">
-                    <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M8 12h.01M12 12h.01M16 12h.01M21 12c0 4.418-4.03 8-9 8a9.863 9.863 0 01-4.255-.949L3 20l1.395-3.72C3.512 15.042 3 13.574 3 12c0-4.418 4.03-8 9-8s9 3.582 9 8z" />
-                    </svg>
-                    <span>{{ __('forum.discussions') }}</span>
-                </div>
-            </button>
-            <button 
-                @click="activeTab = 'leaderboard'"
-                class="flex-1 px-3 py-2 text-center font-medium transition-colors duration-200 border-b-2"
-                :class="activeTab === 'leaderboard' 
-                    ? 'text-blue-600 dark:text-blue-400 border-blue-600 dark:border-blue-400' 
-                    : 'text-gray-500 dark:text-gray-400 border-transparent hover:text-gray-700 dark:hover:text-gray-300'">
-                <div class="flex items-center justify-center space-x-2">
-                    <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 19v-6a2 2 0 00-2-2H5a2 2 0 00-2 2v6a2 2 0 002 2h2a2 2 0 002-2zm0 0V9a2 2 0 012-2h2a2 2 0 012 2v10m-6 0a2 2 0 002 2h2a2 2 0 002-2m0 0V5a2 2 0 012-2h2a2 2 0 012 2v14a2 2 0 01-2 2h-2a2 2 0 01-2-2z" />
-                    </svg>
-                    <span>{{ __('forum.leaderboard') }}</span>
-                </div>
-            </button>
-        </div>
-    </div>
-
+<div class="bg-gray-50 dark:bg-gray-900 transition-colors duration-300">
     <!-- Main Content Container -->
-    <div class="max-w-7xl mx-auto px-3 sm:px-4 lg:px-8 py-3 lg:py-8">
-        <div class="flex flex-col lg:flex-row gap-6">
+    <div class="max-w-7xl mx-auto px-3 sm:px-4 lg:px-8 lg:py-8" x-data="forumTabs()">
+        <!-- Mobile Tab Navigation -->
+        <div class="lg:hidden sticky top-0 z-40 bg-white dark:bg-gray-800 border-b border-gray-200 dark:border-gray-700">
+            <div class="flex">
+                <button 
+                    @click="activeTab = 'discussions'"
+                    class="flex-1 px-3 py-2 text-center font-medium transition-colors duration-200 border-b-2"
+                    :class="activeTab === 'discussions' 
+                        ? 'text-blue-600 dark:text-blue-400 border-blue-600 dark:border-blue-400' 
+                        : 'text-gray-500 dark:text-gray-400 border-transparent hover:text-gray-700 dark:hover:text-gray-300'">
+                    <div class="flex items-center justify-center space-x-2">
+                        <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M8 12h.01M12 12h.01M16 12h.01M21 12c0 4.418-4.03 8-9 8a9.863 9.863 0 01-4.255-.949L3 20l1.395-3.72C3.512 15.042 3 13.574 3 12c0-4.418 4.03-8 9-8s9 3.582 9 8z" />
+                        </svg>
+                        <span>{{ __('forum.discussions') }}</span>
+                    </div>
+                </button>
+                <button 
+                    @click="activeTab = 'leaderboard'"
+                    class="flex-1 px-3 py-2 text-center font-medium transition-colors duration-200 border-b-2"
+                    :class="activeTab === 'leaderboard' 
+                        ? 'text-blue-600 dark:text-blue-400 border-blue-600 dark:border-blue-400' 
+                        : 'text-gray-500 dark:text-gray-400 border-transparent hover:text-gray-700 dark:hover:text-gray-300'">
+                    <div class="flex items-center justify-center space-x-2">
+                        <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 19v-6a2 2 0 00-2-2H5a2 2 0 00-2 2v6a2 2 0 002 2h2a2 2 0 002-2zm0 0V9a2 2 0 012-2h2a2 2 0 012 2v10m-6 0a2 2 0 002 2h2a2 2 0 002-2m0 0V5a2 2 0 012-2h2a2 2 0 012 2v14a2 2 0 01-2 2h-2a2 2 0 01-2-2z" />
+                        </svg>
+                        <span>{{ __('forum.leaderboard') }}</span>
+                    </div>
+                </button>
+            </div>
+        </div>
+        <div class="flex flex-col lg:flex-row">
             <!-- Discussions Section -->
-            <div class="w-full lg:w-2/3">
+            <div class="flex-1 lg:flex-none lg:w-2/3 lg:mr-6">
                 
                 <!-- Mobile Discussions Content -->
                 <div class="lg:hidden" x-show="activeTab === 'discussions'" x-transition:enter="transition ease-out duration-200" x-transition:enter-start="opacity-0" x-transition:enter-end="opacity-100">
@@ -452,21 +451,16 @@
             </div>
 
             <!-- Leaderboard Section -->
-            <div class="w-full lg:w-1/3">
-                <div class="lg:sticky lg:top-8" 
-                     x-data="leaderboardTabs()" 
-                     x-init="init()"
-                     @tab-change.window="handleTabChange($event.detail.tab)">
-                    
-                    <!-- Mobile Leaderboard Content -->
-                    <div class="lg:hidden" x-show="activeTab === 'leaderboard'" x-transition:enter="transition ease-out duration-200" x-transition:enter-start="opacity-0" x-transition:enter-end="opacity-100">
-                        @include('forum.partials.leaderboard-mobile')
-                    </div>
+            <div class="lg:flex-none lg:w-1/3 lg:sticky lg:top-0">
+                <!-- Mobile Leaderboard -->
+                <div class="lg:hidden" x-show="activeTab === 'leaderboard'" x-transition:enter="transition ease-out duration-200" x-transition:enter-start="opacity-0" x-transition:enter-end="opacity-100">
+                    @include('forum.partials.leaderboard-mobile')
+                </div>
 
-                    <!-- Desktop Leaderboard Content (Always Visible) -->
-                    <div class="hidden lg:block">
-                        @include('forum.partials.leaderboard-desktop')
-                    </div>
+                <!-- Desktop Leaderboard (Static) -->
+                <div class="hidden lg:block">
+                    @include('forum.partials.leaderboard-desktop')
+                </div>
                 </div>
             </div>
         </div>
@@ -479,18 +473,6 @@ function forumTabs() {
         activeTab: 'discussions',
         init() {
             this.activeTab = 'discussions';
-        },
-        handleTabChange(tab) {
-            this.activeTab = tab;
-        }
-    }
-}
-
-function leaderboardTabs() {
-    return {
-        activeTab: 'leaderboard',
-        init() {
-            this.activeTab = 'leaderboard';
         },
         handleTabChange(tab) {
             this.activeTab = tab;

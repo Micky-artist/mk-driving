@@ -1,9 +1,9 @@
 <!DOCTYPE html>
-<html lang="rw">
+<html lang="{{ $locale }}">
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>{{ __('auth.reset_password_email.title', [], $locale) }} - {{ config('app.name') }}</title>
+    <title>{{ __('auth.welcome_email.title', [], $locale) }} - {{ config('app.name') }}</title>
     <style>
         /* Brand Colors */
         :root {
@@ -60,26 +60,11 @@
             margin-bottom: 25px;
         }
         
-        .logo-wrapper {
-            padding: 12px;
-            background: var(--white);
-            border-radius: 16px;
-            transform: rotate(6deg);
-            display: inline-block;
-            box-shadow: 0 2px 4px rgba(0,0,0,0.1);
-        }
-        
-        .logo-inner {
-            background: var(--white);
-            padding: 8px;
-            border-radius: 12px;
-            transform: rotate(-6deg);
-            display: inline-block;
-        }
-        
         .logo {
             height: 48px;
             width: auto;
+            border-radius: 8px;
+            box-shadow: 0 2px 4px rgba(0,0,0,0.1);
         }
         
         .title {
@@ -104,7 +89,7 @@
             text-align: center;
         }
         
-        .message-box {
+        .welcome-message {
             background-color: var(--brand-light-blue);
             border-radius: 12px;
             padding: 35px 30px;
@@ -112,7 +97,7 @@
             text-align: center;
         }
         
-        .message-text {
+        .welcome-text {
             color: var(--brand-blue);
             font-size: 17px;
             line-height: 1.7;
@@ -120,15 +105,21 @@
             font-weight: 500;
         }
         
-        .button-container {
-            text-align: center;
+        .user-name {
+            font-weight: 700;
+            color: var(--brand-dark-blue);
+        }
+        
+        .actions-container {
+            display: flex;
+            flex-direction: column;
+            gap: 20px;
             margin: 30px 0;
             padding: 0 10px;
         }
         
-        .reset-button {
+        .action-button {
             display: inline-block;
-            background: linear-gradient(135deg, var(--brand-blue) 0%, var(--brand-dark-blue) 100%);
             color: var(--white);
             padding: 18px 40px;
             text-decoration: none;
@@ -136,17 +127,53 @@
             font-size: 17px;
             font-weight: 600;
             text-align: center;
-            box-shadow: 0 4px 6px rgba(37, 99, 235, 0.3);
+            box-shadow: 0 4px 6px rgba(0, 0, 0, 0.2);
             transition: all 0.3s ease;
         }
         
-        .reset-button:hover {
+        .verify-button {
+            background: linear-gradient(135deg, var(--brand-blue) 0%, var(--brand-dark-blue) 100%);
+            box-shadow: 0 4px 6px rgba(37, 99, 235, 0.3);
+        }
+        
+        .verify-button:hover {
             background: linear-gradient(135deg, var(--brand-dark-blue) 0%, var(--brand-blue) 100%);
             transform: translateY(-2px);
             box-shadow: 0 6px 12px rgba(37, 99, 235, 0.4);
         }
         
-        .expiry-notice {
+        .quiz-button {
+            background: linear-gradient(135deg, var(--brand-orange) 0%, #dc2626 100%);
+            box-shadow: 0 4px 6px rgba(234, 88, 12, 0.3);
+        }
+        
+        .quiz-button:hover {
+            background: linear-gradient(135deg, #dc2626 0%, var(--brand-orange) 100%);
+            transform: translateY(-2px);
+            box-shadow: 0 6px 12px rgba(234, 88, 12, 0.4);
+        }
+        
+        .plan-button {
+            background: linear-gradient(135deg, #10b981 0%, #059669 100%);
+            box-shadow: 0 4px 6px rgba(16, 185, 129, 0.3);
+        }
+        
+        .plan-button:hover {
+            background: linear-gradient(135deg, #059669 0%, #10b981 100%);
+            transform: translateY(-2px);
+            box-shadow: 0 6px 12px rgba(16, 185, 129, 0.4);
+        }
+        
+        .action-description {
+            color: var(--text-light);
+            font-size: 14px;
+            line-height: 1.5;
+            margin: 8px 0 0 0;
+            text-align: center;
+            font-weight: 400;
+        }
+        
+        .instructions {
             color: var(--text-light);
             font-size: 15px;
             line-height: 1.6;
@@ -199,7 +226,7 @@
                 padding: 30px 20px;
             }
             
-            .message-box {
+            .welcome-message {
                 padding: 25px 20px;
             }
             
@@ -211,7 +238,7 @@
                 font-size: 16px;
             }
             
-            .reset-button {
+            .verify-button {
                 padding: 15px 30px;
                 font-size: 16px;
             }
@@ -222,40 +249,71 @@
     <div class="container">
         <div class="header">
             <div class="logo-container">
-                <div class="logo-wrapper">
-                    <div class="logo-inner">
-                        <img src="{{ asset('images/logo.png') }}" alt="{{ config('app.name') }}" class="logo">
-                    </div>
-                </div>
+                <img src="{{ asset('logo.png') }}" alt="{{ config('app.name') }}" class="logo">
             </div>
-            <h1 class="title">{{ __('auth.reset_password_email.title', [], $locale) }}</h1>
-            <p class="subtitle">{{ __('auth.reset_password_email.subtitle', [], $locale) }}</p>
+            <h1 class="title">{{ __('auth.welcome_email.title', [], $locale) }}</h1>
+            <p class="subtitle">{{ __('auth.welcome_email.subtitle', [], $locale) }}</p>
         </div>
 
         <div class="content">
-            <div class="message-box">
-                <p class="message-text">
-                    {{ __('auth.reset_password_email.you_are_receiving', [], $locale) }}
+            <div class="welcome-message">
+                <p class="welcome-text">
+                    {{ __('auth.welcome_email.greeting', ['name' => $user->first_name], $locale) }}!
                 </p>
                 
-                <div class="button-container">
-                    <a href="{{ route('password.reset', ['token' => $token, 'email' => $email, 'locale' => $locale]) }}" class="reset-button">
-                        {{ __('auth.reset_password_email.reset_button', [], $locale) }}
-                    </a>
+                <p class="welcome-text">
+                    {{ __('auth.welcome_email.marketing_intro', [], $locale) }}
+                </p>
+                
+                <div class="actions-container">
+                    <!-- Verify Email Button -->
+                    <div>
+                        <a href="{{ route('verification.verify', ['id' => $user->id, 'hash' => sha1($user->getEmailForVerification()), 'locale' => $locale]) }}" class="action-button verify-button">
+                            {{ __('auth.welcome_email.verify_button', [], $locale) }}
+                        </a>
+                        <p class="action-description">
+                            {{ __('auth.welcome_email.verify_description', [], $locale) }}
+                        </p>
+                    </div>
+                    
+                    <!-- Free Quiz Button -->
+                    <div>
+                        <a href="{{ route('dashboard.quizzes.show', ['id' => 1, 'locale' => $locale]) }}" class="action-button quiz-button">
+                            {{ __('auth.welcome_email.free_quiz_button', [], $locale) }}
+                        </a>
+                        <p class="action-description">
+                            {{ __('auth.welcome_email.free_quiz_description', [], $locale) }}
+                        </p>
+                    </div>
+                    
+                    <!-- Pricing Plans Button -->
+                    <div>
+                        <a href="{{ route('plans', ['locale' => $locale]) }}" class="action-button plan-button">
+                            {{ __('auth.welcome_email.pricing_button', [], $locale) }}
+                        </a>
+                        <p class="action-description">
+                            {{ __('auth.welcome_email.pricing_description', [], $locale) }}
+                        </p>
+                    </div>
                 </div>
                 
-                <p class="expiry-notice">
-                    {{ __('auth.reset_password_email.expiry_notice', ['count' => config('auth.passwords.'.config('auth.defaults.passwords').'.expire')], $locale) }}
+                <p class="instructions">
+                    {{ __('auth.welcome_email.alternative', [], $locale) }}<br>
+                    {{ route('verification.verify', ['id' => $user->id, 'hash' => sha1($user->getEmailForVerification()), 'locale' => $locale]) }}
                 </p>
             </div>
 
             <div class="footer-content">
                 <p class="footer-text">
-                    {{ __('auth.reset_password_email.ignore_if_not_requested', [], $locale) }}
+                    {{ __('auth.welcome_email.benefits_title', [], $locale) }}
                 </p>
                 
                 <p class="footer-text">
-                    {{ __('auth.reset_password_email.contact_support', ['email' => config('mail.support_email')], $locale) }}
+                    {{ __('auth.welcome_email.benefits_description', [], $locale) }}
+                </p>
+                
+                <p class="footer-text">
+                    {{ __('auth.welcome_email.contact_support', ['email' => config('mail.support_email')], $locale) }}
                 </p>
             </div>
         </div>

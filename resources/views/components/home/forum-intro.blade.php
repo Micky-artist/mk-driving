@@ -1,17 +1,17 @@
 <!-- Forum Introduction Section -->
 <div class="py-4 sm:py-6 lg:py-8 bg-white dark:bg-gray-900">
-    <div class="max-w-7xl mx-auto px-2 sm:px-3 lg:px-4">
+    <div class="max-w-7xl mx-auto px-3 sm:px-4 lg:px-6">
         <!-- Section Header -->
         <x-section-header :title="__('forum.community')" :href="route('forum.index', app()->getLocale())" />
 
         <!-- Main Content Grid -->
-    <div class="grid grid-cols-1 lg:grid-cols-2 gap-6 max-w-7xl mx-auto">
+    <div class="grid grid-cols-1 lg:grid-cols-2 gap-4 sm:gap-6 max-w-7xl mx-auto">
         
         <!-- Leaderboard Card -->
         @if(isset($forumData['leaderboard']) && count($forumData['leaderboard']) >= 3)
             <div class="bg-white dark:bg-gray-800/80 backdrop-blur-sm rounded-2xl shadow-lg hover:shadow-2xl transition-all duration-300 border border-gray-100 dark:border-gray-700/50 overflow-hidden">
                 <!-- Leaderboard Header -->
-                <div class="p-6 border-b border-gray-100 dark:border-gray-700/50">
+                <div class="p-2 sm:p-6 border-b border-gray-100 dark:border-gray-700/50">
                     <div class="flex items-center space-x-3 mb-4">
                         <div class="w-12 h-12 rounded-full bg-gradient-to-r from-blue-500 to-orange-500 flex items-center justify-center">
                             <svg class="w-6 h-6 text-white" fill="none" stroke="currentColor" viewBox="0 0 24 24">
@@ -30,7 +30,7 @@
                 </div>
 
                 <!-- Top 3 Podium -->
-                <div class="p-6">
+                <div class="p-2 sm:p-6">
                     <div class="flex items-end justify-center space-x-2 md:space-x-4">
                         <!-- 2nd Place -->
                         <div class="flex flex-col items-center">
@@ -164,18 +164,20 @@
                     <!-- Stats -->
                     <div class="flex items-center justify-between mb-4">
                         <div class="flex items-center space-x-4">
-                            <div class="flex items-center space-x-1 text-gray-500 dark:text-gray-400">
-                                <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                            <a href="{{ route('forum.show', ['locale' => app()->getLocale(), 'id' => $forumData['topQuestion']['id']]) }}" 
+                               class="group flex items-center space-x-1 text-gray-500 dark:text-gray-400 hover:text-blue-600 dark:hover:text-blue-400 transition-colors duration-200 cursor-pointer">
+                                <svg class="w-4 h-4 group-hover:scale-110 transition-transform duration-200" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                                     <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M8 12h.01M12 12h.01M16 12h.01M21 12c0 4.418-4.03 8-9 8a9.863 9.863 0 01-4.255-.949L3 20l1.395-3.72C3.512 15.042 3 13.574 3 12c0-4.418 4.03-8 9-8s9 3.582 9 8z" />
                                 </svg>
                                 <span class="text-sm">{{ $forumData['topQuestion']['stats']['answersCount'] }} {{ $forumData['topQuestion']['stats']['answersCount'] == 1 ? 'Reply' : 'Replies' }}</span>
-                            </div>
-                            <div class="flex items-center space-x-1 text-gray-500 dark:text-gray-400">
-                                <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                            </a>
+                            <a href="{{ route('forum.show', ['locale' => app()->getLocale(), 'id' => $forumData['topQuestion']['id']]) }}" 
+                               class="group flex items-center space-x-1 text-gray-500 dark:text-gray-400 hover:text-red-600 dark:hover:text-red-400 transition-colors duration-200 cursor-pointer">
+                                <svg class="w-4 h-4 group-hover:scale-110 transition-transform duration-200" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                                     <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4.318 6.318a4.5 4.5 0 000 6.364L12 20.364l7.682-7.682a4.5 4.5 0 00-6.364-6.364L12 7.636l-1.318-1.318a4.5 4.5 0 00-6.364 0z" />
                                 </svg>
                                 <span class="text-sm">{{ __('forum.popular') }}</span>
-                            </div>
+                            </a>
                         </div>
                     </div>
 
@@ -213,18 +215,21 @@
                 </div>
 
                 <!-- Action Footer -->
-                <div class="p-6 border-t border-gray-100 dark:border-gray-700/50">
-                    <div class="flex items-center justify-between">
+                <div class="p-4 sm:p-6 border-t border-gray-100 dark:border-gray-700/50">
+                    <div class="flex flex-col sm:flex-row sm:items-center sm:justify-between gap-3 sm:gap-0">
                         <a href="{{ route('forum.show', ['locale' => app()->getLocale(), 'id' => $forumData['topQuestion']['id']]) }}" 
-                           class="inline-flex items-center px-4 py-2 text-sm font-medium text-white bg-gradient-to-r from-blue-600 to-orange-600 hover:from-blue-700 hover:to-orange-700 rounded-lg transition-colors">
-                            {{ __('forum.read_more') }}
+                           class="inline-flex items-center justify-center px-4 py-2.5 text-sm font-medium text-white bg-gradient-to-r from-blue-600 to-orange-600 hover:from-blue-700 hover:to-orange-700 rounded-lg transition-all duration-300 shadow-md hover:shadow-lg transform hover:scale-[1.02] w-full sm:w-auto">
+                            <span>{{ __('forum.read_more') }}</span>
                             <svg class="ml-2 w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                                 <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 5l7 7-7 7" />
                             </svg>
                         </a>
                         <a href="{{ route('forum.index', app()->getLocale()) }}" 
-                           class="text-sm text-blue-600 dark:text-blue-400 hover:text-blue-700 dark:hover:text-blue-300">
+                           class="inline-flex items-center justify-center px-4 py-2.5 text-sm text-blue-600 dark:text-blue-400 hover:text-blue-700 dark:hover:text-blue-300 transition-colors duration-200 w-full sm:w-auto rounded-lg hover:bg-blue-50 dark:hover:bg-blue-900/20">
                             {{ __('forum.view_all_questions') }}
+                            <svg class="ml-1 w-3 h-3" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 5l7 7-7 7" />
+                            </svg>
                         </a>
                     </div>
                 </div>
@@ -233,7 +238,7 @@
     </div>
 
     <!-- Section Footer -->
-    <div class="text-center mt-8">
+    <div class="text-center my-8">
         <a href="{{ route('forum.index', app()->getLocale()) }}" 
            class="inline-flex items-center px-6 py-3 text-base font-medium text-white bg-gradient-to-r from-blue-600 to-orange-600 hover:from-blue-700 hover:to-orange-700 rounded-lg transition-colors shadow-lg">
             {{ __('forum.explore_forum') }}

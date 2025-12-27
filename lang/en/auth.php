@@ -146,4 +146,34 @@ return [
         'success_message' => 'We have emailed your password reset link!',
         'error_message' => 'We can\'t find a user with that email address.'
     ],
+    
+    // Welcome Email
+    'welcome_email' => [
+        'subject' => 'Welcome to MK Driving School! Start Your Journey Today',
+        'title' => 'Welcome to MK Driving School!',
+        'subtitle' => 'Your journey to becoming a confident driver starts now',
+        'greeting' => 'Welcome, :name',
+        'marketing_intro' => 'Thank you for joining MK Driving School! We\'re excited to help you become a safe and confident driver. Get started with these three simple steps:',
+        'verify_button' => 'Verify Your Email',
+        'verify_description' => 'Secure your account and unlock all features',
+        'free_quiz_button' => 'Try a Free Quiz',
+        'free_quiz_description' => 'Test your knowledge with our complimentary driving quiz',
+        'pricing_button' => 'View Pricing Plans',
+        'pricing_description' => 'Choose a plan that fits your learning needs',
+        'alternative' => 'If the verify button doesn\'t work, you can copy and paste this link into your browser:',
+        'benefits_title' => 'Why Choose MK Driving School?',
+        'benefits_description' => 'With verified email access, you\'ll get full access to our comprehensive driving lessons, practice tests, progress tracking, and expert guidance.',
+        'contact_support' => 'Questions? Our support team is here to help at :email'
+    ],
+    
+    // Reset Password Email
+    'reset_password_email' => [
+        'title' => 'Reset Your Password',
+        'subtitle' => 'Secure your account with a new password',
+        'you_are_receiving' => 'You are receiving this email because we received a password reset request for your account.',
+        'reset_button' => 'Reset Password',
+        'expiry_notice' => 'This password reset link will expire in :count minutes.',
+        'ignore_if_not_requested' => 'If you did not request a password reset, no further action is required.',
+        'contact_support' => 'If you\'re having trouble clicking the password reset button, copy and paste the URL below into your web browser or contact our support team at :email.'
+    ],
 ];

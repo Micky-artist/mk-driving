@@ -61,6 +61,14 @@ class PointConfigurationSeeder extends Seeder
                     'cooldown_hours' => 0,
                 ],
             ],
+            [
+                'activity_type' => 'daily_visit',
+                'points' => 5, // Points for daily website visit
+                'is_active' => true,
+                'conditions' => [
+                    'cooldown_hours' => 24, // Once per day
+                ],
+            ],
         ];
 
         foreach ($configurations as $config) {

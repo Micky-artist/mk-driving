@@ -11,6 +11,7 @@ use App\Http\Controllers\SitemapController;
 use App\Models\SubscriptionPlan;
 use App\Services\LocaleService;
 use App\Http\Controllers\Web\PaymentController;
+use App\Http\Middleware\TrackUserActivity;
 
 // Google OAuth Routes
 Route::get('/auth/google', [\App\Http\Controllers\Auth\GoogleAuthController::class, 'redirect'])
@@ -270,7 +271,7 @@ Route::prefix('{locale}')
                 'currentLocale' => $locale,
                 'forumData' => $forumData
             ]);
-        })->name('home');
+        })->name('home')->middleware(TrackUserActivity::class);
         
         // Profile routes (authenticated only)
         Route::middleware(['auth'])->group(function () {
@@ -550,15 +551,22 @@ Route::prefix('{locale}')
             ->name('subscriptions.destroy');
         });
 
-        // Forum Routes (protected by auth and verified middleware)
+        // Forum Routes (public viewing, auth required for interactions)
+        Route::prefix('forum')
+            ->name('forum.')
+            ->group(function () {
+                // Public routes - can view without authentication
+                Route::get('/', [\App\Http\Controllers\Web\ForumController::class, 'index'])->name('index');
+                Route::get('/{id}', [\App\Http\Controllers\Web\ForumController::class, 'show'])->name('show');
+            });
+        
+        // Forum Routes (protected by auth and verified middleware - for interactions)
         Route::middleware(['auth', 'verified'])->group(function () {
             Route::prefix('forum')
                 ->name('forum.')
                 ->group(function () {
-                    Route::get('/', [\App\Http\Controllers\Web\ForumController::class, 'index'])->name('index');
                     Route::get('/ask', [\App\Http\Controllers\Web\ForumController::class, 'create'])->name('create');
                     Route::post('/', [\App\Http\Controllers\Web\ForumController::class, 'store'])->name('store');
-                    Route::get('/{id}', [\App\Http\Controllers\Web\ForumController::class, 'show'])->name('show');
                     
                     // Answers
                     Route::post('/{questionId}/answers', [\App\Http\Controllers\Web\ForumController::class, 'storeAnswer'])

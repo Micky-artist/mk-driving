@@ -25,17 +25,13 @@
 
     <div class="relative max-w-7xl w-full mx-auto px-2 sm:px-4 lg:px-8 overflow-visible py-6 lg:py-8">
         <!-- Desktop Layout: Full Width Animations -->
-        <div class="hidden lg:flex lg:items-center lg:justify-between lg:gap-8 relative">
+        <div class="hidden lg:grid lg:grid-cols-12 lg:items-center lg:gap-8 relative">
             <!-- Left: Car Animation -->
-            <div class="flex-1 flex justify-center">
-                <div class="w-[280px] md:w-[500px] h-[200px] md:h-[250px] relative">
+            <div class="col-span-4 flex justify-start items-center">
+                <div class="w-[280px] md:w-[500px] h-[120px] md:h-[150px] relative overflow-hidden">
                     <!-- Loading Skeleton -->
-                    <div id="car-loading"
+                    <div id="car-loading-desktop"
                         class="absolute pt-4 inset-0 bg-gradient-to-br from-gray-200/40 to-gray-300/40 dark:from-blue-800/20 dark:to-blue-900/20 rounded-lg overflow-hidden">
-                        <!-- Shimmer overlay -->
-                        <div
-                            class="absolute inset-0 bg-gradient-to-r from-transparent via-white/30 to-transparent animate-shimmer">
-                        </div>
 
                         <!-- Skeleton shapes for car -->
                         <div class="absolute inset-0 flex flex-col justify-center items-center gap-4 p-8">
@@ -63,14 +59,15 @@
                     </div>
 
                     <!-- Car Animation Container -->
-                    <div id="car-animation" class="w-full h-full opacity-0 transition-opacity duration-500 -mt-28">
+                    <div id="car-animation-desktop"
+                        class="w-full h-full opacity-0 transition-opacity duration-500 scale-[300%] -translate-y-8">
                     </div>
                 </div>
             </div>
 
             <!-- Center: Billboard CTA -->
-            <div class="flex-1 flex justify-center">
-                <div class="relative inline-block group">
+            <div class="col-span-4 flex justify-center items-center px-4">
+                <div class="relative inline-block group w-full max-w-2xl">
                     <!-- Billboard Frame -->
                     <div class="absolute -inset-0.5 bg-gradient-to-r from-yellow-400/20 to-yellow-500/20 rounded-md blur-sm opacity-80 group-hover:blur-md group-hover:opacity-100 transition-all duration-500 animate-pulse"
                         style="animation-duration: 3s;"></div>
@@ -90,7 +87,7 @@
                         </div>
 
                         <!-- CTA Button -->
-                        <div class="relative z-50 mt-4">
+                        <div class="relative z-10 mt-4">
                             @auth
                                 <a href="/{{ app()->getLocale() }}/dashboard"
                                     class="block w-full text-center bg-gradient-to-r from-yellow-400 to-yellow-500 text-blue-900 font-bold py-2 px-4 rounded hover:from-yellow-300 hover:to-yellow-400 transition-all duration-300 transform group-hover:scale-[1.02] shadow-md hover:shadow-yellow-500/30">
@@ -102,13 +99,14 @@
                                     </svg>
                                 </a>
                             @else
-                                @if($hasGuestQuiz)
+                                @if ($hasGuestQuiz)
                                     <a href="{{ route('guest-quiz.show', ['locale' => app()->getLocale(), 'quiz' => $guestQuiz['id']]) }}"
                                         class="block w-full text-center bg-gradient-to-r from-yellow-400 to-yellow-500 text-blue-900 font-bold py-2 px-4 rounded hover:from-yellow-300 hover:to-yellow-400 transition-all duration-300 transform group-hover:scale-[1.02] shadow-md hover:shadow-yellow-500/30">
                                         {{ $ctaText }}
                                         <svg class="inline-block ml-2 w-4 h-4" fill="none" stroke="currentColor"
                                             stroke-width="3" viewBox="0 0 24 24">
-                                            <path stroke-linecap="round" stroke-linejoin="round" d="M17 8l4 4m0 0l-4 4m4-4H3">
+                                            <path stroke-linecap="round" stroke-linejoin="round"
+                                                d="M17 8l4 4m0 0l-4 4m4-4H3">
                                             </path>
                                         </svg>
                                     </a>
@@ -118,7 +116,8 @@
                                         {{ $ctaText }}
                                         <svg class="inline-block ml-2 w-4 h-4" fill="none" stroke="currentColor"
                                             stroke-width="3" viewBox="0 0 24 24">
-                                            <path stroke-linecap="round" stroke-linejoin="round" d="M17 8l4 4m0 0l-4 4m4-4H3">
+                                            <path stroke-linecap="round" stroke-linejoin="round"
+                                                d="M17 8l4 4m0 0l-4 4m4-4H3">
                                             </path>
                                         </svg>
                                     </a>
@@ -135,15 +134,11 @@
             </div>
 
             <!-- Right: Bike Animation -->
-            <div class="flex-1 flex justify-center">
-                <div class="w-[250px] md:w-[450px] h-[180px] md:h-[220px] relative">
+            <div class="col-span-4 flex justify-end items-center">
+                <div class="w-[250px] md:w-[450px] h-[120px] md:h-[150px] relative overflow-hidden">
                     <!-- Loading Skeleton -->
                     <div id="bike-loading-desktop"
                         class="absolute inset-0 bg-gradient-to-br from-gray-200/40 to-gray-300/40 dark:from-blue-800/20 dark:to-blue-900/20 rounded-lg overflow-hidden">
-                        <!-- Shimmer overlay -->
-                        <div
-                            class="absolute inset-0 bg-gradient-to-r from-transparent via-white/30 to-transparent animate-shimmer">
-                        </div>
 
                         <!-- Skeleton shapes for bike -->
                         <div class="absolute inset-0 flex flex-col justify-center items-center gap-4 p-8">
@@ -171,33 +166,21 @@
                     </div>
 
                     <!-- Bike Animation Container -->
-                    <div id="bike-animation-desktop" class="w-full h-full opacity-0 transition-opacity duration-500">
+                    <div id="bike-animation-desktop"
+                        class="w-full h-full opacity-0 transition-opacity duration-500 scale-[235%] translate-y-8">
                     </div>
                 </div>
             </div>
         </div>
 
-        <!-- Mobile Layout: Vertical Stack -->
-        <div class="lg:hidden flex flex-col items-center justify-center space-y-8 py-8">
-            <!-- Title Section -->
-            <div class="text-center">
-                <h1
-                    class="text-2xl sm:text-3xl font-extrabold bg-gradient-to-r from-blue-600 via-blue-500 to-cyan-500 dark:from-cyan-300 dark:via-blue-200 dark:to-cyan-300 bg-clip-text text-transparent mb-2 leading-tight">
-                    {{ $title }}
-                </h1>
-                <div class="h-1 w-12 bg-blue-400/70 dark:bg-cyan-300/70 my-2 mx-auto rounded-full"></div>
-            </div>
-
-            <!-- Top: Car Animation -->
-            <div class="w-full flex justify-center">
-                <div class="w-[280px] h-[200px] relative">
+        <!-- Mobile Layout: Grid 33% each, 1 column (3 rows) -->
+        <div class="lg:hidden grid grid-cols-1 items-center gap-2 py-2">
+            <!-- Row 1: Car Animation -->
+            <div class="flex justify-center items-center">
+                <div class="w-[320px] h-[140px] relative overflow-hidden">
                     <!-- Loading Skeleton -->
                     <div id="car-loading"
                         class="absolute pt-4 inset-0 bg-gradient-to-br from-gray-200/40 to-gray-300/40 dark:from-blue-800/20 dark:to-blue-900/20 rounded-lg overflow-hidden">
-                        <!-- Shimmer overlay -->
-                        <div
-                            class="absolute inset-0 bg-gradient-to-r from-transparent via-white/30 to-transparent animate-shimmer">
-                        </div>
 
                         <!-- Skeleton shapes for car -->
                         <div class="absolute inset-0 flex flex-col justify-center items-center gap-4 p-8">
@@ -212,58 +195,50 @@
                                 <div class="w-8 h-8 bg-gray-300/60 dark:bg-gray-600/40 rounded-full animate-pulse"
                                     style="animation-delay: 0.6s;"></div>
                             </div>
-                            <!-- Moving lines for motion effect -->
-                            <div class="absolute inset-0 flex flex-col justify-center items-start gap-6 opacity-50">
-                                <div class="h-px w-full bg-gradient-to-r from-transparent via-gray-400/40 dark:via-blue-300/20 to-transparent"
-                                    style="animation: slideRight 2.5s linear infinite;"></div>
-                                <div class="h-px w-full bg-gradient-to-r from-transparent via-gray-400/40 dark:via-blue-300/20 to-transparent"
-                                    style="animation: slideRight 2.5s linear infinite; animation-delay: 0.8s;"></div>
-                                <div class="h-px w-full bg-gradient-to-r from-transparent via-gray-400/40 dark:via-blue-300/20 to-transparent"
-                                    style="animation: slideRight 2.5s linear infinite; animation-delay: 1.6s;"></div>
-                            </div>
                         </div>
                     </div>
 
                     <!-- Car Animation Container -->
-                    <div id="car-animation" class="w-full h-full opacity-0 transition-opacity duration-500 -mt-28">
+                    <div id="car-animation" class="w-full h-full opacity-0 transition-opacity duration-500 scale-[300%] -translate-y-12">
                     </div>
                 </div>
             </div>
 
-            <!-- Middle: Billboard CTA -->
-            <div class="relative inline-block group">
-                <!-- Billboard Frame -->
-                <div class="absolute -inset-0.5 bg-gradient-to-r from-yellow-400/20 to-yellow-500/20 rounded-md blur-sm opacity-80 group-hover:blur-md group-hover:opacity-100 transition-all duration-500 animate-pulse"
-                    style="animation-duration: 3s;"></div>
+            <!-- Row 2: Billboard CTA -->
+            <div class="flex justify-center items-center px-4">
+                <div class="relative inline-block group w-full max-w-md">
+                    <!-- Billboard Frame -->
+                    <div class="absolute -inset-0.5 bg-gradient-to-r from-yellow-400/20 to-yellow-500/20 rounded-md blur-sm opacity-80 group-hover:blur-md group-hover:opacity-100 transition-all duration-500 animate-pulse"
+                        style="animation-duration: 3s;"></div>
 
-                <!-- Billboard Content -->
-                <div
-                    class="relative bg-gradient-to-br from-blue-700/90 to-blue-800/90 text-white rounded-md border-2 border-yellow-400/30 p-4 shadow-lg overflow-hidden h-32 flex flex-col">
-                    <!-- Messages Container -->
-                    <div class="flex-1 flex flex-col justify-center items-center space-y-2 text-center">
-                        <!-- Messages will cycle through these -->
-                        <div class="message-slide text-yellow-300 font-bold text-lg">
-                            {{ __('home.billboard.freeTrial') }}</div>
-                        <div class="message-slide text-yellow-300 font-bold text-lg" style="animation-delay: 2s;">
-                            {{ __('home.billboard.practiceAnytime') }}</div>
-                        <div class="message-slide text-yellow-300 font-bold text-lg" style="animation-delay: 4s;">
-                            {{ __('home.billboard.momoPay') }}</div>
-                    </div>
+                    <!-- Billboard Content -->
+                    <div
+                        class="relative bg-gradient-to-br from-blue-700/90 to-blue-800/90 text-white rounded-md border-2 border-yellow-400/30 p-4 shadow-lg overflow-hidden h-32 flex flex-col">
+                        <!-- Messages Container -->
+                        <div class="flex-1 flex flex-col justify-center items-center space-y-2 text-center">
+                            <!-- Messages will cycle through these -->
+                            <div class="message-slide text-yellow-300 font-bold text-sm">
+                                {{ __('home.billboard.freeTrial') }}</div>
+                            <div class="message-slide text-yellow-300 font-bold text-sm" style="animation-delay: 2s;">
+                                {{ __('home.billboard.practiceAnytime') }}</div>
+                            <div class="message-slide text-yellow-300 font-bold text-sm" style="animation-delay: 4s;">
+                                {{ __('home.billboard.momoPay') }}</div>
+                        </div>
 
-                    <!-- CTA Button -->
-                    <div class="relative z-50 mt-4">
-                        @auth
-                            <a href="/{{ app()->getLocale() }}/dashboard"
-                                class="block w-full text-center bg-gradient-to-r from-yellow-400 to-yellow-500 text-blue-900 font-bold py-2 px-4 rounded hover:from-yellow-300 hover:to-yellow-400 transition-all duration-300 transform group-hover:scale-[1.02] shadow-md hover:shadow-yellow-500/30">
-                                {{ $ctaText }}
-                                <svg class="inline-block ml-2 w-4 h-4" fill="none" stroke="currentColor"
-                                    stroke-width="3" viewBox="0 0 24 24">
-                                    <path stroke-linecap="round" stroke-linejoin="round" d="M17 8l4 4m0 0l-4 4m4-4H3">
-                                    </path>
-                                </svg>
-                            </a>
-                        @else
-                                @if($hasGuestQuiz)
+                        <!-- CTA Button -->
+                        <div class="relative z-10 mt-3">
+                            @auth
+                                <a href="/{{ app()->getLocale() }}/dashboard"
+                                    class="block w-full text-center bg-gradient-to-r from-yellow-400 to-yellow-500 text-blue-900 font-bold py-2 px-4 rounded hover:from-yellow-300 hover:to-yellow-400 transition-all duration-300 transform group-hover:scale-[1.02] shadow-md hover:shadow-yellow-500/30">
+                                    {{ $ctaText }}
+                                    <svg class="inline-block ml-2 w-4 h-4" fill="none" stroke="currentColor"
+                                        stroke-width="3" viewBox="0 0 24 24">
+                                        <path stroke-linecap="round" stroke-linejoin="round" d="M17 8l4 4m0 0l-4 4m4-4H3">
+                                        </path>
+                                    </svg>
+                                </a>
+                            @else
+                                @if ($hasGuestQuiz)
                                     <a href="{{ route('guest-quiz.show', ['locale' => app()->getLocale(), 'quiz' => $guestQuiz['id']]) }}"
                                         class="block w-full text-center bg-gradient-to-r from-yellow-400 to-yellow-500 text-blue-900 font-bold py-2 px-4 rounded hover:from-yellow-300 hover:to-yellow-400 transition-all duration-300 transform group-hover:scale-[1.02] shadow-md hover:shadow-yellow-500/30">
                                         {{ $ctaText }}
@@ -284,83 +259,43 @@
                                         </svg>
                                     </a>
                                 @endif
-                        @endauth
+                            @endauth
+                        </div>
                     </div>
-                </div>
 
-                <!-- Billboard Pole -->
-                <div
-                    class="absolute -bottom-12 left-1/2 transform -translate-x-1/2 w-3 h-12 bg-gradient-to-b from-gray-400 to-gray-600 rounded-b-lg">
+                    <!-- Billboard Pole -->
+                    <div
+                        class="absolute -bottom-10 left-1/2 transform -translate-x-1/2 w-3 h-10 bg-gradient-to-b from-gray-400 to-gray-600 rounded-b-lg">
+                    </div>
                 </div>
             </div>
 
-            <!-- Bottom: Bike Animation -->
-            <div class="w-full flex justify-center">
-                <div class="w-[250px] h-[116px] relative">
+            <!-- Row 3: Bike Animation -->
+            <div class="flex justify-center items-center">
+                <div class="w-[320px] h-[140px] relative overflow-hidden">
                     <!-- Loading Skeleton -->
                     <div id="bike-loading"
                         class="absolute inset-0 bg-gradient-to-br from-gray-200/40 to-gray-300/40 dark:from-blue-800/20 dark:to-blue-900/20 rounded-lg overflow-hidden">
-                        <!-- Shimmer overlay -->
-                        <div
-                            class="absolute inset-0 bg-gradient-to-r from-transparent via-white/30 to-transparent animate-shimmer">
-                        </div>
 
                         <!-- Skeleton shapes for bike -->
-                        <div class="absolute inset-0 flex flex-col justify-center items-center gap-3 p-6">
+                        <div class="absolute inset-0 flex flex-col justify-center items-center gap-4 p-8">
                             <!-- Main bike body skeleton -->
-                            <div class="w-2/3 h-8 bg-gray-300/60 dark:bg-gray-600/40 rounded-lg animate-pulse"></div>
+                            <div class="w-2/3 h-10 bg-gray-300/60 dark:bg-gray-600/40 rounded-lg animate-pulse"></div>
                             <!-- Bike details -->
-                            <div class="flex gap-3 w-2/3 justify-center">
-                                <div class="w-6 h-6 bg-gray-300/60 dark:bg-gray-600/40 rounded-full animate-pulse"
+                            <div class="flex gap-4 w-2/3 justify-center">
+                                <div class="w-8 h-8 bg-gray-300/60 dark:bg-gray-600/40 rounded-full animate-pulse"
                                     style="animation-delay: 0.2s;"></div>
-                                <div class="w-12 h-4 bg-gray-300/60 dark:bg-gray-600/40 rounded animate-pulse"
+                                <div class="w-16 h-6 bg-gray-300/60 dark:bg-gray-600/40 rounded animate-pulse"
                                     style="animation-delay: 0.4s;"></div>
-                                <div class="w-6 h-6 bg-gray-300/60 dark:bg-gray-600/40 rounded-full animate-pulse"
+                                <div class="w-8 h-8 bg-gray-300/60 dark:bg-gray-600/40 rounded-full animate-pulse"
                                     style="animation-delay: 0.6s;"></div>
-                            </div>
-                            <!-- Moving lines for motion effect -->
-                            <div class="absolute inset-0 flex flex-col justify-center items-start gap-4 opacity-50">
-                                <div class="h-px w-full bg-gradient-to-r from-transparent via-gray-400/40 dark:via-blue-300/20 to-transparent"
-                                    style="animation: slideRight 2.5s linear infinite;"></div>
-                                <div class="h-px w-full bg-gradient-to-r from-transparent via-gray-400/40 dark:via-blue-300/20 to-transparent"
-                                    style="animation: slideRight 2.5s linear infinite; animation-delay: 0.8s;"></div>
-                                <div class="h-px w-full bg-gradient-to-r from-transparent via-gray-400/40 dark:via-blue-300/20 to-transparent"
-                                    style="animation: slideRight 2.5s linear infinite; animation-delay: 1.6s;"></div>
                             </div>
                         </div>
                     </div>
 
                     <!-- Bike Animation Container -->
-                    <div id="bike-animation" class="w-full h-full opacity-0 transition-opacity duration-500">
-                    </div>
-                </div>
-            </div>
-        </div>
-
-        <!-- Background Animation Layers (for both desktop and mobile) -->
-        <div class="absolute inset-0 overflow-hidden pointer-events-none" style="z-index: -1;">
-            <!-- Base layer - subtle movement with softer edges -->
-            <div class="absolute inset-0 bg-gradient-to-r from-transparent via-gray-200/25 to-transparent dark:from-transparent dark:via-blue-900/20 dark:to-transparent"
-                style="animation: groundMove 10s linear infinite; animation-direction: reverse; will-change: transform; mask-image: linear-gradient(90deg, transparent 0%, white 20%, white 80%, transparent 100%);">
-            </div>
-
-            <!-- Mid layer - medium movement with softer edges -->
-            <div class="absolute inset-0 bg-gradient-to-r from-transparent via-gray-300/20 to-transparent dark:from-transparent dark:via-blue-800/15 dark:to-transparent"
-                style="animation: groundMove 15s linear infinite; animation-direction: reverse; animation-delay: -5s; will-change: transform; mask-image: linear-gradient(90deg, transparent 0%, white 15%, white 85%, transparent 100%);">
-                <div class="absolute inset-0 backdrop-blur-[1px]"></div>
-            </div>
-
-            <!-- Top layer - road lines with softer edges -->
-            <div class="absolute inset-0 opacity-70 dark:opacity-20">
-                <div class="absolute inset-0 flex flex-col justify-center items-start gap-16">
-                    <div class="h-px bg-gradient-to-r from-transparent via-gray-500/60 to-transparent dark:from-transparent dark:via-blue-300/30 dark:to-transparent w-full"
-                        style="animation: roadLines 12s linear infinite; animation-direction: reverse; will-change: transform; mask-image: linear-gradient(90deg, transparent 0%, white 10%, white 90%, transparent 100%);">
-                    </div>
-                    <div class="h-px bg-gradient-to-r from-transparent via-gray-500/60 to-transparent dark:from-transparent dark:via-blue-300/30 dark:to-transparent w-full"
-                        style="animation: roadLines 12s linear infinite; animation-direction: reverse; animation-delay: 3s; will-change: transform; mask-image: linear-gradient(90deg, transparent 0%, white 10%, white 90%, transparent 100%);">
-                    </div>
-                    <div class="h-px bg-gradient-to-r from-transparent via-gray-500/60 to-transparent dark:from-transparent dark:via-blue-300/30 dark:to-transparent w-full"
-                        style="animation: roadLines 12s linear infinite; animation-direction: reverse; animation-delay: 6s; will-change: transform; mask-image: linear-gradient(90deg, transparent 0%, white 10%, white 90%, transparent 100%);">
+                    <div id="bike-animation"
+                        class="w-full h-full opacity-0 transition-opacity duration-500 scale-[245%] translate-y-8">
                     </div>
                 </div>
             </div>
@@ -408,15 +343,6 @@
                 }
             }
 
-            @keyframes shimmer {
-                0% {
-                    transform: translateX(-100%);
-                }
-
-                100% {
-                    transform: translateX(100%);
-                }
-            }
 
             @keyframes slideInOut {
 
@@ -436,11 +362,6 @@
                     transform: translateY(-20px);
                     opacity: 0;
                 }
-            }
-
-            .animate-shimmer {
-                animation: shimmer 2s ease-in-out infinite;
-                background-size: 200% 100%;
             }
 
             .message-slide {
@@ -472,15 +393,24 @@
 
         <script>
             document.addEventListener('DOMContentLoaded', function() {
-                // Initialize separated animations
-                let carAnimation, bikeAnimation;
-
                 // Cache configuration
                 const CACHE_VERSION = 'v1';
-                const CACHE_DURATION = 24 * 60 * 60 * 1000; // 24 hours in milliseconds
+                const CACHE_DURATION = 24 * 60 * 60 * 1000; // 24 hours
                 const CACHE_KEYS = {
                     carAnimation: `car-animation-${CACHE_VERSION}`,
                     bikeAnimation: `bike-animation-${CACHE_VERSION}`
+                };
+
+                // Basic animation optimization settings
+                const animationConfig = {
+                    autoPlay: true,
+                    loop: true,
+                    renderer: 'svg',
+                    rendererSettings: {
+                        progressiveLoad: true,
+                        hideOnTransparent: true,
+                        preserveAspectRatio: 'xMidYMid meet'
+                    }
                 };
 
                 // Check if cached data is still valid
@@ -494,7 +424,10 @@
                         // Check localStorage first
                         const cached = localStorage.getItem(cacheKey);
                         if (cached) {
-                            const { data, timestamp } = JSON.parse(cached);
+                            const {
+                                data,
+                                timestamp
+                            } = JSON.parse(cached);
                             if (isCacheValid(timestamp)) {
                                 console.log('Loading animation from cache:', cacheKey);
                                 return data;
@@ -509,13 +442,13 @@
                                 'Cache-Control': 'max-age=86400'
                             }
                         });
-                        
+
                         if (!response.ok) {
                             throw new Error(`HTTP error! status: ${response.status}`);
                         }
 
                         const data = await response.json();
-                        
+
                         // Cache the response
                         localStorage.setItem(cacheKey, JSON.stringify({
                             data: data,
@@ -525,29 +458,94 @@
                         return data;
                     } catch (error) {
                         console.error('Failed to load animation data:', error);
-                        
+
                         // Fallback to cached data even if expired
                         const cached = localStorage.getItem(cacheKey);
                         if (cached) {
-                            const { data } = JSON.parse(cached);
+                            const {
+                                data
+                            } = JSON.parse(cached);
                             console.warn('Using expired cached data as fallback');
                             return data;
                         }
-                        
+
                         throw error;
                     }
                 }
 
+                // Load and initialize animation
+                async function initAnimation(containerId, jsonUrl, cacheKey) {
+                    try {
+                        const container = document.getElementById(containerId);
+                        if (!container) {
+                            console.warn(`Animation container not found: ${containerId}`);
+                            return;
+                        }
+
+                        // Hide loading skeleton
+                        const loadingElement = document.getElementById(containerId.replace('-animation',
+                            '-loading'));
+                        if (loadingElement) {
+                            loadingElement.style.display = 'none';
+                        }
+
+                        // Load animation data
+                        const animationData = await loadAnimationData(jsonUrl, cacheKey);
+
+                        // Initialize Lottie animation
+                        const animation = window.lottie.loadAnimation({
+                            container: container,
+                            renderer: animationConfig.renderer,
+                            loop: animationConfig.loop,
+                            autoplay: animationConfig.autoPlay,
+                            animationData: animationData,
+                            rendererSettings: animationConfig.rendererSettings
+                        });
+
+                        // Show animation container
+                        container.style.opacity = '1';
+
+                        // Performance optimization: pause when not visible
+                        const observer = new IntersectionObserver((entries) => {
+                            entries.forEach(entry => {
+                                if (entry.isIntersecting) {
+                                    animation.play();
+                                } else {
+                                    animation.pause();
+                                }
+                            });
+                        }, {
+                            threshold: 0.1
+                        });
+
+                        observer.observe(container);
+
+                        return animation;
+                    } catch (error) {
+                        console.error(`Failed to initialize animation ${containerId}:`, error);
+
+                        // Show loading skeleton as fallback
+                        const loadingElement = document.getElementById(containerId.replace('-animation',
+                            '-loading'));
+                        if (loadingElement) {
+                            loadingElement.style.display = 'block';
+                        }
+                    }
+                }
+
                 function initAnimations() {
-                    // Hide loading skeletons temporarily
-                    const carLoading = document.getElementById('car-loading');
-                    if (carLoading) carLoading.style.display = 'none';
+                    // Only load animations for current device size
+                    const isDesktop = window.innerWidth >= 1024; // lg breakpoint
 
-                    const bikeLoading = document.getElementById('bike-loading');
-                    if (bikeLoading) bikeLoading.style.display = 'none';
-
-                    const bikeLoadingDesktop = document.getElementById('bike-loading-desktop');
-                    if (bikeLoadingDesktop) bikeLoadingDesktop.style.display = 'none';
+                    if (isDesktop) {
+                        // Load desktop animations
+                        initAnimation('car-animation-desktop', '/json/car-moving.json', CACHE_KEYS.carAnimation);
+                        initAnimation('bike-animation-desktop', '/json/bike-moving.json', CACHE_KEYS.bikeAnimation);
+                    } else {
+                        // Load mobile animations
+                        initAnimation('car-animation', '/json/car-moving.json', CACHE_KEYS.carAnimation);
+                        initAnimation('bike-animation', '/json/bike-moving.json', CACHE_KEYS.bikeAnimation);
+                    }
                 }
 
                 // Initialize when Lottie is loaded

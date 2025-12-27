@@ -3,8 +3,8 @@
 @push('styles')
 <style>
     :root {
-        --primary-color: #0369a1;
-        --primary-hover: #0e7490;
+        --primary-color: #2563eb;
+        --primary-hover: #1d4ed8;
         --text-primary: #1f2937;
         --text-secondary: #4b5563;
         --bg-primary: #ffffff;
@@ -20,8 +20,8 @@
 
     @media (prefers-color-scheme: dark) {
         :root {
-            --primary-color: #0ea5e9;
-            --primary-hover: #38bdf8;
+            --primary-color: #2563eb;
+            --primary-hover: #1d4ed8;
             --text-primary: #f3f4f6;
             --text-secondary: #9ca3af;
             --bg-primary: #0f172a;
@@ -75,7 +75,7 @@
     
     .input-field:focus {
         transform: translateY(-1px);
-        box-shadow: 0 0 0 3px rgba(14, 165, 233, 0.2);
+        box-shadow: 0 0 0 3px rgba(37, 99, 235, 0.2);
         border-color: var(--primary-color);
         outline: none;
     }
@@ -84,21 +84,21 @@
         width: 100%;
         padding: 1.25rem 2rem;
         border-radius: 0.75rem;
-        background: linear-gradient(135deg, var(--primary-color) 0%, var(--primary-hover) 100%);
+        background: linear-gradient(135deg, #2563eb 0%, #1d4ed8 100%);
         color: white;
         font-weight: 700;
         font-size: 1.125rem;
         letter-spacing: 0.5px;
         text-transform: uppercase;
         border: 2px solid rgba(255, 255, 255, 0.2);
-        box-shadow: 0 10px 20px -5px rgba(3, 105, 161, 0.3);
+        box-shadow: 0 10px 20px -5px rgba(37, 99, 235, 0.3);
         transition: all 0.3s ease-out;
         cursor: pointer;
     }
     
     .btn-primary:hover:not(:disabled) {
         transform: translateY(-2px);
-        box-shadow: 0 15px 30px -5px rgba(3, 105, 161, 0.4);
+        box-shadow: 0 15px 30px -5px rgba(37, 99, 235, 0.4);
         border-color: rgba(255, 255, 255, 0.3);
     }
     
@@ -197,19 +197,12 @@
             <div class="login-card rounded-2xl p-8">
                 <div class="text-center pb-4">
                     <div class="flex justify-center mb-6">
-                        <div class="p-3 bg-gradient-to-br from-[#0369a1] to-[#0e7490] rounded-2xl shadow-lg transform rotate-6">
-                            <div class="bg-white p-2 rounded-xl shadow-inner -rotate-6 dark:bg-gray-800">
-                                <img 
-                                    src="{{ asset('logo.png') }}" 
-                                    alt="Logo" 
-                                    class="h-16 w-16 object-contain"
-                                    width="64"
-                                    height="64"
-                                >
-                            </div>
-                        </div>
+                        <a href="{{ route('home', ['locale' => app()->getLocale()]) }}" class="flex items-center space-x-1">
+                            <img src="{{ asset('logo.png') }}" alt="MK Driving School Logo" class="h-16 w-16 rounded-lg shadow-md"
+                                onerror="this.onerror=null; this.src='{{ asset('images/logo.png') }}'">
+                        </a>
                     </div>
-                    <h1 class="text-4xl font-extrabold text-gray-900 mb-3 bg-gradient-to-r from-[#0369a1] to-[#0e7490] bg-clip-text text-transparent">
+                    <h1 class="text-4xl font-extrabold text-gray-900 dark:text-white mb-3">
                         {{ __('auth.register.title') }}
                     </h1>
                     <p class="text-gray-600 text-base font-medium dark:text-gray-300">

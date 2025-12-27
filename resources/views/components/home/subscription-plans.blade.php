@@ -160,7 +160,7 @@
     <div class="max-w-7xl mx-auto px-2 sm:px-4 lg:px-8">
         <!-- Section Header -->
         <x-section-header :title="__('home.subscriptionPlans.title')" :href="route('subscriptions', app()->getLocale())" />
-        
+
         <div class="mt-8">
 
             <div class="grid md:grid-cols-2 lg:grid-cols-4 gap-6">
@@ -176,12 +176,22 @@ $isCurrentPlan = is_callable($plan['is_current'] ?? null)
     : $plan['is_current'] ?? false;
                     @endphp
 
-                    <div class="group relative pt-6 h-full rounded-2xl overflow-visible shadow-lg hover:shadow-2xl transition-all duration-300 transform hover:-translate-y-2 {{ $getCardBgClass($planType) }} fade-in"
+                    <div class="group relative pt-6 h-full rounded-2xl overflow-visible shadow-lg hover:shadow-2xl transition-all duration-300 transform hover:-translate-y-2 {{ $isCurrentPlan ? 'border-4 border-green-500 bg-gradient-to-br from-green-50 to-green-100 dark:from-green-950/60 dark:to-green-900/50 shadow-green-200/40 dark:shadow-green-900/20' : $getCardBgClass($planType) }} fade-in"
                         style="animation-delay: {{ $loop->index * 0.1 }}s;">
-                        @if ($isPopular)
+                        @if ($isPopular && !$isCurrentPlan)
                             <div
                                 class="absolute -top-4 left-1/2 -translate-x-1/2 bg-gradient-to-r {{ $getBadgeClass($planType) }} text-white text-sm font-extrabold px-6 py-1.5 rounded-full shadow-lg z-50 whitespace-nowrap transform group-hover:scale-105 transition-transform duration-300">
                                 {{ __('home.subscriptionPlans.mostPopular') }}
+                            </div>
+                        @endif
+                        @if ($isCurrentPlan)
+                            <div
+                                class="absolute -top-4 left-1/2 -translate-x-1/2 bg-gradient-to-r from-green-600 to-green-700 text-white text-sm font-extrabold px-6 py-1.5 rounded-full shadow-lg z-50 whitespace-nowrap transform group-hover:scale-105 transition-transform duration-300 flex items-center">
+                                <svg class="w-4 h-4 mr-2" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
+                                        d="M5 13l4 4L19 7"></path>
+                                </svg>
+                                {{ __('home.subscriptionPlans.currentPlan') }}
                             </div>
                         @endif
 
@@ -250,10 +260,10 @@ $isCurrentPlan = is_callable($plan['is_current'] ?? null)
                                 @if ($isCurrentPlan)
                                     <div class="relative group">
                                         <div
-                                            class="absolute -inset-0.5 bg-gradient-to-r from-gray-400 to-gray-300 dark:from-gray-600 dark:to-gray-700 rounded-lg opacity-70 group-hover:opacity-100 blur transition duration-1000 group-hover:duration-300">
+                                            class="absolute -inset-0.5 bg-gradient-to-r from-green-500 to-green-600 rounded-lg opacity-70 group-hover:opacity-100 blur transition duration-1000 group-hover:duration-300">
                                         </div>
                                         <button
-                                            class="relative w-full text-center bg-gray-300 dark:bg-gray-700 text-gray-800 dark:text-gray-200 font-semibold py-3 px-6 rounded-lg border-2 border-white/20 shadow-md transition-all duration-300 transform hover:scale-[1.02]"
+                                            class="relative w-full text-center bg-gradient-to-r from-green-600 to-green-700 hover:from-green-700 hover:to-green-800 text-white font-semibold py-3 px-6 rounded-lg border-2 border-white/20 shadow-lg transition-all duration-300 transform hover:scale-[1.02]"
                                             disabled>
                                             <span class="flex items-center justify-center">
                                                 <svg class="w-5 h-5 mr-2" fill="none" stroke="currentColor"
@@ -355,24 +365,43 @@ $isCurrentPlan = is_callable($plan['is_current'] ?? null)
             </div>
 
             <!-- Help section -->
-            <div class="mt-12 text-center fade-in delay-400">
-                <p class="text-gray-600 dark:text-gray-300 mb-3">{{ __('home.subscriptionPlans.needHelp') }}</p>
-                <div class="flex items-center justify-center space-x-6">
-                    <a href="mailto:mkscholars250@gmail.com"
-                        class="inline-flex items-center text-blue-600 dark:text-blue-400 font-medium hover:text-blue-800 dark:hover:text-blue-300 transition-colors duration-200 group">
-                        <span>{{ __('home.subscriptionPlans.contact_us') }}</span>
-                        <svg class="w-4 h-4 ml-1 transform group-hover:translate-x-1 transition-transform duration-200"
-                            fill="none" viewBox="0 0 24 24" stroke="currentColor">
-                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
-                                d="M3 8l7.89 5.26a2 2 0 002.22 0L21 8M5 19h14a2 2 0 002-2V7a2 2 0 00-2-2H5a2 2 0 00-2 2v10a2 2 0 002 2z" />
-                        </svg>
-                    </a>
-                    <span class="text-gray-400">|</span>
-                    <a href="https://wa.me/250798611161" target="_blank" rel="noopener noreferrer"
-                        class="inline-flex items-center text-green-600 dark:text-green-400 font-medium hover:text-green-700 dark:hover:text-green-300 transition-colors duration-200 group">
-                        <i class="fab fa-whatsapp text-xl mr-2"></i>
-                        <span>WhatsApp</span>
-                    </a>
+            <div class="my-8 text-center fade-in delay-400">
+                <div class="max-w-xl mx-auto p-6 bg-gradient-to-br from-blue-50/50 to-orange-50/30 dark:from-blue-900/20 dark:to-orange-900/10 rounded-2xl border border-blue-100/50 dark:border-blue-800/30 shadow-lg backdrop-blur-sm">
+                    <p class="text-lg font-semibold bg-gradient-to-r from-blue-700 to-blue-900 dark:from-blue-300 dark:to-blue-500 bg-clip-text text-transparent mb-6">
+                        {{ __('home.subscriptionPlans.needHelp') }}
+                    </p>
+                    <div class="flex flex-col sm:flex-row items-center justify-center gap-4 sm:gap-8">
+                        <a href="mailto:mkscholars250@gmail.com"
+                            class="group relative inline-flex items-center px-6 py-3 bg-gradient-to-r from-blue-600 to-blue-700 hover:from-blue-700 hover:to-blue-800 text-white font-medium rounded-xl shadow-md hover:shadow-lg transform transition-all duration-300 hover:scale-105 hover:-translate-y-0.5">
+                            <div class="absolute inset-0 bg-gradient-to-r from-blue-400/20 to-blue-500/20 rounded-xl opacity-0 group-hover:opacity-100 transition-opacity duration-300"></div>
+                            <svg class="w-5 h-5 mr-2 relative z-10" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
+                                    d="M3 8l7.89 5.26a2 2 0 002.22 0L21 8M5 19h14a2 2 0 002-2V7a2 2 0 00-2-2H5a2 2 0 00-2 2v10a2 2 0 002 2z" />
+                            </svg>
+                            <span class="relative z-10">{{ __('home.subscriptionPlans.contact_us') }}</span>
+                            <svg class="w-4 h-4 ml-2 transform group-hover:translate-x-1 transition-transform duration-300 relative z-10" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 5l7 7-7 7" />
+                            </svg>
+                        </a>
+                        
+                        <div class="hidden sm:block">
+                            <div class="w-px h-8 bg-gradient-to-b from-transparent via-gray-300 to-transparent dark:via-gray-600"></div>
+                        </div>
+                        
+                        <div class="sm:hidden">
+                            <div class="w-8 h-px bg-gradient-to-r from-transparent via-gray-300 to-transparent dark:via-gray-600"></div>
+                        </div>
+                        
+                        <a href="https://wa.me/250798611161" target="_blank" rel="noopener noreferrer"
+                            class="group relative inline-flex items-center px-6 py-3 bg-gradient-to-r from-green-500 to-green-600 hover:from-green-600 hover:to-green-700 text-white font-medium rounded-xl shadow-md hover:shadow-lg transform transition-all duration-300 hover:scale-105 hover:-translate-y-0.5">
+                            <div class="absolute inset-0 bg-gradient-to-r from-green-400/20 to-green-500/20 rounded-xl opacity-0 group-hover:opacity-100 transition-opacity duration-300"></div>
+                            <i class="fab fa-whatsapp text-xl mr-2 relative z-10"></i>
+                            <span class="relative z-10">WhatsApp</span>
+                            <svg class="w-4 h-4 ml-2 transform group-hover:translate-x-1 transition-transform duration-300 relative z-10" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 5l7 7-7 7" />
+                            </svg>
+                        </a>
+                    </div>
                 </div>
             </div>
         </div>

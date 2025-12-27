@@ -146,4 +146,34 @@ return [
         'success_message' => 'Twohereje imeri ifite umurongo wo guhinduriraho ijambo ry\'ibanga!',
         'error_message' => 'Ntago tubona konti ifite iyo imeri.'
     ],
+    
+    // Welcome Email
+    'welcome_email' => [
+        'subject' => 'Murakaza neza kuri MK Driving! Tangira urugendo rwawe none',
+        'title' => 'Murakaza neza kuri MK Driving!',
+        'subtitle' => 'Urugendo rwo kuba umushoferi wizewe rutangirira aha',
+        'greeting' => 'Murakaza neza, :name',
+        'marketing_intro' => 'Murakoze kwiyandikisha kuri MK Driving! Twishimiye kubakira no kubafasha gutangira urugendo rwo kuba umushoferi. Tangira byoroshye:',
+        'verify_button' => 'Kwemeza Imeri Yawe',
+        'verify_description' => 'Bungabunge konti witoze ufite umutekano',
+        'free_quiz_button' => 'Gerageza Umwitozo w\'Ubuntu',
+        'free_quiz_description' => 'Gerageza ubumenyi bware n\'umwitozo w\'ubuntu kuri MK!',
+        'pricing_button' => 'Kwandikisha Ifatabuguzi',
+        'pricing_description' => 'Ihitamo ifatabuguzi rikunogeye',
+        'alternative' => 'Urubuga rwo hejuru nirudakora kopiya iyi mpuza muri browser yawe:',
+        'benefits_title' => 'Kuki Wahitamo MK Driving?',
+        'benefits_description' => 'Ufite konti natwe, ubasha kubona imyitozo yose, igihe wakwiyandikisha n\'ubumenyi bwawe uko bwiyongera',
+        'contact_support' => 'Ufite ikibazo? Twandikire kuri :email'
+    ],
+    
+    // Reset Password Email
+    'reset_password_email' => [
+        'title' => 'Hindura ijambo ry\'ibanga',
+        'subtitle' => 'Bungabunge konti yawe n\'ijambo ry\'ibanga rishya',
+        'you_are_receiving' => 'Ukira iyi imeri kuko twakiriye request yo guhindura ijambo ry\'ibanga rya konti yawe.',
+        'reset_button' => 'Hindura Ijambo ry\'ibanga',
+        'expiry_notice' => 'Iyi link yo guhindura ijambo ry\'ibanga izarangira iminota :count.',
+        'ignore_if_not_requested' => 'Ntabwo wamaze request yo guhindura ijambo ry\'ibanga, nta gikorwa cyongera gikenewe.',
+        'contact_support' => 'Niba ufite ikibazo mu kanda akabuto ka guhindura ijambo ry\'ibanga, yakoporora no gushyiraho URL munsi ya browser yawe cyangwa ukamwire kuri team yacu yo gufasha kuri :email.'
+    ],
 ];

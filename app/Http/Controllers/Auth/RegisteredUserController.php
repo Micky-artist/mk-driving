@@ -6,11 +6,13 @@ use App\Http\Controllers\Controller;
 use App\Models\User;
 use App\Models\Visitor;
 use App\Services\DeviceTrackingService;
+use App\Mail\WelcomeEmailNotification;
 use Illuminate\Auth\Events\Registered;
 use Illuminate\Http\Request;
 use Illuminate\Http\Response;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\Hash;
+use Illuminate\Support\Facades\Mail;
 use Illuminate\Validation\Rules;
 
 class RegisteredUserController extends Controller
@@ -91,6 +93,9 @@ class RegisteredUserController extends Controller
 
             $user = User::create($userData);
 
+            // Send welcome email with marketing links
+            Mail::to($user->email)->locale($user->locale ?? app()->getLocale())->send(new WelcomeEmailNotification($user));
+
             event(new Registered($user));
             Auth::login($user);
 
@@ -102,8 +107,8 @@ class RegisteredUserController extends Controller
                 return response()->json(['redirect' => $returnTo]);
             }
             
-            // Default redirect to home
-            return response()->json(['redirect' => route('home', ['locale' => app()->getLocale()])]);
+            // Default redirect to dashboard (since user is now logged in)
+            return response()->json(['redirect' => route('dashboard', ['locale' => app()->getLocale()])]);
             
         } catch (\Illuminate\Validation\ValidationException $e) {
             return response()->json([

@@ -15,8 +15,8 @@ class SubscriptionPlanSeeder extends Seeder
         $subscriptionPlans = [
             [
                 'name' => json_encode([
-                    'en' => 'Basic Plan',
-                    'rw' => 'Ifatabuguze ry\'Umunsi'
+                    'en' => 'One Day Plan',
+                    'rw' => 'Ifatabuguzi ry\'Umunsi'
                 ]),
                 'description' => json_encode([
                     'en' => 'Access to 15 quizzes for 24 hours',
@@ -38,8 +38,8 @@ class SubscriptionPlanSeeder extends Seeder
             ],
             [
                 'name' => json_encode([
-                    'en' => 'Standard Plan',
-                    'rw' => 'Ifatabuguze ry\'Icyumweru'
+                    'en' => 'One Week Plan',
+                    'rw' => 'Ifatabuguzi ry\'Icyumweru'
                 ]),
                 'description' => json_encode([
                     'en' => 'Access to 25 quizzes for 7 days',
@@ -61,8 +61,8 @@ class SubscriptionPlanSeeder extends Seeder
             ],
             [
                 'name' => json_encode([
-                    'en' => 'Premium Plan',
-                    'rw' => 'Ifatabuguze ry\'Ukwezi'
+                    'en' => 'One Month Plan',
+                    'rw' => 'Ifatabuguzi ry\'Ukwezi'
                 ]),
                 'description' => json_encode([
                     'en' => 'Unlimited quizzes for 1 month',
@@ -84,8 +84,8 @@ class SubscriptionPlanSeeder extends Seeder
             ],
             [
                 'name' => json_encode([
-                    'en' => 'Gold Unlimited Plan',
-                    'rw' => "Ifatabuguze Ritarangira"
+                    'en' => 'Unlimited Plan',
+                    'rw' => "Ifatabuguzi Ritarangira"
                 ]),
                 'description' => json_encode([
                     'en' => 'Unlimited access with no time limit',

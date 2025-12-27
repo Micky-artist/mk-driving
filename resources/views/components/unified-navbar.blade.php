@@ -2,7 +2,7 @@
 
 <nav class="w-full bg-[#2563eb] dark:bg-blue-900 shadow-lg z-50 overflow-hidden md:overflow-visible md:fixed transition-colors duration-200"
     x-data="navbarComponent()"
-    <div class="w-full max-w-full md:max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+    <div class="w-full max-w-full md:max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 md:ml-1 md:mr-1">
         <div class="flex items-center justify-between h-16">
             <!-- Mobile menu button (left on mobile, hidden on desktop) -->
             <div class="flex-shrink-0 flex items-center md:hidden">
@@ -38,7 +38,7 @@
                 @auth
                     @if ($showUserStats)
                         <!-- Mobile Stats -->
-                        <div class="flex items-center space-x-3 flex-wrap">
+                        <div class="flex items-center space-x-3 flex-wrap mr-2">
                             <div class="flex items-center space-x-1 bg-blue-500/20 rounded-lg px-2 py-1">
                                 <span class="text-blue-100 text-sm">🎯</span>
                                 <span class="text-blue-100 text-sm font-bold" x-text="Math.round(userStats.averageScore) + '%'">--%</span>
@@ -60,7 +60,7 @@
                     @endif
                 @else
                     <!-- Mobile Auth Buttons -->
-                    <div class="flex items-center space-x-3">
+                    <div class="flex items-center space-x-3 mr-2">
                         <form action="{{ route('login', ['locale' => app()->getLocale()]) }}" method="GET" class="flex-shrink-0">
                             <button type="submit"
                                 class="h-8 px-3 text-sm font-medium text-white bg-white/20 hover:bg-white/30 backdrop-blur-sm border border-white/30 rounded-lg transition-all duration-200 shadow-sm hover:shadow-md flex items-center justify-center">
@@ -234,14 +234,12 @@
                             @endforeach
                         </div>
                         
-                        <form method="POST" action="{{ route('logout', ['locale' => app()->getLocale()]) }}"
-                            class="ml-2">
-                            @csrf
-                            <button type="submit"
-                                class="text-blue-200 hover:text-white hover:border-blue-200 border-transparent border-b-2 px-1 pt-1 text-sm font-medium transition-colors duration-200">
-                                {{ __('navigation.logout') }}
-                            </button>
-                        </form>
+                        <!-- Profile Icon Link -->
+                        <a href="{{ route('profile.show', ['locale' => app()->getLocale()]) }}" 
+                           class="flex items-center justify-center w-8 h-8 rounded-full bg-white/20 hover:bg-white/30 text-white transition-all duration-200 group"
+                           title="{{ __('navigation.profile') }}">
+                            <i class="fas fa-user text-sm"></i>
+                        </a>
                     </div>
                 @else
                     <div class="flex items-center space-x-3">
@@ -413,8 +411,10 @@
             <!-- User Section -->
             <div class="border-t border-gray-200 dark:border-gray-700 px-6 py-4">
                 @auth
-                    <!-- User info -->
-                    <div class="flex items-center mb-4 p-3 bg-gray-50 dark:bg-gray-700 rounded-lg">
+                    <!-- User info (clickable) -->
+                    <a href="{{ route('profile.show', ['locale' => app()->getLocale()]) }}" 
+                       @click="mobileMenuOpen = false"
+                       class="flex items-center mb-4 p-3 bg-gray-50 dark:bg-gray-700 rounded-lg hover:bg-gray-100 dark:hover:bg-gray-600 transition-colors duration-150">
                         <div
                             class="h-10 w-10 rounded-full bg-gradient-to-br from-blue-500 to-blue-600 flex items-center justify-center text-white font-semibold text-sm flex-shrink-0">
                             {{ strtoupper(substr(Auth::user()->name, 0, 1)) }}
@@ -427,9 +427,10 @@
                                 {{ Auth::user()->email }}
                             </p>
                         </div>
-                    </div>
+                    </a>
 
                     <div class="space-y-2">
+                        <!-- Logout -->
                         <form method="POST" action="{{ route('logout', ['locale' => app()->getLocale()]) }}" id="mobile-logout-form" x-data="{ submitting: false }" @submit.prevent="
                             submitting = true;
                             const form = document.getElementById('mobile-logout-form');

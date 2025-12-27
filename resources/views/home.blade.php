@@ -5,7 +5,7 @@
         @php
             // Get all quizzes including the guest quiz
             $guestQuiz = $quizzes->firstWhere('is_guest_quiz', true);
-            $otherQuizzes = $quizzes->where('is_guest_quiz', false)->take(3);
+            $otherQuizzes = $quizzes->where('is_guest_quiz', false)->take(4);
         @endphp
 
         <!-- Top Hero with Car Animation (Animations Only) -->
@@ -19,9 +19,12 @@
         </div>
 
         <!-- Quiz-Taker Section (Full Width, Unconstrained) -->
-        @if ($guestQuiz = $quizzes->firstWhere('is_guest_quiz', true))
+        @php
+            $guestQuiz = $quizzes->firstWhere('is_guest_quiz', true);
+        @endphp
+        @if($guestQuiz && isset($guestQuiz['id']) && isset($guestQuiz['title']) && isset($guestQuiz['questions']))
         <div class="bg-gray-50 dark:bg-gray-800 py-8 relative" id="guest-quiz-section">
-            <div class="px-4">
+            <div class="px-2">
                 <x-section-header 
                     :title="auth()->check() ? __('home.guestQuiz.continueLearning') : __('home.guestQuiz.trySampleQuiz')" 
                     :href="route('dashboard.quizzes.show', ['locale' => app()->getLocale(), 'quiz' => $guestQuiz['id']])" />

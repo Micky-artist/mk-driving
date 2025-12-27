@@ -649,8 +649,11 @@
                             </svg>
                         </div>
                         <div class="ml-3">
-                            <p class="text-sm font-medium text-white">{{ Auth::user()->name }}</p>
-                            <p class="text-xs font-medium text-white/80">{{ Auth::user()->email }}</p>
+                            <a href="{{ route('profile.show', ['locale' => app()->getLocale()]) }}" 
+                               class="block hover:cursor-pointer">
+                                <p class="text-sm font-medium text-white">{{ Auth::user()->name }}</p>
+                                <p class="text-xs font-medium text-white/80">{{ Auth::user()->email }}</p>
+                            </a>
                         </div>
                         <div class="ml-auto">
                             <form method="POST" action="{{ route('logout') }}">

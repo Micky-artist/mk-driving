@@ -17,11 +17,41 @@ class TrackUserActivity
     {
         $response = $next($request);
 
-        if (Auth::check() && $activityType) {
-            $this->trackActivity($activityType, $request);
+        if (Auth::check()) {
+            // Check for daily visit points on home page
+            if ($this->shouldAwardDailyVisitPoints($request)) {
+                $this->awardDailyVisitPoints($request);
+            }
+            
+            // Handle specific activity types if provided
+            if ($activityType) {
+                $this->trackActivity($activityType, $request);
+            }
         }
 
         return $response;
+    }
+
+    private function shouldAwardDailyVisitPoints(Request $request): bool
+    {
+        // Only award points for GET requests to the home page
+        return $request->isMethod('GET') && 
+               $request->routeIs('home') &&
+               !$request->ajax();
+    }
+
+    private function awardDailyVisitPoints(Request $request): void
+    {
+        $userId = Auth::id();
+        
+        $metadata = [
+            'ip_address' => $request->ip(),
+            'user_agent' => $request->userAgent(),
+            'visit_date' => date('Y-m-d'),
+            'visited_at' => atomString(),
+        ];
+
+        $this->pointsService->awardPoints($userId, 'daily_visit', $metadata);
     }
 
     private function trackActivity(string $activityType, Request $request): void
