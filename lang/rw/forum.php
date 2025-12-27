@@ -102,7 +102,7 @@ return [
     'all_time' => 'Ibihe byose',
     'weekly' => 'Icyumweru',
     'monthly' => 'Ukwezi',
-    'points' => 'Amanota',
+    'points' => 'Amanota: :points',
     'your_rank' => 'Umwanya wawe',
     'your_weekly_rank' => 'Umwanya wawe',
     'you' => 'Wowe',

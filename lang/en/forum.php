@@ -101,7 +101,7 @@ return [
     'all_time' => 'All Time',
     'weekly' => 'Weekly',
     'monthly' => 'Monthly',
-    'points' => 'points',
+    'points' => ':points points',
     'your_rank' => 'Your Rank',
     'your_weekly_rank' => 'Your Rank',
     'you' => 'You',

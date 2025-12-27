@@ -2,53 +2,29 @@
 <div class="hidden lg:block">
     <div x-data="leaderboardTabs()" x-init="init()">
         <!-- Weekly Leaderboard Header -->
-        <div class="bg-white dark:bg-gray-800 rounded-xl shadow-sm border border-gray-200 dark:border-gray-700 p-6">
-            <div class="flex items-center justify-center mb-4">
-                <div class="flex items-center space-x-8">
-                    <h3 class="text-xl font-semibold text-gray-900 dark:text-white flex items-center space-x-2">
-                        <svg class="w-6 h-6 text-blue-500" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 19v-6a2 2 0 00-2-2H5a2 2 0 00-2 2v6a2 2 0 002 2h2a2 2 0 002-2zm0 0V9a2 2 0 012-2h2a2 2 0 012 2v10m-6 0a2 2 0 002 2h2a2 2 0 002-2m0 0V5a2 2 0 012-2h2a2 2 0 012 2v14a2 2 0 01-2 2h-2a2 2 0 01-2-2z" />
-                        </svg>
-                        <span>{{ __('forum.weekly_leaderboard') }}</span>
-                    </h3>
-                    @auth
-                        @if($userPoints)
-                            <div class="text-right">
-                                <div class="text-sm font-medium text-gray-900 dark:text-white">{{ __('forum.your_weekly_rank') }}: #{{ $userRank }}</div>
-                                <div class="text-xs text-gray-500 dark:text-gray-400">{{ $userPoints['weekly'] }} {{ __('forum.points') }}</div>
-                            </div>
-                        @endif
-                    @endauth
-                </div>
+        <div class="bg-white dark:bg-gray-800 rounded-xl shadow-sm border border-gray-200 dark:border-gray-700 p-4">
+            <!-- Title -->
+            <div class="text-center mb-4">
+                <h3 class="text-xl font-semibold text-gray-900 dark:text-white flex items-center justify-center space-x-2">
+                    <svg class="w-6 h-6 text-blue-500" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 19v-6a2 2 0 00-2-2H5a2 2 0 00-2 2v6a2 2 0 002 2h2a2 2 0 002-2zm0 0V9a2 2 0 012-2h2a2 2 0 012 2v10m-6 0a2 2 0 002 2h2a2 2 0 002-2m0 0V5a2 2 0 012-2h2a2 2 0 012 2v14a2 2 0 01-2 2h-2a2 2 0 01-2-2z" />
+                    </svg>
+                    <span>{{ __('forum.weekly_leaderboard') }}</span>
+                </h3>
             </div>
             
-            <div class="text-center">
-                <p class="text-sm text-gray-600 dark:text-gray-400">{{ __('forum.leaderboard_resets_weekly') }}</p>
-            </div>
+            <!-- User Position and Points -->
+            @auth
+                @if($userPoints)
+                    <div class="text-center">
+                        <span class="text-sm font-medium text-gray-900 dark:text-white">{{ __('forum.your_weekly_rank') }}: #{{ $userRank }}</span>
+                        <span class="text-xs text-gray-500 dark:text-gray-400 ml-2">{{ __('forum.points', ['points' => $userPoints['weekly']]) }}</span>
+                    </div>
+                @endif
+            @endauth
         </div>
 
-        <!-- User Rank Info (if authenticated) -->
-        @auth
-            @if($userPoints)
-                <div class="bg-gradient-to-r from-blue-50 to-indigo-50 dark:from-blue-900/20 dark:to-indigo-900/20 rounded-xl p-4 border border-blue-200 dark:border-blue-700/50">
-                    <div class="flex items-center justify-between">
-                        <div class="flex items-center space-x-3">
-                            <div class="w-10 h-10 bg-gradient-to-r from-blue-500 to-blue-600 rounded-full flex items-center justify-center text-white font-bold">
-                                {{ substr(auth()->user()->first_name, 0, 1) }}{{ substr(auth()->user()->last_name, 0, 1) }}
-                            </div>
-                            <div>
-                                <p class="text-sm font-medium text-gray-900 dark:text-white">{{ __('forum.your_weekly_rank') }}: #{{ $userRank }}</p>
-                                <p class="text-xs text-gray-500 dark:text-gray-400">{{ $userPoints['weekly'] }} {{ __('forum.points') }}</p>
-                            </div>
-                        </div>
-                        <div class="text-right">
-                            <p class="text-xs text-gray-500 dark:text-gray-400">{{ __('forum.leaderboard_resets_weekly') }}</p>
-                        </div>
-                    </div>
-                </div>
-            @endif
-        @endauth
-
+        
             <!-- Top 3 Podium -->
             @if(count($leaderboard) >= 3)
                 <div class=" mt-6 bg-gradient-to-br from-white to-gray-50 dark:from-gray-800 dark:to-gray-900 rounded-2xl shadow-lg border border-gray-200 dark:border-gray-700 py-4 p-6 backdrop-blur-sm">
@@ -135,21 +111,6 @@
                                         <div class="group p-4 border-b border-gray-100 dark:border-gray-700 last:border-b-0 hover:bg-gradient-to-r hover:from-blue-50 hover:to-indigo-50 dark:hover:from-blue-900/20 dark:hover:to-indigo-900/20 transition-all duration-200 cursor-pointer
                                              {{ $entry['user']['id'] === Auth::id() ? 'bg-gradient-to-r from-blue-50 to-indigo-50 dark:from-blue-900/20 dark:to-indigo-900/20' : '' }}">
                                             <div class="flex items-center space-x-4">
-                                                <!-- Rank with enhanced styling -->
-                                                <div class="flex-shrink-0 relative">
-                                                    <div class="w-10 h-10 rounded-full flex items-center justify-center text-white font-bold text-sm shadow-md group-hover:shadow-lg transition-shadow"
-                                                         style="background: linear-gradient(to bottom right, 
-                                                             @if($index + 1 <= 5) 
-                                                                 #4ade80, #16a34a
-                                                             @elseif($index + 1 <= 10) 
-                                                                 #60a5fa, #2563eb
-                                                             @else 
-                                                                 #9ca3af, #4b5563
-                                                             @endif)">
-                                                        {{ $index + 1 }}
-                                                    </div>
-                                                </div>
-                                                
                                                 <!-- User Avatar with hover effect -->
                                                 <div class="flex-shrink-0 relative group">
                                                     <div class="w-12 h-12 rounded-full bg-gradient-to-br from-blue-500 to-blue-600 flex items-center justify-center text-white font-bold shadow-md group-hover:shadow-lg transition-all duration-200 group-hover:scale-105">
@@ -198,7 +159,7 @@
                                                        @endif)">
                                                         {{ $entry['points'] }}
                                                     </p>
-                                                    <p class="text-xs text-gray-500 dark:text-gray-400">{{ __('forum.points') }}</p>
+                                                    <p class="text-xs text-gray-500 dark:text-gray-400">{{ __('forum.points', ['points' => $entry['points']]) }}</p>
                                                 </div>
                                             </div>
                                         </div>
