@@ -73,41 +73,72 @@
                 <div class="p-4 border-b border-gray-200 dark:border-gray-700">
                     <div class="flex items-center justify-between">
                         <h2 class="text-lg font-semibold text-gray-900 dark:text-white">{{ __('dashboard.continue_learning') }}</h2>
-                        <a href="{{ route('dashboard.quizzes.index', ['locale' => app()->getLocale(), 'see' => 'in-progress']) }}" 
+                        <a href="{{ route('dashboard.quizzes.index', ['locale' => app()->getLocale()]) }}" 
                            class="text-sm text-blue-600 dark:text-blue-400 hover:text-blue-800 dark:hover:text-blue-300 font-medium">
                             {{ __('dashboard.quizzes.more_quizzes') }}
                         </a>
                     </div>
                 </div>
-                <div class="p-4">
-                    @php
-                        $currentQuiz = $inProgressQuizzes->first();
-                        $progress = $currentQuiz->progress ?? 0;
-                    @endphp
-                    <div class="space-y-3">
-                        <div>
-                            <h3 class="font-medium text-gray-900 dark:text-white text-lg">{{ $currentQuiz->quiz->title }}</h3>
-                            <p class="text-sm text-gray-600 dark:text-gray-400 mt-1">
-                                {{ __('dashboard.updated') }}: {{ timeDiffForHumans($currentQuiz->updated_at) }}
-                            </p>
-                        </div>
-                        <div>
-                            <div class="flex justify-between text-sm mb-1">
-                                <span class="text-gray-600 dark:text-gray-400">{{ __('dashboard.quizzes.progress') }}</span>
-                                <span class="font-medium text-gray-900 dark:text-white">{{ $progress }}%</span>
+                <div class="p-4 space-y-4">
+                    @foreach ($inProgressQuizzes as $currentQuiz)
+                        @php
+                            // Calculate accurate progress using the relationship
+                            $userAnswers = $currentQuiz->userAnswers;
+                            $answeredQuestions = $userAnswers->count();
+                            $correctAnswers = $userAnswers->where('is_correct', true)->count();
+                            $totalQuestions = $currentQuiz->quiz->questions_count ?? $currentQuiz->quiz->questions->count() ?? 0;
+                            
+                            // Calculate progress percentage (questions answered / total questions)
+                            $progress = $totalQuestions > 0 ? round(($answeredQuestions / $totalQuestions) * 100) : 0;
+                            
+                            // Calculate score percentage (correct answers / answered questions)
+                            $scorePercentage = $answeredQuestions > 0 ? round(($correctAnswers / $answeredQuestions) * 100) : 0;
+                            
+                            // Determine progress bar color based on score percentage (same as unified-quiz-taker)
+                            if ($answeredQuestions === 0) {
+                                $progressBarColor = '#10b981'; // Default green when no answers
+                            } else {
+                                if ($scorePercentage >= 80) $progressBarColor = '#10b981'; // Green
+                                elseif ($scorePercentage >= 60) $progressBarColor = '#84cc16'; // Light green  
+                                elseif ($scorePercentage >= 40) $progressBarColor = '#eab308'; // Yellow
+                                elseif ($scorePercentage >= 20) $progressBarColor = '#f97316'; // Orange
+                                else $progressBarColor = '#ef4444'; // Red
+                            }
+                        @endphp
+                        <div class="border border-gray-200 dark:border-gray-600 rounded-lg p-4">
+                            <div class="space-y-3">
+                                <div>
+                                    <h3 class="font-medium text-gray-900 dark:text-white text-lg">{{ $currentQuiz->quiz->title }}</h3>
+                                    <p class="text-sm text-gray-600 dark:text-gray-400 mt-1">
+                                        {{ __('dashboard.updated') }}: {{ timeDiffForHumans($currentQuiz->updated_at) }}
+                                    </p>
+                                </div>
+                                <div>
+                                    <div class="flex justify-between text-sm mb-1">
+                                        <span class="text-gray-600 dark:text-gray-400">{{ __('dashboard.quizzes.progress') }}</span>
+                                        <span class="font-medium text-gray-900 dark:text-white">{{ $answeredQuestions }}/{{ $totalQuestions }} ({{ $progress }}%)</span>
+                                    </div>
+                                    <div class="w-full bg-gray-200 dark:bg-gray-700 rounded-full h-2">
+                                        <div class="h-2 rounded-full transition-all duration-300" 
+                                             style="width: {{ $progress }}%; background-color: {{ $progressBarColor }};">
+                                        </div>
+                                    </div>
+                                    @if ($answeredQuestions > 0)
+                                        <div class="flex justify-between text-xs text-gray-500 dark:text-gray-400 mt-1">
+                                            <span>{{ __('dashboard.quizzes.score') }}: {{ $correctAnswers }}/{{ $answeredQuestions }} ({{ $scorePercentage }}%)</span>
+                                        </div>
+                                    @endif
+                                </div>
+                                <a href="{{ route('dashboard.quizzes.show', ['locale' => app()->getLocale(), 'quiz' => $currentQuiz->quiz->id]) }}" 
+                                   class="inline-flex items-center px-4 py-2 bg-blue-600 hover:bg-blue-700 text-white font-medium rounded-lg transition-colors">
+                                    {{ __('dashboard.quizzes.resume') }}
+                                    <svg xmlns="http://www.w3.org/2000/svg" class="h-4 w-4 ml-2" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 5l7 7-7 7" />
+                                    </svg>
+                                </a>
                             </div>
-                            <div class="w-full bg-gray-200 dark:bg-gray-700 rounded-full h-2">
-                                <div class="bg-blue-600 h-2 rounded-full transition-all duration-300" style="width: {{ $progress }}%"></div>
-                            </div>
                         </div>
-                        <a href="{{ route('dashboard.quizzes.show', ['locale' => app()->getLocale(), 'quiz' => $currentQuiz->quiz->id]) }}" 
-                           class="inline-flex items-center px-4 py-2 bg-blue-600 hover:bg-blue-700 text-white font-medium rounded-lg transition-colors">
-                            {{ __('dashboard.quizzes.resume') }}
-                            <svg xmlns="http://www.w3.org/2000/svg" class="h-4 w-4 ml-2" fill="none" viewBox="0 0 24 24" stroke="currentColor">
-                                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 5l7 7-7 7" />
-                            </svg>
-                        </a>
-                    </div>
+                    @endforeach
                 </div>
             </div>
         @endif
@@ -199,19 +230,51 @@
         @endif
 
         <!-- Quiz History -->
-        @if ($completedQuizzes->count() > 0)
+        @if ($completedQuizzes->count() > 0 || $inProgressQuizzes->count() > 0)
             <div class="bg-white dark:bg-gray-800 rounded-xl shadow-sm border border-gray-200 dark:border-gray-700 overflow-hidden">
                 <div class="p-4 border-b border-gray-200 dark:border-gray-700">
                     <div class="flex items-center justify-between">
                         <h2 class="text-lg font-semibold text-gray-900 dark:text-white">{{ __('dashboard.quizzes.history') }}</h2>
-                        <a href="{{ route('dashboard.quizzes.index', ['locale' => app()->getLocale(), 'see' => 'completed']) }}" 
+                        <a href="{{ route('dashboard.quizzes.index', ['locale' => app()->getLocale()]) }}" 
                            class="text-sm text-blue-600 dark:text-blue-400 hover:text-blue-800 dark:hover:text-blue-300 font-medium">
                             {{ __('dashboard.quizzes.view_all') }}
                         </a>
                     </div>
                 </div>
                 <div class="p-4 space-y-3">
-                    @foreach ($completedQuizzes->take(5) as $attempt)
+                    {{-- Show in-progress quizzes first --}}
+                    @foreach ($inProgressQuizzes->take(3) as $attempt)
+                        @php
+                            $quiz = $attempt->quiz;
+                            $quizTitle = is_array($quiz->title)
+                                ? $quiz->title[app()->getLocale()] ?? ($quiz->title['en'] ?? 'Untitled Quiz')
+                                : $quiz->title;
+                            
+                            // Calculate score based on answered questions only using the relationship
+                            $userAnswers = $attempt->userAnswers;
+                            $answeredQuestions = $userAnswers->count();
+                            $correctAnswers = $userAnswers->where('is_correct', true)->count();
+                            $totalQuestions = $quiz->questions_count ?? $quiz->questions->count() ?? 0;
+                            $percentage = $answeredQuestions > 0 ? round(($correctAnswers / $answeredQuestions) * 100) : 0;
+                        @endphp
+                        <div class="flex items-center justify-between p-3 bg-gray-50 dark:bg-gray-700 rounded-lg border border-gray-200 dark:border-gray-600">
+                            <div class="flex-1 min-w-0">
+                                <h3 class="font-medium text-gray-900 dark:text-white truncate">{{ $quizTitle }}</h3>
+                                <p class="text-sm text-gray-600 dark:text-gray-400 mt-1">
+                                    {{ __('dashboard.quizzes.score') }}: {{ $correctAnswers }}/{{ $answeredQuestions }} ({{ $percentage }}%) • 
+                                    {{ __('dashboard.in_progress') }}: {{ $answeredQuestions }}/{{ $totalQuestions }} {{ __('dashboard.questions') }}
+                                </p>
+                            </div>
+                            <div class="ml-3 flex-shrink-0">
+                                <span class="inline-flex items-center px-2 py-1 text-xs rounded-full bg-yellow-100 text-yellow-800 dark:bg-yellow-900 dark:text-yellow-200">
+                                    {{ __('dashboard.in_progress') }}
+                                </span>
+                            </div>
+                        </div>
+                    @endforeach
+                    
+                    {{-- Show completed quizzes --}}
+                    @foreach ($completedQuizzes->take(2) as $attempt)
                         @php
                             $quiz = $attempt->quiz;
                             $quizTitle = is_array($quiz->title)

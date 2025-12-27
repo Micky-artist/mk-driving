@@ -59,6 +59,14 @@ class QuizAttempt extends Model
     }
 
     /**
+     * Get the user answers for this attempt.
+     */
+    public function userAnswers(): HasMany
+    {
+        return $this->hasMany(UserAnswer::class, 'quiz_attempt_id');
+    }
+
+    /**
      * Get all user answers for this attempt.
      * Now returns answers from the JSON column.
      */
