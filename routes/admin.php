@@ -16,10 +16,7 @@ Route::group([], function () {
         // Admin Portal
         Route::get('/', [AdminController::class, 'dashboard'])->name('portal'); // This will be 'admin.portal' due to the route group prefix
 
-        // Subscription Management
-        Route::get('/subscriptions/manage', [SubscriptionController::class, 'manage'])->name('subscriptions.manage');
-        Route::get('/subscriptions/manage/{plan}', [SubscriptionController::class, 'managePlan'])->name('subscriptions.manage.plan');
-        
+                
         // Profile Management
         Route::prefix('profile')->name('profile.')->group(function () {
             Route::get('/', [ProfileController::class, 'edit'])->name('edit');

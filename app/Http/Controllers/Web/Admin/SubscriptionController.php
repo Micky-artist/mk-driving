@@ -56,86 +56,8 @@ class SubscriptionController extends Controller
         return view('admin.subscriptions.all', compact('subscriptions', 'stats', 'search'));
     }
 
-    /**
-     * Show subscription plan management dashboard.
-     *
-     * @return \Illuminate\View\View
-     */
-    public function manage(Request $request)
-    {
-        $search = $request->get('search');
         
-        $plansQuery = SubscriptionPlan::withCount(['subscriptions' => function($query) {
-                $query->where('status', 'active');
-            }])
-            ->orderBy('created_at', 'desc');
-            
-        // Apply search filter
-        if ($search) {
-            $plansQuery->where(function($query) use ($search) {
-                $query->where('name', 'like', "%{$search}%")
-                     ->orWhere('description', 'like', "%{$search}%")
-                     ->orWhere('price', 'like', "%{$search}%");
-            });
-        }
         
-        $plans = $plansQuery->paginate(20);
-            
-        $stats = [
-            'total_plans' => SubscriptionPlan::count(),
-            'active_plans' => SubscriptionPlan::where('is_active', true)->count(),
-            'inactive_plans' => SubscriptionPlan::where('is_active', false)->count(),
-            'total_subscriptions' => Subscription::count(),
-            'active_subscriptions' => Subscription::where('status', 'active')->count(),
-            'revenue' => Subscription::where('status', 'active')
-                ->whereMonth('created_at', now()->month)
-                ->sum('amount') ?? 0,
-        ];
-        
-        return view('admin.subscriptions.manage', compact('plans', 'stats', 'search'));
-    }
-    
-    /**
-     * Show subscriptions for a specific plan.
-     *
-     * @param  \App\Models\SubscriptionPlan  $plan
-     * @return \Illuminate\View\View
-     */
-    public function managePlan(Request $request, SubscriptionPlan $plan)
-    {
-        $search = $request->get('search');
-        
-        $subscriptionsQuery = Subscription::with(['user', 'plan'])
-            ->where('subscription_plan_id', $plan->id)
-            ->orderBy('created_at', 'desc');
-            
-        // Apply search filter
-        if ($search) {
-            $subscriptionsQuery->where(function($query) use ($search) {
-                $query->whereHas('user', function($userQuery) use ($search) {
-                    $userQuery->where('first_name', 'like', "%{$search}%")
-                             ->orWhere('last_name', 'like', "%{$search}%")
-                             ->orWhere('email', 'like', "%{$search}%")
-                             ->orWhere('phone_number', 'like', "%{$search}%");
-                });
-            });
-        }
-        
-        $subscriptions = $subscriptionsQuery->paginate(20);
-            
-        $stats = [
-            'total' => Subscription::where('subscription_plan_id', $plan->id)->count(),
-            'active' => Subscription::where('subscription_plan_id', $plan->id)->where('status', 'active')->count(),
-            'pending' => Subscription::where('subscription_plan_id', $plan->id)->where('status', 'pending')->count(),
-            'cancelled' => Subscription::where('subscription_plan_id', $plan->id)->where('status', 'cancelled')->count(),
-            'revenue' => Subscription::where('subscription_plan_id', $plan->id)
-                ->where('status', 'active')
-                ->sum('amount') ?? 0,
-        ];
-        
-        return view('admin.subscriptions.manage-plan', compact('plan', 'subscriptions', 'stats', 'search'));
-    }
-    
     /**
      * Show the form for creating a new subscription.
      *
@@ -540,7 +462,7 @@ class SubscriptionController extends Controller
         try {
             // Update subscription status and payment status
             $subscription->update([
-                'status' => 'rejected',
+                'status' => 'CANCELLED',
                 'payment_status' => 'REJECTED',
                 'rejected_at' => now()
             ]);

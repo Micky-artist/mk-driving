@@ -15,7 +15,7 @@ class PointConfigurationSeeder extends Seeder
         $configurations = [
             [
                 'activity_type' => 'quiz_completed',
-                'points' => 20, // Base points for quiz completion
+                'points' => 5, // Base points - kept at 5
                 'is_active' => true,
                 'conditions' => [
                     'cooldown_hours' => 0, // No cooldown for quiz completion
@@ -23,7 +23,7 @@ class PointConfigurationSeeder extends Seeder
             ],
             [
                 'activity_type' => 'quiz_passed',
-                'points' => 15, // Bonus points for passing
+                'points' => 5, // Kept at 5 for intuition
                 'is_active' => true,
                 'conditions' => [
                     'cooldown_hours' => 0,
@@ -31,7 +31,7 @@ class PointConfigurationSeeder extends Seeder
             ],
             [
                 'activity_type' => 'quiz_perfect',
-                'points' => 25, // Bonus points for perfect score
+                'points' => 10, // Kept at 10 for intuition
                 'is_active' => true,
                 'conditions' => [
                     'cooldown_hours' => 0,
@@ -39,7 +39,7 @@ class PointConfigurationSeeder extends Seeder
             ],
             [
                 'activity_type' => 'question_asked',
-                'points' => 10, // Points for asking forum questions
+                'points' => 5, // Kept at 5 for intuition
                 'is_active' => true,
                 'conditions' => [
                     'cooldown_hours' => 1, // 1 hour cooldown between questions
@@ -47,7 +47,7 @@ class PointConfigurationSeeder extends Seeder
             ],
             [
                 'activity_type' => 'question_answered',
-                'points' => 5, // Points for answering forum questions
+                'points' => 5, // Kept at 5 for intuition
                 'is_active' => true,
                 'conditions' => [
                     'cooldown_hours' => 0.5, // 30 minutes cooldown between answers
@@ -55,7 +55,7 @@ class PointConfigurationSeeder extends Seeder
             ],
             [
                 'activity_type' => 'best_answer_selected',
-                'points' => 15, // Bonus points for having best answer
+                'points' => 5, // Kept at 5 for intuition
                 'is_active' => true,
                 'conditions' => [
                     'cooldown_hours' => 0,
@@ -63,7 +63,7 @@ class PointConfigurationSeeder extends Seeder
             ],
             [
                 'activity_type' => 'daily_visit',
-                'points' => 5, // Points for daily website visit
+                'points' => 5, // Kept at 5 for intuition
                 'is_active' => true,
                 'conditions' => [
                     'cooldown_hours' => 24, // Once per day

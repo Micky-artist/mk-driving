@@ -25,12 +25,14 @@ return new class extends Migration
         // Insert default point configurations
         DB::table('point_configurations')->insert([
             ['activity_type' => 'login', 'points' => 5, 'is_active' => true, 'conditions' => json_encode(['cooldown_hours' => 1]), 'created_at' => now(), 'updated_at' => now()],
-            ['activity_type' => 'quiz_started', 'points' => 10, 'is_active' => true, 'conditions' => null, 'created_at' => now(), 'updated_at' => now()],
-            ['activity_type' => 'quiz_completed', 'points' => 20, 'is_active' => true, 'conditions' => null, 'created_at' => now(), 'updated_at' => now()],
-            ['activity_type' => 'quiz_passed', 'points' => 15, 'is_active' => true, 'conditions' => null, 'created_at' => now(), 'updated_at' => now()],
-            ['activity_type' => 'quiz_perfect', 'points' => 25, 'is_active' => true, 'conditions' => null, 'created_at' => now(), 'updated_at' => now()],
-            ['activity_type' => 'question_asked', 'points' => 8, 'is_active' => true, 'conditions' => null, 'created_at' => now(), 'updated_at' => now()],
-            ['activity_type' => 'question_answered', 'points' => 5, 'is_active' => true, 'conditions' => null, 'created_at' => now(), 'updated_at' => now()],
+            ['activity_type' => 'quiz_started', 'points' => 5, 'is_active' => true, 'conditions' => null, 'created_at' => now(), 'updated_at' => now()],
+            ['activity_type' => 'quiz_completed', 'points' => 5, 'is_active' => true, 'conditions' => null, 'created_at' => now(), 'updated_at' => now()],
+            ['activity_type' => 'quiz_passed', 'points' => 5, 'is_active' => true, 'conditions' => null, 'created_at' => now(), 'updated_at' => now()],
+            ['activity_type' => 'quiz_perfect', 'points' => 10, 'is_active' => true, 'conditions' => null, 'created_at' => now(), 'updated_at' => now()],
+            ['activity_type' => 'question_asked', 'points' => 5, 'is_active' => true, 'conditions' => json_encode(['cooldown_hours' => 1]), 'created_at' => now(), 'updated_at' => now()],
+            ['activity_type' => 'question_answered', 'points' => 5, 'is_active' => true, 'conditions' => json_encode(['cooldown_hours' => 0.5]), 'created_at' => now(), 'updated_at' => now()],
+            ['activity_type' => 'best_answer_selected', 'points' => 5, 'is_active' => true, 'conditions' => null, 'created_at' => now(), 'updated_at' => now()],
+            ['activity_type' => 'daily_visit', 'points' => 5, 'is_active' => true, 'conditions' => json_encode(['cooldown_hours' => 24]), 'created_at' => now(), 'updated_at' => now()],
             ['activity_type' => 'account_created', 'points' => 50, 'is_active' => true, 'conditions' => null, 'created_at' => now(), 'updated_at' => now()],
         ]);
     }

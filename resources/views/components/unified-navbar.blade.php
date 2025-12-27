@@ -41,20 +41,20 @@
                         <div class="flex items-center space-x-3 flex-wrap mr-2">
                             <div class="flex items-center space-x-1 bg-blue-500/20 rounded-lg px-2 py-1">
                                 <span class="text-blue-100 text-sm">🎯</span>
-                                <span class="text-blue-100 text-sm font-bold" x-text="Math.round(userStats.averageScore) + '%'">--%</span>
+                                <span class="text-blue-100 text-sm font-bold" x-text="Math.round(userStats.averageScore) + '%'"></span>
                             </div>
                             <div class="flex items-center space-x-1 bg-orange-500/20 rounded-lg px-2 py-1">
                                 <span class="text-orange-100 text-sm">🥇</span>
                                 <span
-                                    class="text-orange-100 text-xs font-bold" x-text="userStats.leaderboardPosition === 'N/A' ? 'N/A' : '#' + userStats.leaderboardPosition">#--</span>
+                                    class="text-orange-100 text-xs font-bold" x-text="userStats.leaderboardPosition === 'N/A' ? 'N/A' : '#' + userStats.leaderboardPosition"></span>
                             </div>
                             <div class="flex items-center space-x-1 bg-purple-500/20 rounded-lg px-2 py-1">
                                 <span class="text-purple-100 text-sm">🔥</span>
-                                <span class="text-purple-100 text-xs font-bold" x-text="userStats.streak">--</span>
+                                <span class="text-purple-100 text-xs font-bold" x-text="userStats.streak"></span>
                             </div>
                             <div class="flex items-center space-x-1 bg-yellow-500/20 rounded-lg px-2 py-1">
                                 <span class="text-yellow-100 text-sm">💎</span>
-                                <span class="text-yellow-100 text-xs font-bold" x-text="userStats.xp">--</span>
+                                <span class="text-yellow-100 text-xs font-bold" x-text="userStats.xp"></span>
                             </div>
                         </div>
                     @endif
@@ -187,7 +187,7 @@
                             <div
                                 class="flex items-center bg-blue-500/10 hover:bg-blue-500/20 dark:bg-blue-900/30 dark:hover:bg-blue-800/30 rounded-lg px-2 py-1 transition-colors duration-200">
                                 <span class="text-blue-100 mr-1">🎯</span>
-                                <span class="text-blue-100 font-medium" x-text="Math.round(userStats.averageScore) + '%'">--%</span>
+                                <span class="text-blue-100 font-medium" x-text="Math.round(userStats.averageScore) + '%'"></span>
                             </div>
 
                             <!-- Leaderboard Position -->
@@ -195,21 +195,21 @@
                                 class="flex items-center bg-orange-500/10 hover:bg-orange-500/20 dark:bg-orange-900/30 dark:hover:bg-orange-800/30 rounded-lg px-2 py-1 transition-colors duration-200">
                                 <span class="text-orange-100 mr-1">🥇</span>
                                 <span
-                                    class="text-orange-100 font-medium" x-text="userStats.leaderboardPosition === 'N/A' ? 'N/A' : '#' + userStats.leaderboardPosition">#--</span>
+                                    class="text-orange-100 font-medium" x-text="userStats.leaderboardPosition === 'N/A' ? 'N/A' : '#' + userStats.leaderboardPosition"></span>
                             </div>
 
                             <!-- Streak -->
                             <div
                                 class="flex items-center bg-purple-500/10 hover:bg-purple-500/20 dark:bg-purple-900/30 dark:hover:bg-purple-800/30 rounded-lg px-2 py-1 transition-colors duration-200">
                                 <span class="text-purple-100 mr-1">🔥</span>
-                                <span class="text-purple-100 font-medium" x-text="userStats.streak">--</span>
+                                <span class="text-purple-100 font-medium" x-text="userStats.streak"></span>
                             </div>
 
                             <!-- XP (points) -->
                             <div
                                 class="flex items-center bg-yellow-500/10 hover:bg-yellow-500/20 dark:bg-yellow-900/30 dark:hover:bg-yellow-800/30 rounded-lg px-2 py-1 transition-colors duration-200">
                                 <span class="text-yellow-100 mr-1">💎</span>
-                                <span class="text-yellow-100 font-medium" x-text="userStats.xp">--</span>
+                                <span class="text-yellow-100 font-medium" x-text="userStats.xp"></span>
                             </div>
                         </div>
                     @endif
