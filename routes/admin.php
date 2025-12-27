@@ -53,9 +53,12 @@ Route::group([], function () {
         
         // Subscription Management
         Route::get('subscriptions', [SubscriptionController::class, 'index'])->name('subscriptions.index');
+        Route::get('subscriptions/all', [SubscriptionController::class, 'all'])->name('subscriptions.all');
         Route::get('subscriptions/published', [SubscriptionController::class, 'published'])->name('subscriptions.published');
         Route::get('subscriptions/pending', [SubscriptionController::class, 'pending'])->name('subscriptions.pending');
         Route::get('subscriptions/active', [SubscriptionController::class, 'active'])->name('subscriptions.active');
+        Route::get('subscriptions/expired', [SubscriptionController::class, 'expired'])->name('subscriptions.expired');
+        Route::get('subscriptions/cancelled', [SubscriptionController::class, 'cancelled'])->name('subscriptions.cancelled');
         Route::resource('subscriptions', SubscriptionController::class)->names('subscriptions')->except(['index', 'pending']);
             
         // Subscription approval routes
@@ -67,6 +70,8 @@ Route::group([], function () {
         // Other subscription routes
         Route::post('subscriptions/{subscription}/cancel', [SubscriptionController::class, 'cancel'])
             ->name('subscriptions.cancel');
+        Route::delete('subscriptions/{subscription}/force-delete', [SubscriptionController::class, 'forceDelete'])
+            ->name('subscriptions.force-delete');
         Route::get('subscriptions/stats', [SubscriptionController::class, 'stats'])
             ->name('subscriptions.stats');
             

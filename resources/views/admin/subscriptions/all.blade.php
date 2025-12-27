@@ -1,21 +1,9 @@
 @extends('admin.layouts.app')
 
-@section('title', 'Subscription Management')
+@section('title', 'All Subscriptions - History Records')
 
 @push('styles')
 <style>
-    .stat-card {
-        /* Using pure Tailwind classes instead of @apply */
-    }
-    
-    .subscription-table {
-        /* Using pure Tailwind classes instead of @apply */
-    }
-    
-    .search-input {
-        /* Using pure Tailwind classes instead of @apply */
-    }
-    
     @keyframes fadeIn {
         from { opacity: 0; transform: translateY(20px); }
         to { opacity: 1; transform: translateY(0); }
@@ -37,10 +25,10 @@
     <div class="flex flex-col sm:flex-row sm:items-center sm:justify-between gap-4 mb-8">
         <div>
             <h1 class="text-3xl font-bold text-gray-900 dark:text-white mb-2">
-                Subscription Management
+                All Subscription History
             </h1>
             <p class="text-gray-600 dark:text-gray-400">
-                Manage subscription plans, monitor subscription status, and handle approvals.
+                Complete view of all subscription records including active, expired, and cancelled subscriptions.
             </p>
         </div>
         <div class="flex items-center gap-3">
@@ -53,7 +41,7 @@
                 </div>
                 <input type="text" 
                        id="search-input"
-                       placeholder="Search by user name, email, or phone..." 
+                       placeholder="Search by user name, email, or plan..." 
                        class="bg-white dark:bg-gray-800 border border-gray-300 dark:border-gray-600 text-gray-900 dark:text-white placeholder-gray-500 dark:placeholder-gray-400 rounded-full pl-10 pr-4 py-3 w-full focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-blue-500 transition-all duration-200">
                 @if($search ?? false)
                 <button type="button" 
@@ -89,42 +77,34 @@
                      x-transition:leave="transition ease-in duration-75"
                      x-transition:leave-start="transform opacity-100 scale-100"
                      x-transition:leave-end="transform opacity-0 scale-95"
-                     class="origin-top-right absolute right-0 mt-2 w-56 rounded-lg shadow-lg bg-white dark:bg-gray-800 ring-1 ring-black ring-opacity-5 dark:ring-gray-700 focus:outline-none z-10 border border-gray-200 dark:border-gray-600">
+                     class="absolute right-0 mt-2 w-56 rounded-lg shadow-lg bg-white dark:bg-gray-800 ring-1 ring-black ring-opacity-5 dark:ring-gray-700 focus:outline-none z-50 border border-gray-200 dark:border-gray-600">
                     <div class="py-1">
-                        <a href="{{ route('admin.subscriptions.index') }}" 
+                        <a href="{{ route('admin.subscriptions.all') }}" 
                            class="block px-4 py-2 text-sm text-gray-700 dark:text-gray-300 hover:bg-gray-50 dark:hover:bg-gray-700 transition-colors">
                             All Subscriptions
                         </a>
-                        <a href="{{ route('admin.subscriptions.pending') }}" 
-                           class="block px-4 py-2 text-sm text-gray-700 dark:text-gray-300 hover:bg-gray-50 dark:hover:bg-gray-700 transition-colors">
-                            Pending
-                        </a>
                         <a href="{{ route('admin.subscriptions.active') }}" 
                            class="block px-4 py-2 text-sm text-gray-700 dark:text-gray-300 hover:bg-gray-50 dark:hover:bg-gray-700 transition-colors">
-                            Active
+                            Active Only
+                        </a>
+                        <a href="{{ route('admin.subscriptions.expired') }}" 
+                           class="block px-4 py-2 text-sm text-gray-700 dark:text-gray-300 hover:bg-gray-50 dark:hover:bg-gray-700 transition-colors">
+                            Expired Only
+                        </a>
+                        <a href="{{ route('admin.subscriptions.cancelled') }}" 
+                           class="block px-4 py-2 text-sm text-gray-700 dark:text-gray-300 hover:bg-gray-50 dark:hover:bg-gray-700 transition-colors">
+                            Cancelled Only
                         </a>
                     </div>
                 </div>
             </div>
-            
-            <!-- Add Subscription Plan Button -->
-            <a href="{{ route('admin.subscription-plans.create') }}" 
-               class="group inline-flex items-center px-6 py-3 bg-gradient-to-r from-blue-600 to-blue-700 hover:from-blue-700 hover:to-blue-800 text-white font-semibold rounded-full shadow-lg hover:shadow-xl transform hover:scale-105 transition-all duration-200 border border-blue-500/20">
-                <svg class="w-5 h-5 mr-2 group-hover:rotate-90 transition-transform duration-200" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 6v6m0 0v6m0-6h6m-6 0H6"></path>
-                </svg>
-                <span class="relative">
-                    Add Plan
-                    <span class="absolute -bottom-1 left-0 right-0 h-0.5 bg-white/30 transform scale-x-0 group-hover:scale-x-100 transition-transform duration-200"></span>
-                </span>
-            </a>
         </div>
     </div>
 
     <!-- Stats Cards -->
     <div class="grid grid-cols-1 md:grid-cols-4 gap-4 mb-8">
         <!-- Total Subscriptions -->
-        <a href="{{ route('admin.subscriptions.all') }}" class="bg-white dark:bg-gray-800 rounded-lg shadow-sm hover:shadow-md transition-all duration-300 transform hover:-translate-y-0.5 border border-gray-200 dark:border-gray-700 hover:border-blue-300 dark:hover:border-blue-600 fade-in fade-in-delay-1 block">
+        <div class="bg-white dark:bg-gray-800 rounded-lg shadow-sm border border-gray-200 dark:border-gray-700 fade-in fade-in-delay-1">
             <div class="p-6">
                 <div class="flex items-center justify-between mb-4">
                     <div class="p-3 bg-blue-100 dark:bg-blue-900/20 rounded-lg">
@@ -133,16 +113,16 @@
                         </svg>
                     </div>
                     <span class="text-xs font-medium text-blue-600 dark:text-blue-400 bg-blue-100 dark:bg-blue-900/20 px-2 py-1 rounded-full">
-                        All
+                        Total
                     </span>
                 </div>
                 <h3 class="text-2xl font-bold text-gray-900 dark:text-white mb-1">{{ number_format($stats['total']) }}</h3>
-                <p class="text-sm text-gray-600 dark:text-gray-400">View All Subscriptions</p>
+                <p class="text-sm text-gray-600 dark:text-gray-400">All Records</p>
             </div>
-        </a>
+        </div>
 
         <!-- Active Subscriptions -->
-        <a href="{{ route('admin.subscriptions.active') }}" class="bg-white dark:bg-gray-800 rounded-lg shadow-sm hover:shadow-md transition-all duration-300 transform hover:-translate-y-0.5 border border-gray-200 dark:border-gray-700 hover:border-green-300 dark:hover:border-green-600 fade-in fade-in-delay-1 block">
+        <div class="bg-white dark:bg-gray-800 rounded-lg shadow-sm border border-gray-200 dark:border-gray-700 fade-in fade-in-delay-1">
             <div class="p-6">
                 <div class="flex items-center justify-between mb-4">
                     <div class="p-3 bg-green-100 dark:bg-green-900/20 rounded-lg">
@@ -155,69 +135,75 @@
                     </span>
                 </div>
                 <h3 class="text-2xl font-bold text-gray-900 dark:text-white mb-1">{{ number_format($stats['active']) }}</h3>
-                <p class="text-sm text-gray-600 dark:text-gray-400">Active Subscriptions</p>
+                <p class="text-sm text-gray-600 dark:text-gray-400">Currently Active</p>
             </div>
-        </a>
+        </div>
 
-        <!-- Pending Subscriptions -->
-        <a href="{{ route('admin.subscriptions.pending') }}" class="bg-white dark:bg-gray-800 rounded-lg shadow-sm hover:shadow-md transition-all duration-300 transform hover:-translate-y-0.5 border border-gray-200 dark:border-gray-700 hover:border-yellow-300 dark:hover:border-yellow-600 fade-in fade-in-delay-2 block">
+        <!-- Expired Subscriptions -->
+        <div class="bg-white dark:bg-gray-800 rounded-lg shadow-sm border border-gray-200 dark:border-gray-700 fade-in fade-in-delay-2">
             <div class="p-6">
                 <div class="flex items-center justify-between mb-4">
-                    <div class="p-3 bg-yellow-100 dark:bg-yellow-900/20 rounded-lg">
-                        <svg class="w-6 h-6 text-yellow-600 dark:text-yellow-400" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 8v4l3 3m6-3a9 9 0 11-18 0 9 9 0 0118 0z"></path>
+                    <div class="p-3 bg-red-100 dark:bg-red-900/20 rounded-lg">
+                        <svg class="w-6 h-6 text-red-600 dark:text-red-400" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 8v4m0 4h.01M21 12a9 9 0 11-18 0 9 9 0 0118 0z"></path>
                         </svg>
                     </div>
-                    <span class="text-xs font-medium text-yellow-600 dark:text-yellow-400 bg-yellow-100 dark:bg-yellow-900/20 px-2 py-1 rounded-full">
-                        Pending
+                    <span class="text-xs font-medium text-red-600 dark:text-red-400 bg-red-100 dark:bg-red-900/20 px-2 py-1 rounded-full">
+                        Expired
                     </span>
                 </div>
-                <h3 class="text-2xl font-bold text-gray-900 dark:text-white mb-1">{{ number_format($stats['pending']) }}</h3>
-                <p class="text-sm text-gray-600 dark:text-gray-400">Pending Subscriptions</p>
+                <h3 class="text-2xl font-bold text-gray-900 dark:text-white mb-1">{{ number_format($stats['expired']) }}</h3>
+                <p class="text-sm text-gray-600 dark:text-gray-400">Expired Records</p>
             </div>
-        </a>
+        </div>
 
-        <!-- Revenue This Month -->
-        <a href="{{ route('admin.reports.index') }}" class="bg-white dark:bg-gray-800 rounded-lg shadow-sm hover:shadow-md transition-all duration-300 transform hover:-translate-y-0.5 border border-gray-200 dark:border-gray-700 hover:border-orange-300 dark:hover:border-orange-600 fade-in fade-in-delay-3 block">
+        <!-- Cancelled Subscriptions -->
+        <div class="bg-white dark:bg-gray-800 rounded-lg shadow-sm border border-gray-200 dark:border-gray-700 fade-in fade-in-delay-3">
             <div class="p-6">
                 <div class="flex items-center justify-between mb-4">
-                    <div class="p-3 bg-orange-100 dark:bg-orange-900/20 rounded-lg">
-                        <svg class="w-6 h-6 text-orange-600 dark:text-orange-400" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 8c-1.657 0-3 .895-3 2s1.343 2 3 2 3 .895 3 2-1.343 2-3 2m0-8c1.11 0 2.08.402 2.599 1M12 8V7m0 1v8m0 0v1m0-1c-1.11 0-2.08-.402-2.599-1M21 12a9 9 0 11-18 0 9 9 0 0118 0z"></path>
+                    <div class="p-3 bg-gray-100 dark:bg-gray-700 rounded-lg">
+                        <svg class="w-6 h-6 text-gray-600 dark:text-gray-400" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M6 18L18 6M6 6l12 12"></path>
                         </svg>
                     </div>
-                    <span class="text-xs font-medium text-orange-600 dark:text-orange-400 bg-orange-100 dark:bg-orange-900/20 px-2 py-1 rounded-full">
-                        Revenue
+                    <span class="text-xs font-medium text-gray-600 dark:text-gray-400 bg-gray-100 dark:bg-gray-700 px-2 py-1 rounded-full">
+                        Cancelled
                     </span>
                 </div>
-                <h3 class="text-2xl font-bold text-gray-900 dark:text-white mb-1">{{ number_format($stats['revenue'], 0) }} RWF</h3>
-                <p class="text-sm text-gray-600 dark:text-gray-400">Revenue This Month</p>
+                <h3 class="text-2xl font-bold text-gray-900 dark:text-white mb-1">{{ number_format($stats['cancelled']) }}</h3>
+                <p class="text-sm text-gray-600 dark:text-gray-400">Cancelled Records</p>
             </div>
-        </a>
+        </div>
     </div>
 
     <!-- Subscriptions Table -->
-    <div class="subscription-table fade-in fade-in-delay-3">
+    <div class="fade-in fade-in-delay-3">
         <div class="overflow-x-auto">
             <table class="min-w-full divide-y divide-gray-200 dark:divide-gray-700">
                 <thead class="bg-gray-50 dark:bg-gray-700">
                     <tr>
-                        <th scope="col" class="px-6 py-3 text-left text-xs font-medium text-gray-500 dark:text-gray-400 uppercase tracking-wider">
+                        <th scope="col" class="py-3 text-left text-xs font-medium text-gray-500 dark:text-gray-400 uppercase tracking-wider">
                             User
                         </th>
-                        <th scope="col" class="px-6 py-3 text-left text-xs font-medium text-gray-500 dark:text-gray-400 uppercase tracking-wider">
+                        <th scope="col" class="py-3 text-left text-xs font-medium text-gray-500 dark:text-gray-400 uppercase tracking-wider">
                             Plan
                         </th>
-                        <th scope="col" class="px-6 py-3 text-left text-xs font-medium text-gray-500 dark:text-gray-400 uppercase tracking-wider">
+                        <th scope="col" class="py-3 text-left text-xs font-medium text-gray-500 dark:text-gray-400 uppercase tracking-wider">
                             Amount
                         </th>
-                        <th scope="col" class="px-6 py-3 text-left text-xs font-medium text-gray-500 dark:text-gray-400 uppercase tracking-wider">
-                            Subscription Status
+                        <th scope="col" class="py-3 text-left text-xs font-medium text-gray-500 dark:text-gray-400 uppercase tracking-wider">
+                            Status
                         </th>
-                        <th scope="col" class="px-6 py-3 text-left text-xs font-medium text-gray-500 dark:text-gray-400 uppercase tracking-wider">
-                            Payment Status
+                        <th scope="col" class="py-3 text-left text-xs font-medium text-gray-500 dark:text-gray-400 uppercase tracking-wider">
+                            Start Date
                         </th>
-                        <th scope="col" class="px-6 py-3 text-left text-xs font-medium text-gray-500 dark:text-gray-400 uppercase tracking-wider">
+                        <th scope="col" class="py-3 text-left text-xs font-medium text-gray-500 dark:text-gray-400 uppercase tracking-wider">
+                            End Date
+                        </th>
+                        <th scope="col" class="py-3 text-left text-xs font-medium text-gray-500 dark:text-gray-400 uppercase tracking-wider">
+                            Payment Method
+                        </th>
+                        <th scope="col" class="py-3 text-left text-xs font-medium text-gray-500 dark:text-gray-400 uppercase tracking-wider">
                             Created
                         </th>
                     </tr>
@@ -226,7 +212,7 @@
                     @forelse($subscriptions as $subscription)
                     <tr class="hover:bg-gray-50 dark:hover:bg-gray-700 transition-colors cursor-pointer" onclick="window.location.href='{{ route('admin.users.show', $subscription->user_id) }}'">
                         <!-- User -->
-                        <td class="px-6 py-3 whitespace-nowrap">
+                        <td class="py-3 whitespace-nowrap">
                             <div class="flex items-center">
                                 <div class="flex-shrink-0 h-10 w-10">
                                     <div class="h-10 w-10 rounded-full bg-gradient-to-br from-blue-500 to-blue-600 flex items-center justify-center text-white font-semibold text-sm shadow-md">
@@ -245,9 +231,16 @@
                         </td>
                         
                         <!-- Plan -->
-                        <td class="px-6 py-3 whitespace-nowrap">
+                        <td class="py-3 whitespace-nowrap">
                             <div class="text-sm font-medium text-gray-900 dark:text-white">
-                                {{ $subscription->plan->name['en'] ?? 'Unknown Plan' }}
+                                @php
+                                    $planName = $subscription->plan->name;
+                                    if (is_string($planName)) {
+                                        $planName = json_decode($planName, true) ?: [];
+                                    }
+                                    $displayName = $planName[app()->getLocale()] ?? $planName['en'] ?? $planName['rw'] ?? 'Unknown Plan';
+                                @endphp
+                                {{ $displayName }}
                             </div>
                             <div class="text-xs text-gray-500 dark:text-gray-400 mt-1">
                                 {{ $subscription->plan->duration ?? 'N/A' }} days
@@ -255,64 +248,61 @@
                         </td>
                         
                         <!-- Amount -->
-                        <td class="px-6 py-3 whitespace-nowrap">
+                        <td class="py-3 whitespace-nowrap">
                             <div class="text-sm font-medium text-gray-900 dark:text-white">
-                                {{ number_format($subscription->amount) }} {{ $subscription->currency ?? 'RWF' }}
+                                {{ number_format($subscription->amount, 0) }} RWF
                             </div>
-                            @if($subscription->payment_method)
-                                <div class="text-xs text-gray-500 dark:text-gray-400 mt-1">
-                                    {{ ucfirst($subscription->payment_method) }}
-                                </div>
-                            @endif
                         </td>
                         
                         <!-- Status -->
-                        <td class="px-6 py-3 whitespace-nowrap">
+                        <td class="py-3 whitespace-nowrap">
                             <span class="inline-flex items-center px-2.5 py-0.5 rounded-full text-xs font-medium 
                                 {{ $subscription->status === 'ACTIVE' ? 'bg-green-100 text-green-800 dark:bg-green-900/20 dark:text-green-400' : '' }}
                                 {{ $subscription->status === 'PENDING' ? 'bg-yellow-100 text-yellow-800 dark:bg-yellow-900/20 dark:text-yellow-400' : '' }}
+                                {{ $subscription->status === 'EXPIRED' ? 'bg-red-100 text-red-800 dark:bg-red-900/20 dark:text-red-400' : '' }}
                                 {{ $subscription->status === 'CANCELLED' ? 'bg-gray-100 text-gray-800 dark:bg-gray-700 dark:text-gray-300' : '' }}">
-                                @if($subscription->status === 'ACTIVE')
-                                    <i class="fas fa-check-circle mr-1.5"></i> Active
-                                @elseif($subscription->status === 'PENDING')
-                                    <i class="fas fa-clock mr-1.5"></i> Pending
-                                @elseif($subscription->status === 'CANCELLED')
-                                    <i class="fas fa-times-circle mr-1.5"></i> Cancelled
-                                @else
-                                    <i class="fas fa-exclamation-circle mr-1.5"></i> {{ ucfirst(strtolower($subscription->status)) }}
-                                @endif
+                                {{ ucfirst(strtolower($subscription->status)) }}
                             </span>
                         </td>
                         
-                        <!-- Payment Status -->
-                        <td class="px-6 py-3 whitespace-nowrap">
-                            <span class="inline-flex items-center px-2.5 py-0.5 rounded-full text-xs font-medium 
-                                {{ $subscription->payment_status === 'COMPLETED' || $subscription->payment_status === 'SUCCESSFUL' ? 'bg-green-100 text-green-800 dark:bg-green-900/20 dark:text-green-400' : '' }}
-                                {{ $subscription->payment_status === 'PENDING' ? 'bg-yellow-100 text-yellow-800 dark:bg-yellow-900/20 dark:text-yellow-400' : '' }}
-                                {{ $subscription->payment_status === 'FAILED' || $subscription->payment_status === 'REJECTED' || $subscription->payment_status === 'CANCELLED' ? 'bg-red-100 text-red-800 dark:bg-red-900/20 dark:text-red-400' : '' }}">
-                                {{ ucfirst(strtolower($subscription->payment_status)) }}
-                            </span>
-                            @if($subscription->payment_method)
-                                <div class="text-xs text-gray-500 dark:text-gray-400 mt-1">
-                                    {{ ucfirst(str_replace('_', ' ', $subscription->payment_method)) }}
+                        <!-- Start Date -->
+                        <td class="py-3 whitespace-nowrap text-sm text-gray-500 dark:text-gray-400">
+                            {{ $subscription->starts_at ? $subscription->starts_at->format('m/d/Y') : 'N/A' }}
+                        </td>
+                        
+                        <!-- End Date -->
+                        <td class="py-3 whitespace-nowrap text-sm text-gray-500 dark:text-gray-400">
+                            {{ $subscription->ends_at ? $subscription->ends_at->format('m/d/Y') : 'N/A' }}
+                            @if($subscription->ends_at && $subscription->status === 'ACTIVE' && $subscription->ends_at->isFuture())
+                                <div class="text-xs text-green-600 dark:text-green-400">
+                                    ({{ $subscription->ends_at->diffForHumans(now(), true) }})
+                                </div>
+                            @elseif($subscription->ends_at && $subscription->status === 'EXPIRED')
+                                <div class="text-xs text-red-600 dark:text-red-400">
+                                    ({{ $subscription->ends_at->diffForHumans(now(), true) }} ago)
                                 </div>
                             @endif
                         </td>
                         
+                        <!-- Payment Method -->
+                        <td class="py-3 whitespace-nowrap text-sm text-gray-500 dark:text-gray-400">
+                            {{ $subscription->payment_method ? ucfirst(str_replace('_', ' ', $subscription->payment_method)) : 'N/A' }}
+                        </td>
+                        
                         <!-- Created -->
-                        <td class="px-6 py-3 whitespace-nowrap text-sm text-gray-500 dark:text-gray-400">
-                            {{ $subscription->created_at->format('M j, Y') }}
+                        <td class="py-3 whitespace-nowrap text-sm text-gray-500 dark:text-gray-400">
+                            {{ $subscription->created_at->format('m/d/Y') }}
                         </td>
                     </tr>
                     @empty
                     <tr>
-                        <td colspan="6" class="px-6 py-12 text-center">
+                        <td colspan="8" class="py-12 text-center">
                             <div class="flex flex-col items-center">
                                 <svg class="w-12 h-12 text-gray-400 dark:text-gray-500 mb-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M17 20h5v-2a3 3 0 00-5.356-3.356A3 3 0 0014 12V4a3 3 0 00-3-3H7a3 3 0 00-3 3v8a3 3 0 003 3h14v-2h-5a2 2 0 00-2-2v-4a2 2 0 012-2h4a2 2 0 012 2V4a2 2 0 01-2 2z"></path>
+                                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 5H7a2 2 0 00-2 2v12a2 2 0 002 2h10a2 2 0 002-2V7a2 2 0 00-2-2h-2M9 5a2 2 0 002 2h2a2 2 0 002-2M9 5a2 2 0 012-2h2a2 2 0 012 2"></path>
                                 </svg>
                                 <p class="text-sm text-gray-500 dark:text-gray-400 font-medium">
-                                    No subscriptions found
+                                    No subscription records found
                                 </p>
                                 <p class="text-xs text-gray-400 dark:text-gray-500 mt-1">
                                     Try adjusting your filters
@@ -327,7 +317,7 @@
         
         <!-- Pagination -->
         @if($subscriptions->hasPages())
-        <div class="px-6 py-4 border-t border-gray-200 dark:border-gray-700 bg-gray-50 dark:bg-gray-800">
+        <div class="py-4 border-t border-gray-200 dark:border-gray-700 bg-gray-50 dark:bg-gray-800">
             <div class="flex items-center justify-between">
                 <div class="text-sm text-gray-700 dark:text-gray-300">
                     Showing results {{ $subscriptions->firstItem() }} to {{ $subscriptions->lastItem() }} of {{ $subscriptions->total() }} total

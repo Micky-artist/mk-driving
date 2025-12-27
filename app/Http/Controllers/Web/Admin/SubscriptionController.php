@@ -15,6 +15,48 @@ use Illuminate\Support\Facades\Auth;
 class SubscriptionController extends Controller
 {
     /**
+     * Show all subscription history records.
+     *
+     * @param \Illuminate\Http\Request $request
+     * @return \Illuminate\View\View
+     */
+    public function all(Request $request)
+    {
+        $search = $request->get('search');
+        
+        // Get all subscriptions with user and plan relationships
+        $subscriptionsQuery = Subscription::with(['user', 'plan'])
+            ->orderBy('created_at', 'desc');
+            
+        // Apply search filter
+        if ($search) {
+            $subscriptionsQuery->where(function($query) use ($search) {
+                $query->whereHas('user', function($userQuery) use ($search) {
+                        $userQuery->where('first_name', 'like', "%{$search}%")
+                               ->orWhere('last_name', 'like', "%{$search}%")
+                               ->orWhere('email', 'like', "%{$search}%");
+                    })
+                    ->orWhereHas('plan', function($planQuery) use ($search) {
+                        $planQuery->where('name', 'like', "%{$search}%");
+                    });
+            });
+        }
+        
+        $subscriptions = $subscriptionsQuery->paginate(25);
+            
+        // Get comprehensive stats
+        $stats = [
+            'total' => Subscription::count(),
+            'active' => Subscription::where('status', 'ACTIVE')->count(),
+            'expired' => Subscription::where('status', 'EXPIRED')->count(),
+            'cancelled' => Subscription::where('status', 'CANCELLED')->count(),
+            'pending' => Subscription::where('status', 'PENDING')->count(),
+        ];
+        
+        return view('admin.subscriptions.all', compact('subscriptions', 'stats', 'search'));
+    }
+
+    /**
      * Show subscription plan management dashboard.
      *
      * @return \Illuminate\View\View
@@ -544,6 +586,64 @@ class SubscriptionController extends Controller
             }
             
             return back()->with('error', 'Failed to reject subscription: ' . $e->getMessage());
+        }
+    }
+    
+    /**
+     * Force delete the specified subscription from storage.
+     *
+     * @param  \App\Models\Subscription  $subscription
+     * @return \Illuminate\Http\RedirectResponse
+     */
+    public function forceDelete(Subscription $subscription)
+    {
+        DB::beginTransaction();
+        
+        try {
+            // Log subscription deletion activity
+            UserActivity::log(
+                $subscription->user_id,
+                UserActivity::TYPE_SUBSCRIPTION,
+                [
+                    'action' => 'deleted',
+                    'subscription_id' => $subscription->id,
+                    'plan_name' => $subscription->plan->name['en'] ?? 'Unknown Plan',
+                    'amount' => $subscription->amount,
+                    'status' => $subscription->status,
+                ],
+                request()->ip(),
+                request()->userAgent()
+            );
+            
+            // Delete the subscription
+            $subscription->delete();
+            
+            DB::commit();
+            
+            if (request()->wantsJson() || request()->ajax()) {
+                return response()->json([
+                    'success' => true,
+                    'message' => 'Subscription deleted permanently'
+                ]);
+            }
+            
+            return back()->with('success', 'Subscription deleted permanently.');
+            
+        } catch (\Exception $e) {
+            DB::rollBack();
+            Log::error('Failed to delete subscription: ' . $e->getMessage(), [
+                'subscription_id' => $subscription->id,
+                'trace' => $e->getTraceAsString()
+            ]);
+            
+            if (request()->wantsJson() || request()->ajax()) {
+                return response()->json([
+                    'success' => false,
+                    'message' => 'Failed to delete subscription: ' . $e->getMessage()
+                ], 500);
+            }
+            
+            return back()->with('error', 'Failed to delete subscription: ' . $e->getMessage());
         }
     }
     

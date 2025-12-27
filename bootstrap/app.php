@@ -24,6 +24,7 @@ return Application::configure(basePath: dirname(__DIR__))
             'verified' => \App\Http\Middleware\EnsureEmailIsVerified::class,
             'localize' => \App\Http\Middleware\SetLocale::class,
             'track.activity' => \App\Http\Middleware\TrackUserActivity::class,
+            'check.subscription' => \App\Http\Middleware\EnsureValidSubscription::class,
         ]);
 
         // Add SetLocale middleware to web group
@@ -34,6 +35,9 @@ return Application::configure(basePath: dirname(__DIR__))
         
         // Add TrackNotifications middleware to web group for admin users
         $middleware->web(\App\Http\Middleware\TrackNotifications::class);
+        
+        // Add subscription validation to web group
+        $middleware->web(\App\Http\Middleware\EnsureValidSubscription::class);
         
         // Add session middleware to API group for web auth compatibility
         $middleware->api([

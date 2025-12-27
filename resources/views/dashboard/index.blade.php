@@ -4,6 +4,16 @@
     {{ __('dashboard.title') }}
 @endsection
 
+@push('scripts')
+<script>
+document.addEventListener('DOMContentLoaded', function() {
+    @if(session('error'))
+        alert('{{ session('error') }}');
+    @endif
+});
+</script>
+@endpush
+
 @section('content')
     
     <div class="px-2 sm:px-6 lg:px-8 py-2">

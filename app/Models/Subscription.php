@@ -81,4 +81,4 @@ class Subscription extends Model
         return $this->plan();
     }
 
-    }
+}

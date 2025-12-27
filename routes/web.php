@@ -406,101 +406,7 @@ Route::prefix('{locale}')
         ->name('logout');
     
     // Plans Page
-    Route::get('plans', function (LocaleService $localeService) {
-        error_log('=== PLANS ROUTE HIT ===');
-        \Illuminate\Support\Facades\Log::debug('PLANS ROUTE HIT - Starting execution');
-        $locale = $localeService->getLocale();
-        $fallbackLocale = config('app.fallback_locale', 'en');
-        
-        $plans = SubscriptionPlan::where('is_active', true)
-            ->orderBy('price')
-            ->get()
-            ->map(function ($plan) use ($locale, $fallbackLocale) {
-                // Ensure we have the slug
-                $slug = $plan->slug;
-                
-                // Handle name (string or array)
-                $name = $plan->name;
-                if (is_string($name)) {
-                    $name = json_decode($name, true) ?: [];
-                }
-                $displayName = $name[$locale] ?? $name[$fallbackLocale] ?? 'Unnamed Plan';
-
-                // Handle description
-                $description = $plan->description;
-                if (is_string($description)) {
-                    $description = json_decode($description, true) ?: [];
-                }
-                $displayDescription = $description[$locale] ?? $description[$fallbackLocale] ?? '';
-
-                // Handle features - ensure we always return an array for the current locale
-                $features = $plan->features;
-                if (is_string($features)) {
-                    $features = json_decode($features, true) ?: [];
-                }
-                
-                // Get features for current locale or fallback
-                $displayFeatures = [];
-                if (isset($features[$locale]) && is_array($features[$locale])) {
-                    $displayFeatures = $features[$locale];
-                } elseif (isset($features[$fallbackLocale]) && is_array($features[$fallbackLocale])) {
-                    $displayFeatures = $features[$fallbackLocale];
-                } elseif (is_array($features) && !isset($features[$locale]) && !isset($features[$fallbackLocale])) {
-                    // If features is a simple array without locale keys
-                    $displayFeatures = array_values($features);
-                }
-                
-                // Debug: Check what we're working with
-                \Illuminate\Support\Facades\Log::debug('Plans route - processing plan', [
-                    'plan_id' => $plan->id,
-                    'auth_check' => \Illuminate\Support\Facades\Auth::check()
-                ]);
-                
-                $isCurrentResult = false;
-                if (\Illuminate\Support\Facades\Auth::check()) {
-                    $user = \Illuminate\Support\Facades\Auth::user();
-                    $hasSubscription = $user->subscriptions()
-                        ->where('subscription_plan_id', $plan->id)
-                        ->whereIn('status', ['ACTIVE', 'PENDING'])
-                        ->where(function($query) {
-                            $query->where('ends_at', '>=', now())
-                                  ->orWhere('status', 'PENDING');
-                        })
-                        ->exists();
-                    
-                    \Illuminate\Support\Facades\Log::debug('Plans route - subscription result', [
-                        'plan_id' => $plan->id,
-                        'user_id' => $user->id,
-                        'has_subscription' => $hasSubscription
-                    ]);
-                    
-                    $isCurrentResult = $hasSubscription;
-                }
-                
-                return [
-                    'id' => $plan->id,
-                    'slug' => $slug,
-                    'name' => $name, // Keep full name object for the component to handle
-                    'display_name' => $displayName,
-                    'description' => $description, // Keep full description object
-                    'display_description' => $displayDescription,
-                    'price' => $plan->price,
-                    'duration' => $plan->duration,
-                    'duration_in_days' => $plan->duration_in_days ?? 0,
-                    'max_quizzes' => $plan->max_quizzes,
-                    'is_active' => $plan->is_active,
-                    'color' => $plan->color,
-                    'features' => $features, // Keep full features object
-                    'display_features' => $displayFeatures, // Add pre-formatted features for current locale
-                    'is_current' => $isCurrentResult,
-                ];
-            });
-            
-        return view('plans.index', [
-            'plans' => $plans,
-            'currentLocale' => $locale
-        ]);
-    })->name('plans');
+    Route::get('plans', [\App\Http\Controllers\Web\PlansController::class, 'index'])->name('plans');
         
     // Protected routes (require authentication)
     Route::middleware(['auth', 'verified'])
@@ -516,21 +422,24 @@ Route::prefix('{locale}')
             
         // Quiz attempt API routes
         Route::prefix('api')->group(function () {
-            // Get or create an active quiz attempt
+            // Get or create an active quiz attempt - requires subscription
             Route::get('quizzes/{quiz}/attempt', 'QuizAttemptController@getActiveAttempt')
-                ->name('api.quizzes.attempt');
+                ->name('api.quizzes.attempt')
+                ->middleware('check.subscription');
                 
-            // Update a quiz attempt (save progress or submit)
+            // Update a quiz attempt (save progress or submit) - requires subscription
             Route::put('attempts/{attempt}', 'QuizAttemptController@update')
-                ->name('api.attempts.update');
+                ->name('api.attempts.update')
+                ->middleware('check.subscription');
                 
-            // Get user's quiz attempts
+            // Get user's quiz attempts - allow viewing history
             Route::get('my-attempts', 'QuizAttemptController@getUserAttempts')
                 ->name('api.my-attempts');
                 
-            // Start or continue a quiz attempt
+            // Start or continue a quiz attempt - requires subscription
             Route::get('quizzes/{quiz}/start', 'QuizAttemptController@start')
-                ->name('quizzes.attempt');
+                ->name('quizzes.attempt')
+                ->middleware('check.subscription');
         });
         
         // Forum
@@ -538,41 +447,45 @@ Route::prefix('{locale}')
         
         // Dashboard Quizzes Routes
         Route::prefix('dashboard/quizzes')->name('dashboard.quizzes.')->group(function () {
-            // All quizzes
+            // All quizzes - allow viewing history
             Route::get('/', [\App\Http\Controllers\Web\Dashboard\QuizController::class, 'index'])
                 ->name('index');
                 
-            // In Progress quizzes
+            // In Progress quizzes - allow viewing history
             Route::get('/in-progress', [\App\Http\Controllers\Web\Dashboard\QuizController::class, 'inProgress'])
                 ->name('in-progress');
                 
-            // Progress quizzes
+            // Progress quizzes - allow viewing history
             Route::get('/progress', [\App\Http\Controllers\Web\Dashboard\QuizController::class, 'progress'])
                 ->name('progress');
                 
-            // Completed quizzes
+            // Completed quizzes - allow viewing history
             Route::get('/completed', [\App\Http\Controllers\Web\Dashboard\QuizController::class, 'completed'])
                 ->name('completed');
                 
-            // Add bookmark route
+            // Add bookmark route - requires subscription
             Route::post('/{quiz}/bookmark', [\App\Http\Controllers\Web\Dashboard\QuizController::class, 'bookmark'])
-                ->name('bookmark');
+                ->name('bookmark')
+                ->middleware('check.subscription');
                 
-            // Update quiz attempt
+            // Update quiz attempt - requires subscription
             Route::put('/attempts/{attempt}', [\App\Http\Controllers\Web\Dashboard\QuizAttemptController::class, 'update'])
-                ->name('attempt.update');
+                ->name('attempt.update')
+                ->middleware('check.subscription');
                 
-            // Quiz submission
+            // Quiz submission - requires subscription
             Route::post('/{quiz}/submit', [\App\Http\Controllers\Web\Dashboard\QuizAttemptController::class, 'update'])
                 ->name('submit')
-                ->where('quiz', '[0-9]+');
+                ->where('quiz', '[0-9]+')
+                ->middleware('check.subscription');
                 
-            // Quiz details
+            // Quiz details - requires subscription
             Route::get('/{quiz}', [\App\Http\Controllers\Web\Dashboard\QuizController::class, 'show'])
                 ->name('show')
-                ->where('quiz', '[0-9]+');
+                ->where('quiz', '[0-9]+')
+                ->middleware('check.subscription');
                 
-            // Attempt details
+            // Attempt details - allow viewing history
             Route::get('/attempts/{attempt}', [\App\Http\Controllers\Web\Dashboard\QuizController::class, 'attemptDetails'])
                 ->name('attempt.details')
                 ->where('attempt', '[0-9]+');

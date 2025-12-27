@@ -5,6 +5,9 @@
 <script>
 document.addEventListener('DOMContentLoaded', function() {
     console.log('=== PLANS PAGE DEBUG ===');
+    console.log('User Subscriptions:', @json($userSubscriptions ?? 'undefined'));
+    console.log('User Subscriptions Count:', {{ isset($userSubscriptions) ? $userSubscriptions->count() : 'undefined' }});
+    console.log('Auth Check:', {{ Auth::check() ? 'true' : 'false' }});
     
     @foreach($plans as $plan)
     @php
@@ -24,12 +27,19 @@ document.addEventListener('DOMContentLoaded', function() {
 @section('content')
 <div x-data="{ selectedPlan: null, showModal: false }">
     
-    <div class="relative z-10">
+    <div class="relative z-10 space-y-8">
         <!-- Subscription Plans Component -->
         @include('components.home.subscription-plans', [
             'plans' => $plans,
             'isPlansPage' => true
         ])
+        {{-- Subscription History (only show if user has subscriptions) --}}
+        @if (isset($userSubscriptions) && $userSubscriptions->count() > 0)
+            @include('components.subscription-history', [
+                'userSubscriptions' => $userSubscriptions
+            ])
+        @endif
+        
     </div>
 </div>
 @endsection
