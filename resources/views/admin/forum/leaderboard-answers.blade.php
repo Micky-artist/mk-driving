@@ -142,20 +142,29 @@
                         <tr class="hover:bg-gray-50 dark:hover:bg-gray-700 transition-colors">
                             <td class="px-6 py-4">
                                 <div class="text-sm text-gray-900 dark:text-white max-w-xs">
-                                    {{ \Illuminate\Support\Str::limit(strip_tags($answer->content), 80) }}
+                                    @if(isset($answer->content['en']) && isset($answer->content['rw']))
+                                        <div>
+                                            <div class="text-xs text-gray-500 dark:text-gray-400 mb-1">English:</div>
+                                            {{ Str::limit(strip_tags($answer->content['en']), 80) }}
+                                        </div>
+                                        <div class="text-xs text-gray-500 dark:text-gray-400 mb-1 mt-2">Kinyarwanda:</div>
+                                        {{ Str::limit(strip_tags($answer->content['rw']), 80) }}
+                                    @else
+                                        {{ Str::limit(strip_tags($answer->content['en'] ?? $answer->content['rw'] ?? ''), 80) }}
+                                    @endif
                                 </div>
                             </td>
                             <td class="px-6 py-4">
                                 <div class="text-sm text-gray-900 dark:text-white">
-                                    {{ $answer->user->name }}
+                                    {{ $answer->user?->name ?? 'Deleted User' }}
                                 </div>
                                 <div class="text-xs text-gray-500 dark:text-gray-400">
-                                    {{ $answer->user->email }}
+                                    {{ $answer->user?->email ?? 'N/A' }}
                                 </div>
                             </td>
                             <td class="px-6 py-4">
                                 <div class="text-sm text-gray-900 dark:text-white max-w-xs">
-                                    {{ \Illuminate\Support\Str::limit($answer->question->title, 50) }}
+                                    {{ \Illuminate\Support\Str::limit($answer->question->title['en'] ?? $answer->question->title['rw'] ?? 'Untitled', 50) }}
                                 </div>
                                 <div class="text-xs text-gray-500 dark:text-gray-400">
                                     ID: #{{ $answer->question_id }}

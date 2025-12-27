@@ -142,18 +142,36 @@
                         <tr class="hover:bg-gray-50 dark:hover:bg-gray-700 transition-colors">
                             <td class="px-6 py-4">
                                 <div class="text-sm font-medium text-gray-900 dark:text-white">
-                                    {{ $question->title }}
+                                    @if(isset($question->title['en']) && isset($question->title['rw']))
+                                        <div>
+                                            <div class="text-xs text-gray-500 dark:text-gray-400 mb-1">English:</div>
+                                            {{ $question->title['en'] }}
+                                        </div>
+                                        <div class="text-xs text-gray-500 dark:text-gray-400 mb-1 mt-2">Kinyarwanda:</div>
+                                        {{ $question->title['rw'] }}
+                                    @else
+                                        {{ $question->title['en'] ?? $question->title['rw'] ?? 'Untitled' }}
+                                    @endif
                                 </div>
                                 <div class="text-xs text-gray-500 dark:text-gray-400 truncate max-w-xs">
-                                    {{ \Illuminate\Support\Str::limit(strip_tags($question->content), 60) }}
+                                    @if(isset($question->content['en']) && isset($question->content['rw']))
+                                        <div>
+                                            <div class="text-xs text-gray-500 dark:text-gray-400 mb-1">English:</div>
+                                            {{ Str::limit(strip_tags($question->content['en']), 60) }}
+                                        </div>
+                                        <div class="text-xs text-gray-500 dark:text-gray-400 mb-1 mt-2">Kinyarwanda:</div>
+                                        {{ Str::limit(strip_tags($question->content['rw']), 60) }}
+                                    @else
+                                        {{ Str::limit(strip_tags($question->content['en'] ?? $question->content['rw'] ?? ''), 60) }}
+                                    @endif
                                 </div>
                             </td>
                             <td class="px-6 py-4">
                                 <div class="text-sm text-gray-900 dark:text-white">
-                                    {{ $question->user->name }}
+                                    {{ $question->user?->name ?? 'Deleted User' }}
                                 </div>
                                 <div class="text-xs text-gray-500 dark:text-gray-400">
-                                    {{ $question->user->email }}
+                                    {{ $question->user?->email ?? 'N/A' }}
                                 </div>
                             </td>
                             <td class="px-6 py-4">

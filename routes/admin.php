@@ -141,6 +141,7 @@ Route::group([], function () {
         // Forum Management
         Route::prefix('forum')->name('forum.')->group(function () {
             Route::get('/', [ForumController::class, 'index'])->name('index');
+            Route::get('/{question}', [ForumController::class, 'show'])->name('show');
             Route::get('/leaderboard', [ForumController::class, 'leaderboard'])->name('leaderboard');
             
             // Moderation

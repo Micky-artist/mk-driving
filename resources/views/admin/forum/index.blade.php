@@ -248,18 +248,36 @@
                                                 </span>
                                             @endif
                                             <h4 class="text-sm font-medium text-gray-900 dark:text-white truncate">
-                                                {{ $question->title }}
+                                                @if(isset($question->title['en']) && isset($question->title['rw']))
+                                                    <div>
+                                                        <div class="text-xs text-gray-500 dark:text-gray-400 mb-1">English:</div>
+                                                        {{ $question->title['en'] }}
+                                                    </div>
+                                                    <div class="text-xs text-gray-500 dark:text-gray-400 mb-1 mt-2">Kinyarwanda:</div>
+                                                    {{ $question->title['rw'] }}
+                                                @else
+                                                    {{ $question->title['en'] ?? $question->title['rw'] ?? 'Untitled' }}
+                                                @endif
                                             </h4>
                                         </div>
                                         <p class="text-xs text-gray-500 dark:text-gray-400 mb-2 line-clamp-2">
-                                            {{ Str::limit(strip_tags($question->content), 80) }}
-                                        </p>
+                                                @if(isset($question->content['en']) && isset($question->content['rw']))
+                                                    <div>
+                                                        <div class="text-xs text-gray-500 dark:text-gray-400 mb-1">English:</div>
+                                                        {{ Str::limit(strip_tags($question->content['en']), 80) }}
+                                                    </div>
+                                                    <div class="text-xs text-gray-500 dark:text-gray-400 mb-1 mt-2">Kinyarwanda:</div>
+                                                    {{ Str::limit(strip_tags($question->content['rw']), 80) }}
+                                                @else
+                                                    {{ Str::limit(strip_tags($question->content['en'] ?? $question->content['rw'] ?? ''), 80) }}
+                                                @endif
+                                            </p>
                                         <div class="flex items-center gap-4 text-xs text-gray-500 dark:text-gray-400">
                                             <span class="flex items-center">
                                                 <svg class="w-3 h-3 mr-1" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                                                     <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M16 7a4 4 0 11-8 0 4 4 0 018 0zM12 14a7 7 0 00-7 7h14a7 7 0 00-7-7z"></path>
                                                 </svg>
-                                                {{ $question->user->name }}
+                                                {{ $question->user?->name ?? 'Deleted User' }}
                                             </span>
                                             <span class="flex items-center">
                                                 <svg class="w-3 h-3 mr-1" fill="none" stroke="currentColor" viewBox="0 0 24 24">
@@ -386,18 +404,36 @@
                         <tr class="hover:bg-gray-50 dark:hover:bg-gray-700 transition-colors">
                             <td class="px-6 py-4">
                                 <div class="text-sm font-medium text-gray-900 dark:text-white">
-                                    {{ $question->title }}
+                                    @if(isset($question->title['en']) && isset($question->title['rw']))
+                                        <div>
+                                            <div class="text-xs text-gray-500 dark:text-gray-400 mb-1">English:</div>
+                                            {{ $question->title['en'] }}
+                                        </div>
+                                        <div class="text-xs text-gray-500 dark:text-gray-400 mb-1 mt-2">Kinyarwanda:</div>
+                                        {{ $question->title['rw'] }}
+                                    @else
+                                        {{ $question->title['en'] ?? $question->title['rw'] ?? 'Untitled' }}
+                                    @endif
                                 </div>
                                 <div class="text-xs text-gray-500 dark:text-gray-400 truncate max-w-xs">
-                                    {{ Str::limit(strip_tags($question->content), 60) }}
+                                    @if(isset($question->content['en']) && isset($question->content['rw']))
+                                        <div>
+                                            <div class="text-xs text-gray-500 dark:text-gray-400 mb-1">English:</div>
+                                            {{ Str::limit(strip_tags($question->content['en']), 60) }}
+                                        </div>
+                                        <div class="text-xs text-gray-500 dark:text-gray-400 mb-1 mt-2">Kinyarwanda:</div>
+                                        {{ Str::limit(strip_tags($question->content['rw']), 60) }}
+                                    @else
+                                        {{ Str::limit(strip_tags($question->content['en'] ?? $question->content['rw'] ?? ''), 60) }}
+                                    @endif
                                 </div>
                             </td>
                             <td class="px-6 py-4">
                                 <div class="text-sm text-gray-900 dark:text-white">
-                                    {{ $question->user->name }}
+                                    {{ $question->user?->name ?? 'Deleted User' }}
                                 </div>
                                 <div class="text-xs text-gray-500 dark:text-gray-400">
-                                    {{ $question->user->email }}
+                                    {{ $question->user?->email ?? 'N/A' }}
                                 </div>
                             </td>
                             <td class="px-6 py-4">

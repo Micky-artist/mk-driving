@@ -70,7 +70,7 @@ __;
                             <div class="flex items-start justify-between">
                                 <div class="flex-1">
                                     <h4 class="text-lg font-medium text-gray-900 dark:text-white mb-2">
-                                        Question: {{ $answer->question->title }}
+                                        Question: {{ $answer->question->title['en'] ?? $answer->question->title['rw'] ?? 'Untitled' }}
                                     </h4>
                                     <p class="text-sm text-gray-600 dark:text-gray-400">
                                         Asked by {{ $answer->question->user->name ?? 'Unknown User' }} · 
@@ -91,7 +91,20 @@ __;
                         <!-- Answer Content -->
                         <div class="mb-4">
                             <div class="bg-gray-50 dark:bg-gray-700/30 rounded-lg p-4">
-                                <p class="text-gray-700 dark:text-gray-300 whitespace-pre-wrap">{{ $answer->content }}</p>
+                                <p class="text-gray-700 dark:text-gray-300 whitespace-pre-wrap">
+                                    @if(isset($answer->content['en']) && isset($answer->content['rw']))
+                                        <div>
+                                            <div class="text-sm text-gray-500 dark:text-gray-400 mb-2 font-medium">English:</div>
+                                            <div class="mb-4">{{ $answer->content['en'] }}</div>
+                                        </div>
+                                        <div>
+                                            <div class="text-sm text-gray-500 dark:text-gray-400 mb-2 font-medium">Kinyarwanda:</div>
+                                            <div>{{ $answer->content['rw'] }}</div>
+                                        </div>
+                                    @else
+                                        {{ $answer->content['en'] ?? $answer->content['rw'] ?? '' }}
+                                    @endif
+                                </p>
                             </div>
                         </div>
 
@@ -114,6 +127,7 @@ __;
                                         </p>
                                     </div>
                                 </div>
+                                @if($answer->user)
                                 <a href="{{ route('admin.users.show', $answer->user->id) }}" 
                                    class="inline-flex items-center px-2 py-1 text-xs bg-purple-100 dark:bg-purple-900/20 text-purple-700 dark:text-purple-300 rounded-md hover:bg-purple-200 dark:hover:bg-purple-800 transition-colors duration-200">
                                     <svg class="w-3 h-3 mr-1" fill="none" stroke="currentColor" viewBox="0 0 24 24">
@@ -122,6 +136,7 @@ __;
                                     </svg>
                                     Manage User
                                 </a>
+                                @endif
                             </div>
 
                             <div class="flex items-center space-x-2">

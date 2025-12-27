@@ -77,25 +77,38 @@
         }
     }
 
-    // Determine status badge color based on score
+    // Determine status badge color based on completion status
     $statusColorClass = 'bg-gray-100 dark:bg-gray-700 text-gray-800 dark:text-gray-300';
     $statusDotClass = 'bg-gray-500';
-    if ($attemptsCount > 0) {
-        if ($progressPercent >= 60) {
-            $statusColorClass = 'bg-green-100 dark:bg-green-900/20 text-green-800 dark:text-green-300';
-            $statusDotClass = 'bg-green-500';
-        } elseif ($progressPercent >= 40) {
-            $statusColorClass = 'bg-yellow-100 dark:bg-yellow-900/20 text-yellow-800 dark:text-yellow-300';
-            $statusDotClass = 'bg-yellow-500';
-        } else {
-            $statusColorClass = 'bg-red-100 dark:bg-red-900/20 text-red-800 dark:text-red-300';
-            $statusDotClass = 'bg-red-500';
-        }
+    
+    if ($status === 'completed') {
+        $statusColorClass = 'bg-green-100 dark:bg-green-900/20 text-green-800 dark:text-green-300';
+        $statusDotClass = 'bg-green-500';
+    } elseif ($status === 'in_progress') {
+        $statusColorClass = 'bg-yellow-100 dark:bg-yellow-900/20 text-yellow-800 dark:text-yellow-300';
+        $statusDotClass = 'bg-yellow-500';
     }
 
     // Define gradient based on score with 60% as passing threshold
-    // Header stays blue, only progress bar and status badge are color-coded
-    $gradient = 'from-blue-600 to-blue-700';
+    // Header stays blue, progress bar and status badge are color-coded
+    $headerGradient = 'from-blue-600 to-blue-700';
+    
+    // Progress bar color based on score
+    if ($attemptsCount > 0) {
+        if ($progressPercent >= 80) {
+            $progressGradient = 'from-green-500 to-green-600';
+        } elseif ($progressPercent >= 60) {
+            $progressGradient = 'from-lime-500 to-lime-600';
+        } elseif ($progressPercent >= 40) {
+            $progressGradient = 'from-yellow-500 to-yellow-600';
+        } elseif ($progressPercent >= 20) {
+            $progressGradient = 'from-orange-500 to-orange-600';
+        } else {
+            $progressGradient = 'from-red-500 to-red-600';
+        }
+    } else {
+        $progressGradient = 'from-gray-400 to-gray-500';
+    }
 
     // Determine button text and link based on user state
     $buttonText = __('dashboard.quizzes.start_quiz');
@@ -161,7 +174,7 @@
 
     <!-- Dashboard Header for Authenticated Users -->
     @if ($showDashboardFeatures)
-        <div class="bg-gradient-to-r {{ $gradient }} p-5 text-white flex-shrink-0">
+        <div class="bg-gradient-to-r {{ $headerGradient }} p-5 text-white flex-shrink-0">
             <div class="flex justify-between items-start gap-3 mb-4">
                 <div class="flex-1 min-w-0">
                     <h3 class="text-lg font-bold truncate">{{ $title }}</h3>
@@ -224,7 +237,7 @@
                     <span class="font-semibold text-gray-900 dark:text-white">{{ $progressPercent }}%</span>
                 </div>
                 <div class="w-full bg-gray-200 dark:bg-gray-600 rounded-full h-2.5 overflow-hidden">
-                    <div class="bg-gradient-to-r {{ $gradient }} h-2.5 rounded-full transition-all duration-500 ease-out"
+                    <div class="bg-gradient-to-r {{ $progressGradient }} h-2.5 rounded-full transition-all duration-500 ease-out"
                         style="width: {{ $progressPercent }}%;"></div>
                 </div>
             </div>
@@ -254,15 +267,26 @@
                 </div>
 
                 <div class="mt-4">
-                    <button type="button"
-                        onclick="event.preventDefault(); @if ($canRetake || $hasActiveSubscription) window.location.href='{{ $buttonLink }}' @else showRetakeRestriction('{{ $nextRetakeTime ? $nextRetakeTime->diffForHumans() : '' }}') @endif"
-                        class="w-full flex items-center justify-center px-4 py-2 border border-transparent rounded-lg text-sm font-medium text-white focus:outline-none focus:ring-2 focus:ring-offset-2 transition-colors duration-200 bg-blue-600 hover:bg-blue-700 focus:ring-blue-500 {{ !$canRetake && !$hasActiveSubscription ? 'opacity-75' : '' }}">
-                        {{ $buttonText }}
-                        <svg class="ml-2 -mr-1 w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
-                                d="M14 5l7 7m0 0l-7 7m7-7H3" />
-                        </svg>
-                    </button>
+                    @if ($buttonLink && $isLocked === false)
+                        <a href="{{ $buttonLink }}"
+                            class="flex items-center justify-center w-full px-4 py-2 border border-transparent rounded-lg text-sm font-medium text-white focus:outline-none focus:ring-2 focus:ring-offset-2 transition-colors duration-200 bg-blue-600 hover:bg-blue-700 focus:ring-blue-500">
+                            {{ $buttonText }}
+                            <svg class="ml-2 -mr-1 w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
+                                    d="M14 5l7 7m0 0l-7 7m7-7H3" />
+                            </svg>
+                        </a>
+                    @else
+                        <button type="button"
+                            onclick="event.preventDefault(); @if ($canRetake || $hasActiveSubscription) window.location.href='{{ $buttonLink }}' @else showRetakeRestriction('{{ $nextRetakeTime ? $nextRetakeTime->diffForHumans() : '' }}') @endif"
+                            class="w-full flex items-center justify-center px-4 py-2 border border-transparent rounded-lg text-sm font-medium text-white focus:outline-none focus:ring-2 focus:ring-offset-2 transition-colors duration-200 bg-blue-600 hover:bg-blue-700 focus:ring-blue-500 {{ !$canRetake && !$hasActiveSubscription ? 'opacity-75' : '' }}">
+                            {{ $buttonText }}
+                            <svg class="ml-2 -mr-1 w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
+                                    d="M14 5l7 7m0 0l-7 7m7-7H3" />
+                            </svg>
+                        </button>
+                    @endif
                 </div>
             </div>
         @else
