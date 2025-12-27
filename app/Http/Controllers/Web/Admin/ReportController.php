@@ -15,6 +15,7 @@ use App\Models\Visitor;
 use App\Models\News;
 use App\Models\ForumQuestion;
 use App\Models\ForumAnswer;
+use App\Models\UserPoint;
 use Illuminate\Support\Facades\DB;
 use Maatwebsite\Excel\Facades\Excel;
 use App\Exports\ReportsExport;
@@ -185,7 +186,8 @@ class ReportController extends Controller
             'regular_questions' => ForumQuestion::where('is_news_discussion', false)->count(),
         ];
 
-        $topContributors = User::withCount(['forumAnswers'])
+        $topContributors = User::join('user_points', 'users.id', '=', 'user_points.user_id')
+            ->withCount(['forumAnswers'])
             ->orderBy('forum_answers_count', 'desc')
             ->take(5)
             ->get()
@@ -193,7 +195,7 @@ class ReportController extends Controller
                 return (object) [
                     'name' => $user->first_name . ' ' . $user->last_name,
                     'answers' => $user->forum_answers_count,
-                    'points' => $user->points ?? 0,
+                    'points' => $user->total_points ?? 0,
                     'rank' => $user->getRankName(),
                     'avatar' => $user->profile_image ?? null,
                 ];
@@ -201,20 +203,21 @@ class ReportController extends Controller
 
         // Leaderboard metrics
         $leaderboardMetrics = [
-            'total_users_ranked' => User::where('points', '>', 0)->count(),
-            'highest_points' => User::max('points') ?? 0,
-            'avg_points_per_user' => User::avg('points') ?? 0,
+            'total_users_ranked' => UserPoint::where('total_points', '>', 0)->count(),
+            'highest_points' => UserPoint::max('total_points') ?? 0,
+            'avg_points_per_user' => UserPoint::avg('total_points') ?? 0,
             'active_streaks' => User::where('streak_days', '>', 0)->count(),
             'longest_streak' => User::max('streak_days') ?? 0,
         ];
 
-        $topRankedUsers = User::orderBy('points', 'desc')
+        $topRankedUsers = User::join('user_points', 'users.id', '=', 'user_points.user_id')
+            ->orderBy('user_points.total_points', 'desc')
             ->take(10)
             ->get()
             ->map(function ($user) {
                 return [
                     'name' => $user->first_name . ' ' . $user->last_name,
-                    'points' => $user->points ?? 0,
+                    'points' => $user->total_points ?? 0,
                     'rank' => $user->getRankName(),
                     'streak' => $user->streak_days ?? 0,
                     'badges' => $user->achievement_badges ?? [],
@@ -323,7 +326,7 @@ class ReportController extends Controller
                     ->whereBetween('created_at', [$previous, $current])
                     ->sum('amount');
                 $previousRevenue = Subscription::where('status', 'ACTIVE')
-                    ->whereBetween('created_at', [$previous->copy()->subDays($period), $previous])
+                    ->whereBetween('created_at', [subDays($period * 2), $previous])
                     ->sum('amount');
                 return $previousRevenue > 0 ? 
                     (($currentRevenue - $previousRevenue) / $previousRevenue) * 100 : 0;
@@ -331,7 +334,7 @@ class ReportController extends Controller
             case 'users':
                 $currentUsers = User::whereBetween('created_at', [$previous, $current])->count();
                 $previousUsers = User::whereBetween('created_at', 
-                    [$previous->copy()->subDays($period), $previous])->count();
+                    [subDays($period * 2), $previous])->count();
                 return $previousUsers > 0 ? 
                     (($currentUsers - $previousUsers) / $previousUsers) * 100 : 0;
                 

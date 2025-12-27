@@ -171,11 +171,11 @@
                         @foreach($topQuizzes as $quiz)
                         <div class="flex items-center justify-between p-3 bg-gray-50 dark:bg-gray-700 rounded-lg">
                             <div>
-                                <p class="font-medium text-gray-900 dark:text-white">{{ $quiz->title }}</p>
-                                <p class="text-sm text-gray-600 dark:text-gray-400">{{ $quiz->attempts }} attempts</p>
+                                <p class="font-medium text-gray-900 dark:text-white">{{ $quiz['title'] }}</p>
+                                <p class="text-sm text-gray-600 dark:text-gray-400">{{ $quiz['attempts'] }} attempts</p>
                             </div>
                             <div class="text-right">
-                                <p class="font-semibold text-green-600 dark:text-green-400">{{ $quiz->pass_rate }}%</p>
+                                <p class="font-semibold text-green-600 dark:text-green-400">{{ $quiz['pass_rate'] }}%</p>
                                 <p class="text-xs text-gray-500 dark:text-gray-400">pass rate</p>
                             </div>
                         </div>
