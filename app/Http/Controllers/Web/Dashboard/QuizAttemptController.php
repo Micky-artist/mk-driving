@@ -4,6 +4,7 @@ namespace App\Http\Controllers\Web\Dashboard;
 
 use App\Http\Controllers\Controller;
 use App\Data\QuizSubmission;
+use App\Models\Quiz;
 use App\Models\QuizAttempt;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
@@ -12,6 +13,68 @@ use Illuminate\Support\Facades\Log;
 
 class QuizAttemptController extends Controller
 {
+    /**
+     * Get or create an active quiz attempt
+     */
+    public function getActiveAttempt(Request $request, $locale, $quizId)
+    {
+        $user = Auth::user();
+        
+        try {
+            // Find the quiz by ID (ignore locale parameter)
+            $quiz = Quiz::findOrFail($quizId);
+            
+            // Check if user has an existing in-progress attempt for this quiz
+            $attempt = $user->quizAttempts()
+                ->where('quiz_id', $quiz->id)
+                ->where('status', 'IN_PROGRESS')
+                ->first();
+
+            if (!$attempt) {
+                // Create a new attempt
+                $attempt = $user->quizAttempts()->create([
+                    'quiz_id' => $quiz->id,
+                    'started_at' => now(),
+                    'score' => 0,
+                    'answers' => [],
+                    'status' => 'IN_PROGRESS'
+                ]);
+
+                Log::info('New quiz attempt created', [
+                    'attempt_id' => $attempt->id,
+                    'user_id' => $user->id,
+                    'quiz_id' => $quiz->id,
+                    'locale' => $locale
+                ]);
+            } else {
+                Log::debug('Resuming existing attempt', [
+                    'attempt_id' => $attempt->id,
+                    'status' => $attempt->status,
+                    'locale' => $locale
+                ]);
+            }
+
+            return response()->json([
+                'success' => true,
+                'attempt' => $attempt->load(['quiz', 'userAnswers.option', 'userAnswers.question'])
+            ]);
+
+        } catch (\Exception $e) {
+            Log::error('Error getting/creating quiz attempt', [
+                'error' => $e->getMessage(),
+                'trace' => $e->getTraceAsString(),
+                'user_id' => $user->id,
+                'quiz_id' => $quizId ?? 'unknown',
+                'locale' => $locale
+            ]);
+
+            return response()->json([
+                'success' => false,
+                'message' => 'Failed to get or create quiz attempt'
+            ], 500);
+        }
+    }
+
     /**
      * Update the specified quiz attempt.
      */

@@ -26,7 +26,7 @@ class DashboardController extends Controller
         ]);
         
         // Eager load relationships
-        $user->load(['subscriptions.plan', 'quizAttempts.quiz', 'quizAttempts.userAnswers']);
+        $user->load(['subscriptions.plan', 'quizAttempts.quiz']);
         
         // Get user's current subscriptions from loaded relationship
         $currentSubscriptions = $user->subscriptions
@@ -87,56 +87,70 @@ class DashboardController extends Controller
         $completedQuizzes = $quizAttempts->where('status', 'COMPLETED');
         $inProgressQuizzes = $quizAttempts->where('status', 'IN_PROGRESS');
         
-        // Calculate test readiness
+        // Calculate test readiness with partial progress
         $completedQuizzesForReadiness = $quizAttempts->where('status', 'COMPLETED');
         $inProgressQuizzesForReadiness = $quizAttempts->where('status', 'IN_PROGRESS');
         
-        // Include both completed and in-progress attempts that have answers
-        $allAttemptsWithAnswers = $quizAttempts->filter(function($attempt) {
-            return $attempt->userAnswers && $attempt->userAnswers->count() > 0;
-        });
-        
-        $totalAttemptsWithAnswers = $allAttemptsWithAnswers->count();
-        $totalCompletedTests = $completedQuizzesForReadiness->count();
-        
-        // Calculate average score from completed quizzes, and partial scores from in-progress
+        // Calculate total quiz equivalents (partial progress counts as fraction)
+        $totalQuizEquivalents = 0;
         $totalScore = 0;
         $scoreCount = 0;
         
+        // Process completed quizzes (each counts as 1 full quiz)
         foreach ($completedQuizzesForReadiness as $completed) {
-            $totalScore += $completed->score ?? 0;
+            $totalQuizEquivalents += 1;
+            
+            // Use the score field if available, otherwise calculate from answers
+            if ($completed->score) {
+                $totalScore += $completed->score;
+            } else {
+                // Calculate score from answers JSON
+                $score = $this->calculateScoreFromAnswers($completed->answers);
+                $totalScore += $score;
+            }
             $scoreCount++;
         }
         
+        // Process in-progress quizzes (count as fraction based on progress)
         foreach ($inProgressQuizzesForReadiness as $inProgress) {
-            if ($inProgress->userAnswers && $inProgress->userAnswers->count() > 0) {
-                $correctAnswers = $inProgress->userAnswers->where('is_correct', true)->count();
-                $totalQuestions = $inProgress->userAnswers->count();
-                $partialScore = $totalQuestions > 0 ? ($correctAnswers / $totalQuestions) * 100 : 0;
-                $totalScore += $partialScore;
-                $scoreCount++;
+            if ($inProgress->answers && is_array($inProgress->answers) && count($inProgress->answers) > 0) {
+                $answeredQuestions = count($inProgress->answers);
+                $totalQuestions = $inProgress->quiz->questions->count() ?? 20; // Default to 20 if not set
+                
+                if ($totalQuestions > 0) {
+                    // This quiz counts as a fraction of a full quiz
+                    $quizFraction = $answeredQuestions / $totalQuestions;
+                    $totalQuizEquivalents += $quizFraction;
+                    
+                    // Calculate partial score
+                    $partialScore = $this->calculateScoreFromAnswers($inProgress->answers);
+                    $totalScore += $partialScore;
+                    $scoreCount++;
+                }
             }
         }
         
         $averageScore = $scoreCount > 0 ? round($totalScore / $scoreCount, 1) : 0;
         
-        // Calculate readiness percentage (60% threshold with at least 25 tests)
+        // Calculate readiness percentage based on 25-quiz baseline
         $readinessPercentage = 0;
-        if ($totalAttemptsWithAnswers >= 25) {
+        if ($totalQuizEquivalents >= 25) {
+            // User has completed equivalent of 25+ quizzes
             $readinessPercentage = min(100, round(($averageScore / 60) * 100));
-        } elseif ($totalAttemptsWithAnswers > 0) {
-            // Partial readiness for users with fewer than 25 tests
-            $testCountFactor = $totalAttemptsWithAnswers / 25; // How close they are to 25 tests
-            $scoreFactor = min(100, ($averageScore / 60) * 100); // Score factor relative to 60%
-            $readinessPercentage = round($testCountFactor * $scoreFactor);
+        } elseif ($totalQuizEquivalents > 0) {
+            // Partial readiness - scale based on how close to 25 quizzes and score
+            $testCountFactor = min(1, $totalQuizEquivalents / 25); // Progress toward 25 quizzes (0 to 1)
+            $scoreFactor = min(1, $averageScore / 60); // Score factor relative to 60% (0 to 1)
+            $readinessPercentage = round($testCountFactor * $scoreFactor * 100);
         }
         
         $readinessData = [
             'percentage' => $readinessPercentage,
             'average_score' => $averageScore,
-            'total_tests' => $totalAttemptsWithAnswers,
+            'total_tests' => round($totalQuizEquivalents, 1), // Show quiz equivalents
+            'quiz_equivalents' => $totalQuizEquivalents, // Raw number for debugging
             'is_ready' => $readinessPercentage >= 100,
-            'getting_ready' => $readinessPercentage >= 60 && $totalAttemptsWithAnswers >= 25,
+            'getting_ready' => $readinessPercentage >= 60 && $totalQuizEquivalents >= 25,
         ];
 
         $stats = [
@@ -212,5 +226,26 @@ class DashboardController extends Controller
             'subscriptionStats' => $subscriptionStats,
             'readinessData' => $readinessData,
         ]);
+    }
+
+    /**
+     * Calculate score percentage from answers JSON
+     */
+    private function calculateScoreFromAnswers($answers): float
+    {
+        if (!is_array($answers) || empty($answers)) {
+            return 0;
+        }
+
+        $totalQuestions = count($answers);
+        $correctAnswers = 0;
+
+        foreach ($answers as $questionId => $answer) {
+            if (is_array($answer) && isset($answer['is_correct']) && $answer['is_correct']) {
+                $correctAnswers++;
+            }
+        }
+
+        return $totalQuestions > 0 ? round(($correctAnswers / $totalQuestions) * 100, 1) : 0;
     }
 }

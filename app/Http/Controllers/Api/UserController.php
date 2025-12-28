@@ -221,9 +221,12 @@ class UserController extends Controller
             }
         }
         
+        // Calculate average score using the same method as dashboard (includes all attempts with answers)
+        $averageScore = $this->calculateUserAverageScore($user);
+        
         // Calculate or get user stats
         $stats = [
-            'averageScore' => round($user->average_score ?? 0, 1),
+            'averageScore' => $averageScore,
             'leaderboardPosition' => $pointsService->getUserRank($user->id), // Use PointsService for consistent ranking
             'streak' => $user->streak_days ?? 0,
             'xp' => $userPoints['total'], // Use unified points system
@@ -262,6 +265,66 @@ class UserController extends Controller
             'latestScore' => $latestScore,
             'previousScore' => $previousScore
         ];
+    }
+
+    /**
+     * Calculate user average score using the same method as dashboard (includes all attempts with answers)
+     */
+    private function calculateUserAverageScore(User $user): float
+    {
+        // Get all quiz attempts
+        $quizAttempts = $user->quizAttempts()->with('quiz')->get() ?? collect();
+        
+        $totalScore = 0;
+        $scoreCount = 0;
+        
+        // Process completed quizzes
+        $completedQuizzes = $quizAttempts->where('status', 'COMPLETED');
+        foreach ($completedQuizzes as $completed) {
+            // Use the score field if available, otherwise calculate from answers
+            if ($completed->score) {
+                $totalScore += $completed->score;
+            } else {
+                // Calculate score from answers JSON
+                $score = $this->calculateScoreFromAnswers($completed->answers);
+                $totalScore += $score;
+            }
+            $scoreCount++;
+        }
+        
+        // Process in-progress quizzes
+        $inProgressQuizzes = $quizAttempts->where('status', 'IN_PROGRESS');
+        foreach ($inProgressQuizzes as $inProgress) {
+            if ($inProgress->answers && is_array($inProgress->answers) && count($inProgress->answers) > 0) {
+                // Calculate partial score
+                $partialScore = $this->calculateScoreFromAnswers($inProgress->answers);
+                $totalScore += $partialScore;
+                $scoreCount++;
+            }
+        }
+        
+        return $scoreCount > 0 ? round($totalScore / $scoreCount, 1) : 0;
+    }
+    
+    /**
+     * Calculate score percentage from answers JSON
+     */
+    private function calculateScoreFromAnswers($answers): float
+    {
+        if (!is_array($answers) || empty($answers)) {
+            return 0;
+        }
+
+        $totalQuestions = count($answers);
+        $correctAnswers = 0;
+
+        foreach ($answers as $questionId => $answer) {
+            if (is_array($answer) && isset($answer['is_correct']) && $answer['is_correct']) {
+                $correctAnswers++;
+            }
+        }
+
+        return $totalQuestions > 0 ? round(($correctAnswers / $totalQuestions) * 100, 1) : 0;
     }
 
     /**

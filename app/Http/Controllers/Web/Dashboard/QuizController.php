@@ -307,7 +307,17 @@ class QuizController extends Controller
             })
             ->exists();
 
-        return $activeSubscription;
+        if (!$activeSubscription) {
+            return false;
+        }
+
+        // Check if user has reached their quiz limit
+        // Only enforce limit for starting new quizzes, not for viewing/resuming existing attempts
+        if ($user->hasReachedQuizLimit()) {
+            return false;
+        }
+
+        return true;
     }
     
     /**
@@ -561,6 +571,101 @@ class QuizController extends Controller
             'quiz' => $quiz,
             'attempt' => $activeAttempt,
             'previousAttempts' => $attempts->where('id', '!=', $activeAttempt->id),
+            'user' => $user,
+            'isBookmarked' => $isBookmarked,
+            'userAttempts' => $userAttempts,
+            'bestScore' => $bestScore,
+            'userStreak' => $userStreak,
+            'canRetake' => $canRetake,
+            'nextRetakeTime' => $nextRetakeTime,
+            'hasActiveSubscription' => $hasActiveSubscription
+        ]);
+    }
+
+    /**
+     * Take a specific quiz attempt
+     *
+     * @param  string  $locale
+     * @param  int  $id The quiz ID
+     * @param  int  $attemptId The attempt ID
+     * @return \Illuminate\View\View|\Illuminate\Http\RedirectResponse
+     */
+    public function take($locale, $id, $attemptId)
+    {
+        // Ensure the IDs are numeric
+        if (!is_numeric($id) || !is_numeric($attemptId)) {
+            abort(404);
+        }
+
+        // Fetch the quiz with relationships
+        $quiz = Quiz::where('is_active', true)
+            ->with(['questions' => function($query) {
+                $query->with(['options']);
+            }])
+            ->findOrFail($id);
+            
+        // Check if user can access this quiz
+        $user = Auth::user();
+        if (!$this->canAccessQuiz($user, $quiz)) {
+            if (!$user) {
+                return redirect()->route('login');
+            }
+            return redirect()->route('dashboard.quizzes.index')
+                ->with('error', 'You do not have access to this quiz. Please upgrade your subscription.');
+        }
+        
+        // Find the specific attempt
+        $attempt = QuizAttempt::where('id', $attemptId)
+            ->where('user_id', $user->id)
+            ->where('quiz_id', $quiz->id)
+            ->firstOrFail();
+            
+        // Ensure the attempt is not completed
+        if ($attempt->completed_at) {
+            return redirect()->route('dashboard.quizzes.show', [$locale, $quiz->id])
+                ->with('info', 'This attempt has already been completed.');
+        }
+        
+        // Authorize the action
+        $this->authorize('view', $attempt);
+        
+        // Get other data needed for the view (similar to show method)
+        $attempts = $quiz->attempts()
+            ->where('user_id', $user->id)
+            ->orderBy('created_at', 'desc')
+            ->get();
+
+        // Check if the quiz is bookmarked by the user
+        $isBookmarked = $user->bookmarks()->where('quiz_id', $quiz->id)->exists();
+        
+        // Get user's total attempts and best score for this quiz
+        $userAttempts = $attempts->count();
+        $bestScore = $attempts->max('score') ?? 0;
+        
+        // Get user's current streak
+        $userStreak = $user->getCurrentStreak();
+        
+        // Check if user can retake the quiz
+        $canRetake = $this->canRetakeQuiz($user, $quiz);
+        $nextRetakeTime = null;
+        $hasActiveSubscription = $user->activeSubscriptions()->exists();
+        
+        if (!$canRetake && !$hasActiveSubscription) {
+            $lastAttempt = $user->quizAttempts()
+                ->where('quiz_id', $quiz->id)
+                ->whereNotNull('completed_at')
+                ->latest('completed_at')
+                ->first();
+                
+            if ($lastAttempt) {
+                $nextRetakeTime = $lastAttempt->completed_at->addHours(24);
+            }
+        }
+
+        return view('dashboard.quizzes.show', [
+            'quiz' => $quiz,
+            'attempt' => $attempt, // Pass the specific attempt
+            'previousAttempts' => $attempts->where('id', '!=', $attempt->id),
             'user' => $user,
             'isBookmarked' => $isBookmarked,
             'userAttempts' => $userAttempts,

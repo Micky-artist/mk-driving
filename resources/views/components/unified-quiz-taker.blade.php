@@ -677,8 +677,8 @@
                         })) : []
                     })),
                     userAnswers: {},
-                    correctCount: {{ $attempt && $attempt->answers ? collect($attempt->answers)->filter(fn($a) => $a['is_correct'])->count() : 0 }},
-                    incorrectCount: {{ $attempt && $attempt->answers ? collect($attempt->answers)->filter(fn($a) => !$a['is_correct'])->count() : 0 }},
+                    correctCount: 0,
+                    incorrectCount: 0,
                     
                     // Translations
                     translations: {
@@ -1065,6 +1065,9 @@
                                 `quiz_${this.quizId}_answers`,
                                 JSON.stringify(this.userAnswers)
                             );
+                            
+                            // Also save immediately to backend
+                            this.saveCurrentAnswer();
                         }
 
                         // Auto-advance if enabled
@@ -1116,11 +1119,24 @@
                         if (savedAnswer) {
                             this.selectedOption = savedAnswer.optionId;
                             this.isAnswerSubmitted = true;
-                            this.isAnswerCorrect = savedAnswer.isCorrect;
+                            
+                            // Determine if the answer is correct if not already set
+                            if (savedAnswer.isCorrect === null) {
+                                const selectedOption = this.currentQuestion.options.find(opt => opt.id === savedAnswer.optionId);
+                                this.isAnswerCorrect = selectedOption ? selectedOption.is_correct : false;
+                                // Update the saved answer with the correct status
+                                savedAnswer.isCorrect = this.isAnswerCorrect;
+                            } else {
+                                this.isAnswerCorrect = savedAnswer.isCorrect;
+                            }
+                            
                             this.showFeedback = true;
-                            this.feedbackMessage = savedAnswer.isCorrect ?
+                            this.feedbackMessage = this.isAnswerCorrect ?
                                 this.translations.quiz.correctFeedback :
                                 this.translations.quiz.incorrectFeedback;
+                                
+                            // Update counts to ensure accuracy
+                            this.updateAnswerCounts();
                         } else {
                             this.selectedOption = null;
                             this.isAnswerSubmitted = false;
@@ -1164,57 +1180,96 @@
                             return;
                         }
 
-                        // Otherwise, create a new attempt
+                        // Otherwise, check for existing incomplete attempt or create new one
                         try {
-                            const response = await fetch('/api/quizzes/start', {
-                                method: 'POST',
+                            const response = await fetch(`/{{ app()->getLocale() }}/api/quizzes/${this.quizId}/attempt`, {
+                                method: 'GET',
                                 credentials: 'same-origin',
                                 headers: {
                                     'Content-Type': 'application/json',
                                     'X-CSRF-TOKEN': document.querySelector(
                                         'meta[name="csrf-token"]').content
-                                },
-                                body: JSON.stringify({
-                                    quizId: this.quizId
-                                })
+                                }
                             });
 
                             if (response.ok) {
                                 const data = await response.json();
                                 this.currentAttempt = data.attempt;
-                                console.log('New attempt created:', this.currentAttempt.id);
+                                console.log('Using attempt:', this.currentAttempt.id);
+                                
+                                // Load the attempt state if it has existing answers
+                                this.loadAttemptState();
                             } else {
-                                console.error('Failed to create attempt');
+                                console.error('Failed to get/create attempt');
                             }
                         } catch (error) {
-                            console.error('Error creating attempt:', error);
+                            console.error('Error getting/creating attempt:', error);
                         }
                     },
 
                     loadAttemptState() {
-                        if (!this.currentAttempt || !this.currentAttempt.user_answers) return;
+                        if (!this.currentAttempt || !this.currentAttempt.answers) return;
 
-                        // Load existing answers
-                        this.currentAttempt.user_answers.forEach(answer => {
-                            this.userAnswers[answer.question_id] = answer.option_id;
+                        // Load existing answers from the attempt
+                        const answers = this.currentAttempt.answers;
+                        Object.keys(answers).forEach(questionId => {
+                            this.userAnswers[questionId] = {
+                                optionId: answers[questionId],
+                                isCorrect: null, // We'll determine this when loading the question
+                                timestamp: new Date().toISOString()
+                            };
                         });
 
-                        // Find the last unanswered question to resume from
-                        const answeredQuestions = Object.keys(this.userAnswers);
-                        if (answeredQuestions.length > 0) {
-                            // Find the index of the last answered question
-                            const lastAnsweredQuestionId = answeredQuestions[answeredQuestions.length - 1];
-                            const lastAnsweredIndex = this.questions.findIndex(q => q.id ==
-                                lastAnsweredQuestionId);
+                        // Update counts based on loaded answers
+                        this.updateAnswerCounts();
 
-                            if (lastAnsweredIndex !== -1) {
-                                // Resume from the next unanswered question
-                                this.currentQuestionIndex = Math.min(lastAnsweredIndex + 1, this
-                                    .totalQuestions - 1);
+                        // Reorder questions: answered questions first, then unanswered
+                        const answeredQuestions = [];
+                        const unansweredQuestions = [];
+                        
+                        this.questions.forEach(question => {
+                            if (this.userAnswers[question.id]) {
+                                answeredQuestions.push(question);
+                            } else {
+                                unansweredQuestions.push(question);
                             }
+                        });
+
+                        // Update the questions array with reordered list
+                        this.questions = [...answeredQuestions, ...unansweredQuestions];
+
+                        // Start from the first unanswered question (or beginning if all answered)
+                        if (unansweredQuestions.length > 0) {
+                            // Find the index of the first unanswered question in the reordered array
+                            this.currentQuestionIndex = answeredQuestions.length;
+                        } else {
+                            // All questions answered, go to the last one
+                            this.currentQuestionIndex = this.questions.length - 1;
                         }
 
-                        console.log('Resumed attempt from question', this.currentQuestionIndex + 1);
+                        console.log('Resumed attempt with reordered questions:', {
+                            answeredCount: answeredQuestions.length,
+                            unansweredCount: unansweredQuestions.length,
+                            startingFrom: this.currentQuestionIndex + 1
+                        });
+                        
+                        // Load the current question state to show any existing answers
+                        this.loadQuestionState();
+                    },
+
+                    updateAnswerCounts() {
+                        // Reset counts
+                        this.correctCount = 0;
+                        this.incorrectCount = 0;
+
+                        // Count correct and incorrect answers
+                        Object.values(this.userAnswers).forEach(answer => {
+                            if (answer.isCorrect === true) {
+                                this.correctCount++;
+                            } else if (answer.isCorrect === false) {
+                                this.incorrectCount++;
+                            }
+                        });
                     },
 
                     async saveCurrentAnswer() {

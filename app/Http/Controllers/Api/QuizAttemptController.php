@@ -48,6 +48,24 @@ class QuizAttemptController extends Controller
             $user = $request->user();
             $quiz = Quiz::findOrFail($request->quizId);
 
+            // Check if user has reached their quiz limit before starting new attempt
+            if ($user->hasReachedQuizLimit()) {
+                // Check if user has an existing in-progress attempt for this quiz
+                $existingAttempt = $user->quizAttempts()
+                    ->where('quiz_id', $quiz->id)
+                    ->where('status', 'in_progress')
+                    ->first();
+
+                if (!$existingAttempt) {
+                    return response()->json([
+                        'success' => false,
+                        'message' => 'You have reached your quiz limit for your current subscription plan. Please upgrade to continue.',
+                        'quiz_limit_reached' => true,
+                        'remaining_attempts' => $user->getRemainingQuizAttempts()
+                    ], 403);
+                }
+            }
+
             // Log quiz retrieval
             Log::debug('Found quiz', [
                 'quiz_id' => $quiz->id,
@@ -303,12 +321,28 @@ class QuizAttemptController extends Controller
             $user = $request->user();
             $quiz = Quiz::findOrFail($request->quiz_id);
 
-            // Create or update quiz attempt
-            $attempt = $user->quizAttempts()->create([
-                'quiz_id' => $quiz->id,
+            // Find and update existing in-progress attempt
+            $attempt = $user->quizAttempts()
+                ->where('quiz_id', $quiz->id)
+                ->where('status', 'in_progress')
+                ->whereNull('completed_at')
+                ->first();
+
+            if (!$attempt) {
+                // If no in-progress attempt exists, create a new one (fallback)
+                $attempt = $user->quizAttempts()->create([
+                    'quiz_id' => $quiz->id,
+                    'started_at' => now()->subSeconds($request->time_spent),
+                    'total_questions' => $request->total_questions,
+                    'answers' => $request->answers ?? [],
+                    'status' => 'in_progress'
+                ]);
+            }
+
+            // Update the attempt with completion data
+            $attempt->update([
                 'score' => $request->score,
                 'passed' => $request->score >= $quiz->passing_score,
-                'started_at' => now()->subSeconds($request->time_spent),
                 'completed_at' => now(),
                 'time_spent_seconds' => $request->time_spent,
                 'answers' => $request->answers ?? [],

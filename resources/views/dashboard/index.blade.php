@@ -219,10 +219,17 @@ document.addEventListener('DOMContentLoaded', function() {
                 <div class="p-4 space-y-4">
                     @foreach ($inProgressQuizzes as $currentQuiz)
                         @php
-                            // Calculate accurate progress using the relationship
-                            $userAnswers = $currentQuiz->userAnswers;
-                            $answeredQuestions = $userAnswers->count();
-                            $correctAnswers = $userAnswers->where('is_correct', true)->count();
+                            // Calculate accurate progress using the answers JSON data
+                            $answers = $currentQuiz->answers ?? [];
+                            $answeredQuestions = count($answers);
+                            $correctAnswers = 0;
+                            
+                            foreach ($answers as $questionId => $answer) {
+                                if (is_array($answer) && isset($answer['is_correct']) && $answer['is_correct']) {
+                                    $correctAnswers++;
+                                }
+                            }
+                            
                             $totalQuestions = $currentQuiz->quiz->questions_count ?? $currentQuiz->quiz->questions->count() ?? 0;
                             
                             // Calculate progress percentage (questions answered / total questions)
@@ -266,7 +273,7 @@ document.addEventListener('DOMContentLoaded', function() {
                                         </div>
                                     @endif
                                 </div>
-                                <a href="{{ route('dashboard.quizzes.show', ['locale' => app()->getLocale(), 'quiz' => $currentQuiz->quiz->id]) }}" 
+                                <a href="{{ route('dashboard.quizzes.take', ['locale' => app()->getLocale(), 'quiz' => $currentQuiz->quiz->id, 'attempt' => $currentQuiz->id]) }}" 
                                    class="inline-flex items-center px-4 py-2 bg-blue-600 hover:bg-blue-700 text-white font-medium rounded-lg transition-colors">
                                     {{ __('dashboard.quizzes.resume') }}
                                     <svg xmlns="http://www.w3.org/2000/svg" class="h-4 w-4 ml-2" fill="none" viewBox="0 0 24 24" stroke="currentColor">
@@ -387,14 +394,22 @@ document.addEventListener('DOMContentLoaded', function() {
                                 ? $quiz->title[app()->getLocale()] ?? ($quiz->title['en'] ?? 'Untitled Quiz')
                                 : $quiz->title;
                             
-                            // Calculate score based on answered questions only using the relationship
-                            $userAnswers = $attempt->userAnswers;
-                            $answeredQuestions = $userAnswers->count();
-                            $correctAnswers = $userAnswers->where('is_correct', true)->count();
+                            // Calculate score based on answered questions using answers JSON
+                            $answers = $attempt->answers ?? [];
+                            $answeredQuestions = count($answers);
+                            $correctAnswers = 0;
+                            
+                            foreach ($answers as $questionId => $answer) {
+                                if (is_array($answer) && isset($answer['is_correct']) && $answer['is_correct']) {
+                                    $correctAnswers++;
+                                }
+                            }
+                            
                             $totalQuestions = $quiz->questions_count ?? $quiz->questions->count() ?? 0;
                             $percentage = $answeredQuestions > 0 ? round(($correctAnswers / $answeredQuestions) * 100) : 0;
                         @endphp
-                        <div class="flex items-center justify-between p-3 bg-gray-50 dark:bg-gray-700 rounded-lg border border-gray-200 dark:border-gray-600">
+                        <div class="flex items-center justify-between p-3 bg-gray-50 dark:bg-gray-700 rounded-lg border border-gray-200 dark:border-gray-600 hover:shadow-md transition-shadow cursor-pointer"
+                             onclick="window.location.href='{{ route('dashboard.quizzes.take', ['locale' => app()->getLocale(), 'quiz' => $quiz->id, 'attempt' => $attempt->id]) }}'">
                             <div class="flex-1 min-w-0">
                                 <h3 class="font-medium text-gray-900 dark:text-white truncate">{{ $quizTitle }}</h3>
                                 <p class="text-sm text-gray-600 dark:text-gray-400 mt-1">

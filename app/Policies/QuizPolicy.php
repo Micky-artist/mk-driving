@@ -72,7 +72,14 @@ class QuizPolicy
         }
 
         // Check if the user has an active subscription if the quiz is premium
-        if ($quiz->subscription_plan_id && !$user->hasActiveSubscription($quiz->subscription_plan_id)) {
+        if ($quiz->subscription_plan_slug && !$user->activeSubscriptions()->whereHas('plan', function($q) use ($quiz) {
+            $q->where('slug', $quiz->subscription_plan_slug);
+        })->exists()) {
+            return false;
+        }
+
+        // Check if user has reached their quiz limit
+        if ($user->hasReachedQuizLimit()) {
             return false;
         }
 

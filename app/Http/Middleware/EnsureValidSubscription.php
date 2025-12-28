@@ -73,7 +73,23 @@ class EnsureValidSubscription
         
         // For premium quizzes, check if user has active subscription for the quiz's plan
         if ($quiz->subscription_plan_slug) {
-            return $this->hasActiveSubscriptionForPlan($user, $quiz->subscription_plan_slug);
+            $hasSubscription = $this->hasActiveSubscriptionForPlan($user, $quiz->subscription_plan_slug);
+            if (!$hasSubscription) {
+                return false;
+            }
+        }
+        
+        // Check if user has reached their quiz limit
+        // Only enforce for new quiz attempts, not for viewing existing attempts
+        if ($user && $user->hasReachedQuizLimit()) {
+            // Check if user has an existing attempt for this quiz
+            $hasExistingAttempt = $user->quizAttempts()
+                ->where('quiz_id', $quiz->id)
+                ->where('status', 'in_progress')
+                ->exists();
+            
+            // Allow access if they have an existing attempt, block if starting new
+            return $hasExistingAttempt;
         }
         
         // If quiz has no plan requirement, allow access

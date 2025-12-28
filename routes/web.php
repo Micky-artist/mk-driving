@@ -408,7 +408,7 @@ Route::prefix('{locale}')
             // Quiz attempt API routes
         Route::prefix('api')->group(function () {
             // Get or create an active quiz attempt - requires subscription
-            Route::get('quizzes/{quiz}/attempt', 'QuizAttemptController@getActiveAttempt')
+            Route::get('quizzes/{quizId}/attempt', 'QuizAttemptController@getActiveAttempt')
                 ->name('api.quizzes.attempt')
                 ->middleware('check.subscription');
                 

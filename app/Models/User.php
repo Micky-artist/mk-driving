@@ -283,6 +283,77 @@ class User extends Authenticatable
     }
 
     /**
+     * Check if user has reached their quiz limit based on subscription
+     *
+     * @return bool True if user has reached their limit, false otherwise
+     */
+    public function hasReachedQuizLimit(): bool
+    {
+        // Admins never have limits
+        if ($this->isAdmin()) {
+            return false;
+        }
+
+        // Get active subscription
+        $activeSubscription = $this->activeSubscriptions()->with('plan')->first();
+        
+        // If no active subscription, no limit (or could return true to block completely)
+        if (!$activeSubscription || !$activeSubscription->plan) {
+            return false;
+        }
+
+        $maxQuizzes = $activeSubscription->plan->max_quizzes;
+        
+        // If max_quizzes is 0 or null, it means unlimited
+        if (!$maxQuizzes || $maxQuizzes === 0) {
+            return false;
+        }
+
+        // Count completed quiz attempts
+        $completedAttempts = $this->quizAttempts()
+            ->where('status', 'completed')
+            ->count();
+
+        return $completedAttempts >= $maxQuizzes;
+    }
+
+    /**
+     * Get remaining quiz attempts for the user
+     *
+     * @return int Remaining attempts (0 if reached limit, positive number for remaining, -1 if unlimited)
+     */
+    public function getRemainingQuizAttempts(): int
+    {
+        // Admins have unlimited attempts
+        if ($this->isAdmin()) {
+            return -1;
+        }
+
+        $activeSubscription = $this->activeSubscriptions()->with('plan')->first();
+        
+        // If no active subscription, return 0 (no attempts allowed)
+        if (!$activeSubscription || !$activeSubscription->plan) {
+            return 0;
+        }
+
+        $maxQuizzes = $activeSubscription->plan->max_quizzes;
+        
+        // If max_quizzes is 0 or null, it means unlimited
+        if (!$maxQuizzes || $maxQuizzes === 0) {
+            return -1;
+        }
+
+        $completedAttempts = $this->quizAttempts()
+            ->where('status', 'completed')
+            ->count();
+
+        $remaining = $maxQuizzes - $completedAttempts;
+        
+        // Return 0 if limit reached, otherwise return remaining
+        return $remaining <= 0 ? 0 : $remaining;
+    }
+
+    /**
      * Check if user is an admin.
      *
      * @return bool True if the user has admin role, false otherwise.
