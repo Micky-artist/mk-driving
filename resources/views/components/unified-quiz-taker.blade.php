@@ -1028,8 +1028,8 @@
 
                         // Set feedback message
                         this.feedbackMessage = option.is_correct ?
-                            'Correct! Well done! 🎉' :
-                            'Incorrect. The correct answer has been highlighted.';
+                            this.translations.quiz.correctFeedback :
+                            this.translations.quiz.incorrectFeedback;
 
                         // Update counts
                         if (option.is_correct) {
@@ -1105,8 +1105,8 @@
                             this.isAnswerCorrect = savedAnswer.isCorrect;
                             this.showFeedback = true;
                             this.feedbackMessage = savedAnswer.isCorrect ?
-                                'Correct! Well done! 🎉' :
-                                'Incorrect. The correct answer has been highlighted.';
+                                this.translations.quiz.correctFeedback :
+                                this.translations.quiz.incorrectFeedback;
                         } else {
                             this.selectedOption = null;
                             this.isAnswerSubmitted = false;

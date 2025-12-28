@@ -10,8 +10,11 @@ return [
     'failed' => 'Ibyangombwa ntibihuye n\'ibyacu.',
     'password' => 'Ijambo ry\'ibanga si ryo.',
     'password_reset_success' => [
-        'title' => 'Ijambo ry\'ibanga ryahinduwe neza!'
+        'title' => 'Guhindura Ijambo banga Byagenze Neza',
+        'message' => 'Ijambo banga ryawe ryahinduwe.',
     ],
+    'forum_login_required' => 'Nyamuneka winjire kubaza ibibazo mu forum.',
+    'login_required' => 'Kwinjira Birakenewe',
     'throttle' => 'Wongere ugerageze nyuma y\'amasengonda :seconds.',
     'invalid_credentials' => 'Imyirondoro ntabwo ari yo',
     'email_in_use' => 'Iyi imeri isanzwe ikoreshwa',

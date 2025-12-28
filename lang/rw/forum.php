@@ -82,6 +82,7 @@ return [
         'correct_answer' => '✓ Igisubizo cyo kwemera',
     ],
     'validation' => [
+        'validation_errors_title' => 'Nyamuneka gerageza gukurikiza amabwiriza:',
         'title_required' => 'Nyamuneka andika umutwe w\'ikibazo cyawe',
         'title_min' => 'Umutwe ugomba kugira byibura inyuguti :min',
         'title_max' => 'Umutwe ntushobora kurenza inyuguti :max',
@@ -103,6 +104,7 @@ return [
     'weekly' => 'Icyumweru',
     'monthly' => 'Ukwezi',
     'points' => 'Amanota: :points',
+    'points_label' => 'amanota',
     'your_rank' => 'Umwanya wawe',
     'your_weekly_rank' => 'Umwanya wawe',
     'you' => 'Wowe',
@@ -115,6 +117,7 @@ return [
     'points_for_quiz_completion' => 'Kurangiza umwitozo',
     'back_to_discussions' => 'Garuka kubiganiro',
     'leaderboard_description' => 'Reba abandi bitoza n\'umwanya wawe',
+    'joined' => 'Yinjiye',
     
     // Pagination
     'previous' => 'Ibanjirize',

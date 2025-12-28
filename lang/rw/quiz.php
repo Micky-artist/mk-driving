@@ -219,6 +219,8 @@ return [
     // Feedback
     'correct' => 'Nibyo!',
     'incorrect' => 'Sibyo!',
+    'correctFeedback' => 'Nibyiza! Wakoze neza! 🎉',
+    'incorrectFeedback' => 'Ntibyagenze neza. Igisubizo gikwiriye cyerekanywe.',
 
     // Quiz Results Modal
     'quizCompleted' => 'Umwitozo warangiye!',

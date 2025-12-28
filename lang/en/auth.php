@@ -10,8 +10,11 @@ return [
     'failed' => 'These credentials do not match our records.',
     'password' => 'The provided password is incorrect.',
     'password_reset_success' => [
-        'title' => 'Password Reset Successful!'
+        'title' => 'Password Reset Successful',
+        'message' => 'Your password has been reset successfully. Please log in with your new password.',
     ],
+    'forum_login_required' => 'Please log in to ask questions in the forum.',
+    'login_required' => 'Login Required',
     'throttle' => 'Too many login attempts. Please try again in :seconds seconds.',
     'invalid_credentials' => 'Invalid credentials',
     'email_in_use' => 'Email already in use',

@@ -6,7 +6,6 @@ use App\Http\Controllers\Api\AuthController;
 use App\Http\Controllers\Api\ChatbotController;
 use App\Http\Controllers\Api\ForumController;
 use App\Http\Controllers\Api\AdminController;
-use App\Http\Controllers\Api\NewsController;
 use App\Http\Controllers\Api\SearchController;
 use App\Http\Controllers\Api\SubscriptionPlanController;
 use App\Http\Controllers\Api\SubscriptionController;
@@ -21,8 +20,6 @@ Route::post('/login', [AuthController::class, 'login']);
 
 // Public routes
 Route::get('/forum/questions', [ForumController::class, 'getQuestions']);
-Route::get('/news', [NewsController::class, 'index']);
-Route::get('/news/by-slug/{slug}', [NewsController::class, 'showBySlug']);
 
 // Search routes
 Route::get('/search', [SearchController::class, 'globalSearch']);

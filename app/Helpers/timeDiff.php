@@ -22,35 +22,71 @@ if (!function_exists('timeDiffForHumans')) {
         // Use proper hierarchy: check largest unit first, stop at first non-zero
         if ($diff >= 31536000) { // 365 days
             $years = floor($diff / 31536000);
+            if ($locale === 'rw') {
+                // Manual pluralization for Kinyarwanda
+                $translation = $years === 1 ? 'umwaka :count ushize' : 'imyaka :count ishize';
+                return str_replace(':count', $years, $translation);
+            }
             return trans_choice('time.year_ago', $years, ['count' => $years], $locale);
         }
         
         if ($diff >= 2592000) { // 30 days
             $months = floor($diff / 2592000);
+            if ($locale === 'rw') {
+                // Manual pluralization for Kinyarwanda
+                $translation = $months === 1 ? 'ukwezi :count gushize' : 'amezi :count ashize';
+                return str_replace(':count', $months, $translation);
+            }
             return trans_choice('time.month_ago', $months, ['count' => $months], $locale);
         }
         
         if ($diff >= 604800) { // 7 days
             $weeks = floor($diff / 604800);
+            if ($locale === 'rw') {
+                // Manual pluralization for Kinyarwanda
+                $translation = $weeks === 1 ? 'icyumweru :count gishize' : 'ibyumweru :count bishize';
+                return str_replace(':count', $weeks, $translation);
+            }
             return trans_choice('time.week_ago', $weeks, ['count' => $weeks], $locale);
         }
         
         if ($diff >= 86400) { // 1 day
             $days = floor($diff / 86400);
+            if ($locale === 'rw') {
+                // Manual pluralization for Kinyarwanda
+                $translation = $days === 1 ? 'umunsi :count ushize' : 'iminsi :count ishize';
+                return str_replace(':count', $days, $translation);
+            }
             return trans_choice('time.day_ago', $days, ['count' => $days], $locale);
         }
         
         if ($diff >= 3600) { // 1 hour
             $hours = floor($diff / 3600);
+            if ($locale === 'rw') {
+                // Manual pluralization for Kinyarwanda
+                $translation = $hours === 1 ? 'isaha :count ishize' : 'amasaha :count ashize';
+                return str_replace(':count', $hours, $translation);
+            }
             return trans_choice('time.hour_ago', $hours, ['count' => $hours], $locale);
         }
         
         if ($diff >= 60) { // 1 minute
             $minutes = floor($diff / 60);
-            return trans_choice('time.minute_ago', $minutes, ['count' => $minutes], $locale);
+            $key = 'time.minute_ago';
+            if ($locale === 'rw') {
+                // Manual pluralization for Kinyarwanda
+                $translation = $minutes === 1 ? 'umunota :count ushize' : 'iminota :count ishize';
+                return str_replace(':count', $minutes, $translation);
+            }
+            return trans_choice($key, $minutes, ['count' => $minutes], $locale);
         }
         
         // Less than 1 minute
+        if ($locale === 'rw') {
+            // Manual pluralization for Kinyarwanda
+            $translation = $diff === 1 ? 'isegonda :count rishize' : 'amasegonda :count ashize';
+            return str_replace(':count', $diff, $translation);
+        }
         return trans_choice('time.second_ago', $diff, ['count' => $diff], $locale);
     }
 }

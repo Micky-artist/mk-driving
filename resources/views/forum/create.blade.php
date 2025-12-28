@@ -2,23 +2,6 @@
 
 @section('content')
 <div class="min-h-screen bg-gradient-to-br from-gray-50 via-white to-gray-100 dark:from-gray-900 dark:via-gray-800 dark:to-gray-900 transition-colors duration-300">
-    <!-- Hero Section -->
-    <div class="relative overflow-hidden bg-gradient-to-r from-blue-600 to-blue-700 text-white py-2 md:py-4 shadow-xl">
-        <!-- Decorative elements -->
-        <div class="absolute top-0 left-0 w-full h-full opacity-10">
-            <div class="absolute top-0 right-0 w-1/3 h-1/3 bg-blue-300 rounded-full filter blur-3xl"></div>
-            <div class="absolute bottom-0 left-0 w-1/4 h-1/4 bg-indigo-300 rounded-full filter blur-3xl"></div>
-        </div>
-        
-        <div class="relative max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 text-center">
-            <h1 class="text-4xl md:text-5xl font-bold mb-4 fade-in bg-clip-text text-transparent bg-gradient-to-r from-white to-blue-100">
-                {{ __('forum.ask_question') }}
-            </h1>
-            <p class="text-blue-100 text-lg md:text-xl max-w-3xl mx-auto fade-in delay-100 leading-relaxed">
-                {{ __('forum.ask_community') }}
-            </p>
-        </div>
-    </div>
 
     <!-- Main Content -->
     <div class="max-w-3xl mx-auto px-4 sm:px-6 lg:px-8 py-12">
@@ -38,8 +21,29 @@
                 <p class="mt-1.5 text-sm text-gray-500 dark:text-gray-400">{{ __('forum.ask_community_help') }}</p>
             </div>
             
-            <form action="{{ route('forum.store', ['locale' => app()->getLocale()]) }}" method="POST" class="p-6 md:p-8">
+            <form action="{{ route('ask.store', ['locale' => app()->getLocale()]) }}" method="POST" class="p-6 md:p-8">
                 @csrf
+                
+                <!-- Error Summary -->
+                @if ($errors->any())
+                    <div class="mb-6 p-4 bg-red-50 dark:bg-red-900/20 border border-red-200 dark:border-red-800 rounded-lg">
+                        <div class="flex items-start">
+                            <svg class="w-5 h-5 text-red-600 dark:text-red-400 mr-3 mt-0.5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 8v4m0 4h.01M21 12a9 9 0 11-18 0 9 9 0 0118 0z"></path>
+                            </svg>
+                            <div class="flex-1">
+                                <h3 class="text-sm font-medium text-red-800 dark:text-red-200 mb-2">
+                                    {{ __('forum.validation_errors_title') }}
+                                </h3>
+                                <ul class="text-sm text-red-700 dark:text-red-300 space-y-1">
+                                    @foreach ($errors->all() as $error)
+                                        <li>{{ $error }}</li>
+                                    @endforeach
+                                </ul>
+                            </div>
+                        </div>
+                    </div>
+                @endif
                 
                 <!-- Title -->
                 <div class="mb-8">

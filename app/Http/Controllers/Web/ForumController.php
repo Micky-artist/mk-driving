@@ -10,6 +10,7 @@ use Illuminate\Http\Request;
 use Illuminate\Support\Str;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\DB;
+use Illuminate\Support\Facades\Log;
 
 class ForumController extends Controller
 {
@@ -69,6 +70,7 @@ class ForumController extends Controller
                 'content' => $content,
                 'createdAt' => $question->created_at,
                 'updatedAt' => $question->updated_at,
+                'votes' => $question->votes ?? 0,
                 'author' => [
                     'firstName' => $question->user && $question->user->first_name ? $question->user->first_name : 'Anonymous',
                     'lastName' => $question->user && $question->user->last_name ? $question->user->last_name : '',
@@ -83,6 +85,7 @@ class ForumController extends Controller
                     return [
                         'id' => $answer->id,
                         'content' => $answerContent,
+                        'votes' => $answer->votes ?? 0,
                         'author' => [
                             'firstName' => $answer->user && $answer->user->first_name ? $answer->user->first_name : 'Anonymous',
                             'lastName' => $answer->user && $answer->user->last_name ? $answer->user->last_name : '',
@@ -160,6 +163,12 @@ class ForumController extends Controller
      */
     public function create()
     {
+        // Check if user is verified
+        if (!Auth::user()->email_verified_at) {
+            return redirect()->route('profile.show', ['locale' => app()->getLocale()])
+                ->with('status', 'Please verify your email address before asking questions in the forum.');
+        }
+        
         $topics = config('forum.topics', []);
         return view('forum.create', compact('topics'));
     }
@@ -169,6 +178,12 @@ class ForumController extends Controller
      */
     public function store(Request $request)
     {
+        // Check if user is verified
+        if (!Auth::user()->email_verified_at) {
+            return redirect()->route('profile.show', ['locale' => app()->getLocale()])
+                ->with('status', 'Please verify your email address before asking questions in the forum.');
+        }
+        
         $locale = app()->getLocale();
         $fallback = config('app.fallback_locale', 'rw');
         
@@ -373,15 +388,50 @@ class ForumController extends Controller
     /**
      * Vote for a question or answer.
      */
-    public function vote(Request $request, $type, $id)
+    public function vote(Request $request, $param1, $param2, $param3 = null)
     {
+        // Handle locale parameter extraction
+        $locale = null;
+        $type = null;
+        $id = null;
+        
+        // Check if first parameter is locale (rw or en)
+        if (in_array($param1, ['rw', 'en'])) {
+            $locale = $param1;
+            $type = $param2;
+            $id = $param3;
+        } else {
+            $type = $param1;
+            $id = $param2;
+        }
+        
+        Log::info('Vote method called', [
+            'original_params' => [$param1, $param2, $param3],
+            'extracted' => ['locale' => $locale, 'type' => $type, 'id' => $id],
+            'vote' => $request->vote,
+            'user_id' => Auth::id()
+        ]);
+
         $request->validate([
             'vote' => 'required|in:up,down',
         ]);
 
-        $model = $type === 'question' 
-            ? ForumQuestion::findOrFail($id)
-            : ForumAnswer::findOrFail($id);
+        Log::info('Validation passed, determining model type');
+
+        try {
+            $model = $type === 'question' 
+                ? ForumQuestion::findOrFail($id)
+                : ForumAnswer::findOrFail($id);
+
+            Log::info('Model found', ['model_type' => get_class($model), 'model_id' => $model->id]);
+        } catch (\Illuminate\Database\Eloquent\ModelNotFoundException $e) {
+            Log::error('Model not found in vote method', [
+                'type' => $type,
+                'id' => $id,
+                'error' => $e->getMessage()
+            ]);
+            return response()->json(['success' => false, 'message' => 'Model not found'], 404);
+        }
 
         $user = Auth::user();
         $voteType = $request->vote === 'up' ? 1 : -1;
@@ -403,10 +453,14 @@ class ForumController extends Controller
                 // Decrement the votes count
                 get_class($model)::where('id', $model->id)->decrement('votes');
                 
+                // Refresh the model to get the updated vote count
+                $model->refresh();
+                
                 return response()->json([
                     'success' => true,
                     'action' => 'removed',
                     'votes' => $model->votes,
+                    'user_vote' => null,
                 ]);
             } 
             // If different vote, update it
@@ -418,10 +472,14 @@ class ForumController extends Controller
                 // Update votes count (add 2 because we're changing from -1 to 1 or vice versa)
                 get_class($model)::where('id', $model->id)->increment('votes', 2 * $voteType);
                 
+                // Refresh the model to get the updated vote count
+                $model->refresh();
+                
                 return response()->json([
                     'success' => true,
                     'action' => 'updated',
                     'votes' => $model->votes,
+                    'user_vote' => $voteType === 1 ? 'up' : 'down',
                 ]);
             }
         }
@@ -439,10 +497,14 @@ class ForumController extends Controller
         // Update the votes count
         get_class($model)::where('id', $model->id)->increment('votes', $voteType);
 
+        // Refresh the model to get the updated vote count
+        $model->refresh();
+
         return response()->json([
             'success' => true,
             'action' => 'added',
             'votes' => $model->votes,
+            'user_vote' => $voteType === 1 ? 'up' : 'down',
         ]);
     }
 

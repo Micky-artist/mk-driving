@@ -81,6 +81,7 @@ return [
         'correct_answer' => '✓ Correct Answer',
     ],
     'validation' => [
+        'validation_errors_title' => 'Please correct the following errors:',
         'title_required' => 'Please enter a title for your question',
         'title_min' => 'The title must be at least :min characters',
         'title_max' => 'The title may not be greater than :max characters',
@@ -102,6 +103,7 @@ return [
     'weekly' => 'Weekly',
     'monthly' => 'Monthly',
     'points' => ':points points',
+    'points_label' => 'points',
     'your_rank' => 'Your Rank',
     'your_weekly_rank' => 'Your Rank',
     'you' => 'You',
@@ -114,6 +116,7 @@ return [
     'points_for_quiz_completion' => 'Complete a quiz',
     'back_to_discussions' => 'Back to Discussions',
     'leaderboard_description' => 'See top performers and track your ranking',
+    'joined' => 'Joined',
     
     // Pagination
     'previous' => 'Previous',

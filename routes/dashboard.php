@@ -38,11 +38,6 @@ Route::prefix('{locale}')->where(['locale' => '(rw|en)'])
         })->middleware('can:view,attempt');
     });
 
-    // News Routes
-    Route::prefix('news')->name('news.')->group(function () {
-        Route::get('/', [\App\Http\Controllers\Web\NewsController::class, 'dashboardIndex'])->name('index');
-        Route::get('/{slug}', [\App\Http\Controllers\Web\NewsController::class, 'dashboardShow'])->name('show');
-    });
     
     // Help Center
     Route::get('/help-center', [\App\Http\Controllers\Web\HelpCenterController::class, 'index'])->name('help-center');

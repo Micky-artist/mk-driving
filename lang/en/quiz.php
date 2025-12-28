@@ -218,6 +218,8 @@ return [
     // Feedback
     'correct' => 'Correct!',
     'incorrect' => 'Incorrect',
+    'correctFeedback' => 'Correct! Well done! 🎉',
+    'incorrectFeedback' => 'Incorrect. The correct answer has been highlighted.',
     
     // Quiz Results Modal
     'quizCompleted' => 'Quiz Completed!',

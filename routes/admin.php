@@ -5,7 +5,6 @@ use App\Http\Controllers\Web\Admin\UserController;
 use App\Http\Controllers\Web\Admin\SubscriptionPlanController;
 use App\Http\Controllers\Web\Admin\SubscriptionController;
 use App\Http\Controllers\ProfileController;
-use App\Http\Controllers\Web\Admin\NewsController;
 use App\Http\Controllers\Web\Admin\GuestQuizController;
 use App\Http\Controllers\Web\Admin\ForumController;
 use App\Http\Controllers\Web\Admin\ReportController;
@@ -72,16 +71,6 @@ Route::group([], function () {
         Route::get('subscriptions/stats', [SubscriptionController::class, 'stats'])
             ->name('subscriptions.stats');
             
-        // News Management
-        Route::prefix('news')->name('news.')->group(function () {
-            Route::get('/', [NewsController::class, 'index'])->name('index');
-            Route::get('/create', [NewsController::class, 'create'])->name('create');
-            Route::post('/', [NewsController::class, 'store'])->name('store');
-            Route::get('/{news}/edit', [NewsController::class, 'edit'])->name('edit');
-            Route::put('/{news}', [NewsController::class, 'update'])->name('update');
-            Route::delete('/{news}', [NewsController::class, 'destroy'])->name('destroy');
-            Route::delete('/{id}/remove-image/{imageIndex}', [NewsController::class, 'removeImage'])->name('remove-image');
-        });
 
         // Settings
         Route::prefix('settings')->name('settings.')->group(function () {

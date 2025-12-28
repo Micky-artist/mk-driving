@@ -56,7 +56,7 @@
                         </p>
                         <p class="text-sm font-bold text-gray-600 dark:text-gray-300">{{ $leaderboard[1]['points'] }}
                         </p>
-                        <p class="text-xs text-gray-500 dark:text-gray-400">{{ __('forum.points') }}</p>
+                        <p class="text-xs text-gray-500 dark:text-gray-400">{{ __('forum.points_label') }}</p>
                     </div>
                     <div
                         class="mt-1 w-12 h-10 bg-gradient-to-b from-gray-100 to-gray-200 dark:from-gray-700 dark:to-gray-600 rounded-t-lg flex items-center justify-center shadow-md">
@@ -88,7 +88,7 @@
                         </p>
                         <p class="text-lg font-bold text-yellow-600 dark:text-yellow-400">
                             {{ $leaderboard[0]['points'] }}</p>
-                        <p class="text-xs text-gray-500 dark:text-gray-400">{{ __('forum.points') }}</p>
+                        <p class="text-xs text-gray-500 dark:text-gray-400">{{ __('forum.points_label') }}</p>
                     </div>
                     <div
                         class="mt-1 w-14 h-14 bg-gradient-to-b from-yellow-100 to-yellow-200 dark:from-yellow-900/30 dark:to-yellow-800/40 rounded-t-lg flex items-center justify-center shadow-lg">
@@ -120,7 +120,7 @@
                         </p>
                         <p class="text-sm font-bold text-orange-600 dark:text-orange-400">
                             {{ $leaderboard[2]['points'] }}</p>
-                        <p class="text-xs text-gray-500 dark:text-gray-400">{{ __('forum.points') }}</p>
+                        <p class="text-xs text-gray-500 dark:text-gray-400">{{ __('forum.points_label') }}</p>
                     </div>
                     <div
                         class="mt-1 w-12 h-10 bg-gradient-to-b from-orange-100 to-orange-200 dark:from-orange-900/30 dark:to-orange-800/40 rounded-t-lg flex items-center justify-center shadow-md">
@@ -177,8 +177,7 @@
                                 @endif
                             </div>
                             <p class="text-xs text-gray-500 dark:text-gray-400">
-                                {{ __('forum.joined') }}
-                                {{ \Carbon\Carbon::parse($entry['user']['createdAt'])->diffForHumans() }}
+                                {{ __('forum.joined') }} {{ timeDiffForHumans($entry['user']['createdAt']) }}
                             </p>
                         </div>
 
@@ -193,7 +192,7 @@
                                        #4b5563, #374151 @endif)">
                                 {{ $entry['points'] }}
                             </p>
-                            <p class="text-xs text-gray-500 dark:text-gray-400">{{ __('forum.points') }}</p>
+                            <p class="text-xs text-gray-500 dark:text-gray-400">{{ __('forum.points_label') }}</p>
                         </div>
                     </div>
                 </div>

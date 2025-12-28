@@ -167,17 +167,31 @@
                         <div class="space-y-5">
                             <!-- Session Status -->
                             @if (session('status'))
-                                <div class="mb-6 p-4 bg-green-50 dark:bg-green-900/20 border border-green-200 dark:border-green-800 rounded-xl">
+                                @php
+                                    $statusMessage = session('status');
+                                    $isForumLogin = $statusMessage === __('auth.forum_login_required');
+                                    $isPasswordReset = $statusMessage === __('auth.password_reset_success.message');
+                                @endphp
+                                
+                                <div class="mb-6 p-4 {{ $isPasswordReset ? 'bg-green-50 dark:bg-green-900/20 border border-green-200 dark:border-green-800' : 'bg-blue-50 dark:bg-blue-900/20 border border-blue-200 dark:border-blue-800' }} rounded-xl">
                                     <div class="flex items-start">
                                         <div class="flex-shrink-0">
-                                            <svg class="h-6 w-6 text-green-500" fill="none" viewBox="0 0 24 24" stroke="currentColor">
-                                                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 12l2 2 4-4m6 2a9 9 0 11-18 0 9 9 0 0118 0z" />
-                                            </svg>
+                                            @if ($isPasswordReset)
+                                                <svg class="h-6 w-6 text-green-500" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                                                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 12l2 2 4-4m6 2a9 9 0 11-18 0 9 9 0 0118 0z" />
+                                                </svg>
+                                            @else
+                                                <svg class="h-6 w-6 text-blue-500" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                                                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M13 16h-1v-4h-1m1-4h.01M21 12a9 9 0 11-18 0 9 9 0 0118 0z" />
+                                                </svg>
+                                            @endif
                                         </div>
                                         <div class="ml-3">
-                                            <h3 class="text-lg font-medium text-green-800 dark:text-green-200">{{ __('auth.password_reset_success.title') }}</h3>
-                                            <div class="mt-1 text-sm text-green-700 dark:text-green-300">
-                                                {{ session('status') }}
+                                            <h3 class="text-lg font-medium {{ $isPasswordReset ? 'text-green-800 dark:text-green-200' : 'text-blue-800 dark:text-blue-200' }}">
+                                                {{ $isPasswordReset ? __('auth.password_reset_success.title') : __('auth.login_required') }}
+                                            </h3>
+                                            <div class="mt-1 text-sm {{ $isPasswordReset ? 'text-green-700 dark:text-green-300' : 'text-blue-700 dark:text-blue-300' }}">
+                                                {{ $statusMessage }}
                                             </div>
                                         </div>
                                     </div>

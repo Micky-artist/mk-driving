@@ -3,7 +3,6 @@
 use Illuminate\Support\Facades\Route;
 use Illuminate\Support\Facades\Log;
 use Illuminate\Support\Facades\Auth;
-use App\Http\Controllers\Web\NewsController;
 use App\Http\Controllers\Web\NewsDetailController;
 use App\Http\Controllers\LanguageController;
 use App\Models\Blog;
@@ -349,12 +348,6 @@ Route::prefix('{locale}')
         return view('terms');
     })->name('terms');
     
-    // News routes
-    Route::get('news', [\App\Http\Controllers\Web\NewsController::class, 'index'])
-        ->name('news');
-        
-    Route::get('news/{slug}', [\App\Http\Controllers\Web\NewsController::class, 'show'])
-        ->name('news.detail');
         
     // Guest Quiz Routes - Accessible without authentication
     Route::prefix('guest-quiz')->group(function () {
@@ -476,6 +469,10 @@ Route::prefix('{locale}')
                         ->name('best-answer');
                 });
         });
+        
+        // Ask Question Routes (new clean routes to avoid existing issues)
+        Route::get('/ask', [\App\Http\Controllers\Web\AskController::class, 'index'])->name('ask.question');
+        Route::post('/ask', [\App\Http\Controllers\Web\AskController::class, 'store'])->name('ask.store');
     }); // Close the locale prefix group
 
 // Authentication routes (from auth.php)
