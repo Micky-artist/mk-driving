@@ -338,13 +338,22 @@
                     </div>
 
                     <button @click="nextQuestion"
+                        :disabled="!selectedOption || (autoAdvance && !isLastQuestion) || showResultsModal || isSubmitting"
                         class="px-3 py-2 sm:px-4 sm:py-2 border border-transparent rounded-md shadow-sm text-sm font-medium text-white bg-blue-600 hover:bg-blue-700 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-blue-500 disabled:opacity-50 disabled:cursor-not-allowed flex-1 sm:flex-none">
-                        <span
-                            x-text="isGuest ? '{{ __('quiz.signUpToContinue') }}' : (isLastQuestion ? '{{ __('quiz.finish') }}' : '{{ __('quiz.next') }}')"></span>
-                        <svg class="w-4 h-4 ml-1 -mr-1 sm:inline hidden" fill="none" stroke="currentColor"
-                            viewBox="0 0 24 24">
-                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 5l7 7-7 7" />
-                        </svg>
+                        <template x-if="isSubmitting">
+                            <svg class="animate-spin -ml-1 mr-2 h-4 w-4 text-white inline" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24">
+                                <circle class="opacity-25" cx="12" cy="12" r="10" stroke="currentColor" stroke-width="4"></circle>
+                                <path class="opacity-75" fill="currentColor" d="M4 12a8 8 0 018-8V0C5.373 0 0 5.373 0 12h4zm2 5.291A7.962 7.962 0 014 12H0c0 3.042 1.135 5.824 3 7.938l3-2.647z"></path>
+                            </svg>
+                            <span x-text="isLastQuestion ? '{{ __("quiz.submitting") }}' : '{{ __("quiz.loading") }}'"></span>
+                        </template>
+                        <template x-if="!isSubmitting">
+                            <span x-text="isGuest ? '{{ __('quiz.signUpToContinue') }}' : (isLastQuestion ? '{{ __('quiz.finish') }}' : '{{ __('quiz.next') }}')"></span>
+                            <svg class="w-4 h-4 ml-1 -mr-1 sm:inline hidden" fill="none" stroke="currentColor"
+                                viewBox="0 0 24 24">
+                                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 5l7 7-7 7" />
+                            </svg>
+                        </template>
                     </button>
                 </div>
             </div>
@@ -650,6 +659,7 @@
                     initialized: false, // Loading state
                     showLoginModal: false,
                     showResultsModal: false,
+                    isSubmitting: false,
                     updatedStats: null,
                     currentScore: 0,
                     flaggedQuestions: new Set(),
@@ -1308,6 +1318,9 @@
                         clearInterval(this.timer);
                         this.endTime = new Date();
 
+                        // Set submitting state
+                        this.isSubmitting = true;
+
                         // Calculate score
                         const score = Math.round(
                             (this.correctCount / this.totalQuestions) * 100
@@ -1366,9 +1379,13 @@
                                 console.log('Results saved:', data);
                                 // Store current score for modal display
                                 this.currentScore = score;
+                                // Reset submitting state
+                                this.isSubmitting = false;
                             })
                             .catch(error => {
                                 console.error('Error saving results:', error);
+                                // Reset submitting state
+                                this.isSubmitting = false;
                             });
                     },
 
