@@ -443,11 +443,11 @@
     </style>
 </head>
 
-<body class="antialiased bg-gray-100 dark:bg-gray-900 text-gray-900 dark:text-gray-100">
+<body class="antialiased bg-gray-100 dark:bg-gray-900 text-gray-900 dark:text-gray-100" x-data="{ mobileMenuOpen: false }" x-init="console.log('Body x-data initialized, mobileMenuOpen:', mobileMenuOpen)">
     <div class="flex h-screen">
         <!-- Sidebar -->
         <div class="hidden md:flex md:flex-shrink-0">
-            <div class="flex flex-col w-64 bg-gradient-to-b from-blue-600 to-blue-700 dark:from-gray-900 dark:to-blue-950 text-white h-screen sticky top-0">
+            <div class="fixed left-0 top-0 flex flex-col w-64 h-screen bg-gradient-to-b from-blue-600 to-blue-700 dark:from-gray-900 dark:to-blue-950 text-white z-30">
                 <!-- Logo -->
                 <a href="{{ route('home', ['locale' => app()->getLocale()]) }}" class="block">
                     <div
@@ -674,38 +674,17 @@
         </div>
 
         <!-- Main Content Area -->
-        <div class="flex-1 flex flex-col overflow-hidden bg-white dark:bg-gray-900">
+        <div class="flex-1 flex flex-col overflow-hidden bg-white dark:bg-gray-900 md:ml-64">
             <!-- Main Content Wrapper -->
-            <div class="flex-1 overflow-auto">
-                <!-- This div is a spacer to account for the fixed sidebar -->
-                <!-- Mobile header -->
-                <div class="md:hidden">
-                    <!-- Mobile header content here -->
-                </div>
-
-                <!-- Mobile header -->
-                <header class="md:hidden bg-white dark:bg-gray-800 text-gray-900 dark:text-white shadow">
-                    <div class="flex items-center justify-between px-4 py-3">
-                        <div class="flex items-center">
-                            <button @click="sidebarOpen = true" class="text-gray-900 dark:text-white focus:outline-none">
-                                <svg class="h-6 w-6" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
-                                        d="M4 6h16M4 12h16M4 18h16" />
-                                </svg>
-                            </button>
-                            <a href="{{ route('home', ['locale' => app()->getLocale()]) }}"
-                                class="ml-4 text-xl font-bold text-gray-900 dark:text-white">MK Driving</a>
-                        </div>
-                    </div>
-                </header>
+            <div class="flex-1 overflow-auto pb-16 md:pb-0">
 
                 <!-- Mobile sidebar (hidden by default) -->
-                <div x-show="sidebarOpen" @click.away="sidebarOpen = false" class="md:hidden fixed inset-0 z-40"
+                <div x-show="mobileMenuOpen" @click.away="mobileMenuOpen = false" class="md:hidden fixed inset-0 z-40"
                     x-cloak style="display: none;">
-                    <div class="fixed inset-0 bg-gray-600 bg-opacity-75" @click="sidebarOpen = false"></div>
-                    <div class="relative flex-1 flex flex-col max-w-xs w-full bg-white dark:bg-gray-800">
+                    <div class="fixed inset-0 bg-gray-600 bg-opacity-75" @click="mobileMenuOpen = false"></div>
+                    <div class="relative flex-1 flex flex-col max-w-xs w-full bg-white dark:bg-gray-800" style="height: calc(100vh - 4rem);">
                         <div class="absolute top-0 right-0 -mr-14 p-1">
-                            <button @click="sidebarOpen = false"
+                            <button @click="mobileMenuOpen = false"
                                 class="flex items-center justify-center h-12 w-12 rounded-full focus:outline-none focus:bg-gray-600">
                                 <svg class="h-6 w-6 text-white" fill="none" stroke="currentColor"
                                     viewBox="0 0 24 24">
@@ -715,8 +694,104 @@
                             </button>
                         </div>
                         <div class="flex-1 h-0 pt-5 pb-4 overflow-y-auto">
-                            <div class="flex-shrink-0 flex items-center px-4">
-                                <span class="text-xl font-bold text-gray-900 dark:text-white">MK Driving Admin</span>
+                            <div class="flex-shrink-0 flex items-center px-4 mb-4">
+                                <a href="{{ route('home', ['locale' => app()->getLocale()]) }}" class="text-xl font-bold text-gray-900 dark:text-white">
+                                    MK Driving 
+                                </a>
+                            </div>
+                            <nav class="px-2 space-y-1">
+                                <!-- Dashboard -->
+                                <a href="{{ route('admin.portal') }}" class="group flex items-center px-2 py-2 text-base font-medium rounded-md {{ request()->routeIs('admin.portal') ? 'bg-gray-100 dark:bg-gray-700 text-gray-900 dark:text-white' : 'text-gray-600 dark:text-gray-300 hover:bg-gray-50 dark:hover:bg-gray-700 hover:text-gray-900 dark:hover:text-white' }}">
+                                    <svg class="mr-4 h-6 w-6 {{ request()->routeIs('admin.portal') ? 'text-gray-500 dark:text-gray-300' : 'text-gray-400 dark:text-gray-400 group-hover:text-gray-500 dark:group-hover:text-gray-300' }}" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M3 12l2-2m0 0l7-7 7 7M5 10v10a1 1 0 001 1h3m10-11l2 2m-2-2v10a1 1 0 01-1 1h-3m-6 0a1 1 0 001-1v-4a1 1 0 011-1h2a1 1 0 011 1v4a1 1 0 001 1m-6 0h6"></path>
+                                    </svg>
+                                    Dashboard
+                                </a>
+
+                                <!-- Users -->
+                                <a href="{{ route('admin.users.index') }}" class="group flex items-center px-2 py-2 text-base font-medium rounded-md {{ request()->routeIs('admin.users.*') ? 'bg-gray-100 dark:bg-gray-700 text-gray-900 dark:text-white' : 'text-gray-600 dark:text-gray-300 hover:bg-gray-50 dark:hover:bg-gray-700 hover:text-gray-900 dark:hover:text-white' }}">
+                                    <svg class="mr-4 h-6 w-6 {{ request()->routeIs('admin.users.*') ? 'text-gray-500 dark:text-gray-300' : 'text-gray-400 dark:text-gray-400 group-hover:text-gray-500 dark:group-hover:text-gray-300' }}" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 4.354a4 4 0 110 5.292M15 21H3v-1a6 6 0 0112 0v1zm0 0h6v-1a6 6 0 00-9-5.197M13 7a4 4 0 11-8 0 4 4 0 018 0z"></path>
+                                    </svg>
+                                    Users
+                                </a>
+
+                                <!-- Roles & Permissions -->
+                                <a href="{{ route('admin.settings.index') }}" class="group flex items-center px-2 py-2 text-base font-medium rounded-md {{ request()->routeIs('admin.settings.*') ? 'bg-gray-100 dark:bg-gray-700 text-gray-900 dark:text-white' : 'text-gray-600 dark:text-gray-300 hover:bg-gray-50 dark:hover:bg-gray-700 hover:text-gray-900 dark:hover:text-white' }}">
+                                    <svg class="mr-4 h-6 w-6 {{ request()->routeIs('admin.settings.*') ? 'text-gray-500 dark:text-gray-300' : 'text-gray-400 dark:text-gray-400 group-hover:text-gray-500 dark:group-hover:text-gray-300' }}" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 12l2 2 4-4m5.618-4.016A11.955 11.955 0 0112 2.944a11.955 11.955 0 01-8.618 3.04A12.02 12.02 0 003 9c0 5.591 3.824 10.29 9 11.622 5.176-1.332 9-6.03 9-11.622 0-1.042-.133-2.052-.382-3.016z"></path>
+                                    </svg>
+                                    Roles & Permissions
+                                </a>
+
+                                <!-- Quizzes & Questions -->
+                                <a href="{{ route('admin.quizzes.index') }}" class="group flex items-center px-2 py-2 text-base font-medium rounded-md {{ request()->routeIs('admin.quizzes.*') || request()->routeIs('admin.questions.*') || request()->routeIs('admin.quiz.attempts.*') || request()->routeIs('admin.test.*') ? 'bg-gray-100 dark:bg-gray-700 text-gray-900 dark:text-white' : 'text-gray-600 dark:text-gray-300 hover:bg-gray-50 dark:hover:bg-gray-700 hover:text-gray-900 dark:hover:text-white' }}">
+                                    <svg class="mr-4 h-6 w-6 {{ request()->routeIs('admin.quizzes.*') || request()->routeIs('admin.questions.*') || request()->routeIs('admin.quiz.attempts.*') || request()->routeIs('admin.test.*') ? 'text-gray-500 dark:text-gray-300' : 'text-gray-400 dark:text-gray-400 group-hover:text-gray-500 dark:group-hover:text-gray-300' }}" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 5H7a2 2 0 00-2 2v10a2 2 0 002 2h8a2 2 0 002-2V7a2 2 0 00-2-2h-2M9 5a2 2 0 002 2h2a2 2 0 002-2M9 5a2 2 0 012-2h2a2 2 0 012 2m-3 7h3m-3 4h3m-6-4h.01M9 16h.01"></path>
+                                    </svg>
+                                    Quiz Management
+                                </a>
+
+                                <!-- Plan Management -->
+                                <a href="{{ route('admin.subscription-plans.index') }}" class="group flex items-center px-2 py-2 text-base font-medium rounded-md {{ request()->routeIs('admin.subscription-plans.*') ? 'bg-gray-100 dark:bg-gray-700 text-gray-900 dark:text-white' : 'text-gray-600 dark:text-gray-300 hover:bg-gray-50 dark:hover:bg-gray-700 hover:text-gray-900 dark:hover:text-white' }}">
+                                    <svg class="mr-4 h-6 w-6 {{ request()->routeIs('admin.subscription-plans.*') ? 'text-gray-500 dark:text-gray-300' : 'text-gray-400 dark:text-gray-400 group-hover:text-gray-500 dark:group-hover:text-gray-300' }}" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 11H5m14 0a2 2 0 012 2v6a2 2 0 01-2 2H5a2 2 0 01-2-2v-6a2 2 0 012-2m14 0V9a2 2 0 00-2-2M5 11V9a2 2 0 012-2m0 0V5a2 2 0 012-2h6a2 2 0 012 2v2M7 7h10"></path>
+                                    </svg>
+                                    Plan Management
+                                </a>
+
+                                <!-- Subscriptions & Payments -->
+                                <a href="{{ route('admin.subscriptions.index') }}" class="group flex items-center px-2 py-2 text-base font-medium rounded-md {{ request()->routeIs('admin.subscriptions.*') || request()->routeIs('admin.payments.*') || request()->routeIs('admin.plans.*') ? 'bg-gray-100 dark:bg-gray-700 text-gray-900 dark:text-white' : 'text-gray-600 dark:text-gray-300 hover:bg-gray-50 dark:hover:bg-gray-700 hover:text-gray-900 dark:hover:text-white' }}">
+                                    <svg class="mr-4 h-6 w-6 {{ request()->routeIs('admin.subscriptions.*') || request()->routeIs('admin.payments.*') || request()->routeIs('admin.plans.*') ? 'text-gray-500 dark:text-gray-300' : 'text-gray-400 dark:text-gray-400 group-hover:text-gray-500 dark:group-hover:text-gray-300' }}" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M3 10h18M7 3v2m10-2v2m-10 5h.01M12 12h.01M16 12h.01M7 16h10a2 2 0 002-2V7a2 2 0 00-2-2H7a2 2 0 00-2 2v7a2 2 0 002 2z"></path>
+                                    </svg>
+                                    Subscriptions
+                                </a>
+
+                                <!-- Forum Management -->
+                                <a href="{{ route('admin.forum.index') }}" class="group flex items-center px-2 py-2 text-base font-medium rounded-md {{ request()->routeIs('admin.forum.*') ? 'bg-gray-100 dark:bg-gray-700 text-gray-900 dark:text-white' : 'text-gray-600 dark:text-gray-300 hover:bg-gray-50 dark:hover:bg-gray-700 hover:text-gray-900 dark:hover:text-white' }}">
+                                    <svg class="mr-4 h-6 w-6 {{ request()->routeIs('admin.forum.*') ? 'text-gray-500 dark:text-gray-300' : 'text-gray-400 dark:text-gray-400 group-hover:text-gray-500 dark:group-hover:text-gray-300' }}" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M17 8h2a2 2 0 012 2v6a2 2 0 01-2 2h-2v4l-4-4H9a1.994 1.994 0 01-1.414-.586m0 0L11 14h4a2 2 0 002-2V6a2 2 0 00-2-2H5a2 2 0 00-2 2v6a2 2 0 002 2h2v4h.01z"></path>
+                                    </svg>
+                                    Forum Management
+                                </a>
+
+                                <!-- Reports & Analytics -->
+                                <a href="{{ route('admin.reports.index') }}" class="group flex items-center px-2 py-2 text-base font-medium rounded-md {{ request()->routeIs('admin.reports.*') ? 'bg-gray-100 dark:bg-gray-700 text-gray-900 dark:text-white' : 'text-gray-600 dark:text-gray-300 hover:bg-gray-50 dark:hover:bg-gray-700 hover:text-gray-900 dark:hover:text-white' }}">
+                                    <svg class="mr-4 h-6 w-6 {{ request()->routeIs('admin.reports.*') ? 'text-gray-500 dark:text-gray-300' : 'text-gray-400 dark:text-gray-400 group-hover:text-gray-500 dark:group-hover:text-gray-300' }}" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 19v-6a2 2 0 00-2-2H5a2 2 0 00-2 2v6a2 2 0 002 2h2a2 2 0 002-2zm0 0V9a2 2 0 012-2h2a2 2 0 012 2v10m-6 0a2 2 0 002 2h2a2 2 0 002-2m0 0V5a2 2 0 012-2h2a2 2 0 012 2V14a2 2 0 01-2 2h-2a2 2 0 01-2-2z"></path>
+                                    </svg>
+                                    Reports
+                                </a>
+
+                                <!-- Settings -->
+                                <a href="{{ route('admin.settings.index') }}" class="group flex items-center px-2 py-2 text-base font-medium rounded-md {{ request()->routeIs('admin.settings.*') ? 'bg-gray-100 dark:bg-gray-700 text-gray-900 dark:text-white' : 'text-gray-600 dark:text-gray-300 hover:bg-gray-50 dark:hover:bg-gray-700 hover:text-gray-900 dark:hover:text-white' }}">
+                                    <svg class="mr-4 h-6 w-6 {{ request()->routeIs('admin.settings.*') ? 'text-gray-500 dark:text-gray-300' : 'text-gray-400 dark:text-gray-400 group-hover:text-gray-500 dark:group-hover:text-gray-300' }}" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M10.325 4.317c.426-1.756 2.924-1.756 3.35 0a1.724 1.724 0 002.573 1.066c1.543-.94 3.31.826 2.37 2.37a1.724 1.724 0 001.065 2.572c1.756.426 1.756 2.924 0 3.35a1.724 1.724 0 00-1.066 2.573c-.94 1.543-.826 3.31-2.37 2.37a1.724 1.724 0 00-2.572 1.065c-.426-1.756-2.924-1.756-3.35 0a1.724 1.724 0 00-2.573-1.066c-1.543.94-3.31-.826-2.37-2.37a1.724 1.724 0 00-1.065-2.572c-1.756-.426-1.756-2.924 0-3.35a1.724 1.724 0 001.066-2.573c.94-1.543.826-3.31 2.37-2.37.996.608l-2.829-2.829m4.244 4.244l2.829-2.829m0 0L16.973 11.025c-.678-.678-1.778-1.778-2.456 0"></path>
+                                    </svg>
+                                    Settings
+                                </a>
+                            </nav>
+                        </div>
+                        <div class="flex-shrink-0 flex border-t border-gray-200 dark:border-gray-700 p-4">
+                            <a href="#" class="flex-shrink-0 group block">
+                                <div class="flex items-center">
+                                    <div>
+                                        <div class="flex items-center">
+                                            <img class="inline-block h-9 w-9 rounded-full" src="{{ Auth::user()->profile_photo_url ?? 'https://ui-avatars.com/api/?name='.urlencode(Auth::user()->name).'&color=7F9CF5&background=EBF4FF' }}" alt="{{ Auth::user()->name }}" />
+                                            <div class="ml-3">
+                                                <p class="text-sm font-medium text-gray-700 dark:text-gray-200 group-hover:text-gray-900 dark:group-hover:text-white">
+                                                    {{ Auth::user()->name }}
+                                                </p>
+                                                <p class="text-xs font-medium text-gray-500 dark:text-gray-400 group-hover:text-gray-700 dark:group-hover:text-gray-300">
+                                                    View profile
+                                                </p>
+                                            </div>
+                                        </div>
+                                    </div>
+                                </div>
+                            </a>
+                        </div>
                             </div>
                             <nav class="mt-5 px-2 space-y-1">
                                 <a href="{{ route('admin.portal', ['locale' => app()->getLocale()]) }}"
@@ -771,31 +846,64 @@
                     @yield('content')
                 </div>
                 </main>
-                </main>
+            </div>
+            
+            <!-- Mobile Bottom Navigation -->
+            <div class="md:hidden fixed bottom-0 left-0 right-0 bg-white dark:bg-gray-800 border-t border-gray-200 dark:border-gray-700 z-50">
+                <div class="flex items-center justify-between px-4 py-2">
+                    <!-- Menu Button -->
+                    <button @click="mobileMenuOpen = !mobileMenuOpen; console.log('Menu button clicked, mobileMenuOpen:', mobileMenuOpen)" onclick="console.log('Native onclick triggered')" class="flex items-center justify-center p-3 text-gray-600 dark:text-gray-300 hover:text-gray-900 dark:hover:text-white hover:bg-gray-100 dark:hover:bg-gray-700 rounded-lg transition-colors duration-200">
+                        <svg class="h-6 w-6" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                            <path x-show="!mobileMenuOpen" stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4 6h16M4 12h16M4 18h16"></path>
+                            <path x-show="mobileMenuOpen" x-cloak stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M6 18L18 6M6 6l12 12"></path>
+                        </svg>
+                        <span class="ml-2 text-sm font-medium">Menu</span>
+                    </button>
+                    
+                    <!-- Logout Button -->
+                    <form method="POST" action="{{ route('logout') }}" class="inline">
+                        @csrf
+                        <button type="submit" class="flex items-center justify-center p-3 text-gray-600 dark:text-gray-300 hover:text-red-600 dark:hover:text-red-400 hover:bg-red-50 dark:hover:bg-red-900/20 rounded-lg transition-colors duration-200">
+                            <svg class="h-6 w-6" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M17 16l4-4m0 0l-4-4m4 4H7m6 4v1a3 3 0 01-3 3H6a3 3 0 01-3-3V7a3 3 0 013-3h4a3 3 0 013 3v1"></path>
+                            </svg>
+                            <span class="ml-2 text-sm font-medium">Logout</span>
+                        </button>
+                    </form>
+                </div>
             </div>
         </div>
 
         <script>
             document.addEventListener('alpine:init', () => {
+                console.log('AlpineJS initializing...');
                 Alpine.data('admin', () => ({
                     sidebarOpen: false,
                     mobileMenuOpen: false,
                     userMenuOpen: false,
 
+                    init() {
+                        console.log('Admin component initialized, mobileMenuOpen:', this.mobileMenuOpen);
+                    },
+
                     toggleSidebar() {
                         this.sidebarOpen = !this.sidebarOpen;
+                        console.log('Sidebar toggled:', this.sidebarOpen);
                     },
 
                     closeSidebar() {
                         this.sidebarOpen = false;
+                        console.log('Sidebar closed');
                     },
 
                     toggleMobileMenu() {
                         this.mobileMenuOpen = !this.mobileMenuOpen;
+                        console.log('Mobile menu toggled:', this.mobileMenuOpen);
                     },
 
                     closeMobileMenu() {
                         this.mobileMenuOpen = false;
+                        console.log('Mobile menu closed');
                     },
 
                     toggleUserMenu() {
