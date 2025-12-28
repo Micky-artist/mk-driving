@@ -78,44 +78,21 @@ class QuizController extends Controller
                 ];
             });
         
-        // Get leaderboard position using points system (consistent with navbar)
+        // Get weekly leaderboard using PointsService (consistent with forum)
         $pointsService = app(\App\Services\PointsService::class);
-        $userPosition = $pointsService->getUserRank($user->id);
+        $userPosition = $pointsService->getUserRank($user->id, 'weekly');
+        $leaderboard = collect($pointsService->getLeaderboard(10, 'weekly'));
         
-        // Get top 10 users by points for leaderboard display
-        $topUsers = \App\Models\UserPoint::with('user')
-            ->orderBy('total_points', 'desc')
-            ->take(10)
-            ->get()
-            ->map(function($userPoint) {
-                return [
-                    'user' => $userPoint->user,
-                    'total_points' => $userPoint->total_points,
-                    'average_score' => $userPoint->user->average_score ?? 0,
-                    'completed_quizzes' => $userPoint->user->quizAttempts()->whereNotNull('completed_at')->count()
-                ];
-            });
-        
-        // Create leaderboard with current user first, then top users
-        $leaderboard = collect();
-        
-        // Add current user at the top if they have points
-        $userPoints = \App\Models\UserPoint::where('user_id', $user->id)->first();
-        if ($userPoints && $userPoints->total_points > 0) {
-            $leaderboard->push([
+        // Add additional user data needed for dashboard
+        $leaderboard = $leaderboard->map(function($entry) {
+            $user = \App\Models\User::find($entry['user']['id']);
+            return [
                 'user' => $user,
-                'total_points' => $userPoints->total_points,
+                'total_points' => $entry['points'],
                 'average_score' => $user->average_score ?? 0,
                 'completed_quizzes' => $user->quizAttempts()->whereNotNull('completed_at')->count(),
-                'is_current_user' => true
-            ]);
-        }
-        
-        // Add top users (excluding current user if already added)
-        $topUsers->each(function($entry) use ($leaderboard, $user) {
-            if ($entry['user']->id !== $user->id) {
-                $leaderboard->push(array_merge($entry, ['is_current_user' => false]));
-            }
+                'is_current_user' => $user->id === Auth::id()
+            ];
         });
         
         // Get recent activity
