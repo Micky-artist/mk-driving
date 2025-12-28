@@ -168,6 +168,79 @@ class DashboardController extends Controller
             'average_score' => $averageScore,
         ];
         
+        // Calculate test readiness
+        try {
+            // Get all quiz attempts with user answers
+            $quizAttempts = $user->quizAttempts()->with('userAnswers')->get() ?? collect();
+            
+            // Filter attempts with answers (both completed and in-progress)
+            $attemptsWithAnswers = $quizAttempts->filter(function($attempt) {
+                if (!$attempt) return false;
+                $userAnswers = $attempt->userAnswers ?? null;
+                return $userAnswers && is_countable($userAnswers) && count($userAnswers) > 0;
+            });
+            
+            $totalAttemptsWithAnswers = $attemptsWithAnswers->count();
+            
+            // Calculate scores from both completed and in-progress quizzes
+            $totalScore = 0;
+            $scoreCount = 0;
+            
+            foreach ($attemptsWithAnswers as $attempt) {
+                $userAnswers = $attempt->userAnswers ?? [];
+                if (!is_countable($userAnswers) || count($userAnswers) === 0) continue;
+                
+                // Count correct answers
+                $correctAnswers = 0;
+                foreach ($userAnswers as $answer) {
+                    // Check if is_correct exists and equals 1 (or true)
+                    if ($answer && 
+                        ((isset($answer->is_correct) && $answer->is_correct == 1) ||
+                         (isset($answer->is_correct) && $answer->is_correct === true))) {
+                        $correctAnswers++;
+                    }
+                }
+                
+                // Calculate percentage score for this attempt
+                $attemptScore = ($correctAnswers / count($userAnswers)) * 100;
+                $totalScore += $attemptScore;
+                $scoreCount++;
+            }
+            
+            $readinessAverageScore = $scoreCount > 0 ? round($totalScore / $scoreCount, 1) : 0;
+            
+            // Calculate readiness percentage using the original formula
+            $readinessPercentage = 0;
+            
+            if ($totalAttemptsWithAnswers >= 25) {
+                // User has completed 25+ quizzes - only score matters
+                $readinessPercentage = min(100, round(($readinessAverageScore / 60) * 100));
+            } elseif ($totalAttemptsWithAnswers > 0) {
+                // User has fewer than 25 quizzes - combine score + progress
+                $scoreFactor = min(100, ($readinessAverageScore / 60) * 100); // Score factor (max 100%)
+                $progressFactor = $totalAttemptsWithAnswers / 25; // Progress factor (0 to 1)
+                $readinessPercentage = round($scoreFactor * $progressFactor);
+            }
+            
+            $readinessData = [
+                'percentage' => $readinessPercentage,
+                'average_score' => $readinessAverageScore,
+                'total_tests' => $totalAttemptsWithAnswers,
+                'is_ready' => $readinessPercentage >= 100,
+                'getting_ready' => $readinessPercentage >= 60 && $totalAttemptsWithAnswers >= 25,
+            ];
+            
+        } catch (\Exception $e) {
+            // Fallback data
+            $readinessData = [
+                'percentage' => 0,
+                'average_score' => 0,
+                'total_tests' => 0,
+                'is_ready' => false,
+                'getting_ready' => false,
+            ];
+        }
+        
         return view('dashboard.index', [
             'user' => $user,
             'currentSubscriptions' => $currentSubscriptions,
@@ -178,6 +251,7 @@ class DashboardController extends Controller
             'inProgressQuizzes' => $inProgressQuizzes,
             'completedQuizzes' => $completedQuizzes,
             'stats' => $stats,
+            'readinessData' => $readinessData,
             'activeRoute' => 'dashboard',
         ]);
     }
@@ -309,75 +383,6 @@ class DashboardController extends Controller
                     }
                 }
             });
-            
-        $completedQuizzes = $user->quizAttempts()
-            ->where('status', 'COMPLETED')
-            ->count();
-            
-        // Get new quizzes (not yet attempted)
-        $attemptedQuizIds = $user->quizAttempts()->pluck('quiz_id');
-        $newQuizzes = Quiz::where('is_active', true)
-            ->whereNotIn('id', $attemptedQuizIds)
-            ->where(function($query) use ($currentSubscriptions) {
-                // Include guest quizzes
-                $query->where('is_guest_quiz', true);
-                
-                // Include quizzes from active subscriptions
-                if ($currentSubscriptions->isNotEmpty()) {
-                    $planSlugs = $currentSubscriptions->pluck('subscription_plan_slug')->filter()->toArray();
-                    if (!empty($planSlugs)) {
-                        $query->orWhereIn('subscription_plan_slug', $planSlugs);
-                    }
-                }
-            })
-            ->orderBy('created_at', 'desc')
-            ->take(3)
-            ->get();
-            
-        // Get in-progress quizzes (started but not completed)
-        $inProgressQuizzes = $user->quizAttempts()
-            ->with('quiz')
-            ->where('status', 'IN_PROGRESS')
-            ->where('created_at', '>', now()->subDays(7))
-            ->orderBy('updated_at', 'desc')
-            ->get()
-            ->map(function ($attempt) {
-                $totalQuestions = $attempt->quiz->questions_count ?? 0;
-                $attempt->progress = $totalQuestions > 0 
-                    ? round(($attempt->answers_count / $totalQuestions) * 100) 
-                    : 0;
-                return $attempt;
-            });
-            
-        // Get recently completed quizzes
-        $completedQuizzesList = $user->quizAttempts()
-            ->with('quiz')
-            ->where('status', 'COMPLETED')
-            ->orderBy('completed_at', 'desc')
-            ->take(3)
-            ->get();
-
-        // Calculate average score from completed quizzes
-        $averageScore = $user->quizAttempts()
-            ->where('status', 'COMPLETED')
-            ->whereNotNull('score')
-            ->avg('score');
-
-        return view('dashboard.index', [
-            'user' => $user,
-            'currentSubscriptions' => $currentSubscriptions,
-            'availablePlans' => $availablePlans,
-            'stats' => [
-                'total_quizzes' => $availableQuizzes,
-                'completed_count' => $completedQuizzes,
-                'in_progress_count' => $inProgressQuizzes->count(),
-                'new_quizzes_count' => $newQuizzes->count(),
-                'average_score' => round($averageScore ?? 0, 1),
-            ],
-            'newQuizzes' => $newQuizzes,
-            'inProgressQuizzes' => $inProgressQuizzes,
-            'completedQuizzes' => $completedQuizzesList,
-        ]);
     }
     
     /**

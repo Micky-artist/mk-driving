@@ -87,6 +87,58 @@ class DashboardController extends Controller
         $completedQuizzes = $quizAttempts->where('status', 'COMPLETED');
         $inProgressQuizzes = $quizAttempts->where('status', 'IN_PROGRESS');
         
+        // Calculate test readiness
+        $completedQuizzesForReadiness = $quizAttempts->where('status', 'COMPLETED');
+        $inProgressQuizzesForReadiness = $quizAttempts->where('status', 'IN_PROGRESS');
+        
+        // Include both completed and in-progress attempts that have answers
+        $allAttemptsWithAnswers = $quizAttempts->filter(function($attempt) {
+            return $attempt->userAnswers && $attempt->userAnswers->count() > 0;
+        });
+        
+        $totalAttemptsWithAnswers = $allAttemptsWithAnswers->count();
+        $totalCompletedTests = $completedQuizzesForReadiness->count();
+        
+        // Calculate average score from completed quizzes, and partial scores from in-progress
+        $totalScore = 0;
+        $scoreCount = 0;
+        
+        foreach ($completedQuizzesForReadiness as $completed) {
+            $totalScore += $completed->score ?? 0;
+            $scoreCount++;
+        }
+        
+        foreach ($inProgressQuizzesForReadiness as $inProgress) {
+            if ($inProgress->userAnswers && $inProgress->userAnswers->count() > 0) {
+                $correctAnswers = $inProgress->userAnswers->where('is_correct', true)->count();
+                $totalQuestions = $inProgress->userAnswers->count();
+                $partialScore = $totalQuestions > 0 ? ($correctAnswers / $totalQuestions) * 100 : 0;
+                $totalScore += $partialScore;
+                $scoreCount++;
+            }
+        }
+        
+        $averageScore = $scoreCount > 0 ? round($totalScore / $scoreCount, 1) : 0;
+        
+        // Calculate readiness percentage (60% threshold with at least 25 tests)
+        $readinessPercentage = 0;
+        if ($totalAttemptsWithAnswers >= 25) {
+            $readinessPercentage = min(100, round(($averageScore / 60) * 100));
+        } elseif ($totalAttemptsWithAnswers > 0) {
+            // Partial readiness for users with fewer than 25 tests
+            $testCountFactor = $totalAttemptsWithAnswers / 25; // How close they are to 25 tests
+            $scoreFactor = min(100, ($averageScore / 60) * 100); // Score factor relative to 60%
+            $readinessPercentage = round($testCountFactor * $scoreFactor);
+        }
+        
+        $readinessData = [
+            'percentage' => $readinessPercentage,
+            'average_score' => $averageScore,
+            'total_tests' => $totalAttemptsWithAnswers,
+            'is_ready' => $readinessPercentage >= 100,
+            'getting_ready' => $readinessPercentage >= 60 && $totalAttemptsWithAnswers >= 25,
+        ];
+
         $stats = [
             'total_quizzes' => $totalQuizzes,
             'completed_count' => $completedQuizzes->count(),
@@ -158,6 +210,7 @@ class DashboardController extends Controller
             'completedQuizzes' => $completedQuizzes->take(3),
             'stats' => $stats,
             'subscriptionStats' => $subscriptionStats,
+            'readinessData' => $readinessData,
         ]);
     }
 }

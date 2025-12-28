@@ -169,8 +169,9 @@
                             @if (session('status'))
                                 @php
                                     $statusMessage = session('status');
+                                    $passwordResetMessage = __('auth.password_reset_success.message');
+                                    $isPasswordReset = $statusMessage === $passwordResetMessage;
                                     $isForumLogin = $statusMessage === __('auth.forum_login_required');
-                                    $isPasswordReset = $statusMessage === __('auth.password_reset_success.message');
                                 @endphp
                                 
                                 <div class="mb-6 p-4 {{ $isPasswordReset ? 'bg-green-50 dark:bg-green-900/20 border border-green-200 dark:border-green-800' : 'bg-blue-50 dark:bg-blue-900/20 border border-blue-200 dark:border-blue-800' }} rounded-xl">

@@ -210,4 +210,17 @@ return [
         'close' => 'Funga',
         'start_quiz' => 'Tangira Umwitozo',
     ],
+    'readiness' => [
+        'title' => 'Aho Mugeze Mwitegura Gukora Ikizami',
+        'percentage' => 'Mwiteguye :percentage% ',
+        'tests_completed' => 'Imyitozo :count yakozwe',
+        'average_score' => 'Amanota muri rusange: :score%',
+        'getting_ready' => 'Muri kwiyongera!',
+        'ready' => 'Mwiteguye gukora ikizamini!',
+        'keep_practicing' => 'Komeza kwitoza!',
+        'need_more_tests' => 'Mukeneye gukora imyitozo 25 byibuze ngo tumenye uko mwiteguye',
+        'need_better_scores' => 'Gerageza kubona 60% muri rusange',
+        'see_more_quizzes' => 'Reba imyitozo yose',
+        'not_enough_data' => 'Ntamyitozo ihagije ngo tubone uko mwiteguye',
+    ],
 ];

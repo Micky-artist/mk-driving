@@ -212,4 +212,17 @@ return [
         'close' => 'Maybe Later',
         'start_quiz' => 'Start Quiz',
     ],
+    'readiness' => [
+        'title' => 'Readiness to take official test',
+        'percentage' => ':percentage% ready',
+        'tests_completed' => ':count tests completed',
+        'average_score' => 'Average score: :score%',
+        'getting_ready' => 'Getting ready!',
+        'ready' => 'Ready for official test!',
+        'keep_practicing' => 'Keep practicing!',
+        'need_more_tests' => 'Complete at least 25 tests to evaluate readiness',
+        'need_better_scores' => 'Aim for 60% average score to be ready',
+        'see_more_quizzes' => 'See more quizzes',
+        'not_enough_data' => 'Complete more quizzes to see your readiness',
+    ],
 ];

@@ -80,6 +80,130 @@ document.addEventListener('DOMContentLoaded', function() {
         <!-- Main Content Area that overlays the subscription section -->
         <div class="relative z-10 space-y-6">
 
+        <!-- Test Readiness Progress Bar -->
+        @php
+            // Log what we received from controller
+            \Log::info('Dashboard view - readinessData received', [
+                'readinessData_exists' => isset($readinessData),
+                'readinessData_value' => $readinessData ?? 'NOT_SET'
+            ]);
+            
+            // Fallback if readinessData is not available
+            $readinessData = $readinessData ?? [
+                'percentage' => 0,
+                'average_score' => 0,
+                'total_tests' => 0,
+                'is_ready' => false,
+                'getting_ready' => false,
+            ];
+            
+            // Log final readiness data being used
+            \Log::info('Dashboard view - final readiness data', [
+                'percentage' => $readinessData['percentage'],
+                'total_tests' => $readinessData['total_tests'],
+                'average_score' => $readinessData['average_score']
+            ]);
+        @endphp
+        <div class="bg-white dark:bg-gray-800 rounded-xl shadow-sm border border-gray-200 dark:border-gray-700 p-4">
+            <div class="space-y-3">
+                <!-- Title and Status -->
+                <div class="flex flex-col sm:flex-row sm:items-center sm:justify-between gap-2">
+                    <h3 class="text-base font-semibold text-gray-900 dark:text-white">
+                        {{ __('dashboard.readiness.title') }}
+                    </h3>
+                    <div class="flex items-center gap-2">
+                        @if($readinessData['is_ready'])
+                            <span class="inline-flex items-center px-2 py-1 text-xs font-medium rounded-full bg-green-100 text-green-800 dark:bg-green-900/20 dark:text-green-400">
+                                {{ __('dashboard.readiness.ready') }}
+                            </span>
+                        @elseif($readinessData['getting_ready'])
+                            <span class="inline-flex items-center px-2 py-1 text-xs font-medium rounded-full bg-yellow-100 text-yellow-800 dark:bg-yellow-900/20 dark:text-yellow-400">
+                                {{ __('dashboard.readiness.getting_ready') }}
+                            </span>
+                        @else
+                            <span class="inline-flex items-center px-2 py-1 text-xs font-medium rounded-full bg-blue-100 text-blue-800 dark:bg-blue-900/20 dark:text-blue-400">
+                                {{ __('dashboard.readiness.keep_practicing') }}
+                            </span>
+                        @endif
+                        <span class="text-sm font-medium text-gray-900 dark:text-white">
+                            {{ __('dashboard.readiness.percentage', ['percentage' => $readinessData['percentage']]) }}
+                        </span>
+                    </div>
+                </div>
+
+                <!-- Progress Bar -->
+                <div class="space-y-2">
+                    <div class="w-full bg-gray-200 dark:bg-gray-700 rounded-full h-3 overflow-hidden">
+                        <div class="h-full rounded-full transition-all duration-500 ease-out relative"
+                             style="width: {{ $readinessData['percentage'] }}%; 
+                                    background: linear-gradient(to right, 
+                                        #ef4444 0%, 
+                                        #f97316 25%, 
+                                        #eab308 50%, 
+                                        #84cc16 75%, 
+                                        #10b981 100%);">
+                            @if($readinessData['percentage'] > 10)
+                                <div class="absolute inset-0 bg-white/20 animate-pulse"></div>
+                            @endif
+                        </div>
+                    </div>
+                    
+                    <!-- Progress Markers -->
+                    <div class="relative h-2">
+                        <div class="absolute inset-0 flex justify-between text-xs text-gray-500 dark:text-gray-400">
+                            <span>0%</span>
+                            <span>25%</span>
+                            <span>50%</span>
+                            <span>75%</span>
+                            <span>100%</span>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Stats and Nudge -->
+                <div class="flex flex-col sm:flex-row sm:items-center sm:justify-between gap-3 pt-2 border-t border-gray-200 dark:border-gray-700">
+                    <div class="flex flex-col sm:flex-row sm:items-center gap-2 sm:gap-4 text-xs text-gray-600 dark:text-gray-400">
+                        @if($readinessData['total_tests'] > 0)
+                            <span>{{ __('dashboard.readiness.tests_completed', ['count' => $readinessData['total_tests']]) }}</span>
+                            <span>{{ __('dashboard.readiness.average_score', ['score' => $readinessData['average_score']]) }}</span>
+                        @else
+                            <span>{{ __('dashboard.readiness.not_enough_data') }}</span>
+                        @endif
+                    </div>
+                    
+                    <div class="flex flex-col sm:flex-row gap-2">
+                        @if(!$readinessData['is_ready'] && $readinessData['total_tests'] > 0)
+                            @if($readinessData['total_tests'] < 25)
+                                <p class="text-xs text-gray-600 dark:text-gray-400">
+                                    {{ __('dashboard.readiness.need_more_tests') }}
+                                </p>
+                            @elseif($readinessData['average_score'] < 60)
+                                <p class="text-xs text-gray-600 dark:text-gray-400">
+                                    {{ __('dashboard.readiness.need_better_scores') }}
+                                </p>
+                            @endif
+                        @endif
+                        <div class="flex gap-2">
+                            <a href="{{ route('dashboard.quizzes.index', ['locale' => app()->getLocale()]) }}" 
+                               class="inline-flex items-center px-3 py-1.5 text-xs font-medium text-blue-600 dark:text-blue-400 bg-blue-50 dark:bg-blue-900/20 rounded-md hover:bg-blue-100 dark:hover:bg-blue-900/30 transition-colors">
+                                {{ __('dashboard.readiness.see_more_quizzes') }}
+                                <svg xmlns="http://www.w3.org/2000/svg" class="h-3 w-3 ml-1" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 5l7 7-7 7" />
+                                </svg>
+                            </a>
+                            <a href="{{ route('dashboard.progress', ['locale' => app()->getLocale()]) }}" 
+                               class="inline-flex items-center px-3 py-1.5 text-xs font-medium text-purple-600 dark:text-purple-400 bg-purple-50 dark:bg-purple-900/20 rounded-md hover:bg-purple-100 dark:hover:bg-purple-900/30 transition-colors">
+                                {{ __('dashboard.progress.title') }}
+                                <svg xmlns="http://www.w3.org/2000/svg" class="h-3 w-3 ml-1" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 19v-6a2 2 0 00-2-2H5a2 2 0 00-2 2v6a2 2 0 002 2h2a2 2 0 002-2zm0 0V9a2 2 0 012-2h2a2 2 0 012 2v10m-6 0a2 2 0 002 2h2a2 2 0 002-2m0 0V5a2 2 0 012-2h2a2 2 0 012 2v14a2 2 0 01-2 2h-2a2 2 0 01-2-2z" />
+                                </svg>
+                            </a>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+
         <!-- Current/Recently Opened Quiz -->
         @if ($inProgressQuizzes->count() > 0)
             <div class="bg-white dark:bg-gray-800 rounded-xl shadow-sm border border-gray-200 dark:border-gray-700 overflow-hidden">

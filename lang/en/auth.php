@@ -132,6 +132,7 @@ return [
         'title' => 'Password must contain:',
         'length' => 'At least 6 characters',
         'letter_number_required' => 'At least 1 letter and 1 number',
+        'letter' => 'At least 1 letter',
         'strength' => [
             'weak' => 'Weak',
             'good' => 'Good',
@@ -209,5 +210,20 @@ return [
         'expiry_notice' => 'This password reset link will expire in :count minutes.',
         'ignore_if_not_requested' => 'If you did not request a password reset, no further action is required.',
         'contact_support' => 'If you\'re having trouble clicking the password reset button, copy and paste the URL below into your web browser or contact our support team at :email.'
+    ],
+
+    // Laravel Password Reset translations
+    'passwords' => [
+        'reset' => 'Your password has been reset!',
+        'sent' => 'We have emailed your password reset link!',
+        'throttled' => 'Please wait before trying again.',
+        'token' => 'This password reset token is invalid.',
+        'user' => "We can't find a user with that email address.",
+        'password' => 'Passwords must be at least eight characters and match the confirmation.',
+        'reset' => 'Your password has been reset!',
+        'sent' => 'We have emailed your password reset link!',
+        'throttled' => 'Please wait before trying again.',
+        'token' => 'This password reset token is invalid.',
+        'user' => "We can't find a user with that email address.",
     ],
 ];

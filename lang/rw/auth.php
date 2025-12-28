@@ -132,6 +132,7 @@ return [
         'title' => 'Ijambo ry\'ibanga rigomba kuba rifite:',
         'length' => 'Inyuguti 6 byibura',
         'letter_number_required' => 'Umubare umwe byibura',
+        'letter' => 'Inyuguti 1 byibura',
         'strength' => [
             'weak' => 'Ntarengwa',
             'good' => 'Byiza',
@@ -209,5 +210,15 @@ return [
         'expiry_notice' => 'Iyi link yo guhindura ijambo ry\'ibanga irarangira muminota :count.',
         'ignore_if_not_requested' => 'Niba mutayatse mwirengagize buno butumwa.',
         'contact_support' => 'Niba mufite ikibazo twandikire kuri :email.'
+    ],
+
+    // Laravel Password Reset translations
+    'passwords' => [
+        'reset' => 'Ijambo ry\'ibanga ryahinduwe!',
+        'sent' => 'Twakoherereje link yo guhindura ijambo ry\'ibanga!',
+        'throttled' => 'Wongera ugerageze mu isaha.',
+        'token' => 'Iyi kodi yo guhindura ijambo ry\'ibanga ntabwo ari yo.',
+        'user' => "Ntibashoboka kubona umukoresha ufite iyi imeyili.",
+        'password' => 'Amagambo y\'ibanga agomba kuba inyuguti 6 n\'umubare.',
     ],
 ];
