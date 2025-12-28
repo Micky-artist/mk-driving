@@ -64,11 +64,10 @@ class ImportDrivingQuestions extends Command
                 ));
 
                 $adminUser = $this->getOrCreateAdminUser();
-                $subscriptionPlan = $this->getSubscriptionPlan();
 
                 // Process each quiz
                 foreach ($quizzes as $quizIndex => $quizQuestions) {
-                    $this->processQuiz($quizIndex, $quizQuestions, $adminUser, $subscriptionPlan);
+                    $this->processQuiz($quizIndex, $quizQuestions, $adminUser);
                 }
 
                 // Commit the transaction if we got this far
@@ -80,10 +79,14 @@ class ImportDrivingQuestions extends Command
                 if (DB::transactionLevel() > 0) {
                     DB::rollBack();
                 }
+                // Re-enable foreign key checks before re-throwing
+                DB::statement('SET FOREIGN_KEY_CHECKS=1');
                 throw $e; // Re-throw to be caught by the outer catch
             } finally {
-                // Re-enable foreign key checks
-                DB::statement('SET FOREIGN_KEY_CHECKS=1');
+                // Re-enable foreign key checks if not already done
+                if (DB::transactionLevel() === 0) {
+                    DB::statement('SET FOREIGN_KEY_CHECKS=1');
+                }
             }
         } catch (\Exception $e) {
             $this->logError($e);
@@ -93,12 +96,12 @@ class ImportDrivingQuestions extends Command
 
     private function getOrCreateAdminUser()
     {
-        $adminUser = User::where('email', 'admin@example.com')->first();
+        $adminUser = User::where('email', 'remyrwa@gmail.com')->first();
         if (!$adminUser) {
             $adminUser = User::create([
-                'first_name' => 'Admin',
-                'last_name' => 'User',
-                'email' => 'admin@example.com',
+                'first_name' => 'Remy',
+                'last_name' => 'Hirwa',
+                'email' => 'remyrwa@gmail.com',
                 'password' => bcrypt('password'),
                 'is_admin' => true
             ]);
@@ -115,7 +118,7 @@ class ImportDrivingQuestions extends Command
         return $subscriptionPlan;
     }
 
-    private function processQuiz($quizIndex, $quizQuestions, $adminUser, $subscriptionPlan)
+    private function processQuiz($quizIndex, $quizQuestions, $adminUser)
     {
         if (!is_array($quizQuestions)) {
             $this->warn("Quiz at index {$quizIndex} is not an array, skipping...");
@@ -127,13 +130,42 @@ class ImportDrivingQuestions extends Command
         
         $isGuestQuiz = $quizIndex === 10; // 0-based index, so 10 is the 11th quiz
         
+        // Assign quizzes based on subscription plan hierarchy
+        if ($quizNumber <= 15) {
+            // Basic plan gets quizzes 1-15
+            $subscriptionPlan = \App\Models\SubscriptionPlan::where('slug', 'basic-plan')->first();
+        } elseif ($quizNumber <= 25) {
+            // Standard plan gets quizzes 16-25 (plus access to basic)
+            $subscriptionPlan = \App\Models\SubscriptionPlan::where('slug', 'standard-plan')->first();
+        } else {
+            // Premium and Unlimited get all quizzes (26+)
+            $subscriptionPlan = \App\Models\SubscriptionPlan::where('slug', 'premium-plan')->first();
+        }
+        
+        if (!$subscriptionPlan) {
+            throw new \RuntimeException('Subscription plan not found for quiz assignment.');
+        }
+        
+        $categories = [
+            ['rw' => "Ibimenyetso n'Amabwiriza By'Umuhanda", 'en' => "Traffic Signs & Signals"],
+            ['rw' => "Igenamigambi n'Umutekano By'Ikinyabiziga", 'en' => "Vehicle Control & Safety"],
+            ['rw' => "Amategeko Y'Umuhanda", 'en' => "Rules of the Road"],
+            ['rw' => "Kumenya Ingingo Zo Kwirinda Impanuka", 'en' => "Hazard Awareness"],
+            ['rw' => "Gutwara mu Gihe Cy'Imihindagurikire y'Ibigukikije", 'en' => "Environmental & Weather Conditions"]
+        ];
+        
+        $category = $categories[$quizIndex % count($categories)];
+        
         $quiz = Quiz::create([
             'title' => $isGuestQuiz 
-                ? ['rw' => "Umwitozo bwa mbere", 'en' => "Practice Quiz"]
-                : ['rw' => "Umwitozo {$quizNumber}", 'en' => "Quiz {$quizNumber}"],
+                ? ['rw' => "Umwitozo Wo Gutangira no Kwihugura", 'en' => "Initial Quiz to Test Your Knowledge"]
+                : ['rw' => "Umwitozo wa {$quizNumber}: {$category['rw']}", 'en' => "Quiz Number {$quizNumber}: {$category['en']}"],
             'description' => $isGuestQuiz
-                ? ['rw' => "Igikorwa cy'umuhanda cya mbere", 'en' => "Practice driving test questions set for guests"]
-                : ['rw' => "Igikorwa cy'umuhanda {$quizNumber}", 'en' => "Driving test questions set {$quizNumber}"],
+                ? ['rw' => "Umwitozo w'ubuntu dutanga k'ubashakisha uruhushya", 'en' => "Introductory driving test for license applicants"]
+                : [
+                    'rw' => "Umwitozo wa {$quizNumber} ufite ibibazo " . count($quizQuestions) . ". Wakwihugura igihe cyose wifashishije ifatabuguzi. Gutsinda bisaba 60%, Imenyereze ubone 100%.",
+                    'en' => "Quiz {$quizNumber} with " . count($quizQuestions) . " questions. Practice anytime with a subscription. Score 60% to pass, aim for 100%."
+                ],
             'time_limit_minutes' => 20,
             'is_active' => true,
             'is_guest_quiz' => $isGuestQuiz,

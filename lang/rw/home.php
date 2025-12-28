@@ -173,4 +173,7 @@ return [
         'refund_policy' => 'Gusubizwa Ubwishyu',
         'all_rights_reserved' => 'All rights reserved.',
     ],
+    'quizViewer' => [
+        'continueWithViewer' => 'Komereza Ahabugenewe',
+    ],
 ];

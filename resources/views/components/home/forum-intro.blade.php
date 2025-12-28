@@ -49,7 +49,7 @@
                                     {{ $forumData['leaderboard'][1]['user']['firstName'] }} {{ $forumData['leaderboard'][1]['user']['lastName'] }}
                                 </p>
                                 <p class="text-sm md:text-lg font-bold text-gray-600 dark:text-gray-300">{{ $forumData['leaderboard'][1]['points'] }}</p>
-                                <p class="text-xs text-gray-500 dark:text-gray-400">{{ __('forum.points') }}</p>
+                                <p class="text-xs text-gray-500 dark:text-gray-400">{{ __('forum.points_label') }}</p>
                             </div>
                             <div class="mt-1 md:mt-2 w-16 h-12 md:w-20 md:h-16 bg-gray-100 dark:bg-gray-700 rounded-t-lg flex items-center justify-center">
                                 <span class="text-sm md:text-lg font-bold text-gray-600 dark:text-gray-300">2</span>
@@ -73,7 +73,7 @@
                                     {{ $forumData['leaderboard'][0]['user']['firstName'] }} {{ $forumData['leaderboard'][0]['user']['lastName'] }}
                                 </p>
                                 <p class="text-base md:text-xl font-bold text-yellow-600 dark:text-yellow-400">{{ $forumData['leaderboard'][0]['points'] }}</p>
-                                <p class="text-xs text-gray-500 dark:text-gray-400">{{ __('forum.points') }}</p>
+                                <p class="text-xs text-gray-500 dark:text-gray-400">{{ __('forum.points_label') }}</p>
                             </div>
                             <div class="mt-1 md:mt-2 w-16 h-16 md:w-20 md:h-20 bg-yellow-100 dark:bg-yellow-900/30 rounded-t-lg flex items-center justify-center">
                                 <span class="text-base md:text-xl font-bold text-yellow-600 dark:text-yellow-400">1</span>
@@ -97,7 +97,7 @@
                                     {{ $forumData['leaderboard'][2]['user']['firstName'] }} {{ $forumData['leaderboard'][2]['user']['lastName'] }}
                                 </p>
                                 <p class="text-sm md:text-lg font-bold text-orange-600 dark:text-orange-400">{{ $forumData['leaderboard'][2]['points'] }}</p>
-                                <p class="text-xs text-gray-500 dark:text-gray-400">{{ __('forum.points') }}</p>
+                                <p class="text-xs text-gray-500 dark:text-gray-400">{{ __('forum.points_label') }}</p>
                             </div>
                             <div class="mt-1 md:mt-2 w-16 h-10 md:w-20 md:h-14 bg-orange-100 dark:bg-orange-900/30 rounded-t-lg flex items-center justify-center">
                                 <span class="text-sm md:text-lg font-bold text-orange-600 dark:text-orange-400">3</span>
@@ -140,7 +140,7 @@
                     </div>
                     
                     <h3 class="text-xl font-bold text-gray-900 dark:text-white mb-3 line-clamp-2">
-                        {{ $forumData['topQuestion']['title'] }}
+                        {{ is_string($forumData['topQuestion']['title']) ? json_decode($forumData['topQuestion']['title'], true)[app()->getLocale()] ?? $forumData['topQuestion']['title'] : $forumData['topQuestion']['title'] }}
                     </h3>
                     
                     <div class="flex items-center space-x-3 text-sm text-gray-500 dark:text-gray-400">
@@ -158,7 +158,7 @@
                 <!-- Question Content -->
                 <div class="p-6">
                     <p class="text-gray-700 dark:text-gray-300 mb-4 line-clamp-3">
-                        {{ $forumData['topQuestion']['excerpt'] }}
+                        {{ is_string($forumData['topQuestion']['excerpt']) ? json_decode($forumData['topQuestion']['excerpt'], true)[app()->getLocale()] ?? $forumData['topQuestion']['excerpt'] : $forumData['topQuestion']['excerpt'] }}
                     </p>
 
                     <!-- Stats -->
@@ -199,7 +199,7 @@
                                     </div>
                                     <div class="flex-1 min-w-0">
                                         <p class="text-sm text-gray-700 dark:text-gray-300 line-clamp-2">
-                                            {{ $answer['excerpt'] }}
+                                            {{ is_string($answer['excerpt']) ? json_decode($answer['excerpt'], true)[app()->getLocale()] ?? $answer['excerpt'] : $answer['excerpt'] }}
                                         </p>
                                         <div class="flex items-center space-x-2 mt-1">
                                             <span class="text-xs text-gray-500 dark:text-gray-400">{{ $answer['author']['fullName'] }}</span>

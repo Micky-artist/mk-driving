@@ -258,6 +258,7 @@ return [
     'cancel' => 'Hagarika',
     'termsAndPrivacy' => 'Amategeko n\'Amabwiriza',
     'questionImage' => 'Ishusho y\'ikibazo',
+    'optionImage' => 'Ishusho y\'igihembwe',
     'loginToUsePause' => 'Injira ubashe guhagarika',
     'resume' => 'Komeza',
     'pause' => 'Hagarika',

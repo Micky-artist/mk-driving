@@ -272,7 +272,12 @@
                                             </svg>
                                         </div>
                                     </div>
-                                    <div class="ml-3 text-sm">
+                                    <div class="ml-3 text-sm flex-1">
+                                        <!-- Option Image -->
+                                        <div x-show="option.image" class="mb-2">
+                                            <img :src="option.image" alt="{{ __('quiz.optionImage') }}"
+                                                class="max-w-xs h-auto rounded-lg border border-gray-200 dark:border-gray-700">
+                                        </div>
                                         <p class="font-medium text-gray-900 dark:text-gray-100" x-text="option.text">
                                         </p>
                                     </div>
@@ -661,11 +666,12 @@
                     questions: config.questions.map((q, index) => ({
                         id: q.id || `q-${index}`,
                         text: q.text || q.question_text || `Question ${index + 1}`,
-                        image: q.image_path ? `/storage/${q.image_path}` : null,
+                        image: q.image_url || null,
                         options: Array.isArray(q.options) ? q.options.map((opt, optIndex) => ({
                             id: opt.id || `opt-${index}-${optIndex}`,
                             text: opt.text || opt.option_text ||
                                 `Option ${optIndex + 1}`,
+                            image: opt.image_url || null,
                             is_correct: opt.is_correct || opt.correct || false,
                             explanation: opt.explanation || ''
                         })) : []

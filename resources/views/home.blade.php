@@ -33,6 +33,17 @@
                     :show-header="true"
                     :compact-mode="false"
                     :allow-navigation="true" />
+                
+                <!-- Continue with Quiz Viewer Button -->
+                <div class="py-4 text-center bg-gray-50 dark:bg-gray-800">
+                    <a href="{{ route('dashboard.quizzes.show', ['locale' => app()->getLocale(), 'quiz' => $guestQuiz['id']]) }}"
+                        class="group inline-flex items-center px-6 py-3 text-base font-medium text-blue-600 dark:text-blue-400 border-2 border-blue-500 hover:bg-blue-50 dark:hover:bg-blue-900/20 rounded-lg transition-colors">
+                        <span>{{ __('home.quizViewer.continueWithViewer') }}</span>
+                        <svg class="w-4 h-4 ml-2" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 5l7 7-7 7" />
+                        </svg>
+                    </a>
+                </div>
             </div>
         </div>
         @endif

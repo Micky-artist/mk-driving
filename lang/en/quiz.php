@@ -257,6 +257,7 @@ return [
     'cancel' => 'Cancel',
     'termsAndPrivacy' => 'By signing up, you agree to our Terms of Service and Privacy Policy',
     'questionImage' => 'Question image',
+    'optionImage' => 'Option image',
     'loginToUsePause' => 'Login to use pause',
     'resume' => 'Resume',
     'pause' => 'Pause',

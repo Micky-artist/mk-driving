@@ -163,4 +163,7 @@ return [
         'refund_policy' => 'Refund Policy',
         'all_rights_reserved' => 'All rights reserved.',
     ],
+    'quizViewer' => [
+        'continueWithViewer' => 'Continue with Quiz Viewer',
+    ],
 ];
