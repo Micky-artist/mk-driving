@@ -100,7 +100,7 @@ return [
         'title' => 'Kora Konti Yawe',
         'subtitle' => 'Injira muri MK Scholars Driving School uyu munsi!',
         'first_name' => 'Izina ribanza',
-        'last_name' => 'Izina rya nyina',
+        'last_name' => 'Izina ry\'umurango',
         'email' => 'Imeri',
         'sign_up' => 'Iyandikishe',
         'phone' => 'Numero ya telefone',
