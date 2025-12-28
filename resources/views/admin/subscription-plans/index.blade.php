@@ -91,15 +91,15 @@
                      x-transition:leave-end="transform opacity-0 scale-95"
                      class="origin-top-right absolute right-0 mt-2 w-56 rounded-lg shadow-lg bg-white dark:bg-gray-800 ring-1 ring-black ring-opacity-5 dark:ring-gray-700 focus:outline-none z-10 border border-gray-200 dark:border-gray-600">
                     <div class="py-1">
-                        <a href="{{ route('admin.subscriptions.manage') }}" 
+                        <a href="{{ route('admin.subscription-plans.index') }}" 
                            class="block px-4 py-2 text-sm text-gray-700 dark:text-gray-300 hover:bg-gray-50 dark:hover:bg-gray-700 transition-colors">
                             All Plans
                         </a>
-                        <a href="{{ route('admin.subscriptions.manage', ['is_active' => 'true']) }}" 
+                        <a href="{{ route('admin.subscription-plans.index', ['filter' => 'active']) }}" 
                            class="block px-4 py-2 text-sm text-gray-700 dark:text-gray-300 hover:bg-gray-50 dark:hover:bg-gray-700 transition-colors">
                             Active Plans
                         </a>
-                        <a href="{{ route('admin.subscriptions.manage', ['is_active' => 'false']) }}" 
+                        <a href="{{ route('admin.subscription-plans.index', ['filter' => 'inactive']) }}" 
                            class="block px-4 py-2 text-sm text-gray-700 dark:text-gray-300 hover:bg-gray-50 dark:hover:bg-gray-700 transition-colors">
                             Inactive Plans
                         </a>
@@ -124,7 +124,7 @@
     <!-- Stats Cards -->
     <div class="grid grid-cols-1 md:grid-cols-4 gap-4 mb-8">
         <!-- Total Plans -->
-        <a href="{{ route('admin.subscriptions.manage') }}" class="bg-white dark:bg-gray-800 rounded-lg shadow-sm hover:shadow-md transition-all duration-300 transform hover:-translate-y-0.5 border border-gray-200 dark:border-gray-700 hover:border-blue-300 dark:hover:border-blue-600 fade-in fade-in-delay-1 block">
+        <a href="{{ route('admin.subscription-plans.index') }}" class="bg-white dark:bg-gray-800 rounded-lg shadow-sm hover:shadow-md transition-all duration-300 transform hover:-translate-y-0.5 border border-gray-200 dark:border-gray-700 hover:border-blue-300 dark:hover:border-blue-600 fade-in fade-in-delay-1 block">
             <div class="p-6">
                 <div class="flex items-center justify-between mb-4">
                     <div class="p-3 bg-blue-100 dark:bg-blue-900/20 rounded-lg">
@@ -142,7 +142,7 @@
         </a>
 
         <!-- Active Plans -->
-        <a href="{{ route('admin.subscriptions.manage', ['is_active' => 'true']) }}" class="bg-white dark:bg-gray-800 rounded-lg shadow-sm hover:shadow-md transition-all duration-300 transform hover:-translate-y-0.5 border border-gray-200 dark:border-gray-700 hover:border-green-300 dark:hover:border-green-600 fade-in fade-in-delay-2 block">
+        <a href="{{ route('admin.subscription-plans.index', ['filter' => 'active']) }}" class="bg-white dark:bg-gray-800 rounded-lg shadow-sm hover:shadow-md transition-all duration-300 transform hover:-translate-y-0.5 border border-gray-200 dark:border-gray-700 hover:border-green-300 dark:hover:border-green-600 fade-in fade-in-delay-2 block">
             <div class="p-6">
                 <div class="flex items-center justify-between mb-4">
                     <div class="p-3 bg-green-100 dark:bg-green-900/20 rounded-lg">
@@ -160,7 +160,7 @@
         </a>
 
         <!-- Inactive Plans -->
-        <a href="{{ route('admin.subscriptions.manage', ['is_active' => 'false']) }}" class="bg-white dark:bg-gray-800 rounded-lg shadow-sm hover:shadow-md transition-all duration-300 transform hover:-translate-y-0.5 border border-gray-200 dark:border-gray-700 hover:border-gray-400 dark:hover:border-gray-500 fade-in fade-in-delay-3 block">
+        <a href="{{ route('admin.subscription-plans.index', ['filter' => 'inactive']) }}" class="bg-white dark:bg-gray-800 rounded-lg shadow-sm hover:shadow-md transition-all duration-300 transform hover:-translate-y-0.5 border border-gray-200 dark:border-gray-700 hover:border-gray-400 dark:hover:border-gray-500 fade-in fade-in-delay-3 block">
             <div class="p-6">
                 <div class="flex items-center justify-between mb-4">
                     <div class="p-3 bg-gray-100 dark:bg-gray-900/20 rounded-lg">
