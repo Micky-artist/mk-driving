@@ -142,14 +142,7 @@ Route::middleware('auth:web')->group(function () {
         Route::get('/subscriptions', [AdminController::class, 'getAllSubscriptions']);
         Route::get('/subscriptions/{id}', [AdminController::class, 'getSubscription']);
         
-        // News management
-        Route::apiResource('news', NewsController::class, ['names' => [
-            'show' => 'api.news.show',
-            'store' => 'api.news.store',
-            'update' => 'api.news.update',
-            'destroy' => 'api.news.destroy'
-        ]])->except(['index']);
-        
+                
         // Admin search routes
         Route::get('search/users', [SearchController::class, 'searchUsers']);
         Route::get('search/subscription-plans', [SearchController::class, 'searchSubscriptionPlans']);

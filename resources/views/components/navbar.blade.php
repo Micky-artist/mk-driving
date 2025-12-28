@@ -180,7 +180,7 @@ $classes = $isActive
             x-transition:enter="transition-opacity ease-linear duration-200" x-transition:enter-start="opacity-0"
             x-transition:enter-end="opacity-100" x-transition:leave="transition-opacity ease-linear duration-150"
             x-transition:leave-start="opacity-100" x-transition:leave-end="opacity-0"
-            class="md:hidden fixed inset-0 bg-black/70 backdrop-blur-sm z-40" x-cloak
+            class="md:hidden fixed inset-0 bg-black/70 backdrop-blur-sm z-50" x-cloak
             x-transition:enter="transition ease-in-out duration-300 transform"
             x-transition:enter-start="-translate-x-full" x-transition:enter-end="translate-x-0"
             x-transition:leave="transition ease-in-out duration-300 transform" x-transition:leave-start="translate-x-0"
@@ -195,7 +195,7 @@ $classes = $isActive
             </div>
 
             <!-- Mobile menu panel -->
-            <div class="fixed inset-y-0 left-0 w-80 max-w-full bg-white dark:bg-gray-800 shadow-2xl overflow-y-auto z-50 transform transition-transform duration-300 ease-in-out"
+            <div class="fixed inset-y-0 left-0 w-80 max-w-full bg-white dark:bg-gray-800 shadow-2xl overflow-y-auto z-[60] transform transition-transform duration-300 ease-in-out"
                 :class="{ 'translate-x-0': mobileMenuOpen, '-translate-x-full': !mobileMenuOpen }"
                 @click.away="mobileMenuOpen = false" role="dialog" aria-modal="true" x-show="mobileMenuOpen">
 

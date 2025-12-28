@@ -434,13 +434,7 @@ Route::prefix('{locale}')
                 ->middleware('check.subscription');
         });
         
-        // News Routes
-        Route::get('news', [\App\Http\Controllers\Web\NewsController::class, 'index'])
-            ->name('news.index');
-            
-        Route::get('news/{news:slug}', [\App\Http\Controllers\Web\NewsDetailController::class, 'show'])
-            ->name('news.show');
-        
+                
             // Subscription success/cancel routes
         Route::get('subscriptions/success', [\App\Http\Controllers\Web\SubscriptionController::class, 'success'])
             ->name('subscriptions.success');
