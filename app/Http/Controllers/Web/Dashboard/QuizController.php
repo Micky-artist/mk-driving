@@ -78,34 +78,45 @@ class QuizController extends Controller
                 ];
             });
         
-        // Get leaderboard position (top 10 users by average score)
-        $leaderboard = User::withCount(['quizAttempts' => function($query) {
-                $query->whereNotNull('completed_at');
-            }])
-            ->whereHas('quizAttempts', function($query) {
-                $query->whereNotNull('completed_at');
-            })
-            ->get()
-            ->map(function($user) {
-                $avgScore = $user->quizAttempts()
-                    ->whereNotNull('completed_at')
-                    ->whereNotNull('score')
-                    ->avg('score') ?? 0;
-                
-                return [
-                    'user' => $user,
-                    'average_score' => $avgScore,
-                    'completed_quizzes' => $user->quizAttempts()->whereNotNull('completed_at')->count()
-                ];
-            })
-            ->sortByDesc('average_score')
-            ->take(10)
-            ->values();
+        // Get leaderboard position using points system (consistent with navbar)
+        $pointsService = app(\App\Services\PointsService::class);
+        $userPosition = $pointsService->getUserRank($user->id);
         
-        // Find current user's position
-        $userPosition = $leaderboard->search(function($entry) use ($user) {
-            return $entry['user']->id === $user->id;
-        }) + 1;
+        // Get top 10 users by points for leaderboard display
+        $topUsers = \App\Models\UserPoint::with('user')
+            ->orderBy('total_points', 'desc')
+            ->take(10)
+            ->get()
+            ->map(function($userPoint) {
+                return [
+                    'user' => $userPoint->user,
+                    'total_points' => $userPoint->total_points,
+                    'average_score' => $userPoint->user->average_score ?? 0,
+                    'completed_quizzes' => $userPoint->user->quizAttempts()->whereNotNull('completed_at')->count()
+                ];
+            });
+        
+        // Create leaderboard with current user first, then top users
+        $leaderboard = collect();
+        
+        // Add current user at the top if they have points
+        $userPoints = \App\Models\UserPoint::where('user_id', $user->id)->first();
+        if ($userPoints && $userPoints->total_points > 0) {
+            $leaderboard->push([
+                'user' => $user,
+                'total_points' => $userPoints->total_points,
+                'average_score' => $user->average_score ?? 0,
+                'completed_quizzes' => $user->quizAttempts()->whereNotNull('completed_at')->count(),
+                'is_current_user' => true
+            ]);
+        }
+        
+        // Add top users (excluding current user if already added)
+        $topUsers->each(function($entry) use ($leaderboard, $user) {
+            if ($entry['user']->id !== $user->id) {
+                $leaderboard->push(array_merge($entry, ['is_current_user' => false]));
+            }
+        });
         
         // Get recent activity
         $recentAttempts = $user->quizAttempts()
@@ -115,7 +126,7 @@ class QuizController extends Controller
             ->get();
         
         // Calculate streak information
-        $currentStreak = $user->getCurrentStreak();
+        $currentStreak = $user->streak_days ?? 0;
         $bestStreak = $user->streak_days ?? 0;
         
         // Get improvement metrics

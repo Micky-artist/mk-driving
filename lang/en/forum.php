@@ -107,6 +107,17 @@ return [
     'you' => 'You',
     'no_leaderboard_data' => 'No leaderboard data available yet.',
     'leaderboard_resets_weekly' => 'Leaderboard resets every Monday',
+    'how_to_earn_points' => 'How to Earn Points',
+    'points_for_question' => 'Ask a question',
+    'points_for_answer' => 'Post an answer',
+    'points_for_daily_visit' => 'Daily visit',
+    'points_for_quiz_completion' => 'Complete a quiz',
+    'back_to_discussions' => 'Back to Discussions',
+    'leaderboard_description' => 'See top performers and track your ranking',
+    
+    // Pagination
+    'previous' => 'Previous',
+    'next' => 'Next',
     
     // Forum Introduction
     'community_discussions' => 'Community Discussions',

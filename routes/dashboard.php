@@ -1,7 +1,7 @@
 <?php
 
 use Illuminate\Support\Facades\Route;
-use App\Http\Controllers\Web\DashboardController;
+use App\Http\Controllers\Dashboard\DashboardController;
 use App\Http\Controllers\Web\Dashboard\QuizController;
 use App\Http\Controllers\Web\Dashboard\QuizAttemptController;
 use App\Http\Controllers\Web\Dashboard\PaymentController;
@@ -12,6 +12,14 @@ Route::prefix('{locale}')->where(['locale' => '(rw|en)'])
     // Dashboard Home
     Route::get('/dashboard', [DashboardController::class, 'index'])
         ->name('dashboard');
+    
+    // Clear welcome modal session flag
+    Route::post('/dashboard/clear-welcome-modal', [DashboardController::class, 'clearWelcomeModal'])
+        ->name('dashboard.clear-welcome-modal');
+
+    // Dashboard Progress (direct route)
+    Route::get('/dashboard/progress', [QuizController::class, 'progress'])
+        ->name('dashboard.progress');
 
     // Quiz Routes
     Route::prefix('dashboard/quizzes')->name('dashboard.quizzes.')->group(function () {

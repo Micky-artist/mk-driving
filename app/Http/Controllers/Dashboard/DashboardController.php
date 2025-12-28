@@ -381,6 +381,17 @@ class DashboardController extends Controller
     }
     
     /**
+     * Clear the welcome modal session flag
+     *
+     * @return \Illuminate\Http\JsonResponse
+     */
+    public function clearWelcomeModal()
+    {
+        session()->forget('show_welcome_modal');
+        return response()->json(['success' => true]);
+    }
+    
+    /**
      * Display the user's subscription history
      *
      * @return \Illuminate\View\View

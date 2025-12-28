@@ -18,6 +18,9 @@ class TrackUserActivity
         $response = $next($request);
 
         if (Auth::check()) {
+            // Update user streak for any authenticated activity
+            Auth::user()->updateStreak();
+            
             // Check for daily visit points on home page
             if ($this->shouldAwardDailyVisitPoints($request)) {
                 $this->awardDailyVisitPoints($request);

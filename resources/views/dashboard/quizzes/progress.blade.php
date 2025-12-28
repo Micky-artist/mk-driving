@@ -4,9 +4,9 @@
 
 @section('content')
     
-    <div class="pt-16">    <div class="min-h-screen bg-gray-50 dark:bg-gray-900">
+    <div class="sm:px-6 px-2 py-2 min-h-screen bg-gray-50 dark:bg-gray-900">
         <!-- Header -->
-        <div class="bg-white dark:bg-gray-800 border-b border-gray-100 dark:border-gray-700">
+        <div class="bg-white dark:bg-gray-800 border-b border-gray-100 dark:border-gray-700 rounded-lg">
             <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
                 <div class="py-6">
                     <h1 class="text-2xl font-semibold text-gray-900 dark:text-white">{{ __('dashboard.progress.title') }}</h1>
@@ -16,7 +16,7 @@
         </div>
 
         <!-- Main Content -->
-        <main class="max-w-7xl mx-auto px-4 sm:px-2 py-6 space-y-6">
+        <main class="max-w-7xl mx-auto sm:px-2 py-6 space-y-6">
             <!-- Performance Overview Cards -->
             <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-4">
                 <!-- Average Score Card -->
@@ -129,23 +129,27 @@
                         </div>
                         <div class="p-4 space-y-3">
                             @foreach($leaderboard as $index => $entry)
-                                <div class="flex items-center justify-between p-3 {{ $entry['user']->id === $user->id ? 'bg-blue-50 dark:bg-blue-900/20 rounded-lg' : '' }}">
+                                <div class="flex items-center justify-between p-3 {{ $entry['is_current_user'] ?? false ? 'bg-blue-50 dark:bg-blue-900/20 rounded-lg border-2 border-blue-200 dark:border-blue-700' : '' }}">
                                     <div class="flex items-center space-x-3">
                                         <div class="flex-shrink-0">
-                                            @if($index === 0)
+                                            @if($entry['is_current_user'] ?? false)
+                                                <div class="w-8 h-8 bg-blue-500 text-white rounded-full flex items-center justify-center text-sm font-bold">#{{ $userPosition }}</div>
+                                            @elseif($index === 0 && !($leaderboard[0]['is_current_user'] ?? false))
                                                 <div class="w-8 h-8 bg-yellow-400 text-white rounded-full flex items-center justify-center text-sm font-bold">1</div>
-                                            @elseif($index === 1)
+                                            @elseif($index === 1 && !($leaderboard[1]['is_current_user'] ?? false))
                                                 <div class="w-8 h-8 bg-gray-400 text-white rounded-full flex items-center justify-center text-sm font-bold">2</div>
-                                            @elseif($index === 2)
+                                            @elseif($index === 2 && !($leaderboard[2]['is_current_user'] ?? false))
                                                 <div class="w-8 h-8 bg-orange-400 text-white rounded-full flex items-center justify-center text-sm font-bold">3</div>
                                             @else
-                                                <div class="w-8 h-8 bg-gray-200 dark:bg-gray-600 text-gray-700 dark:text-gray-300 rounded-full flex items-center justify-center text-sm font-bold">{{ $index + 1 }}</div>
+                                                <div class="w-8 h-8 bg-gray-200 dark:bg-gray-600 text-gray-700 dark:text-gray-300 rounded-full flex items-center justify-center text-sm font-bold">
+                                                    {{ $entry['is_current_user'] ?? false ? $userPosition : ($index + 1 - ($leaderboard[0]['is_current_user'] ?? false ? 1 : 0)) }}
+                                                </div>
                                             @endif
                                         </div>
                                         <div>
                                             <p class="font-medium text-gray-900 dark:text-white text-sm">
                                                 {{ $entry['user']->first_name }} {{ $entry['user']->last_name }}
-                                                @if($entry['user']->id === $user->id)
+                                                @if($entry['is_current_user'] ?? false)
                                                     <span class="text-xs text-blue-600 dark:text-blue-400 ml-1">({{ __('dashboard.progress.you') }})</span>
                                                 @endif
                                             </p>
@@ -153,7 +157,7 @@
                                         </div>
                                     </div>
                                     <div class="text-right">
-                                        <p class="font-semibold text-gray-900 dark:text-white">{{ round($entry['average_score'], 1) }}%</p>
+                                        <p class="font-semibold text-gray-900 dark:text-white">{{ $entry['total_points'] }} pts</p>
                                     </div>
                                 </div>
                             @endforeach

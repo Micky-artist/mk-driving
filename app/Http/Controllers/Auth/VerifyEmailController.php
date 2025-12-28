@@ -60,14 +60,14 @@ class VerifyEmailController extends Controller
         }
 
         if ($request->user()->hasVerifiedEmail()) {
-            return redirect($this->redirectPath());
+            return redirect(app()->getLocale() . $this->redirectPath());
         }
 
         if ($request->user()->markEmailAsVerified()) {
             event(new \Illuminate\Auth\Events\Verified($request->user()));
         }
 
-        return redirect($this->redirectPath().'?verified=1');
+        return redirect(app()->getLocale() . $this->redirectPath().'?verified=1');
     }
 
     /**
@@ -81,7 +81,7 @@ class VerifyEmailController extends Controller
         if ($request->user()->hasVerifiedEmail()) {
             return $request->wantsJson()
                         ? new Response('', 204)
-                        : redirect($this->redirectPath());
+                        : redirect(app()->getLocale() . $this->redirectPath());
         }
 
         $request->user()->sendEmailVerificationNotification();

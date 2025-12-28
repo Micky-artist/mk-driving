@@ -7,6 +7,7 @@ use App\Models\UserPoint;
 use App\Models\PointConfiguration;
 use App\Models\User;
 use Illuminate\Support\Facades\DB;
+use Illuminate\Support\Facades\Log;
 
 class PointsService
 {
@@ -49,27 +50,55 @@ class PointsService
         });
     }
 
-    public function getLeaderboard(int $limit = 10, string $period = 'total'): array
+    public function getLeaderboard(int $limit = 25, string $period = 'total'): array
     {
+        Log::info('PointsService getLeaderboard called', ['limit' => $limit, 'period' => $period]);
+        
         $column = match ($period) {
             'weekly' => 'weekly_points',
             'monthly' => 'monthly_points',
             default => 'total_points',
         };
 
-        return UserPoint::with('user')
+        Log::info('Using column', ['column' => $column]);
+
+        // Get all user points ordered by the selected period with user relationship
+        // Include users with zero points, sort by points desc, then by name asc
+        $query = UserPoint::select('user_points.*')
+            ->join('users', 'user_points.user_id', '=', 'users.id')
+            ->where('users.is_active', true)
             ->orderBy($column, 'desc')
-            ->limit($limit)
-            ->get()
-            ->map(function ($userPoint) use ($column) {
-                return [
-                    'user' => $userPoint->user,
-                    'points' => $userPoint->$column,
-                    'rank' => null, // Will be calculated in the collection
-                ];
-            })
-            ->values()
-            ->toArray();
+            ->orderByRaw("CONCAT(users.first_name, ' ', users.last_name) ASC")
+            ->with(['user' => function($query) {
+                $query->select('id', 'first_name', 'last_name', 'created_at');
+            }])
+            ->limit($limit);
+
+        Log::info('SQL Query', ['sql' => $query->toSql(), 'bindings' => $query->getBindings()]);
+        
+        $userPoints = $query->get();
+        
+        Log::info('UserPoints query result', ['count' => $userPoints->count(), 'data' => $userPoints->toArray()]);
+
+        // Transform the results with ranks and format user data
+        $result = $userPoints->map(function ($userPoint, $index) use ($column) {
+            Log::info('Processing user point', ['user_id' => $userPoint->user_id, 'points' => $userPoint->$column]);
+            
+            return [
+                'user' => [
+                    'id' => $userPoint->user->id,
+                    'first_name' => $userPoint->user->first_name,
+                    'last_name' => $userPoint->user->last_name,
+                    'createdAt' => $userPoint->user->created_at->toIso8601String(),
+                ],
+                'points' => (int) $userPoint->$column,
+                'rank' => $index + 1,
+            ];
+        })->values()->toArray();
+
+        Log::info('Final leaderboard result', ['count' => count($result), 'result' => $result]);
+        
+        return $result;
     }
 
     public function getUserRank(int $userId, string $period = 'total'): int

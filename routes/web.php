@@ -412,15 +412,7 @@ Route::prefix('{locale}')
     Route::middleware(['auth', 'verified'])
         ->namespace('App\Http\Controllers\Dashboard')
         ->group(function () {
-        // Dashboard route
-        Route::get('dashboard', 'DashboardController@index')
-            ->name('dashboard');
-            
-        // User quiz routes
-        Route::get('dashboard/my-quizzes', 'DashboardController@myQuizzes')
-            ->name('dashboard.my-quizzes');
-            
-        // Quiz attempt API routes
+            // Quiz attempt API routes
         Route::prefix('api')->group(function () {
             // Get or create an active quiz attempt - requires subscription
             Route::get('quizzes/{quiz}/attempt', 'QuizAttemptController@getActiveAttempt')
@@ -440,55 +432,6 @@ Route::prefix('{locale}')
             Route::get('quizzes/{quiz}/start', 'QuizAttemptController@start')
                 ->name('quizzes.attempt')
                 ->middleware('check.subscription');
-        });
-        
-        // Forum
-        Route::get('forum', [\App\Http\Controllers\Web\ForumController::class, 'index'])->name('forum');
-        
-        // Dashboard Quizzes Routes
-        Route::prefix('dashboard/quizzes')->name('dashboard.quizzes.')->group(function () {
-            // All quizzes - allow viewing history
-            Route::get('/', [\App\Http\Controllers\Web\Dashboard\QuizController::class, 'index'])
-                ->name('index');
-                
-            // In Progress quizzes - allow viewing history
-            Route::get('/in-progress', [\App\Http\Controllers\Web\Dashboard\QuizController::class, 'inProgress'])
-                ->name('in-progress');
-                
-            // Progress quizzes - allow viewing history
-            Route::get('/progress', [\App\Http\Controllers\Web\Dashboard\QuizController::class, 'progress'])
-                ->name('progress');
-                
-            // Completed quizzes - allow viewing history
-            Route::get('/completed', [\App\Http\Controllers\Web\Dashboard\QuizController::class, 'completed'])
-                ->name('completed');
-                
-            // Add bookmark route - requires subscription
-            Route::post('/{quiz}/bookmark', [\App\Http\Controllers\Web\Dashboard\QuizController::class, 'bookmark'])
-                ->name('bookmark')
-                ->middleware('check.subscription');
-                
-            // Update quiz attempt - requires subscription
-            Route::put('/attempts/{attempt}', [\App\Http\Controllers\Web\Dashboard\QuizAttemptController::class, 'update'])
-                ->name('attempt.update')
-                ->middleware('check.subscription');
-                
-            // Quiz submission - requires subscription
-            Route::post('/{quiz}/submit', [\App\Http\Controllers\Web\Dashboard\QuizAttemptController::class, 'update'])
-                ->name('submit')
-                ->where('quiz', '[0-9]+')
-                ->middleware('check.subscription');
-                
-            // Quiz details - requires subscription
-            Route::get('/{quiz}', [\App\Http\Controllers\Web\Dashboard\QuizController::class, 'show'])
-                ->name('show')
-                ->where('quiz', '[0-9]+')
-                ->middleware('check.subscription');
-                
-            // Attempt details - allow viewing history
-            Route::get('/attempts/{attempt}', [\App\Http\Controllers\Web\Dashboard\QuizController::class, 'attemptDetails'])
-                ->name('attempt.details')
-                ->where('attempt', '[0-9]+');
         });
         
         // News Routes
@@ -543,3 +486,6 @@ Route::prefix('{locale}')
 
 // Authentication routes (from auth.php)
 require __DIR__ . '/auth.php';
+
+// Dashboard routes
+require __DIR__ . '/dashboard.php';

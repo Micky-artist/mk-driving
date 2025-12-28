@@ -531,7 +531,7 @@ class UserController extends Controller
         
         // Get detailed visitor data - only unregistered visitors
         $visitors = Visitor::where('is_registered_user', false)
-            ->orderBy('last_seen_at', 'desc')
+            ->orderBy('last_visit_at', 'desc')
             ->paginate(20);
             
         return view('admin.users.unregistered-visits', compact('visitorStats', 'visitors'));

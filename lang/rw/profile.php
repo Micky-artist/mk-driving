@@ -21,4 +21,17 @@ return [
     'confirm_new_password' => 'Emeza ijambo ry\'ibanga rishya',
     'update_success' => 'Amakuru yahinduwe neza',
     'password_updated' => 'Ijambo ry\'ibanga ryahinduwe neza',
+    
+    // Profile show page
+    'member_since' => 'Watangiye',
+    'verified' => 'Konti yaremejwe',
+    'unverified' => 'Ntimwari mwemeza imeli',
+    'verify_your_email_address' => 'Kwemeza aderesi yawe ya imeyili',
+    'verify_email_message' => 'Muracyakeneye kwemezi imeli.',
+    'resend_verification_email' => 'Ohereza ubutumwa bwo kwemeza imeli nanone',
+    'account_information' => 'Amakuru ya Konti',
+    'email_verified' => 'Imeri Yamejwe',
+    'business' => 'Business',
+    'logout' => 'Sohoka',
+    'edit_profile' => 'Hindura Amakuru',
 ];

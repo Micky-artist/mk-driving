@@ -1,6 +1,6 @@
 <!-- Desktop Leaderboard -->
 <div class="hidden lg:block">
-    <div x-data="leaderboardTabs()" x-init="init()">
+    <div>
         <!-- Weekly Leaderboard Header -->
         <div class="bg-white dark:bg-gray-800 rounded-xl shadow-sm border border-gray-200 dark:border-gray-700 p-4">
             <!-- Title -->
@@ -181,4 +181,35 @@
             </div>
         </div>
     </div>
+        
+        <!-- How to Earn Points -->
+        <div class="mt-8 bg-white dark:bg-gray-800 rounded-xl shadow-sm border border-gray-200 dark:border-gray-700 p-6 max-w-2xl mx-auto">
+            <h3 class="text-lg font-semibold text-gray-900 dark:text-white mb-4 text-center">{{ __('forum.how_to_earn_points') }}</h3>
+            <ul class="space-y-2 text-sm text-gray-600 dark:text-gray-400">
+                <li class="flex items-center">
+                    <svg class="w-4 h-4 text-green-500 mr-2" fill="currentColor" viewBox="0 0 20 20">
+                        <path fill-rule="evenodd" d="M16.707 5.293a1 1 0 010 1.414l-8 8a1 1 0 01-1.414 0l-4-4a1 1 0 011.414-1.414L8 12.586l7.293-7.293a1 1 0 011.414 0z" clip-rule="evenodd" />
+                    </svg>
+                    {{ __('forum.points_for_question') }}
+                </li>
+                <li class="flex items-center">
+                    <svg class="w-4 h-4 text-green-500 mr-2" fill="currentColor" viewBox="0 0 20 20">
+                        <path fill-rule="evenodd" d="M16.707 5.293a1 1 0 010 1.414l-8 8a1 1 0 01-1.414 0l-4-4a1 1 0 011.414-1.414L8 12.586l7.293-7.293a1 1 0 011.414 0z" clip-rule="evenodd" />
+                    </svg>
+                    {{ __('forum.points_for_answer') }}
+                </li>
+                <li class="flex items-center">
+                    <svg class="w-4 h-4 text-green-500 mr-2" fill="currentColor" viewBox="0 0 20 20">
+                        <path fill-rule="evenodd" d="M16.707 5.293a1 1 0 010 1.414l-8 8a1 1 0 01-1.414 0l-4-4a1 1 0 011.414-1.414L8 12.586l7.293-7.293a1 1 0 011.414 0z" clip-rule="evenodd" />
+                    </svg>
+                    {{ __('forum.points_for_daily_visit') }}
+                </li>
+                <li class="flex items-center">
+                    <svg class="w-4 h-4 text-green-500 mr-2" fill="currentColor" viewBox="0 0 20 20">
+                        <path fill-rule="evenodd" d="M16.707 5.293a1 1 0 010 1.414l-8 8a1 1 0 01-1.414 0l-4-4a1 1 0 011.414-1.414L8 12.586l7.293-7.293a1 1 0 011.414 0z" clip-rule="evenodd" />
+                    </svg>
+                    {{ __('forum.points_for_quiz_completion') }}
+                </li>
+            </ul>
+        </div>
 </div>

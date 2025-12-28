@@ -108,6 +108,17 @@ return [
     'you' => 'Wowe',
     'no_leaderboard_data' => 'Nta makuru kuri leaderboard.',
     'leaderboard_resets_weekly' => 'Leaderboard ihinduka buri wambere',
+    'how_to_earn_points' => 'Ukubona Amanota',
+    'points_for_question' => 'Kubaza ikibazo',
+    'points_for_answer' => 'Kwandika igisubizo',
+    'points_for_daily_visit' => 'Kwitoza buri munsi',
+    'points_for_quiz_completion' => 'Kurangiza umwitozo',
+    'back_to_discussions' => 'Garuka kubiganiro',
+    'leaderboard_description' => 'Reba abandi bitoza n\'umwanya wawe',
+    
+    // Pagination
+    'previous' => 'Ibanjirize',
+    'next' => 'Ikurikira',
     
     // Forum Introduction
     'community_discussions' => 'Ibiganiro',

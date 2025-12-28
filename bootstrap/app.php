@@ -8,6 +8,7 @@ use Illuminate\Cookie\Middleware\AddQueuedCookiesToResponse;
 use Illuminate\View\Middleware\ShareErrorsFromSession;
 use App\Http\Middleware\VerifyCsrfToken;
 use App\Http\Middleware\EncryptCookies;
+use Illuminate\Support\Facades\Route;
 
 return Application::configure(basePath: dirname(__DIR__))
     ->withProviders([
@@ -18,6 +19,10 @@ return Application::configure(basePath: dirname(__DIR__))
         api: __DIR__.'/../routes/api.php',
         commands: __DIR__.'/../routes/console.php',
         health: '/up',
+        then: function () {
+            Route::middleware('web')
+                ->group(base_path('routes/dashboard.php'));
+        },
     )
     ->withMiddleware(function (Middleware $middleware): void {
         $middleware->alias([

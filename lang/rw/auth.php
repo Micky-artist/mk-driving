@@ -8,8 +8,11 @@ return [
     'logout_success' => 'Gusohoka byagenze neza',
     'password_changed' => 'Ijambo ry\'ibanga ryahinduwe neza',
     'failed' => 'Ibyangombwa ntibihuye n\'ibyacu.',
-    'password' => 'Ijambo ry\'ibanga ryoherejwe siryo.',
-    'throttle' => 'Kugerageza kwinjira kenshi. Subira gerageza mu :seconds.',
+    'password' => 'Ijambo ry\'ibanga si ryo.',
+    'password_reset_success' => [
+        'title' => 'Ijambo ry\'ibanga ryahinduwe neza!'
+    ],
+    'throttle' => 'Wongere ugerageze nyuma y\'amasengonda :seconds.',
     'invalid_credentials' => 'Imyirondoro ntabwo ari yo',
     'email_in_use' => 'Iyi imeri isanzwe ikoreshwa',
     'invalid_current_password' => 'Ijambo ry\'ibanga ubu ririmo ntabwo ari ryo',
@@ -128,6 +131,7 @@ return [
         'letter_number_required' => 'Umubare umwe byibura',
         'strength' => [
             'weak' => 'Ntarengwa',
+            'good' => 'Byiza',
             'medium' => 'Iragerageza',
             'strong' => 'Ikomeye',
             'very_strong' => 'Ikomeye cyane'
@@ -155,7 +159,7 @@ return [
         'greeting' => 'Murakaza neza, :name',
         'marketing_intro' => 'Murakoze kwiyandikisha kuri MK Driving! Twishimiye kubakira no kubafasha gutangira urugendo rwo kuba umushoferi. Tangira byoroshye:',
         'verify_button' => 'Kwemeza Imeri Yawe',
-        'verify_description' => 'Bungabunge konti witoze ufite umutekano',
+        'verify_description' => 'Bungabunga konti witoze ufite umutekano',
         'free_quiz_button' => 'Gerageza Umwitozo w\'Ubuntu',
         'free_quiz_description' => 'Gerageza ubumenyi bware n\'umwitozo w\'ubuntu kuri MK!',
         'pricing_button' => 'Kwandikisha Ifatabuguzi',
@@ -166,14 +170,39 @@ return [
         'contact_support' => 'Ufite ikibazo? Twandikire kuri :email'
     ],
     
+    // Forgot Password Page
+    'forgot_password_page' => [
+        'title' => 'Wibagiwe ijambo ry\'ibanga?',
+        'subtitle' => 'Nta kibazo. Shyiramo aderesi yawe ya imeyili munsi hanyuma turakoherereza link yo guhindura ijambo ry\'ibanga.',
+        'email_placeholder' => 'Shyiramo aderesi yawe ya imeyili',
+        'submit_button' => 'Kohereza Link yo Guhindura',
+        'back_to_login' => 'Subira kwinjira',
+        'success_message' => 'Twakohereje link yo guhindura ijambo ry\'ibanga kuri imeyili yawe.',
+        'dialog_title' => 'Link Yoherejwe!',
+        'dialog_message' => 'Reba Link kuri',
+        'dialog_button' => 'Yego',
+        'sending' => 'Biri gukorwa...'
+    ],
+    
+    // Password Requirements
+    'password_requirements' => [
+        'length' => 'Inyuguti 6 byibuze',
+        'letter' => 'Yinjiza inyuguti n\'imibare',
+        'strength' => [
+            'weak' => 'Yoroshye',
+            'good' => 'Byiza',
+            'strong' => 'Bikomeye'
+        ]
+    ],
+    
     // Reset Password Email
     'reset_password_email' => [
         'title' => 'Hindura ijambo ry\'ibanga',
-        'subtitle' => 'Bungabunge konti yawe n\'ijambo ry\'ibanga rishya',
-        'you_are_receiving' => 'Ukira iyi imeri kuko twakiriye request yo guhindura ijambo ry\'ibanga rya konti yawe.',
+        'subtitle' => 'Bungabunga konti yawe n\'ijambo ry\'ibanga rishya',
+        'you_are_receiving' => 'Wakiriye iyi imeri kuko twakiriye ko ushaka guhindura ijambo ry\'ibanga rya konti yawe.',
         'reset_button' => 'Hindura Ijambo ry\'ibanga',
-        'expiry_notice' => 'Iyi link yo guhindura ijambo ry\'ibanga izarangira iminota :count.',
-        'ignore_if_not_requested' => 'Ntabwo wamaze request yo guhindura ijambo ry\'ibanga, nta gikorwa cyongera gikenewe.',
-        'contact_support' => 'Niba ufite ikibazo mu kanda akabuto ka guhindura ijambo ry\'ibanga, yakoporora no gushyiraho URL munsi ya browser yawe cyangwa ukamwire kuri team yacu yo gufasha kuri :email.'
+        'expiry_notice' => 'Iyi link yo guhindura ijambo ry\'ibanga irarangira muminota :count.',
+        'ignore_if_not_requested' => 'Niba mutayatse mwirengagize buno butumwa.',
+        'contact_support' => 'Niba mufite ikibazo twandikire kuri :email.'
     ],
 ];

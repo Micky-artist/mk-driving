@@ -22,6 +22,7 @@ class ForumController extends Controller
      */
     public function index(Request $request)
     {
+        $see = $request->input('see', 'forum');
         $perPage = 10; // Number of questions per page
         $search = $request->input('search');
         
@@ -93,7 +94,7 @@ class ForumController extends Controller
         });
 
         // Get weekly leaderboard data (Duolingo-style)
-        $leaderboard = $this->pointsService->getLeaderboard(10, 'weekly');
+        $leaderboard = $this->pointsService->getLeaderboard(25, 'weekly');
         
         // Get user's rank if authenticated
         $userRank = null;
@@ -116,6 +117,38 @@ class ForumController extends Controller
         return view('forum.index', [
             'questions' => $questions,
             'topics' => $topics,
+            'leaderboard' => $leaderboard,
+            'userRank' => $userRank,
+            'userPoints' => $userPoints,
+        ]);
+    }
+
+    /**
+     * Display the leaderboard view
+     */
+    public function leaderboard(Request $request)
+    {
+        // Get weekly leaderboard data (Duolingo-style)
+        $leaderboard = $this->pointsService->getLeaderboard(25, 'weekly');
+        
+        // Get user's rank if authenticated
+        $userRank = null;
+        $userPoints = 0;
+        
+        if (Auth::check()) {
+            $userPoints = $this->pointsService->getUserPoints(Auth::id());
+            $userRank = $this->pointsService->getUserRank(Auth::id(), 'weekly');
+        }
+
+        if ($request->wantsJson()) {
+            return response()->json([
+                'leaderboard' => $leaderboard,
+                'userRank' => $userRank,
+                'userPoints' => $userPoints,
+            ]);
+        }
+
+        return view('forum.leaderboard', [
             'leaderboard' => $leaderboard,
             'userRank' => $userRank,
             'userPoints' => $userPoints,

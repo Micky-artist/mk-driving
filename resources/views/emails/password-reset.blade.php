@@ -113,7 +113,7 @@
         }
         
         .message-text {
-            color: var(--brand-blue);
+            color: var(--text-dark);
             font-size: 17px;
             line-height: 1.7;
             margin: 0 0 25px 0;
@@ -163,7 +163,7 @@
         }
         
         .footer-text {
-            color: var(--brand-blue);
+            color: var(--text-dark);
             font-size: 15px;
             line-height: 1.6;
             margin: 0 0 20px 0;

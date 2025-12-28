@@ -167,8 +167,20 @@
                         <div class="space-y-5">
                             <!-- Session Status -->
                             @if (session('status'))
-                                <div class="mb-4 text-sm font-medium text-green-600">
-                                    {{ session('status') }}
+                                <div class="mb-6 p-4 bg-green-50 dark:bg-green-900/20 border border-green-200 dark:border-green-800 rounded-xl">
+                                    <div class="flex items-start">
+                                        <div class="flex-shrink-0">
+                                            <svg class="h-6 w-6 text-green-500" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                                                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 12l2 2 4-4m6 2a9 9 0 11-18 0 9 9 0 0118 0z" />
+                                            </svg>
+                                        </div>
+                                        <div class="ml-3">
+                                            <h3 class="text-lg font-medium text-green-800 dark:text-green-200">{{ __('auth.password_reset_success.title') }}</h3>
+                                            <div class="mt-1 text-sm text-green-700 dark:text-green-300">
+                                                {{ session('status') }}
+                                            </div>
+                                        </div>
+                                    </div>
                                 </div>
                             @endif
 

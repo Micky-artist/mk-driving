@@ -225,7 +225,7 @@ class UserController extends Controller
         $stats = [
             'averageScore' => round($user->average_score ?? 0, 1),
             'leaderboardPosition' => $pointsService->getUserRank($user->id), // Use PointsService for consistent ranking
-            'streak' => $user->quiz_completion_streak ?? 0,
+            'streak' => $user->streak_days ?? 0,
             'xp' => $userPoints['total'], // Use unified points system
             'xpGained' => $xpGained, // XP gained from this quiz
             'hasPlan' => $user->hasActiveSubscription(),

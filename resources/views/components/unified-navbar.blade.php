@@ -39,22 +39,21 @@
                     @if ($showUserStats)
                         <!-- Mobile Stats -->
                         <div class="flex items-center space-x-3 flex-wrap mr-2">
-                            <div class="flex items-center space-x-1 bg-blue-500/20 rounded-lg px-2 py-1">
-                                <span class="text-blue-100 text-sm">🎯</span>
-                                <span class="text-blue-100 text-sm font-bold" x-text="Math.round(userStats.averageScore) + '%'"></span>
+                            <div @click="navigateTo('{{ route('dashboard.progress', ['locale' => app()->getLocale()]) }}')" class="h-8 flex items-center space-x-1 bg-blue-500/20 rounded-lg px-2 cursor-pointer">
+                                <span class="text-blue-100 text-sm leading-none">🎯</span>
+                                <span class="text-blue-100 text-sm font-bold leading-none" x-text="Math.round(userStats.averageScore) + '%'"></span>
                             </div>
-                            <div class="flex items-center space-x-1 bg-orange-500/20 rounded-lg px-2 py-1">
-                                <span class="text-orange-100 text-sm">🥇</span>
-                                <span
-                                    class="text-orange-100 text-xs font-bold" x-text="userStats.leaderboardPosition === 'N/A' ? 'N/A' : '#' + userStats.leaderboardPosition"></span>
+                            <div @click="navigateTo('{{ route('forum.index', ['locale' => app()->getLocale(), 'see' => 'leaderboard']) }}')" class="h-8 flex items-center space-x-1 bg-orange-500/20 rounded-lg px-2 cursor-pointer">
+                                <span class="text-orange-100 text-sm leading-none">🥇</span>
+                                <span class="text-orange-100 text-xs font-bold leading-none" x-text="userStats.leaderboardPosition === 'N/A' ? 'N/A' : '#' + userStats.leaderboardPosition"></span>
                             </div>
-                            <div class="flex items-center space-x-1 bg-purple-500/20 rounded-lg px-2 py-1">
-                                <span class="text-purple-100 text-sm">🔥</span>
-                                <span class="text-purple-100 text-xs font-bold" x-text="userStats.streak"></span>
+                            <div @click="navigateTo('{{ route('dashboard', ['locale' => app()->getLocale()]) }}')" class="h-8 flex items-center space-x-1 bg-purple-500/20 rounded-lg px-2 cursor-pointer">
+                                <span class="text-purple-100 text-sm leading-none">🔥</span>
+                                <span class="text-purple-100 text-xs font-bold leading-none" x-text="userStats.streak"></span>
                             </div>
-                            <div class="flex items-center space-x-1 bg-yellow-500/20 rounded-lg px-2 py-1">
-                                <span class="text-yellow-100 text-sm">💎</span>
-                                <span class="text-yellow-100 text-xs font-bold" x-text="userStats.xp"></span>
+                            <div @click="navigateTo('{{ route('forum.index', ['locale' => app()->getLocale(), 'see' => 'leaderboard']) }}')" class="h-8 flex items-center space-x-1 bg-yellow-500/20 rounded-lg px-2 cursor-pointer">
+                                <span class="text-yellow-100 text-sm leading-none">💎</span>
+                                <span class="text-yellow-100 text-xs font-bold leading-none" x-text="userStats.xp"></span>
                             </div>
                         </div>
                     @endif
@@ -91,7 +90,7 @@
                         [
                             'route' => 'dashboard',
                             'text' => __('navigation.dashboard'),
-                            'routes' => ['dashboard'],
+                            'routes' => ['dashboard', 'dashboard.progress'],
                             'fragment' => null,
                             'is_home' => false,
                         ],
@@ -182,34 +181,23 @@
                 @auth
                     @if ($showUserStats)
                         <!-- User Stats -->
-                        <div class="flex items-center space-x-2 mr-4 text-sm">
-                            <!-- Pass Rate -->
-                            <div
-                                class="flex items-center bg-blue-500/10 hover:bg-blue-500/20 dark:bg-blue-900/30 dark:hover:bg-blue-800/30 rounded-lg px-2 py-1 transition-colors duration-200">
-                                <span class="text-blue-100 mr-1">🎯</span>
-                                <span class="text-blue-100 font-medium" x-text="Math.round(userStats.averageScore) + '%'"></span>
+                        
+                        <div class="flex items-center space-x-3 flex-wrap mr-2">
+                            <div @click="navigateTo('{{ route('dashboard.progress', ['locale' => app()->getLocale()]) }}')" class="h-6 py-2 flex items-center space-x-1 bg-blue-500/20 rounded-lg px-2 cursor-pointer">
+                                <span class="text-blue-100 text-sm leading-none">🎯</span>
+                                <span class="text-blue-100 text-sm font-bold leading-none" x-text="Math.round(userStats.averageScore) + '%'"></span>
                             </div>
-
-                            <!-- Leaderboard Position -->
-                            <div
-                                class="flex items-center bg-orange-500/10 hover:bg-orange-500/20 dark:bg-orange-900/30 dark:hover:bg-orange-800/30 rounded-lg px-2 py-1 transition-colors duration-200">
-                                <span class="text-orange-100 mr-1">🥇</span>
-                                <span
-                                    class="text-orange-100 font-medium" x-text="userStats.leaderboardPosition === 'N/A' ? 'N/A' : '#' + userStats.leaderboardPosition"></span>
+                            <div @click="navigateTo('{{ route('forum.index', ['locale' => app()->getLocale(), 'see' => 'leaderboard']) }}')" class="h-6 py-2 flex items-center space-x-1 bg-orange-500/20 rounded-lg px-2 cursor-pointer">
+                                <span class="text-orange-100 text-sm leading-none">🥇</span>
+                                <span class="text-orange-100 text-xs font-bold leading-none" x-text="userStats.leaderboardPosition === 'N/A' ? 'N/A' : '#' + userStats.leaderboardPosition"></span>
                             </div>
-
-                            <!-- Streak -->
-                            <div
-                                class="flex items-center bg-purple-500/10 hover:bg-purple-500/20 dark:bg-purple-900/30 dark:hover:bg-purple-800/30 rounded-lg px-2 py-1 transition-colors duration-200">
-                                <span class="text-purple-100 mr-1">🔥</span>
-                                <span class="text-purple-100 font-medium" x-text="userStats.streak"></span>
+                            <div @click="navigateTo('{{ route('dashboard', ['locale' => app()->getLocale()]) }}')" class="h-6 py-2 flex items-center space-x-1 bg-purple-500/20 rounded-lg px-2 cursor-pointer">
+                                <span class="text-purple-100 text-sm leading-none">🔥</span>
+                                <span class="text-purple-100 text-xs font-bold leading-none" x-text="userStats.streak"></span>
                             </div>
-
-                            <!-- XP (points) -->
-                            <div
-                                class="flex items-center bg-yellow-500/10 hover:bg-yellow-500/20 dark:bg-yellow-900/30 dark:hover:bg-yellow-800/30 rounded-lg px-2 py-1 transition-colors duration-200">
-                                <span class="text-yellow-100 mr-1">💎</span>
-                                <span class="text-yellow-100 font-medium" x-text="userStats.xp"></span>
+                            <div @click="navigateTo('{{ route('forum.index', ['locale' => app()->getLocale(), 'see' => 'leaderboard']) }}')" class="h-6 py-2 flex items-center space-x-1 bg-yellow-500/20 rounded-lg px-2 cursor-pointer">
+                                <span class="text-yellow-100 text-sm leading-none">💎</span>
+                                <span class="text-yellow-100 text-xs font-bold leading-none" x-text="userStats.xp"></span>
                             </div>
                         </div>
                     @endif
@@ -500,7 +488,7 @@ function navbarComponent() {
         userStats: {
             averageScore: {{ Auth::user()->average_score ?? 97 }},
             leaderboardPosition: {{ Auth::user()->leaderboard_position ?? 1 }},
-            streak: {{ Auth::user()->quiz_completion_streak ?? 0 }},
+            streak: {{ Auth::user()->streak_days ?? 0 }},
             xp: {{ Auth::user()->points ?? 0 }}
         },
         async fetchUserStats() {
@@ -534,6 +522,9 @@ function navbarComponent() {
             } catch (error) {
                 console.error('Error fetching user stats:', error);
             }
+        },
+        navigateTo(url) {
+            window.location.href = url;
         },
         init() {
             // Delay fetchUserStats to ensure Alpine is fully initialized

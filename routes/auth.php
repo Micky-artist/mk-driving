@@ -29,15 +29,25 @@ Route::prefix('{locale}')->where(['locale' => '(rw|en)'])->group(function () {
         ->middleware('guest')
         ->name('login');
 
-    // Display forgot password form
+    // Display forgot password form (for guests)
     Route::get('/forgot-password', [PasswordResetLinkController::class, 'create'])
         ->middleware('guest')
         ->name('password.request');
 
-    // Handle forgot password form submission
+    // Handle forgot password form submission (for guests)
     Route::post('/forgot-password', [PasswordResetLinkController::class, 'store'])
         ->middleware('guest')
         ->name('password.email');
+
+    // Display forgot password form (for authenticated users)
+    Route::get('/profile/password-reset', [PasswordResetLinkController::class, 'create'])
+        ->middleware('auth')
+        ->name('profile.password.request');
+
+    // Handle forgot password form submission (for authenticated users)
+    Route::post('/profile/password-reset', [PasswordResetLinkController::class, 'store'])
+        ->middleware('auth')
+        ->name('profile.password.email');
 
     // Display reset password form
     Route::get('/reset-password/{token}', [NewPasswordController::class, 'create'])
@@ -56,7 +66,7 @@ Route::prefix('{locale}')->where(['locale' => '(rw|en)'])->group(function () {
 
     Route::get('/verify-email/{id}/{hash}', function (\Illuminate\Foundation\Auth\EmailVerificationRequest $request) {
         $request->fulfill();
-        return redirect('/dashboard?verified=1');
+        return redirect(app()->getLocale() . '/dashboard?verified=1');
     })->middleware(['auth', 'signed', 'throttle:6,1'])->name('verification.verify');
 
     Route::post('/email/verification-notification', function (Request $request) {

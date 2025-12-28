@@ -1,5 +1,5 @@
 <!-- Mobile Weekly Leaderboard -->
-<div class="space-y-3" x-data="leaderboardTabs()" x-init="init()">
+<div class="space-y-3">
     <!-- Weekly Leaderboard Header -->
     <div class="bg-white dark:bg-gray-800 rounded-xl shadow-sm border border-gray-200 dark:border-gray-700 p-4">
         <div class="flex items-center justify-center mb-3">

@@ -9,6 +9,9 @@ return [
     'password_changed' => 'Password changed successfully',
     'failed' => 'These credentials do not match our records.',
     'password' => 'The provided password is incorrect.',
+    'password_reset_success' => [
+        'title' => 'Password Reset Successful!'
+    ],
     'throttle' => 'Too many login attempts. Please try again in :seconds seconds.',
     'invalid_credentials' => 'Invalid credentials',
     'email_in_use' => 'Email already in use',
@@ -128,6 +131,7 @@ return [
         'letter_number_required' => 'At least 1 letter and 1 number',
         'strength' => [
             'weak' => 'Weak',
+            'good' => 'Good',
             'medium' => 'Medium',
             'strong' => 'Strong',
             'very_strong' => 'Very Strong'
@@ -164,6 +168,31 @@ return [
         'benefits_title' => 'Why Choose MK Driving School?',
         'benefits_description' => 'With verified email access, you\'ll get full access to our comprehensive driving lessons, practice tests, progress tracking, and expert guidance.',
         'contact_support' => 'Questions? Our support team is here to help at :email'
+    ],
+    
+    // Forgot Password Page
+    'forgot_password_page' => [
+        'title' => 'Forgot Your Password?',
+        'subtitle' => 'No problem. Enter your email address below and we\'ll send you a password reset link.',
+        'email_placeholder' => 'Enter your email address',
+        'submit_button' => 'Send Reset Link',
+        'back_to_login' => 'Back to Login',
+        'success_message' => 'We\'ve sent a password reset link to your email address.',
+        'dialog_title' => 'Reset Link Sent!',
+        'dialog_message' => 'Check your email at',
+        'dialog_button' => 'Got it',
+        'sending' => 'Sending...'
+    ],
+    
+    // Password Requirements
+    'password_requirements' => [
+        'length' => 'At least 6 characters',
+        'letter' => 'Contains letters and numbers',
+        'strength' => [
+            'weak' => 'Weak',
+            'good' => 'Good',
+            'strong' => 'Strong'
+        ]
     ],
     
     // Reset Password Email

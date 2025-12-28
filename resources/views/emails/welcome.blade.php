@@ -98,7 +98,7 @@
         }
         
         .welcome-text {
-            color: var(--brand-blue);
+            color: var(--text-dark);
             font-size: 17px;
             line-height: 1.7;
             margin: 0 0 25px 0;
@@ -107,7 +107,7 @@
         
         .user-name {
             font-weight: 700;
-            color: var(--brand-dark-blue);
+            color: var(--text-dark);
         }
         
         .actions-container {
@@ -143,25 +143,25 @@
         }
         
         .quiz-button {
-            background: linear-gradient(135deg, var(--brand-orange) 0%, #dc2626 100%);
-            box-shadow: 0 4px 6px rgba(234, 88, 12, 0.3);
+            background: linear-gradient(135deg, var(--brand-blue) 0%, var(--brand-dark-blue) 100%);
+            box-shadow: 0 4px 6px rgba(37, 99, 235, 0.3);
         }
         
         .quiz-button:hover {
-            background: linear-gradient(135deg, #dc2626 0%, var(--brand-orange) 100%);
+            background: linear-gradient(135deg, var(--brand-dark-blue) 0%, var(--brand-blue) 100%);
             transform: translateY(-2px);
-            box-shadow: 0 6px 12px rgba(234, 88, 12, 0.4);
+            box-shadow: 0 6px 12px rgba(37, 99, 235, 0.4);
         }
         
         .plan-button {
-            background: linear-gradient(135deg, #10b981 0%, #059669 100%);
-            box-shadow: 0 4px 6px rgba(16, 185, 129, 0.3);
+            background: linear-gradient(135deg, var(--brand-blue) 0%, var(--brand-dark-blue) 100%);
+            box-shadow: 0 4px 6px rgba(37, 99, 235, 0.3);
         }
         
         .plan-button:hover {
-            background: linear-gradient(135deg, #059669 0%, #10b981 100%);
+            background: linear-gradient(135deg, var(--brand-dark-blue) 0%, var(--brand-blue) 100%);
             transform: translateY(-2px);
-            box-shadow: 0 6px 12px rgba(16, 185, 129, 0.4);
+            box-shadow: 0 6px 12px rgba(37, 99, 235, 0.4);
         }
         
         .action-description {
@@ -190,7 +190,7 @@
         }
         
         .footer-text {
-            color: var(--brand-blue);
+            color: var(--text-dark);
             font-size: 15px;
             line-height: 1.6;
             margin: 0 0 20px 0;
@@ -278,7 +278,7 @@
                     
                     <!-- Free Quiz Button -->
                     <div>
-                        <a href="{{ route('dashboard.quizzes.show', ['id' => 1, 'locale' => $locale]) }}" class="action-button quiz-button">
+                        <a href="{{ route('dashboard.quizzes.show', ['quiz' => 1, 'locale' => $locale]) }}" class="action-button quiz-button">
                             {{ __('auth.welcome_email.free_quiz_button', [], $locale) }}
                         </a>
                         <p class="action-description">

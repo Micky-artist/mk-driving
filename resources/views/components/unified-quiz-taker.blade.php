@@ -522,7 +522,7 @@
                             class="block w-full text-center px-4 py-2 bg-yellow-600 text-white rounded-lg hover:bg-yellow-700">
                             {{ __('quiz.upgradeSubscription') }}
                         </a>
-                        <a href="{{ route('dashboard.quizzes.progress') }}"
+                        <a href="{{ route('dashboard.progress') }}"
                             class="block w-full text-center px-4 py-2 bg-green-600 text-white rounded-lg hover:bg-green-700">
                             {{ __('quiz.checkProgress') }}
                         </a>

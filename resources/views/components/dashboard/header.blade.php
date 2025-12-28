@@ -31,7 +31,7 @@
                 {{ __('dashboard.stats.streak') }}
             </div>
             <div class="text-blue-700 dark:text-blue-300 text-sm font-bold">
-                {{ Auth::user()->streak ?? 0 }}
+                {{ Auth::user()->streak_days ?? 0 }}
             </div>
         </div>
         

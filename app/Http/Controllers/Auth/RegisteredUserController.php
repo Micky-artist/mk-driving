@@ -6,12 +6,14 @@ use App\Http\Controllers\Controller;
 use App\Models\User;
 use App\Models\Visitor;
 use App\Services\DeviceTrackingService;
+use App\Services\PointsService;
 use App\Mail\WelcomeEmailNotification;
 use Illuminate\Auth\Events\Registered;
 use Illuminate\Http\Request;
 use Illuminate\Http\Response;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\Hash;
+use Illuminate\Support\Facades\Log;
 use Illuminate\Support\Facades\Mail;
 use Illuminate\Validation\Rules;
 
@@ -93,11 +95,29 @@ class RegisteredUserController extends Controller
 
             $user = User::create($userData);
 
+            // Award points for joining
+            $pointsService = new PointsService();
+            $pointsService->awardPoints($user->id, 'user_joined', [
+                'source' => 'registration',
+                'ip' => $request->ip(),
+                'user_agent' => $request->userAgent()
+            ]);
+
             // Send welcome email with marketing links
-            Mail::to($user->email)->locale($user->locale ?? app()->getLocale())->send(new WelcomeEmailNotification($user));
+            \Log::info('Attempting to send welcome email', ['user_id' => $user->id, 'email' => $user->email]);
+            
+            try {
+                Mail::to($user->email)->locale($user->locale ?? app()->getLocale())->send(new WelcomeEmailNotification($user));
+                \Log::info('Welcome email sent successfully', ['user_id' => $user->id, 'email' => $user->email]);
+            } catch (\Exception $e) {
+                \Log::error('Failed to send welcome email', ['user_id' => $user->id, 'email' => $user->email, 'error' => $e->getMessage()]);
+            }
 
             event(new Registered($user));
             Auth::login($user);
+
+            // Set session flag for welcome modal
+            session(['show_welcome_modal' => true]);
 
             // Get return_to from the request or fall back to the URL parameter
             $returnTo = $request->input('return_to') ?? $request->query('return_to');

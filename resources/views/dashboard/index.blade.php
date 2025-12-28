@@ -16,6 +16,9 @@ document.addEventListener('DOMContentLoaded', function() {
 
 @section('content')
     
+    <!-- Welcome Modal for New Users -->
+    @include('components.welcome-modal')
+    
     <div class="px-2 sm:px-6 lg:px-8 py-2">
         <!-- Subscription Info positioned behind main content -->
         @if ($currentSubscriptions->count() > 0)
@@ -181,7 +184,7 @@ document.addEventListener('DOMContentLoaded', function() {
                 <p class="text-2xl font-bold text-gray-900 dark:text-white">{{ $stats['completed_count'] }}</p>
             </a>
 
-            <a href="{{ route('dashboard.quizzes.progress', ['locale' => app()->getLocale()]) }}" 
+            <a href="{{ route('dashboard.progress', ['locale' => app()->getLocale()]) }}" 
                class="bg-white dark:bg-gray-800 rounded-lg p-4 border border-gray-200 dark:border-gray-700 hover:shadow-md transition-shadow cursor-pointer block">
                 <div class="flex items-center justify-between mb-2">
                     <span class="text-sm text-gray-600 dark:text-gray-400">{{ __('dashboard.stats.average_score') }}</span>

@@ -1,6 +1,6 @@
 @extends('layouts.app')
 
-@section('title', __('My Profile'))
+@section('title', __('profile.title'))
 
 @section('content')
 <div class="container mx-auto px-4 py-8">
@@ -31,17 +31,17 @@
                     <div class="flex items-center mt-2 space-x-4">
                         <span class="text-sm text-gray-500 dark:text-gray-400">
                             <i class="fas fa-calendar-alt mr-1"></i>
-                            {{ __('Member since') }} {{ $user->created_at->format('F Y') }}
+                            {{ __('profile.member_since') }} {{ $user->created_at->format('F Y') }}
                         </span>
                         @if($user->email_verified_at)
                             <span class="inline-flex items-center px-2.5 py-0.5 rounded-full text-xs font-medium bg-green-100 text-green-800 dark:bg-green-900 dark:text-green-200">
                                 <i class="fas fa-check-circle mr-1"></i>
-                                {{ __('Verified') }}
+                                {{ __('profile.verified') }}
                             </span>
                         @else
                             <span class="inline-flex items-center px-2.5 py-0.5 rounded-full text-xs font-medium bg-yellow-100 text-yellow-800 dark:bg-yellow-900 dark:text-yellow-200">
                                 <i class="fas fa-exclamation-triangle mr-1"></i>
-                                {{ __('Unverified') }}
+                                {{ __('profile.unverified') }}
                             </span>
                         @endif
                     </div>
@@ -57,16 +57,16 @@
                         <i class="fas fa-info-circle text-blue-500 text-xl"></i>
                     </div>
                     <div class="ml-4 flex-1">
-                        <h3 class="text-lg font-medium text-blue-900 dark:text-blue-100">{{ __('Verify your email address') }}</h3>
+                        <h3 class="text-lg font-medium text-blue-900 dark:text-blue-100">{{ __('profile.verify_your_email_address') }}</h3>
                         <div class="mt-2 text-blue-700 dark:text-blue-300">
-                            <p>{{ __('Please check your email and click the verification link to unlock all features and ensure account security.') }}</p>
+                            <p>{{ __('profile.verify_email_message') }}</p>
                         </div>
                         <div class="mt-4">
                             <form method="POST" action="{{ route('verification.send', ['locale' => app()->getLocale()]) }}" class="inline">
                                 @csrf
                                 <button type="submit" class="inline-flex items-center px-4 py-2 bg-blue-600 hover:bg-blue-700 text-white font-medium rounded-lg transition-colors duration-200">
                                     <i class="fas fa-paper-plane mr-2"></i>
-                                    {{ __('Resend verification email') }}
+                                    {{ __('profile.resend_verification_email') }}
                                 </button>
                             </form>
                         </div>
@@ -80,27 +80,27 @@
             <div class="px-6 py-4 border-b border-gray-200 dark:border-gray-700">
                 <h2 class="text-xl font-semibold text-gray-900 dark:text-white flex items-center">
                     <i class="fas fa-user-circle mr-2 text-blue-500"></i>
-                    {{ __('Account Information') }}
+                    {{ __('profile.account_information') }}
                 </h2>
             </div>
             
             <div class="p-6">
                 <div class="grid grid-cols-1 md:grid-cols-2 gap-6">
                     <div class="bg-gray-50 dark:bg-gray-700/50 rounded-lg p-4">
-                        <h4 class="text-sm font-medium text-gray-500 dark:text-gray-400 mb-1">{{ __('First Name') }}</h4>
+                        <h4 class="text-sm font-medium text-gray-500 dark:text-gray-400 mb-1">{{ __('profile.first_name') }}</h4>
                         <p class="text-lg font-medium text-gray-900 dark:text-white">{{ $user->first_name }}</p>
                     </div>
                     <div class="bg-gray-50 dark:bg-gray-700/50 rounded-lg p-4">
-                        <h4 class="text-sm font-medium text-gray-500 dark:text-gray-400 mb-1">{{ __('Last Name') }}</h4>
+                        <h4 class="text-sm font-medium text-gray-500 dark:text-gray-400 mb-1">{{ __('profile.last_name') }}</h4>
                         <p class="text-lg font-medium text-gray-900 dark:text-white">{{ $user->last_name }}</p>
                     </div>
                     <div class="bg-gray-50 dark:bg-gray-700/50 rounded-lg p-4">
-                        <h4 class="text-sm font-medium text-gray-500 dark:text-gray-400 mb-1">{{ __('Email') }}</h4>
+                        <h4 class="text-sm font-medium text-gray-500 dark:text-gray-400 mb-1">{{ __('profile.email') }}</h4>
                         <p class="text-lg font-medium text-gray-900 dark:text-white">{{ $user->email }}</p>
                     </div>
                     @if($user->email_verified_at)
                         <div class="bg-gray-50 dark:bg-gray-700/50 rounded-lg p-4">
-                            <h4 class="text-sm font-medium text-gray-500 dark:text-gray-400 mb-1">{{ __('Email Verified') }}</h4>
+                            <h4 class="text-sm font-medium text-gray-500 dark:text-gray-400 mb-1">{{ __('profile.email_verified') }}</h4>
                             <p class="text-lg font-medium text-gray-900 dark:text-white">{{ $user->email_verified_at->format('M d, Y') }}</p>
                         </div>
                     @endif
@@ -114,21 +114,26 @@
                 <a href="{{ route('admin.portal', ['locale' => app()->getLocale()]) }}" 
                    class="inline-flex items-center px-6 py-3 bg-purple-600 hover:bg-purple-700 text-white font-medium rounded-lg shadow-md hover:shadow-lg transition-all duration-200 transform hover:scale-105">
                     <i class="fas fa-briefcase mr-2"></i>
-                    {{ __('Business') }}
+                    {{ __('profile.business') }}
                 </a>
             @endcan
+            <a href="{{ route('profile.password.request', ['locale' => app()->getLocale()]) }}" 
+               class="inline-flex items-center px-6 py-3 bg-gray-600 hover:bg-gray-700 text-white font-medium rounded-lg shadow-md hover:shadow-lg transition-all duration-200 transform hover:scale-105">
+                <i class="fas fa-key mr-2"></i>
+                {{ __('profile.change_password') }}
+            </a>
             <form method="POST" action="{{ route('logout', ['locale' => app()->getLocale()]) }}" class="inline">
                 @csrf
                 <button type="submit" 
                         class="inline-flex items-center px-6 py-3 bg-red-500 hover:bg-red-600 text-white font-medium rounded-lg shadow-md hover:shadow-lg transition-all duration-200 transform hover:scale-105">
                     <i class="fas fa-sign-out-alt mr-2"></i>
-                    {{ __('Logout') }}
+                    {{ __('profile.logout') }}
                 </button>
             </form>
             <a href="{{ route('profile.edit', ['locale' => app()->getLocale()]) }}" 
                class="inline-flex items-center px-6 py-3 bg-blue-600 hover:bg-blue-700 text-white font-medium rounded-lg shadow-md hover:shadow-lg transition-all duration-200 transform hover:scale-105">
                 <i class="fas fa-edit mr-2"></i>
-                {{ __('Edit Profile') }}
+                {{ __('profile.edit_profile') }}
             </a>
         </div>
     </div>

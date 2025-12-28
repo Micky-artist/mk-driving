@@ -3,8 +3,8 @@
 @push('styles')
 <style>
     :root {
-        --primary-color: #0369a1;
-        --primary-hover: #0e7490;
+        --primary-color: #2563eb;
+        --primary-hover: #1d4ed8;
         --text-primary: #1f2937;
         --text-secondary: #4b5563;
         --bg-primary: #ffffff;
@@ -20,8 +20,8 @@
     
     @media (prefers-color-scheme: dark) {
         :root {
-            --primary-color: #0ea5e9;
-            --primary-hover: #38bdf8;
+            --primary-color: #3b82f6;
+            --primary-hover: #2563eb;
             --text-primary: #f3f4f6;
             --text-secondary: #9ca3af;
             --bg-primary: #0f172a;
@@ -229,11 +229,7 @@
                 <div class="text-center pb-4">
                     <div class="flex justify-center mb-6">
                         <a href="{{ route('home', app()->getLocale()) }}" class="auth-logo">
-                            <div class="p-3 bg-gradient-to-br from-[#0369a1] to-[#0e7490] rounded-2xl shadow-lg transform rotate-6">
-                                <div class="bg-white p-2 rounded-xl shadow-inner -rotate-6">
-                                    <img src="{{ asset('images/logo.png') }}" alt="{{ config('app.name') }}" class="h-12 w-auto">
-                                </div>
-                            </div>
+                            <img src="{{ asset('images/logo.png') }}" alt="{{ config('app.name') }}" class="h-16 w-auto">
                         </a>
                     </div>
                     
