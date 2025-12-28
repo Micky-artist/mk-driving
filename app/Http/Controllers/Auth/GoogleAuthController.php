@@ -4,8 +4,13 @@ namespace App\Http\Controllers\Auth;
 
 use App\Http\Controllers\Controller;
 use App\Models\User;
+use App\Models\Visitor;
+use App\Services\DeviceTrackingService;
+use App\Services\PointsService;
+use App\Mail\WelcomeEmailNotification;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\Log;
+use Illuminate\Support\Facades\Mail;
 use Laravel\Socialite\Facades\Socialite;
 
 class GoogleAuthController extends Controller
@@ -33,13 +38,64 @@ class GoogleAuthController extends Controller
             if (!$user) {
                 Log::info('Creating new user');
                 try {
-                    $user = User::create([
-                        'name' => $googleUser->name,
+                    // Split name into first and last name
+                    $nameParts = explode(' ', $googleUser->name, 2);
+                    $firstName = $nameParts[0] ?? $googleUser->name;
+                    $lastName = $nameParts[1] ?? '';
+                    
+                    // Get device fingerprint and location data
+                    $request = request();
+                    $fingerprints = DeviceTrackingService::generateDeviceFingerprint($request);
+                    $deviceInfo = Visitor::detectDevice($request->userAgent());
+                    
+                    $userData = [
+                        'first_name' => $firstName,
+                        'last_name' => $lastName,
                         'email' => $googleUser->email,
                         'password' => bcrypt(uniqid()),
                         'email_verified_at' => now(),
                         'google_id' => $googleUser->id,
+                        'role' => 'USER',
+                        'is_active' => true,
+                        // Location data
+                        'country' => Visitor::getCountryFromIP($request->ip()),
+                        'city' => Visitor::getCityFromIP($request->ip()),
+                        'timezone' => $request->header('Timezone') ?? config('app.timezone'),
+                        // Device tracking data
+                        'device_fingerprint' => $fingerprints['device_fingerprint'],
+                        'registration_ip' => $request->ip(),
+                        'registration_user_agent' => substr($request->userAgent(), 0, 500),
+                        'registration_device_type' => $deviceInfo['device_type'],
+                        'registration_browser' => $deviceInfo['browser'],
+                        'registration_platform' => $deviceInfo['platform'],
+                        // Timestamps
+                        'registered_at' => now(),
+                        'last_seen_at' => now(),
+                    ];
+                    
+                    $user = User::create($userData);
+                    
+                    // Award points for joining
+                    $pointsService = new PointsService();
+                    $pointsService->awardPoints($user->id, 'account_created', [
+                        'source' => 'google_oauth',
+                        'ip' => $request->ip(),
+                        'user_agent' => $request->userAgent()
                     ]);
+                    
+                    // Send welcome email
+                    Log::info('Attempting to send welcome email', ['user_id' => $user->id, 'email' => $user->email]);
+                    
+                    try {
+                        Mail::to($user->email)->locale($user->locale ?? app()->getLocale())->send(new WelcomeEmailNotification($user));
+                        Log::info('Welcome email sent successfully', ['user_id' => $user->id, 'email' => $user->email]);
+                    } catch (\Exception $e) {
+                        Log::error('Failed to send welcome email', ['user_id' => $user->id, 'email' => $user->email, 'error' => $e->getMessage()]);
+                    }
+                    
+                    // Set session flag for welcome modal
+                    session(['show_welcome_modal' => true]);
+                    
                     Log::info('New user created', ['user_id' => $user->id]);
                 } catch (\Exception $e) {
                     Log::error('Error creating user', [

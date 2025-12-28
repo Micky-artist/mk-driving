@@ -186,8 +186,10 @@ return [
     
     // Password Requirements
     'password_requirements' => [
+        'title' => 'Ijambo ry\'ibanga rigomba kuba rifite:',
         'length' => 'Inyuguti 6 byibuze',
-        'letter' => 'Yinjiza inyuguti n\'imibare',
+        'letter_number_required' => 'Inyuguti n\'umubare 1 byibuze',
+        'match' => 'Amajambo y\'ibanga niryo',
         'strength' => [
             'weak' => 'Yoroshye',
             'good' => 'Byiza',

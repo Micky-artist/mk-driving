@@ -97,7 +97,7 @@ class RegisteredUserController extends Controller
 
             // Award points for joining
             $pointsService = new PointsService();
-            $pointsService->awardPoints($user->id, 'user_joined', [
+            $pointsService->awardPoints($user->id, 'account_created', [
                 'source' => 'registration',
                 'ip' => $request->ip(),
                 'user_agent' => $request->userAgent()

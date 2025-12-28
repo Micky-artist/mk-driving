@@ -62,16 +62,20 @@ class PointsService
 
         Log::info('Using column', ['column' => $column]);
 
-        // Get all user points ordered by the selected period with user relationship
-        // Include users with zero points, sort by points desc, then by name asc
-        $query = UserPoint::select('user_points.*')
-            ->join('users', 'user_points.user_id', '=', 'users.id')
+        // Get all active users with their points (including zero points)
+        // Left join to include users who may not have UserPoint records yet
+        $query = DB::table('users')
+            ->leftJoin('user_points', 'users.id', '=', 'user_points.user_id')
             ->where('users.is_active', true)
-            ->orderBy($column, 'desc')
+            ->select(
+                'users.id',
+                'users.first_name',
+                'users.last_name',
+                'users.created_at',
+                DB::raw('COALESCE(user_points.' . $column . ', 0) as points')
+            )
+            ->orderBy('points', 'desc')
             ->orderByRaw("CONCAT(users.first_name, ' ', users.last_name) ASC")
-            ->with(['user' => function($query) {
-                $query->select('id', 'first_name', 'last_name', 'created_at');
-            }])
             ->limit($limit);
 
         Log::info('SQL Query', ['sql' => $query->toSql(), 'bindings' => $query->getBindings()]);
@@ -81,17 +85,17 @@ class PointsService
         Log::info('UserPoints query result', ['count' => $userPoints->count(), 'data' => $userPoints->toArray()]);
 
         // Transform the results with ranks and format user data
-        $result = $userPoints->map(function ($userPoint, $index) use ($column) {
-            Log::info('Processing user point', ['user_id' => $userPoint->user_id, 'points' => $userPoint->$column]);
+        $result = $userPoints->map(function ($user, $index) {
+            Log::info('Processing user', ['user_id' => $user->id, 'points' => $user->points]);
             
             return [
                 'user' => [
-                    'id' => $userPoint->user->id,
-                    'first_name' => $userPoint->user->first_name,
-                    'last_name' => $userPoint->user->last_name,
-                    'createdAt' => $userPoint->user->created_at->toIso8601String(),
+                    'id' => $user->id,
+                    'first_name' => $user->first_name,
+                    'last_name' => $user->last_name,
+                    'createdAt' => $user->created_at,
                 ],
-                'points' => (int) $userPoint->$column,
+                'points' => (int) $user->points,
                 'rank' => $index + 1,
             ];
         })->values()->toArray();

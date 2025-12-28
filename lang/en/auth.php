@@ -186,8 +186,10 @@ return [
     
     // Password Requirements
     'password_requirements' => [
+        'title' => 'Password must contain:',
         'length' => 'At least 6 characters',
-        'letter' => 'Contains letters and numbers',
+        'letter_number_required' => 'At least 1 letter and 1 number',
+        'match' => 'Passwords match',
         'strength' => [
             'weak' => 'Weak',
             'good' => 'Good',
