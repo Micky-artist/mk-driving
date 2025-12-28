@@ -89,7 +89,7 @@
                         <!-- CTA Button -->
                         <div class="relative z-10 mt-4">
                             @auth
-                                <a href="/{{ app()->getLocale() }}/dashboard"
+                                <a href="{{ route('dashboard', ['locale' => app()->getLocale() ?: config('app.fallback_locale', 'en')]) }}"
                                     class="block w-full text-center bg-gradient-to-r from-yellow-400 to-yellow-500 text-blue-900 font-bold py-2 px-4 rounded hover:from-yellow-300 hover:to-yellow-400 transition-all duration-300 transform group-hover:scale-[1.02] shadow-md hover:shadow-yellow-500/30">
                                     {{ $ctaText }}
                                     <svg class="inline-block ml-2 w-4 h-4" fill="none" stroke="currentColor"
@@ -100,7 +100,7 @@
                                 </a>
                             @else
                                 @if ($hasGuestQuiz)
-                                    <a href="{{ route('guest-quiz.show', ['locale' => app()->getLocale(), 'quiz' => $guestQuiz['id']]) }}"
+                                    <a href="{{ route('guest-quiz.show', ['locale' => app()->getLocale() ?: config('app.fallback_locale', 'en'), 'quiz' => $guestQuiz['id']]) }}"
                                         class="block w-full text-center bg-gradient-to-r from-yellow-400 to-yellow-500 text-blue-900 font-bold py-2 px-4 rounded hover:from-yellow-300 hover:to-yellow-400 transition-all duration-300 transform group-hover:scale-[1.02] shadow-md hover:shadow-yellow-500/30">
                                         {{ $ctaText }}
                                         <svg class="inline-block ml-2 w-4 h-4" fill="none" stroke="currentColor"
@@ -228,7 +228,7 @@
                         <!-- CTA Button -->
                         <div class="relative z-10 mt-3">
                             @auth
-                                <a href="/{{ app()->getLocale() }}/dashboard"
+                                <a href="{{ route('dashboard', ['locale' => app()->getLocale() ?: config('app.fallback_locale', 'en')]) }}"
                                     class="block w-full text-center bg-gradient-to-r from-yellow-400 to-yellow-500 text-blue-900 font-bold py-2 px-4 rounded hover:from-yellow-300 hover:to-yellow-400 transition-all duration-300 transform group-hover:scale-[1.02] shadow-md hover:shadow-yellow-500/30">
                                     {{ $ctaText }}
                                     <svg class="inline-block ml-2 w-4 h-4" fill="none" stroke="currentColor"
@@ -239,7 +239,7 @@
                                 </a>
                             @else
                                 @if ($hasGuestQuiz)
-                                    <a href="{{ route('guest-quiz.show', ['locale' => app()->getLocale(), 'quiz' => $guestQuiz['id']]) }}"
+                                    <a href="{{ route('guest-quiz.show', ['locale' => app()->getLocale() ?: config('app.fallback_locale', 'en'), 'quiz' => $guestQuiz['id']]) }}"
                                         class="block w-full text-center bg-gradient-to-r from-yellow-400 to-yellow-500 text-blue-900 font-bold py-2 px-4 rounded hover:from-yellow-300 hover:to-yellow-400 transition-all duration-300 transform group-hover:scale-[1.02] shadow-md hover:shadow-yellow-500/30">
                                         {{ $ctaText }}
                                         <svg class="inline-block ml-2 w-4 h-4" fill="none" stroke="currentColor"
