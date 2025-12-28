@@ -523,11 +523,11 @@ class QuizAttemptController extends Controller
             ],
             'user_answers' => $attempt->userAnswers->map(function ($answer) {
                 return [
-                    'id' => $answer->id,
+                    'id' => $answer->id ?? null,
                     'question_id' => $answer->question_id,
                     'option_id' => $answer->option_id,
                     'is_correct' => (bool)$answer->is_correct,
-                    'time_spent' => $answer->time_spent,
+                    'time_spent' => $answer->time_spent ?? null,
                     'question' => $answer->question ? [
                         'id' => $answer->question->id,
                         'text' => $answer->question->text,

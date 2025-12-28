@@ -67,15 +67,6 @@ class QuizAttempt extends Model
     }
 
     /**
-     * Get all user answers for this attempt.
-     * Now returns answers from the JSON column.
-     */
-    public function getUserAnswersAttribute()
-    {
-        return collect($this->answers ?? []);
-    }
-
-    /**
      * Alias for userAnswers for backward compatibility.
      */
     public function answers()

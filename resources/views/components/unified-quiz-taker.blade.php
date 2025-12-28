@@ -1078,8 +1078,8 @@
                                 } else {
                                     // Scroll to next button if it's the last question
                                     this.$nextTick(() => {
-                                        const nextButton = this.$el.querySelector(
-                                            'button:has(span:contains("Finish"))');
+                                        const nextButton = Array.from(this.$el.querySelectorAll('button'))
+                                            .find(btn => btn.textContent?.includes('Finish'));
                                         if (nextButton) {
                                             nextButton.scrollIntoView({
                                                 behavior: 'smooth',

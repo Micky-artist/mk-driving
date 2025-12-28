@@ -184,10 +184,11 @@ class UserController extends Controller
             
         // Calculate XP gained with gamification
         $xpGained = 0;
-        if ($latestAttempt && $latestAttempt->answers) {
-            $correctAnswers = $latestAttempt->answers->where('is_correct', true)->count();
-            $totalQuestions = $latestAttempt->answers->count();
-            $score = $totalQuestions > 0 ? ($correctAnswers / $totalQuestions) * 100 : 0;
+        if ($latestAttempt) {
+            // Use the userAnswers relationship to get correct answers
+            $correctAnswers = $latestAttempt->userAnswers()->where('is_correct', true)->count();
+            $totalAnswers = $latestAttempt->userAnswers()->count();
+            $score = $totalAnswers > 0 ? ($correctAnswers / $totalAnswers) * 100 : 0;
             
             // Base XP: 5 points per correct answer
             $xpGained = $correctAnswers * 5;
@@ -216,7 +217,11 @@ class UserController extends Controller
             
             // Add XP to user's total if not already awarded
             if (!$latestAttempt->xp_awarded) {
-                $pointsService->addPoints($user->id, $xpGained, 'quiz_completion', 'Completed quiz: ' . ($latestAttempt->quiz->title ?? 'Quiz'));
+                $pointsService->awardPoints($user->id, 'quiz_completion', [
+                    'quiz_id' => $latestAttempt->quiz_id,
+                    'xp_gained' => $xpGained,
+                    'quiz_title' => $latestAttempt->quiz->title ?? 'Quiz'
+                ]);
                 $latestAttempt->update(['xp_awarded' => true]);
             }
         }
