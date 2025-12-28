@@ -679,6 +679,14 @@
                     userAnswers: {},
                     correctCount: {{ $attempt && $attempt->answers ? collect($attempt->answers)->filter(fn($a) => $a['is_correct'])->count() : 0 }},
                     incorrectCount: {{ $attempt && $attempt->answers ? collect($attempt->answers)->filter(fn($a) => !$a['is_correct'])->count() : 0 }},
+                    
+                    // Translations
+                    translations: {
+                        quiz: {
+                            correctFeedback: "{{ __('quiz.correctFeedback') }}",
+                            incorrectFeedback: "{{ __('quiz.incorrectFeedback') }}"
+                        }
+                    },
 
                     // Computed properties
                     get currentQuestion() {
