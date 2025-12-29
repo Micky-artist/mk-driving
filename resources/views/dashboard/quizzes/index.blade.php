@@ -117,8 +117,94 @@
                     </div>
                 </div>
                 
-                <!-- Available Quizzes Section -->
-                @if(isset($quizzes) && $quizzes->count() > 0)
+                <!-- Completed Quizzes Section - Only show when currentStatus is completed -->
+                @if(isset($currentStatus) && $currentStatus === 'completed')
+                    <div class="mb-12">
+                        <h2 class="text-xl font-semibold text-gray-900 dark:text-white mb-6">
+                            {{ __('dashboard.quizzes.completed_quizzes') }}
+                            <span class="ml-2 text-sm font-normal text-gray-500 dark:text-gray-400">
+                                ({{ isset($availableCompletedQuizzes) ? $availableCompletedQuizzes->count() : 0 }} {{ __('dashboard.quizzes.available_text') }}, {{ isset($unavailableCompletedQuizzes) ? $unavailableCompletedQuizzes->count() : 0 }} {{ __('dashboard.quizzes.view_only') }})
+                            </span>
+                        </h2>
+                        
+                        @if(isset($availableCompletedQuizzes) && $availableCompletedQuizzes->count() > 0)
+                            <!-- Available Completed Quizzes -->
+                            <div class="mb-8">
+                                <h3 class="text-lg font-medium text-gray-800 dark:text-gray-200 mb-4">
+                                    {{ __('dashboard.quizzes.available_for_retake') }}
+                                    <span class="ml-2 text-sm font-normal text-green-600">
+                                        ({{ $availableCompletedQuizzes->count() }})
+                                    </span>
+                                </h3>
+                                <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 gap-6">
+                                    @foreach($availableCompletedQuizzes as $quiz)
+                                        <x-quiz.quiz-card :quiz="$quiz" />
+                                    @endforeach
+                                </div>
+                            </div>
+                        @endif
+                        
+                        @if(isset($unavailableCompletedQuizzes) && $unavailableCompletedQuizzes->count() > 0)
+                            <!-- Unavailable Completed Quizzes -->
+                            <div class="bg-gray-50 dark:bg-gray-800/50 rounded-xl p-6 border border-gray-200 dark:border-gray-700">
+                                <div class="flex items-center justify-between mb-6">
+                                    <h3 class="text-lg font-medium text-gray-800 dark:text-gray-200">
+                                        {{ __('dashboard.quizzes.view_only_completed') }}
+                                        <span class="ml-2 text-sm font-normal text-orange-600">
+                                            ({{ $unavailableCompletedQuizzes->count() }})
+                                        </span>
+                                    </h3>
+                                    <a href="{{ route('plans', ['locale' => app()->getLocale()]) }}" 
+                                       class="inline-flex items-center px-4 py-2 bg-blue-600 text-white font-medium rounded-lg hover:bg-blue-700 transition-colors duration-200 shadow-md hover:shadow-lg">
+                                        <svg class="w-4 h-4 mr-2" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 8c-1.657 0-3 .895-3 2s1.343 2 3 2 3 .895 3 2-1.343 2-3 2m0-8c1.11 0 2.08.402 2.599 1M12 8V7m0 1v8m0 0v1m0-1c-1.11 0-2.08-.402-2.599-1M21 12a9 9 0 11-18 0 9 9 0 0118 0z" />
+                                        </svg>
+                                        {{ __('dashboard.quizzes.upgrade_to_retake') }}
+                                    </a>
+                                </div>
+                                
+                                <p class="text-gray-600 dark:text-gray-300 mb-6">
+                                    {{ __('dashboard.quizzes.completed_upgrade_message') }}
+                                </p>
+                                
+                                <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 gap-6">
+                                    @foreach($unavailableCompletedQuizzes as $quiz)
+                                        <x-quiz.quiz-card :quiz="$quiz" />
+                                    @endforeach
+                                </div>
+                            </div>
+                        @endif
+                        
+                        <!-- Pagination for completed quizzes -->
+                        @if(isset($quizzes) && $quizzes->hasPages())
+                            <div class="mt-10 flex flex-col sm:flex-row items-center justify-between gap-4">
+                                <div class="text-sm text-gray-600 dark:text-gray-400">
+                                    {{ __('dashboard.quizzes.showing', ['from' => $quizzes->firstItem(), 'to' => $quizzes->lastItem(), 'total' => $quizzes->total()]) }}
+                                </div>
+                                <div class="flex items-center gap-2">
+                                    {{ $quizzes->links() }}
+                                </div>
+                            </div>
+                        @endif
+                        
+                        @if((!isset($availableCompletedQuizzes) || $availableCompletedQuizzes->count() === 0) && (!isset($unavailableCompletedQuizzes) || $unavailableCompletedQuizzes->count() === 0))
+                            <!-- Empty State for Completed -->
+                            <div class="text-center py-16 bg-white dark:bg-gray-800 rounded-xl border border-gray-200 dark:border-gray-700">
+                                <svg class="mx-auto h-16 w-16 text-gray-400 dark:text-gray-500" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="1.5" d="M9 12l2 2 4-4m6 2a9 9 0 11-18 0 9 9 0 0118 0z" />
+                                </svg>
+                                <h3 class="mt-2 text-lg font-medium text-gray-900 dark:text-white">{{ __('dashboard.quizzes.no_completed_quizzes') }}</h3>
+                                <p class="mt-1 text-sm text-gray-500 dark:text-gray-400">
+                                    {{ __('dashboard.quizzes.no_completed_message') }}
+                                </p>
+                            </div>
+                        @endif
+                    </div>
+                @endif
+                
+                <!-- Available Quizzes Section - Hide when currentStatus is completed -->
+                @if(!isset($currentStatus) || $currentStatus !== 'completed')
+                    @if(isset($quizzes) && $quizzes->count() > 0)
                     <div class="mb-12">
                         <h2 class="text-xl font-semibold text-gray-900 dark:text-white mb-6">
                             {{ __('dashboard.quizzes.available_quizzes') }}
@@ -146,6 +232,7 @@
                             </div>
                         @endif
                     </div>
+                @endif
                 @endif
 
                 <!-- Locked Quizzes Section -->

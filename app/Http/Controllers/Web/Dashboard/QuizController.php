@@ -404,6 +404,48 @@ class QuizController extends Controller
             return !$this->canAccessQuiz($user, $quiz);
         });
 
+        // Special handling for completed status - show all completed quizzes but separate them
+        if ($status === 'completed') {
+            // Separate completed quizzes into available and unavailable
+            $availableCompleted = $availableQuizzes;
+            $unavailableCompleted = $lockedQuizzes;
+            
+            // Sort both collections
+            $sortedAvailableCompleted = $availableCompleted->sortByDesc('created_at')->values();
+            $sortedUnavailableCompleted = $unavailableCompleted->sortByDesc('created_at')->values();
+            
+            // Paginate the available completed quizzes
+            $perPage = 9;
+            $page = request()->get('page', 1);
+            $quizzes = new \Illuminate\Pagination\LengthAwarePaginator(
+                $sortedAvailableCompleted->forPage($page, $perPage),
+                $sortedAvailableCompleted->count(),
+                $perPage,
+                $page,
+                ['path' => request()->url(), 'query' => request()->query()]
+            );
+            
+            // Get user's quiz statistics
+            $userAttempts = $user->quizAttempts;
+            $completedQuizzes = $userAttempts->where('status', 'COMPLETED');
+            $inProgressQuizzes = $userAttempts->where('status', 'IN_PROGRESS');
+            
+            $stats = [
+                'completed_count' => $completedQuizzes->count(),
+                'in_progress_count' => $inProgressQuizzes->count(),
+                'average_score' => round($completedQuizzes->avg('score') ?? 0, 1),
+            ];
+
+            return view('dashboard.quizzes.index', [
+                'quizzes' => $quizzes,
+                'lockedQuizzes' => $sortedUnavailableCompleted,
+                'availableCompletedQuizzes' => $sortedAvailableCompleted,
+                'unavailableCompletedQuizzes' => $sortedUnavailableCompleted,
+                'stats' => $stats,
+                'currentStatus' => $status
+            ]);
+        }
+
         // Sort available quizzes: user's active plan quizzes first, then by created_at desc
         $userActivePlanSlugs = $user->activeSubscriptions()->with('plan')->get()->pluck('plan.slug')->toArray();
         
