@@ -97,6 +97,10 @@ return [
         'view_in_progress' => 'Reba Itarangijwe',
         'view_completed' => 'Reba Iyarangijwe',
         'view_progress' => 'Reba Ukwo Wiyongera',
+        'available_quizzes' => 'Ibizamini Bihari',
+        'purchase_required' => 'Kwiyandikisha Kugirango Ubone Ibi',
+        'purchase_plan' => 'Kwiyandikisha',
+        'purchase_message' => 'Fungura ibizamini bindi wongere ubumenyi.',
     ],
     'subscription' => [
         'status' => 'Imimerere',

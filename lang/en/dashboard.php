@@ -99,6 +99,10 @@ return [
         'view_in_progress' => 'View In Progress',
         'view_completed' => 'View Completed',
         'view_progress' => 'View Progress',
+        'available_quizzes' => 'Available Quizzes',
+        'purchase_required' => 'Purchase Plans to Access These',
+        'purchase_plan' => 'Purchase Plans',
+        'purchase_message' => 'Unlock these premium quizzes by upgrading your subscription plan. Get access to exclusive content and features.',
     ],
     'subscription' => [
         'status' => 'Status',

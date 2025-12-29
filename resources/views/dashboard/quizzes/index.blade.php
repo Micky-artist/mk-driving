@@ -117,21 +117,65 @@
                     </div>
                 </div>
                 
-                <!-- Enhanced Quizzes Grid -->
-                <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 gap-6">
-                    @foreach($quizzes as $quiz)
-                        <x-quiz.quiz-card :quiz="$quiz" />
-                    @endforeach
-                </div>
-
-                <!-- Enhanced Pagination -->
-                @if($quizzes->hasPages())
-                    <div class="mt-10 flex flex-col sm:flex-row items-center justify-between gap-4">
-                        <div class="text-sm text-gray-600 dark:text-gray-400">
-                            {{ __('dashboard.quizzes.showing', ['from' => $quizzes->firstItem(), 'to' => $quizzes->lastItem(), 'total' => $quizzes->total()]) }}
+                <!-- Available Quizzes Section -->
+                @if(isset($quizzes) && $quizzes->count() > 0)
+                    <div class="mb-12">
+                        <h2 class="text-xl font-semibold text-gray-900 dark:text-white mb-6">
+                            {{ __('dashboard.quizzes.available_quizzes') }}
+                            <span class="ml-2 text-sm font-normal text-gray-500 dark:text-gray-400">
+                                ({{ $quizzes->total() }})
+                            </span>
+                        </h2>
+                        
+                        <!-- Enhanced Quizzes Grid -->
+                        <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 gap-6">
+                            @foreach($quizzes as $quiz)
+                                <x-quiz.quiz-card :quiz="$quiz" />
+                            @endforeach
                         </div>
-                        <div class="flex items-center gap-2">
-                            {{ $quizzes->links() }}
+
+                        <!-- Enhanced Pagination -->
+                        @if($quizzes->hasPages())
+                            <div class="mt-10 flex flex-col sm:flex-row items-center justify-between gap-4">
+                                <div class="text-sm text-gray-600 dark:text-gray-400">
+                                    {{ __('dashboard.quizzes.showing', ['from' => $quizzes->firstItem(), 'to' => $quizzes->lastItem(), 'total' => $quizzes->total()]) }}
+                                </div>
+                                <div class="flex items-center gap-2">
+                                    {{ $quizzes->links() }}
+                                </div>
+                            </div>
+                        @endif
+                    </div>
+                @endif
+
+                <!-- Locked Quizzes Section -->
+                @if(isset($lockedQuizzes) && $lockedQuizzes->count() > 0 && !auth()->user()->isAdmin())
+                    <div class="bg-gray-50 dark:bg-gray-800/50 rounded-xl p-6 border border-gray-200 dark:border-gray-700">
+                        <div class="flex items-center justify-between mb-6">
+                            <h2 class="text-xl font-semibold text-gray-900 dark:text-white">
+                                {{ __('dashboard.quizzes.purchase_required') }}
+                                <span class="ml-2 text-sm font-normal text-gray-500 dark:text-gray-400">
+                                    ({{ $lockedQuizzes->count() }})
+                                </span>
+                            </h2>
+                            <a href="{{ route('plans', ['locale' => app()->getLocale()]) }}" 
+                               class="inline-flex items-center px-4 py-2 bg-blue-600 text-white font-medium rounded-lg hover:bg-blue-700 transition-colors duration-200 shadow-md hover:shadow-lg">
+                                <svg class="w-4 h-4 mr-2" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 8c-1.657 0-3 .895-3 2s1.343 2 3 2 3 .895 3 2-1.343 2-3 2m0-8c1.11 0 2.08.402 2.599 1M12 8V7m0 1v8m0 0v1m0-1c-1.11 0-2.08-.402-2.599-1M21 12a9 9 0 11-18 0 9 9 0 0118 0z" />
+                                </svg>
+                                {{ __('dashboard.quizzes.purchase_plan') }}
+                            </a>
+                        </div>
+                        
+                        <p class="text-gray-600 dark:text-gray-300 mb-6">
+                            {{ __('dashboard.quizzes.purchase_message') }}
+                        </p>
+                        
+                        <!-- Locked Quizzes Grid -->
+                        <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 gap-6">
+                            @foreach($lockedQuizzes as $quiz)
+                                <x-quiz.quiz-card :quiz="$quiz" />
+                            @endforeach
                         </div>
                     </div>
                 @endif

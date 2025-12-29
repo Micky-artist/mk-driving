@@ -395,14 +395,19 @@ class QuizController extends Controller
         });
         
         // Filter quizzes based on user's subscription
-        $filteredQuizzes = $allQuizzes->filter(function($quiz) use ($user) {
+        $availableQuizzes = $allQuizzes->filter(function($quiz) use ($user) {
             return $this->canAccessQuiz($user, $quiz);
         });
+        
+        // Get locked quizzes (those user cannot access)
+        $lockedQuizzes = $allQuizzes->filter(function($quiz) use ($user) {
+            return !$this->canAccessQuiz($user, $quiz);
+        });
 
-        // Sort quizzes: user's active plan quizzes first, then by created_at desc
+        // Sort available quizzes: user's active plan quizzes first, then by created_at desc
         $userActivePlanSlugs = $user->activeSubscriptions()->with('plan')->get()->pluck('plan.slug')->toArray();
         
-        $sortedQuizzes = $filteredQuizzes->sortBy(function($quiz) use ($userActivePlanSlugs) {
+        $sortedAvailableQuizzes = $availableQuizzes->sortBy(function($quiz) use ($userActivePlanSlugs) {
             // Priority 1: Quizzes matching user's active plan
             if ($quiz->subscription_plan_slug && in_array($quiz->subscription_plan_slug, $userActivePlanSlugs)) {
                 return [0, -$quiz->created_at->timestamp]; // Sort by priority, then by created_at desc (negative for desc)
@@ -414,13 +419,16 @@ class QuizController extends Controller
             // Priority 3: Other quizzes
             return [2, -$quiz->created_at->timestamp]; // Sort by priority, then by created_at desc (negative for desc)
         })->values(); // values() to reset array keys
+        
+        // Sort locked quizzes by created_at desc
+        $sortedLockedQuizzes = $lockedQuizzes->sortByDesc('created_at')->values();
 
-        // Paginate the sorted results
+        // Paginate the available quizzes
         $perPage = 9;
         $page = request()->get('page', 1);
         $quizzes = new \Illuminate\Pagination\LengthAwarePaginator(
-            $sortedQuizzes->forPage($page, $perPage),
-            $sortedQuizzes->count(),
+            $sortedAvailableQuizzes->forPage($page, $perPage),
+            $sortedAvailableQuizzes->count(),
             $perPage,
             $page,
             ['path' => request()->url(), 'query' => request()->query()]
@@ -439,6 +447,7 @@ class QuizController extends Controller
 
         return view('dashboard.quizzes.index', [
             'quizzes' => $quizzes,
+            'lockedQuizzes' => $sortedLockedQuizzes,
             'user' => $user,
             'currentStatus' => $status,
             'stats' => $stats
