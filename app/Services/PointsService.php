@@ -67,6 +67,7 @@ class PointsService
         $query = DB::table('users')
             ->leftJoin('user_points', 'users.id', '=', 'user_points.user_id')
             ->where('users.is_active', true)
+            ->where('users.role', '!=', User::ROLE_ADMIN)
             ->select(
                 'users.id',
                 'users.first_name',
@@ -119,7 +120,10 @@ class PointsService
             return 0;
         }
 
-        return UserPoint::where($column, '>', $userPoints->$column)->count() + 1;
+        return UserPoint::join('users', 'user_points.user_id', '=', 'users.id')
+            ->where('users.role', '!=', User::ROLE_ADMIN)
+            ->where($column, '>', $userPoints->$column)
+            ->count() + 1;
     }
 
     public function getUserPoints(int $userId): array

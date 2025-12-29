@@ -211,6 +211,7 @@ class ReportController extends Controller
         ];
 
         $topRankedUsers = User::join('user_points', 'users.id', '=', 'user_points.user_id')
+            ->where('users.role', '!=', User::ROLE_ADMIN)
             ->orderBy('user_points.total_points', 'desc')
             ->take(10)
             ->get()

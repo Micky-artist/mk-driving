@@ -410,6 +410,8 @@ class SubscriptionController extends Controller
                 'status' => 'active',
                 'payment_status' => 'COMPLETED',
                 'approved_at' => now(),
+                'starts_at' => now(), // Start counting from approval time
+                'ends_at' => now()->addDays($subscription->plan->duration_days), // Calculate expiration from approval time
             ]);
             
             // Log subscription approval activity

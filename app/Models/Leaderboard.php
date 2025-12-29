@@ -89,6 +89,7 @@ class Leaderboard extends Model
     public function updateRankings(): void
     {
         $users = User::withCount(['quizAttempts', 'forumAnswers'])
+            ->where('role', '!=', User::ROLE_ADMIN)
             ->orderBy('points', 'desc')
             ->limit(100) // Top 100 users
             ->get();
