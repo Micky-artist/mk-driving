@@ -676,13 +676,13 @@
         <!-- Main Content Area -->
         <div class="flex-1 flex flex-col overflow-hidden bg-white dark:bg-gray-900 md:ml-64">
             <!-- Main Content Wrapper -->
-            <div class="flex-1 overflow-auto pb-16 md:pb-0">
+            <div class="flex-1 overflow-auto pb-20 md:pb-0">
 
                 <!-- Mobile sidebar (hidden by default) -->
                 <div x-show="mobileMenuOpen" @click.away="mobileMenuOpen = false" class="md:hidden fixed inset-0 z-40"
                     x-cloak style="display: none;">
                     <div class="fixed inset-0 bg-gray-600 bg-opacity-75" @click="mobileMenuOpen = false"></div>
-                    <div class="relative flex-1 flex flex-col max-w-xs w-full bg-white dark:bg-gray-800" style="height: calc(100vh - 4rem);">
+                    <div class="relative flex-1 flex flex-col max-w-xs w-full bg-white dark:bg-gray-800" style="height: calc(100vh - 20px);">
                         <div class="absolute top-0 right-0 -mr-14 p-1">
                             <button @click="mobileMenuOpen = false"
                                 class="flex items-center justify-center h-12 w-12 rounded-full focus:outline-none focus:bg-gray-600">
@@ -746,6 +746,14 @@
                                         <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M3 10h18M7 3v2m10-2v2m-10 5h.01M12 12h.01M16 12h.01M7 16h10a2 2 0 002-2V7a2 2 0 00-2-2H7a2 2 0 00-2 2v7a2 2 0 002 2z"></path>
                                     </svg>
                                     Subscriptions
+                                    @php
+                                        $pendingCount = \App\Models\Subscription::where('status', 'pending')->count();
+                                    @endphp
+                                    @if ($pendingCount > 0)
+                                        <span class="ml-2 inline-block py-0.5 px-2 text-xs font-medium rounded-full bg-red-500 text-white">
+                                            {{ $pendingCount }}
+                                        </span>
+                                    @endif
                                 </a>
 
                                 <!-- Forum Management -->
