@@ -28,6 +28,7 @@ class Subscription extends Model
         'transaction_id',
         'payment_reference',
         'payment_method',
+        'phone_number',
         'payment_proof_url',
         'payment_proof_name',
         'admin_notes',

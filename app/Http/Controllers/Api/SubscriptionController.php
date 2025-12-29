@@ -61,9 +61,12 @@ class SubscriptionController extends Controller
                 
                 // Calculate end date based on plan duration
                 $endDate = null;
-                if ($plan->duration > 0) {
-                    $endDate = now()->addDays($plan->duration);
-                } // For unlimited (duration = 0), end_date remains null
+                if ($plan->duration_days && $plan->duration_days > 0) {
+                    $endDate = now()->addDays($plan->duration_days);
+                } else {
+                    // For unlimited plans (duration = 0 or null), set a far future date
+                    $endDate = now()->addYears(100);
+                }
                 
                 // Create new subscription
                 $subscription = $user->subscriptions()->create([

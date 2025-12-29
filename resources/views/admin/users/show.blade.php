@@ -94,6 +94,16 @@
 @endpush
 
 @section('content')
+    @php
+        // Get subscription phone number for fallback in Personal Information section
+        $pendingSubscriptions = $user->subscriptions->filter(function ($sub) {
+            return strtolower($sub->status) === 'pending';
+        });
+        $subscriptionPhone = $pendingSubscriptions->isNotEmpty() 
+            ? $pendingSubscriptions->sortByDesc('created_at')->first()->phone_number 
+            : null;
+    @endphp
+    
     <div class="space-y-6 fade-in">
         <!-- Header Section -->
         <div
@@ -196,7 +206,7 @@
                                         class="block text-xs font-medium text-gray-500 dark:text-gray-400 uppercase tracking-wider mb-1">Phone
                                         Number</label>
                                     <div class="text-gray-900 dark:text-white font-medium">
-                                        {{ $user->phone ?? 'Not provided' }}</div>
+                                        {{ $user->phone_number ?? $subscriptionPhone ?? 'Not provided' }}</div>
                                 </div>
                             </div>
                         </div>
@@ -285,12 +295,6 @@
                         </h2>
                     </div>
                     <div class="p-6">
-                        @php
-                            $pendingSubscriptions = $user->subscriptions->filter(function ($sub) {
-                                return strtolower($sub->status) === 'pending';
-                            });
-                        @endphp
-                        
                         @if ($pendingSubscriptions->isNotEmpty())
                             @php
                                 $subscription = $pendingSubscriptions->sortByDesc('created_at')->first();
@@ -315,6 +319,11 @@
                                             <span class="font-medium text-gray-900 dark:text-white">{{ number_format($subscription->plan->price, 0) }} RWF{{ $subscription->plan->billing_interval }}</span>
                                         </div>
                                     @endif
+
+                                    <div class="flex justify-between">
+                                        <span class="text-gray-500 dark:text-gray-400">Phone Number:</span>
+                                        <span class="font-medium text-gray-900 dark:text-white">{{ $subscription->phone_number ?? $user->phone_number ?? 'Not provided' }}</span>
+                                    </div>
 
                                     <div class="flex justify-between">
                                         <span class="text-gray-500 dark:text-gray-400">Requested:</span>
