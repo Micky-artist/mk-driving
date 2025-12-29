@@ -433,21 +433,66 @@ document.addEventListener('DOMContentLoaded', function() {
                                 ? $quiz->title[app()->getLocale()] ?? ($quiz->title['en'] ?? 'Untitled Quiz')
                                 : $quiz->title;
                             
+                            // Get accurate score from the attempt
+                            $score = $attempt->score ?? 0;
                             $totalQuestions = $attempt->total_questions > 0 ? $attempt->total_questions : ($quiz->questions_count ?? $quiz->questions->count() ?? 0);
-                            $percentage = $attempt->score_percentage ?? 0;
-                            $correctAnswers = $totalQuestions > 0 ? round(($percentage / 100) * $totalQuestions) : 0;
+                            
+                            // Calculate correct answers based on score (score is already a percentage)
+                            $correctAnswers = $totalQuestions > 0 ? round(($score / 100) * $totalQuestions) : 0;
+                            
+                            // Check if user can retake this quiz
+                            $user = auth()->user();
+                            $canRetake = true;
+                            $nextRetakeTime = null;
+                            
+                            if (!$user->isAdmin()) {
+                                $hasActiveSubscription = $user->activeSubscriptions()->exists();
+                                $hasRequiredPlan = false;
+                                
+                                if ($quiz->subscription_plan_slug) {
+                                    $hasRequiredPlan = $user->activeSubscriptions()
+                                        ->whereHas('plan', function($query) use ($quiz) {
+                                            $query->where('slug', $quiz->subscription_plan_slug);
+                                        })
+                                        ->exists();
+                                }
+                                
+                                // Check retake restrictions for non-admin users
+                                if (!$hasRequiredPlan && !$quiz->is_guest_quiz && $attempt->completed_at) {
+                                    $canRetake = $attempt->completed_at->addHours(24)->isPast();
+                                    if (!$canRetake) {
+                                        $nextRetakeTime = $attempt->completed_at->addHours(24);
+                                    }
+                                }
+                            }
                         @endphp
-                        <div class="flex items-center justify-between p-3 bg-gray-50 dark:bg-gray-700 rounded-lg border border-gray-200 dark:border-gray-600">
+                        <div class="flex items-center justify-between p-3 bg-gray-50 dark:bg-gray-700 rounded-lg border border-gray-200 dark:border-gray-600 hover:bg-gray-100 dark:hover:bg-gray-600 transition-colors cursor-pointer group"
+                             onclick="window.location.href='{{ route('dashboard.quizzes.show', ['locale' => app()->getLocale(), 'quiz' => $quiz->id]) }}'">
                             <div class="flex-1 min-w-0">
-                                <h3 class="font-medium text-gray-900 dark:text-white truncate">{{ $quizTitle }}</h3>
+                                <h3 class="font-medium text-gray-900 dark:text-white truncate group-hover:text-blue-600 dark:group-hover:text-blue-400 transition-colors">
+                                    {{ $quizTitle }}
+                                </h3>
                                 <p class="text-sm text-gray-600 dark:text-gray-400 mt-1">
-                                    {{ __('dashboard.quizzes.score') }}: {{ $correctAnswers }}/{{ $totalQuestions }} ({{ $percentage }}%)
+                                    {{ __('dashboard.quizzes.score') }}: {{ $correctAnswers }}/{{ $totalQuestions }} ({{ round($score) }}%)
                                 </p>
+                                @if (!$canRetake && $nextRetakeTime)
+                                    <p class="text-xs text-orange-600 dark:text-orange-400 mt-1">
+                                        {{ __('dashboard.quizzes.can_retry_in', ['time' => $nextRetakeTime->diffForHumans()]) }}
+                                    </p>
+                                @endif
                             </div>
-                            <div class="ml-3 flex-shrink-0">
+                            <div class="ml-3 flex-shrink-0 flex items-center space-x-2">
                                 <span class="inline-flex items-center px-2 py-1 text-xs rounded-full bg-green-100 text-green-800 dark:bg-green-900 dark:text-green-200">
                                     {{ __('dashboard.completed') }}
                                 </span>
+                                @if ($canRetake)
+                                    <span class="inline-flex items-center px-2.5 py-1 text-xs font-medium rounded-full bg-gradient-to-r from-blue-500 to-blue-600 text-white dark:from-blue-600 dark:to-blue-700 transition-all duration-200 shadow-md hover:shadow-lg transform hover:scale-105">
+                                        <svg class="w-3 h-3 mr-1" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4 4v5h.582m15.356 2A8.001 8.001 0 004.582 9m0 0H9m11 11v-5h-.581m0 0a8.003 8.003 0 01-15.357-2m15.357 2H15" />
+                                        </svg>
+                                        {{ __('dashboard.quizzes.try_again') }}
+                                    </span>
+                                @endif
                             </div>
                         </div>
                     @endforeach

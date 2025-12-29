@@ -399,12 +399,28 @@ class QuizController extends Controller
             return $this->canAccessQuiz($user, $quiz);
         });
 
-        // Paginate the filtered results
+        // Sort quizzes: user's active plan quizzes first, then by created_at desc
+        $userActivePlanSlugs = $user->activeSubscriptions()->with('plan')->get()->pluck('plan.slug')->toArray();
+        
+        $sortedQuizzes = $filteredQuizzes->sortBy(function($quiz) use ($userActivePlanSlugs) {
+            // Priority 1: Quizzes matching user's active plan
+            if ($quiz->subscription_plan_slug && in_array($quiz->subscription_plan_slug, $userActivePlanSlugs)) {
+                return [0, -$quiz->created_at->timestamp]; // Sort by priority, then by created_at desc (negative for desc)
+            }
+            // Priority 2: Quizzes without plan restriction (accessible to all)
+            if (!$quiz->subscription_plan_slug) {
+                return [1, -$quiz->created_at->timestamp]; // Sort by priority, then by created_at desc (negative for desc)
+            }
+            // Priority 3: Other quizzes
+            return [2, -$quiz->created_at->timestamp]; // Sort by priority, then by created_at desc (negative for desc)
+        })->values(); // values() to reset array keys
+
+        // Paginate the sorted results
         $perPage = 9;
         $page = request()->get('page', 1);
         $quizzes = new \Illuminate\Pagination\LengthAwarePaginator(
-            $filteredQuizzes->forPage($page, $perPage),
-            $filteredQuizzes->count(),
+            $sortedQuizzes->forPage($page, $perPage),
+            $sortedQuizzes->count(),
             $perPage,
             $page,
             ['path' => request()->url(), 'query' => request()->query()]

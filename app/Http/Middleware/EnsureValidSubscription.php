@@ -66,6 +66,11 @@ class EnsureValidSubscription
             return true;
         }
         
+        // Admins can access all quizzes
+        if ($user && $user->isAdmin()) {
+            return true;
+        }
+        
         // Guest quizzes are accessible to everyone
         if ($quiz->is_guest_quiz) {
             return true;

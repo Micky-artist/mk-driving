@@ -91,6 +91,8 @@ return [
         'premium' => 'Ifatabuguzi',
         'retake_restriction' => 'Wakongera mu :time. Ongera ifatabuguzi witoze bitarangira!',
         'retake_restriction_default' => 'Ushobora kongera mu masaha 24. Ongera ifatabuguzi uhozeho!',
+        'try_again' => 'Kongera',
+        'can_retry_in' => 'Wakongera mu :time',
     ],
     'subscription' => [
         'status' => 'Imimerere',

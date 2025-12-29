@@ -93,6 +93,8 @@ return [
         'premium' => 'Premium',
         'retake_restriction' => 'You can retake this quiz :time. Upgrade to premium for unlimited retakes!',
         'retake_restriction_default' => 'You can retake this quiz in 24 hours. Upgrade to premium for unlimited retakes!',
+        'try_again' => 'Try Again',
+        'can_retry_in' => 'Can retry in :time',
     ],
     'subscription' => [
         'status' => 'Status',

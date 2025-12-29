@@ -36,16 +36,35 @@
     $isLocked = false;
     $user = auth()->user();
     $hasActiveSubscription = false;
+    $hasRequiredPlan = false;
 
     if (!$user) {
         // Guest users - only guest quizzes are accessible
         $isLocked = !$isGuestQuiz;
     } else {
-        // Authenticated users - check subscription
+        // Authenticated users - check subscription for specific plan requirements
         $hasActiveSubscription = $user->activeSubscriptions()->exists();
-        if (!$hasActiveSubscription && !$isGuestQuiz) {
-            $isLocked = true;
+        
+        // Check if quiz requires a specific plan
+        $requiredPlanSlug = null;
+        if (is_object($quiz) && isset($quiz->subscription_plan_slug)) {
+            $requiredPlanSlug = $quiz->subscription_plan_slug;
         }
+        
+        if ($requiredPlanSlug) {
+            // Quiz requires a specific plan - check if user has this plan
+            $hasRequiredPlan = $user->activeSubscriptions()
+                ->whereHas('plan', function($query) use ($requiredPlanSlug) {
+                    $query->where('slug', $requiredPlanSlug);
+                })
+                ->exists();
+            $isLocked = !$hasRequiredPlan;
+        } elseif (!$isGuestQuiz) {
+            // Quiz doesn't require a specific plan but is not a guest quiz
+            // User needs any active subscription
+            $isLocked = !$hasActiveSubscription;
+        }
+        // Guest quizzes are always accessible
     }
 
     // All features enabled - no separation between dashboard and homepage
@@ -69,7 +88,7 @@
         $status = $latestAttempt && $latestAttempt->completed_at ? 'completed' : 'in_progress';
 
         // Check retake restrictions
-        if (!$hasActiveSubscription && $latestAttempt && $latestAttempt->completed_at) {
+        if (!$hasRequiredPlan && !$isGuestQuiz && $latestAttempt && $latestAttempt->completed_at) {
             $canRetake = $latestAttempt->completed_at->addHours(24)->isPast();
             if (!$canRetake) {
                 $nextRetakeTime = $latestAttempt->completed_at->addHours(24);
@@ -278,8 +297,8 @@
                         </a>
                     @else
                         <button type="button"
-                            onclick="event.preventDefault(); @if ($canRetake || $hasActiveSubscription) window.location.href='{{ $buttonLink }}' @else showRetakeRestriction('{{ $nextRetakeTime ? $nextRetakeTime->diffForHumans() : '' }}') @endif"
-                            class="w-full flex items-center justify-center px-4 py-2 border border-transparent rounded-lg text-sm font-medium text-white focus:outline-none focus:ring-2 focus:ring-offset-2 transition-colors duration-200 bg-blue-600 hover:bg-blue-700 focus:ring-blue-500 {{ !$canRetake && !$hasActiveSubscription ? 'opacity-75' : '' }}">
+                            onclick="event.preventDefault(); @if ($canRetake || $hasRequiredPlan || $isGuestQuiz) window.location.href='{{ $buttonLink }}' @else showRetakeRestriction('{{ $nextRetakeTime ? $nextRetakeTime->diffForHumans() : '' }}') @endif"
+                            class="w-full flex items-center justify-center px-4 py-2 border border-transparent rounded-lg text-sm font-medium text-white focus:outline-none focus:ring-2 focus:ring-offset-2 transition-colors duration-200 bg-blue-600 hover:bg-blue-700 focus:ring-blue-500 {{ !$canRetake && !$hasRequiredPlan && !$isGuestQuiz ? 'opacity-75' : '' }}">
                             {{ $buttonText }}
                             <svg class="ml-2 -mr-1 w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                                 <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
@@ -324,7 +343,7 @@
 
 </div>
 
-@if ($showDashboardFeatures && !$canRetake && !$hasActiveSubscription)
+@if ($showDashboardFeatures && !$canRetake && !$hasRequiredPlan && !$isGuestQuiz)
     <script>
         function showRetakeRestriction(timeLeft) {
             if (typeof window.showRetakeRestrictionModal === 'function') {

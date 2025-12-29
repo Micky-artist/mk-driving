@@ -30,6 +30,7 @@ class DashboardController extends Controller
         
         // Get user's current subscriptions from loaded relationship
         $currentSubscriptions = $user->subscriptions
+            ->where('status', 'ACTIVE')
             ->where('ends_at', '>=', now())
             ->values();
 
@@ -62,21 +63,27 @@ class DashboardController extends Controller
         Log::info('Quiz access calculation', [
             'user_id' => $user->id,
             'accessible_plan_slugs' => $accessiblePlanSlugs->toArray(),
-            'has_active_subscription' => $currentSubscriptions->count() > 0
+            'has_active_subscription' => $currentSubscriptions->count() > 0,
+            'is_admin' => $user->isAdmin()
         ]);
         
-        $totalQuizzes = Quiz::where('is_active', true)
-            ->where(function ($query) use ($accessiblePlanSlugs) {
-                // Check quizzes with subscription_plan_slug
-                $query->whereIn('subscription_plan_slug', $accessiblePlanSlugs)
-                      // Check guest quizzes (no subscription required)
-                      ->orWhereNull('subscription_plan_slug')
-                      // Check quizzes accessible through many-to-many relationship
-                      ->orWhereHas('subscriptionPlans', function ($subQuery) use ($accessiblePlanSlugs) {
-                          $subQuery->whereIn('slug', $accessiblePlanSlugs);
-                      });
-            })
-            ->count();
+        // Admin users can see all quizzes
+        if ($user->isAdmin()) {
+            $totalQuizzes = Quiz::where('is_active', true)->count();
+        } else {
+            $totalQuizzes = Quiz::where('is_active', true)
+                ->where(function ($query) use ($accessiblePlanSlugs) {
+                    // Check quizzes with subscription_plan_slug
+                    $query->whereIn('subscription_plan_slug', $accessiblePlanSlugs)
+                          // Check guest quizzes (no subscription required)
+                          ->orWhereNull('subscription_plan_slug')
+                          // Check quizzes accessible through many-to-many relationship
+                          ->orWhereHas('subscriptionPlans', function ($subQuery) use ($accessiblePlanSlugs) {
+                              $subQuery->whereIn('slug', $accessiblePlanSlugs);
+                          });
+                })
+                ->count();
+        }
 
         Log::info('Total quizzes calculated', [
             'user_id' => $user->id,
