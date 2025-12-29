@@ -93,6 +93,10 @@ return [
         'retake_restriction_default' => 'Ushobora kongera mu masaha 24. Ongera ifatabuguzi uhozeho!',
         'try_again' => 'Kongera',
         'can_retry_in' => 'Wakongera mu :time',
+        'take_quiz' => 'Tangira umwitozo',
+        'view_in_progress' => 'Reba Itarangijwe',
+        'view_completed' => 'Reba Iyarangijwe',
+        'view_progress' => 'Reba Ukwo Wiyongera',
     ],
     'subscription' => [
         'status' => 'Imimerere',

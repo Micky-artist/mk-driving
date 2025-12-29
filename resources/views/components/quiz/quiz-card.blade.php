@@ -45,9 +45,9 @@
         // Authenticated users - check subscription for specific plan requirements
         $hasActiveSubscription = $user->activeSubscriptions()->exists();
         
-        // Check if quiz requires a specific plan
+        // Check if quiz requires a specific plan (prioritize guest quiz flag)
         $requiredPlanSlug = null;
-        if (is_object($quiz) && isset($quiz->subscription_plan_slug)) {
+        if (is_object($quiz) && isset($quiz->subscription_plan_slug) && !$quiz->is_guest_quiz) {
             $requiredPlanSlug = $quiz->subscription_plan_slug;
         }
         
@@ -59,10 +59,10 @@
                 })
                 ->exists();
             $isLocked = !$hasRequiredPlan;
-        } elseif (!$isGuestQuiz) {
-            // Quiz doesn't require a specific plan but is not a guest quiz
-            // User needs any active subscription
-            $isLocked = !$hasActiveSubscription;
+        } else {
+            // Quiz doesn't require a specific plan (free quiz) or is a guest quiz
+            // Always accessible to authenticated users, guests need to check guest status
+            $isLocked = !$user && !$isGuestQuiz;
         }
         // Guest quizzes are always accessible
     }

@@ -95,6 +95,10 @@ return [
         'retake_restriction_default' => 'You can retake this quiz in 24 hours. Upgrade to premium for unlimited retakes!',
         'try_again' => 'Try Again',
         'can_retry_in' => 'Can retry in :time',
+        'take_quiz' => 'Take a quiz',
+        'view_in_progress' => 'View In Progress',
+        'view_completed' => 'View Completed',
+        'view_progress' => 'View Progress',
     ],
     'subscription' => [
         'status' => 'Status',
