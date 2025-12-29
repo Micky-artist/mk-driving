@@ -251,7 +251,7 @@ return [
     'signUpToContinue' => 'Iyandikishe ukomeze',
     'finish' => 'Ohereza',
     'next' => 'Igikurikira',
-    'signUpRequired' => 'Kiyandikisha birakenewe',
+    'signUpRequired' => 'Kwiyandikisha birakenewe',
     'signUpRequiredMessage' => 'Iyandikishe cyangwa winjire kugirango ukomeze umwitozo.',
     'signUp' => 'Iyandikishe',
     'login' => 'Injira',
