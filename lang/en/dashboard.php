@@ -103,6 +103,7 @@ return [
         'purchase_required' => 'Purchase Plans to Access These',
         'purchase_plan' => 'Purchase Plans',
         'purchase_message' => 'Unlock these premium quizzes by upgrading your subscription plan. Get access to exclusive content and features.',
+        'see_all_locked' => 'See All :count Locked Quizzes',
     ],
     'subscription' => [
         'status' => 'Status',
