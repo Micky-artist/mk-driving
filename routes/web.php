@@ -442,7 +442,6 @@ Route::prefix('{locale}')
         // News Routes
         Route::prefix('news')->name('news.')->group(function () {
             Route::get('/', [NewsController::class, 'index'])->name('index');
-            Route::get('/{news}', [NewsController::class, 'show'])->name('show');
             
             // Admin routes for news management
             Route::middleware(['auth', 'verified', 'can:isAdmin'])->group(function () {
@@ -452,6 +451,9 @@ Route::prefix('{locale}')
                 Route::put('/{news}', [NewsController::class, 'update'])->name('update');
                 Route::delete('/{news}', [NewsController::class, 'destroy'])->name('destroy');
             });
+            
+            // Public show route must come after specific routes
+            Route::get('/{news}', [NewsController::class, 'show'])->name('show');
         });
     
     // Forum Routes (public viewing, auth required for interactions)

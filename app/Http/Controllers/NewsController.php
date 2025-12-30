@@ -83,25 +83,18 @@ class NewsController extends Controller
     /**
      * Display the specified resource.
      */
-    public function show($news)
+    public function show($locale, $news)
     {
+        // Ignore locale parameter, use the news slug
         $newsItem = News::where('slug', $news)
             ->published()
             ->firstOrFail();
             
         $newsItem->incrementViews();
         
-        // Get related news
-        $relatedNews = News::published()
-            ->where('id', '!=', $newsItem->id)
-            ->where('category', $newsItem->category)
-            ->orderBy('published_at', 'desc')
-            ->limit(3)
-            ->get();
-        
         return view('news.show', [
             'news' => $newsItem,
-            'relatedNews' => $relatedNews
+            'relatedNews' => collect() // Empty collection for now since category field doesn't exist
         ]);
     }
 
