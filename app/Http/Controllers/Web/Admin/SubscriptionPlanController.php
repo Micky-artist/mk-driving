@@ -102,7 +102,7 @@ class SubscriptionPlanController extends Controller
             'name' => 'required|string|max:255',
             'description' => 'nullable|string',
             'price' => 'required|numeric|min:0',
-            'duration_days' => 'required|integer|min:1',
+            'duration_in_days' => 'required|integer|min:1',
             'features' => 'nullable|array',
             'is_active' => 'boolean',
         ]);

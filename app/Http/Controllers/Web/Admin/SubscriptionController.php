@@ -51,6 +51,7 @@ class SubscriptionController extends Controller
             'expired' => Subscription::where('status', 'EXPIRED')->count(),
             'cancelled' => Subscription::where('status', 'CANCELLED')->count(),
             'pending' => Subscription::where('status', 'PENDING')->count(),
+            'buggy' => $this->getBuggySubscriptionsCount(),
         ];
         
         return view('admin.subscriptions.all', compact('subscriptions', 'stats', 'search'));
@@ -100,7 +101,7 @@ class SubscriptionController extends Controller
                 'user_id' => $validated['user_id'],
                 'subscription_plan_id' => $validated['subscription_plan_id'],
                 'starts_at' => $validated['starts_at'],
-                'ends_at' => now()->addDays(SubscriptionPlan::find($validated['subscription_plan_id'])->duration_days),
+                'ends_at' => now()->addDays(SubscriptionPlan::find($validated['subscription_plan_id'])->duration_in_days),
                 'status' => $validated['status'],
                 'notes' => $validated['notes'] ?? null,
             ]);
@@ -380,7 +381,7 @@ class SubscriptionController extends Controller
             if ($subscription->subscription_plan_id != $validated['subscription_plan_id']) {
                 $plan = SubscriptionPlan::find($validated['subscription_plan_id']);
                 $validated['ends_at'] = $validated['ends_at'] ?? 
-                    $validated['starts_at']->addDays($plan->duration_days);
+                    $validated['starts_at']->addDays($plan->duration_in_days);
             }
             
             $subscription->update($validated);
@@ -411,7 +412,7 @@ class SubscriptionController extends Controller
                 'payment_status' => 'COMPLETED',
                 'approved_at' => now(),
                 'starts_at' => now(), // Start counting from approval time
-                'ends_at' => now()->addDays($subscription->plan->duration_days), // Calculate expiration from approval time
+                'ends_at' => now()->addDays($subscription->plan->duration_in_days), // Calculate expiration from approval time
             ]);
             
             // Log subscription approval activity
@@ -582,5 +583,170 @@ class SubscriptionController extends Controller
         
         $duration = $plan->duration_in_days ?? 30; // Default to 30 days if not specified
         return now()->addDays($duration);
+    }
+    
+    /**
+     * Get count of buggy subscriptions that need fixing
+     */
+    public function getBuggySubscriptionsCount()
+    {
+        return $this->getBuggySubscriptions()->count();
+    }
+    
+    /**
+     * Get subscriptions that were likely affected by the duration_days bug
+     */
+    public function getBuggySubscriptions()
+    {
+        $now = now();
+        
+        return Subscription::where('status', 'ACTIVE')
+            ->where('payment_status', 'COMPLETED')
+            ->where(function($query) use ($now) {
+                // Case 1: End date is very close to start date (within 1 minute) - clear bug symptom
+                $query->whereRaw('TIMESTAMPDIFF(SECOND, starts_at, ends_at) <= 60')
+                // Case 2: End date is in past but subscription was approved recently (within last 30 days)
+                ->orWhere(function($subQuery) use ($now) {
+                    $subQuery->where('ends_at', '<=', $now)
+                            ->where('starts_at', '>=', $now->subDays(30));
+                });
+            })
+            ->orWhere(function($query) {
+                // Case 3: EXPIRED subscriptions with 0 duration that should be active
+                $query->where('status', 'EXPIRED')
+                      ->where('payment_status', 'COMPLETED')
+                      ->whereRaw('TIMESTAMPDIFF(SECOND, starts_at, ends_at) = 0')
+                      ->where('created_at', '>=', now()->subDays(7)); // Created in last 7 days
+            });
+    }
+    
+    /**
+     * Show page with buggy subscriptions that need fixing
+     */
+    public function buggy()
+    {
+        $buggySubscriptions = $this->getBuggySubscriptions()
+            ->with(['user', 'plan'])
+            ->orderBy('created_at', 'desc')
+            ->paginate(25);
+            
+        return view('admin.subscriptions.buggy', compact('buggySubscriptions'));
+    }
+    
+    /**
+     * Fix a single buggy subscription
+     */
+    public function fixSubscription(Subscription $subscription)
+    {
+        try {
+            $plan = $subscription->plan;
+            
+            if (!$plan || !$plan->duration_in_days) {
+                return back()->with('error', 'Cannot fix subscription - missing plan or duration information.');
+            }
+            
+            // Calculate the correct end date based on NOW (not start time)
+            $correctEndDate = now()->copy()->addDays($plan->duration_in_days);
+            
+            // Only fix if the correct end date is actually in the future
+            if ($correctEndDate <= now()) {
+                return back()->with('error', 'Cannot fix subscription - corrected end date is not in the future.');
+            }
+            
+            $oldEndDate = $subscription->ends_at;
+            
+            // Update the subscription with the correct end date and status
+            $subscription->update([
+                'status' => 'ACTIVE', // Change from EXPIRED to ACTIVE
+                'ends_at' => $correctEndDate,
+                'metadata' => array_merge($subscription->metadata ?? [], [
+                    'duration_bug_fixed' => true,
+                    'fixed_at' => now()->toDateTimeString(),
+                    'original_end_date' => $oldEndDate,
+                    'corrected_end_date' => $correctEndDate,
+                    'original_status' => $subscription->getOriginal('status'),
+                    'fix_reason' => 'duration_days_vs_duration_in_days_bug',
+                    'fixed_by_admin' => auth()->id(),
+                ])
+            ]);
+            
+            // Log the fix for audit purposes
+            Log::info('Subscription duration bug fixed by admin', [
+                'subscription_id' => $subscription->id,
+                'user_id' => $subscription->user_id,
+                'plan_id' => $subscription->subscription_plan_id,
+                'plan_name' => $plan->name['en'] ?? 'Unknown',
+                'old_end_date' => $oldEndDate,
+                'new_end_date' => $correctEndDate,
+                'plan_duration_days' => $plan->duration_in_days,
+                'fixed_by' => auth()->id(),
+                'fixed_at' => now()
+            ]);
+            
+            return back()->with('success', 'Subscription fixed successfully! End date corrected from ' . $oldEndDate . ' to ' . $correctEndDate);
+            
+        } catch (\Exception $e) {
+            Log::error('Failed to fix subscription', [
+                'subscription_id' => $subscription->id,
+                'error' => $e->getMessage()
+            ]);
+            
+            return back()->with('error', 'Failed to fix subscription: ' . $e->getMessage());
+        }
+    }
+    
+    /**
+     * Fix all buggy subscriptions in bulk
+     */
+    public function fixAllBuggy()
+    {
+        $buggySubscriptions = $this->getBuggySubscriptions()->get();
+        $fixedCount = 0;
+        $errorCount = 0;
+        
+        foreach ($buggySubscriptions as $subscription) {
+            try {
+                $plan = $subscription->plan;
+                
+                if (!$plan || !$plan->duration_in_days) {
+                    $errorCount++;
+                    continue;
+                }
+                
+                $correctEndDate = now()->copy()->addDays($plan->duration_in_days);
+                
+                if ($correctEndDate <= now()) {
+                    $errorCount++;
+                    continue;
+                }
+                
+                $oldEndDate = $subscription->ends_at;
+                
+                $subscription->update([
+                    'status' => 'ACTIVE', // Change from EXPIRED to ACTIVE
+                    'ends_at' => $correctEndDate,
+                    'metadata' => array_merge($subscription->metadata ?? [], [
+                        'duration_bug_fixed' => true,
+                        'fixed_at' => now()->toDateTimeString(),
+                        'original_end_date' => $oldEndDate,
+                        'corrected_end_date' => $correctEndDate,
+                        'original_status' => $subscription->getOriginal('status'),
+                        'fix_reason' => 'duration_days_vs_duration_in_days_bug',
+                        'fixed_by_admin' => auth()->id(),
+                    ])
+                ]);
+                
+                $fixedCount++;
+                
+            } catch (\Exception $e) {
+                $errorCount++;
+                Log::error('Failed to fix subscription in bulk', [
+                    'subscription_id' => $subscription->id,
+                    'error' => $e->getMessage()
+                ]);
+            }
+        }
+        
+        return back()->with('success', "Bulk fix completed! Fixed: {$fixedCount} subscriptions, Errors: {$errorCount}");
     }
 }

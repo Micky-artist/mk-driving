@@ -196,6 +196,87 @@
         </a>
     </div>
 
+    <!-- Subscriptions with Issues Section -->
+    @php
+        $buggySubscriptions = app(\App\Http\Controllers\Web\Admin\SubscriptionController::class)->getBuggySubscriptions()
+            ->with(['user', 'plan'])
+            ->limit(10)
+            ->get();
+    @endphp
+    
+    @if($buggySubscriptions->count() > 0)
+    <div class="bg-red-50 dark:bg-red-900/10 border border-red-200 dark:border-red-800 rounded-lg p-6 mb-6 fade-in fade-in-delay-2">
+        <div class="flex items-center justify-between mb-4">
+            <div class="flex items-center">
+                <div class="p-2 bg-red-100 dark:bg-red-900/20 rounded-lg mr-3">
+                    <svg class="w-6 h-6 text-red-600 dark:text-red-400" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 9v2m0 4h.01m-6.938 4h13.856c1.54 0 2.502-1.667 1.732-2.5L13.732 4c-.77-.833-1.964-.833-2.732 0L3.732 16.5c-.77.833.192 2.5 1.732 2.5z"></path>
+                    </svg>
+                </div>
+                <div>
+                    <h3 class="text-lg font-semibold text-red-900 dark:text-red-100">Subscriptions with Issues</h3>
+                    <p class="text-sm text-red-700 dark:text-red-300">These subscriptions have incorrect expiration dates and need to be fixed</p>
+                </div>
+            </div>
+            <form action="{{ route('admin.subscriptions.fix-all-buggy') }}" method="POST" class="inline">
+                @csrf
+                <button type="submit" 
+                        onclick="return confirm('Are you sure you want to fix all {{ $buggySubscriptions->count() }} subscriptions? This will correct their expiration dates.')"
+                        class="inline-flex items-center px-4 py-2 bg-red-600 hover:bg-red-700 text-white font-medium rounded-lg transition-colors">
+                    <svg class="w-4 h-4 mr-2" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M13 10V3L4 14h7v7l9-11h-7z"></path>
+                    </svg>
+                    Fix All ({{ $buggySubscriptions->count() }})
+                </button>
+            </form>
+        </div>
+        
+        <div class="space-y-3">
+            @foreach($buggySubscriptions as $subscription)
+                <div class="bg-white dark:bg-gray-800 border border-red-200 dark:border-red-700 rounded-lg p-4 flex items-center justify-between">
+                    <div class="flex-1">
+                        <div class="flex items-center space-x-4">
+                            <div>
+                                <p class="font-medium text-gray-900 dark:text-white">
+                                    {{ $subscription->user->first_name }} {{ $subscription->user->last_name }}
+                                    <span class="text-gray-500 dark:text-gray-400">({{ $subscription->user->email }})</span>
+                                </p>
+                                <p class="text-sm text-gray-600 dark:text-gray-400">
+                                    {{ $subscription->plan->name['en'] ?? 'Unknown Plan' }} - 
+                                    <span class="text-red-600 dark:text-red-400 font-medium">
+                                        Expires: {{ $subscription->ends_at }}
+                                    </span>
+                                    <span class="text-gray-500">→ Should be: {{ now()->copy()->addDays($subscription->plan->duration_in_days) }}</span>
+                                </p>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="flex items-center space-x-2">
+                        <form action="{{ route('admin.subscriptions.fix', $subscription) }}" method="POST" class="inline">
+                            @csrf
+                            <button type="submit" 
+                                    class="inline-flex items-center px-3 py-1.5 bg-orange-600 hover:bg-orange-700 text-white text-sm font-medium rounded-lg transition-colors">
+                                <svg class="w-4 h-4 mr-1" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M13 10V3L4 14h7v7l9-11h-7z"></path>
+                                </svg>
+                                Fix
+                            </button>
+                        </form>
+                    </div>
+                </div>
+            @endforeach
+        </div>
+        
+        @if($buggySubscriptions->count() >= 10)
+        <div class="mt-4 text-center">
+            <a href="{{ route('admin.subscriptions.buggy') }}" class="text-red-600 dark:text-red-400 hover:text-red-700 dark:hover:text-red-300 font-medium text-sm">
+                View all problematic subscriptions →
+            </a>
+        </div>
+        @endif
+    </div>
+    @endif
+
     <!-- Subscriptions Table -->
     <div class="subscription-table fade-in fade-in-delay-3">
         <div class="overflow-x-auto">

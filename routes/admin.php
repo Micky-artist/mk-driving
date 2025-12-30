@@ -63,6 +63,14 @@ Route::group([], function () {
         Route::post('subscriptions/{subscription}/reject', [SubscriptionController::class, 'reject'])
             ->name('subscriptions.reject');
             
+        // Buggy subscription fix routes
+        Route::get('subscriptions/buggy', [SubscriptionController::class, 'buggy'])
+            ->name('subscriptions.buggy');
+        Route::post('subscriptions/{subscription}/fix', [SubscriptionController::class, 'fixSubscription'])
+            ->name('subscriptions.fix');
+        Route::post('subscriptions/fix-all-buggy', [SubscriptionController::class, 'fixAllBuggy'])
+            ->name('subscriptions.fix-all-buggy');
+            
         // Other subscription routes
         Route::post('subscriptions/{subscription}/cancel', [SubscriptionController::class, 'cancel'])
             ->name('subscriptions.cancel');
