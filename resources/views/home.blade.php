@@ -58,7 +58,6 @@
                 <div class="relative z-10 px-2 sm:px-4 lg:px-8">
                     @include('components.home.subscription-plans')
                     @include('components.home.forum-intro', ['forumData' => $forumData])
-                    @include('components.home.hero')
                 </div>
             </div>
         </div>
