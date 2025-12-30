@@ -1,6 +1,17 @@
 <?php
 
 return [
+    'title' => 'News & Announcements',
+    'description' => 'Stay updated with the latest announcements, news, and articles from our driving school platform.',
+    'article' => 'Article',
+    'no_articles_title' => 'No articles found',
+    'no_articles' => 'No articles have been published yet. Check back soon for updates and announcements.',
+    'views' => 'views',
+    'comments' => 'comments',
+    'like' => 'Like',
+    'share' => 'Share',
+    'last_updated' => 'Last updated',
+    'related_articles' => 'Related Articles',
     'default_title' => 'Untitled Article',
     'default_content' => 'No content available.',
     'no_articles' => 'No articles found.',

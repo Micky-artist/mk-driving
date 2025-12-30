@@ -167,7 +167,7 @@
 
                     <!-- Bike Animation Container -->
                     <div id="bike-animation-desktop"
-                        class="w-full h-full opacity-0 transition-opacity duration-500 scale-[235%] translate-y-8">
+                        class="w-full h-full opacity-0 transition-opacity duration-500 scale-[240%] translate-y-8" style="transform: scale(2.25) translateY(0.7rem) scaleX(-1);">
                     </div>
                 </div>
             </div>
@@ -295,7 +295,7 @@
 
                     <!-- Bike Animation Container -->
                     <div id="bike-animation"
-                        class="w-full h-full opacity-0 transition-opacity duration-500 scale-[245%] translate-y-8">
+                        class="w-full h-full opacity-0 transition-opacity duration-500 scale-[245%] translate-y-8" style="transform: scale(2.45) translateY(0.5rem) scaleX(-1);">
                     </div>
                 </div>
             </div>

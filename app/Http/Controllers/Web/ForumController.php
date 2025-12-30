@@ -19,11 +19,10 @@ class ForumController extends Controller
     }
 
     /**
-     * Display a listing of the forum questions with leaderboard.
+     * Display a listing of the forum questions.
      */
     public function index(Request $request)
     {
-        $see = $request->input('see', 'forum');
         $perPage = 10; // Number of questions per page
         $search = $request->input('search');
         
@@ -36,12 +35,12 @@ class ForumController extends Controller
             $query->where(function($q) use ($searchTerm) {
                 // Search in title JSON column for both 'en' and 'rw' locales
                 $q->whereRaw("LOWER(JSON_UNQUOTE(title)) LIKE ?", ["%{$searchTerm}%"])
-                  ->orWhereRaw("LOWER(JSON_UNQUOTE(title->'$.en')) LIKE ?", ["%{$searchTerm}%"])
-                  ->orWhereRaw("LOWER(JSON_UNQUOTE(title->'$.rw')) LIKE ?", ["%{$searchTerm}%"])
+                  ->orWhereRaw("LOWER(JSON_UNQUOTE(JSON_EXTRACT(title, '$.en'))) LIKE ?", ["%{$searchTerm}%"])
+                  ->orWhereRaw("LOWER(JSON_UNQUOTE(JSON_EXTRACT(title, '$.rw'))) LIKE ?", ["%{$searchTerm}%"])
                   // Search in content JSON column for both 'en' and 'rw' locales
                   ->orWhereRaw("LOWER(JSON_UNQUOTE(content)) LIKE ?", ["%{$searchTerm}%"])
-                  ->orWhereRaw("LOWER(JSON_UNQUOTE(content->'$.en')) LIKE ?", ["%{$searchTerm}%"])
-                  ->orWhereRaw("LOWER(JSON_UNQUOTE(content->'$.rw')) LIKE ?", ["%{$searchTerm}%"]);
+                  ->orWhereRaw("LOWER(JSON_UNQUOTE(JSON_EXTRACT(content, '$.en'))) LIKE ?", ["%{$searchTerm}%"])
+                  ->orWhereRaw("LOWER(JSON_UNQUOTE(JSON_EXTRACT(content, '$.rw'))) LIKE ?", ["%{$searchTerm}%"]);
             });
         }
         
@@ -96,23 +95,9 @@ class ForumController extends Controller
             ];
         });
 
-        // Get weekly leaderboard data (Duolingo-style)
-        $leaderboard = $this->pointsService->getLeaderboard(25, 'weekly');
-        
-        // Get user's rank if authenticated
-        $userRank = null;
-        $userPoints = null;
-        if (Auth::check()) {
-            $userRank = $this->pointsService->getUserRank(Auth::id(), 'weekly');
-            $userPoints = $this->pointsService->getUserPoints(Auth::id());
-        }
-
         if ($request->wantsJson()) {
             return response()->json([
                 'questions' => $questions,
-                'leaderboard' => $leaderboard,
-                'userRank' => $userRank,
-                'userPoints' => $userPoints,
             ]);
         }
 
@@ -120,9 +105,6 @@ class ForumController extends Controller
         return view('forum.index', [
             'questions' => $questions,
             'topics' => $topics,
-            'leaderboard' => $leaderboard,
-            'userRank' => $userRank,
-            'userPoints' => $userPoints,
         ]);
     }
 
@@ -151,7 +133,7 @@ class ForumController extends Controller
             ]);
         }
 
-        return view('forum.leaderboard', [
+        return view('leaderboard', [
             'leaderboard' => $leaderboard,
             'userRank' => $userRank,
             'userPoints' => $userPoints,

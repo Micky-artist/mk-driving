@@ -3,93 +3,15 @@
 @section('content')
     <div class="bg-gray-50 dark:bg-gray-900 transition-colors duration-300">
         <!-- Main Content Container -->
-        <div class="max-w-7xl mx-auto px-3 sm:px-4 lg:px-16" x-data="forumTabs()">
-            <!-- Mobile Tab Navigation -->
-            <div class="lg:hidden sticky top-0 z-40 bg-white dark:bg-gray-800 border-b border-gray-200 dark:border-gray-700">
-                <div class="flex">
-                    <button @click="handleTabChange('discussions')"
-                        class="flex-1 px-3 py-2 text-center font-medium transition-colors duration-200 border-b-2"
-                        :class="activeTab === 'discussions'
-                            ?
-                            'text-blue-600 dark:text-blue-400 border-blue-600 dark:border-blue-400' :
-                            'text-gray-500 dark:text-gray-400 border-transparent hover:text-gray-700 dark:hover:text-gray-300'">
-                        <div class="flex items-center justify-center space-x-2">
-                            <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
-                                    d="M8 12h.01M12 12h.01M16 12h.01M21 12c0 4.418-4.03 8-9 8a9.863 9.863 0 01-4.255-.949L3 20l1.395-3.72C3.512 15.042 3 13.574 3 12c0-4.418 4.03-8 9-8s9 3.582 9 8z" />
-                            </svg>
-                            <span>{{ __('forum.discussions') }}</span>
-                        </div>
-                    </button>
-                    <button @click="handleTabChange('leaderboard')"
-                        class="flex-1 px-3 py-2 text-center font-medium transition-colors duration-200 border-b-2"
-                        :class="activeTab === 'leaderboard'
-                            ?
-                            'text-blue-600 dark:text-blue-400 border-blue-600 dark:border-blue-400' :
-                            'text-gray-500 dark:text-gray-400 border-transparent hover:text-gray-700 dark:hover:text-gray-300'">
-                        <div class="flex items-center justify-center space-x-2">
-                            <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
-                                    d="M9 19v-6a2 2 0 00-2-2H5a2 2 0 00-2 2v6a2 2 0 002 2h2a2 2 0 002-2zm0 0V9a2 2 0 012-2h2a2 2 0 012 2v10m-6 0a2 2 0 002 2h2a2 2 0 002-2m0 0V5a2 2 0 012-2h2a2 2 0 012 2v14a2 2 0 01-2 2h-2a2 2 0 01-2-2z" />
-                            </svg>
-                            <span>{{ __('forum.leaderboard') }}</span>
-                        </div>
-                    </button>
-                </div>
-            </div>
-            <!-- Desktop Navigation -->
-            <div class="hidden lg:block sticky top-0 z-40 bg-white dark:bg-gray-800 border-b border-gray-200 dark:border-gray-700">
-                <!-- Loading Skeleton -->
-                <div x-cloak x-data="{ loading: true }" 
-                     x-init="setTimeout(() => loading = false, 100)"
-                     x-show="!loading"
-                     class="relative flex items-center justify-between px-6 py-3">
-                    <!-- Navigation button -->
-                    <button @click="handleTabChange(activeTab === 'discussions' ? 'leaderboard' : 'discussions')"
-                        x-show="activeTab === 'discussions' || activeTab === 'leaderboard'"
-                        class="inline-flex items-center px-4 py-2 text-sm font-medium text-gray-600 dark:text-gray-300 hover:text-gray-900 dark:hover:text-white transition-colors">
-                        <svg x-show="activeTab === 'leaderboard'" class="w-4 h-4 mr-2" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M10 19l-7-7m0 0l7-7m-7 7h18" />
-                        </svg>
-                        <svg x-show="activeTab === 'discussions'" class="w-4 h-4 mr-2" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M14 5l7 7m0 0l-7 7m7-7H3" />
-                        </svg>
-                        <span x-show="activeTab === 'leaderboard'">{{ __('forum.back_to_discussions') }}</span>
-                        <span x-show="activeTab === 'discussions'">{{ __('forum.leaderboard') }}</span>
-                    </button>
-                    
-                    <!-- Center: Current view title -->
-                    <div class="absolute left-1/2 transform -translate-x-1/2">
-                        <h2 class="text-lg font-semibold text-gray-900 dark:text-white">
-                            <span x-show="activeTab === 'discussions'">{{ __('forum.discussions') }}</span>
-                            <span x-show="activeTab === 'leaderboard'">{{ __('forum.leaderboard') }}</span>
-                        </h2>
-                    </div>
-                    
-                    <!-- Empty space for balance -->
-                    <div></div>
-                </div>
-                
-                <!-- Loading State -->
-                <div x-show="loading" class="p-4 animate-pulse">
-                    <div class="flex justify-between items-center">
-                        <div class="h-8 w-24 bg-gray-200 dark:bg-gray-700 rounded"></div>
-                        <div class="h-6 w-32 bg-gray-200 dark:bg-gray-700 rounded"></div>
-                        <div class="w-8"></div>
-                    </div>
-                </div>
-            </div>
+        <div class="max-w-7xl mx-auto px-3 sm:px-4 lg:px-16">
             <div class="flex flex-col lg:flex-row">
                 <!-- Discussions Section -->
                 <div class="flex-1 lg:flex-none lg:w-full">
 
                         <!-- Mobile Discussions Content -->
-                        <div class="lg:hidden" x-show="activeTab === 'discussions'"
-                            x-transition:enter="transition ease-out duration-200" x-transition:enter-start="opacity-0"
-                            x-transition:enter-end="opacity-100">
-                            <!-- Search Bar with Ask Button -->
-                            <div
-                                class="bg-white dark:bg-gray-800 rounded-xl shadow-sm border border-gray-200 dark:border-gray-700 p-3 mb-3">
+                        <div class="lg:hidden">
+                            <!-- Search Bar with Leaderboard -->
+                            <div class="bg-white dark:bg-gray-800 rounded-xl shadow-sm border border-gray-200 dark:border-gray-700 p-3 mb-3">
                                 <div class="flex items-center space-x-2">
                                     <!-- Search Input -->
                                     <div class="relative flex-1">
@@ -101,15 +23,32 @@
                                             </svg>
                                         </div>
                                         <input type="text" id="mobile-search"
-                                            placeholder="{{ __('forum.search_placeholder') }}"
+                                            placeholder="{{ __('forum.search_discussions') }}"
                                             class="w-full pl-10 pr-3 py-2 border border-gray-200 dark:border-gray-600 rounded-lg 
                                               focus:ring-2 focus:ring-blue-500 focus:border-transparent 
                                               bg-white dark:bg-gray-700 text-gray-900 dark:text-gray-100 
                                               placeholder-gray-500 dark:placeholder-gray-400 transition-all duration-200">
                                     </div>
-                                    <!-- Ask Button -->
+                                    <!-- Leaderboard Button -->
+                                    <a href="{{ route('leaderboard', ['locale' => app()->getLocale()]) }}"
+                                       class="flex items-center space-x-1 px-3 py-2 bg-orange-500 hover:bg-orange-600 text-white rounded-lg transition-colors duration-200">
+                                        <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
+                                                d="M9 19v-6a2 2 0 00-2-2H5a2 2 0 00-2 2v6a2 2 0 002 2h2a2 2 0 002-2zm0 0V9a2 2 0 012-2h2a2 2 0 012 2v10m-6 0a2 2 0 002 2h2a2 2 0 002-2m0 0V5a2 2 0 012-2h2a2 2 0 012 2v14a2 2 0 01-2 2h-2a2 2 0 01-2-2z" />
+                                        </svg>
+                                        <span class="text-sm font-medium">{{ __('forum.leaderboard') }}</span>
+                                    </a>
+                                </div>
+                            </div>
+                            
+                            <!-- Discussion Description with Ask Question -->
+                            <div class="bg-white dark:bg-gray-800 rounded-xl shadow-sm border border-gray-200 dark:border-gray-700 p-4 mb-3">
+                                <p class="text-gray-700 dark:text-gray-300 text-center text-lg font-medium leading-relaxed mb-4">
+                                    {{ __('forum.discussions_description') }}
+                                </p>
+                                <div class="text-center">
                                     <a href="{{ route('ask.question', ['locale' => app()->getLocale()]) }}"
-                                       class="flex items-center space-x-1 px-3 py-2 bg-blue-600 hover:bg-blue-700 text-white rounded-lg transition-colors duration-200">
+                                       class="inline-flex items-center space-x-1 px-4 py-2 bg-blue-600 hover:bg-blue-700 text-white rounded-lg transition-colors duration-200">
                                         <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                                             <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
                                                 d="M8.228 9c.549-1.165 2.03-2 3.772-2 2.21 0 4 1.343 4 3 0 1.4-1.278 2.575-3.006 2.907-.542.104-.994.54-.994 1.093m0 3h.01M21 12a9 9 0 11-18 0 9 9 0 0118 0z" />
@@ -371,12 +310,9 @@
                         </div>
 
                         <!-- Desktop Discussions Content -->
-                        <div class="hidden lg:block" x-show="activeTab === 'discussions'"
-                            x-transition:enter="transition ease-out duration-200" x-transition:enter-start="opacity-0"
-                            x-transition:enter-end="opacity-100">
-                            <!-- Search Bar with Ask Button -->
-                            <div
-                                class="bg-white dark:bg-gray-800 rounded-xl shadow-sm border border-gray-200 dark:border-gray-700 p-5 mb-6">
+                        <div class="hidden lg:block">
+                            <!-- Search Bar with Leaderboard -->
+                            <div class="bg-white dark:bg-gray-800 rounded-xl shadow-sm border border-gray-200 dark:border-gray-700 p-5 mb-6">
                                 <div class="flex items-center space-x-3">
                                     <!-- Search Input -->
                                     <div class="relative flex-1">
@@ -388,22 +324,39 @@
                                             </svg>
                                         </div>
                                         <input type="text" id="desktop-search"
-                                            placeholder="{{ __('forum.search_placeholder') }}"
+                                            placeholder="{{ __('forum.search_discussions') }}"
                                             class="w-full pl-10 pr-4 py-2.5 border border-gray-200 dark:border-gray-600 rounded-xl 
                                               focus:ring-2 focus:ring-blue-500 focus:border-transparent 
                                               bg-white dark:bg-gray-700 text-gray-900 dark:text-gray-100 
                                               placeholder-gray-500 dark:placeholder-gray-400">
                                     </div>
-                                    <!-- Ask Button -->
-                                    <a href="{{ route('ask.question', ['locale' => app()->getLocale()]) }}"
-                                       class="flex items-center space-x-2 px-4 py-2.5 bg-blue-600 hover:bg-blue-700 text-white rounded-xl transition-colors duration-200">
+                                    <!-- Leaderboard Button -->
+                                    <a href="{{ route('leaderboard', ['locale' => app()->getLocale()]) }}"
+                                       class="flex items-center space-x-2 px-4 py-2.5 bg-orange-500 hover:bg-orange-600 text-white rounded-xl transition-colors duration-200">
                                         <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                                             <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
-                                                d="M8.228 9c.549-1.165 2.03-2 3.772-2 2.21 0 4 1.343 4 3 0 1.4-1.278 2.575-3.006 2.907-.542.104-.994.54-.994 1.093m0 3h.01M21 12a9 9 0 11-18 0 9 9 0 0118 0z" />
+                                                d="M9 19v-6a2 2 0 00-2-2H5a2 2 0 00-2 2v6a2 2 0 002 2h2a2 2 0 002-2zm0 0V9a2 2 0 012-2h2a2 2 0 012 2v10m-6 0a2 2 0 002 2h2a2 2 0 002-2m0 0V5a2 2 0 012-2h2a2 2 0 012 2v14a2 2 0 01-2 2h-2a2 2 0 01-2-2z" />
                                         </svg>
-                                        <span class="font-medium">{{ __('forum.ask_question') }}</span>
+                                        <span class="font-medium">{{ __('forum.leaderboard') }}</span>
                                     </a>
                                 </div>
+                            </div>
+                            
+                            <!-- Discussion Description with Ask Question -->
+                            <div class="bg-white dark:bg-gray-800 rounded-xl shadow-sm border border-gray-200 dark:border-gray-700 p-5 mb-6">
+                                <div class="text-center mx-auto max-w-3xl">
+                                <p class="text-gray-700 dark:text-gray-300 text-xl font-semibold leading-relaxed mb-6">
+                                    {{ __('forum.discussions_description') }}
+                                </p>
+                                <a href="{{ route('ask.question', ['locale' => app()->getLocale()]) }}"
+                                   class="inline-flex items-center space-x-2 px-6 py-3 bg-blue-600 hover:bg-blue-700 text-white rounded-xl transition-colors duration-200">
+                                    <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
+                                            d="M8.228 9c.549-1.165 2.03-2 3.772-2 2.21 0 4 1.343 4 3 0 1.4-1.278 2.575-3.006 2.907-.542.104-.994.54-.994 1.093m0 3h.01M21 12a9 9 0 11-18 0 9 9 0 0118 0z" />
+                                    </svg>
+                                    <span class="font-medium">{{ __('forum.ask_question') }}</span>
+                                </a>
+                            </div>
                             </div>
 
                             <!-- Questions List (Desktop) -->
@@ -658,20 +611,6 @@
                                 </div>
                             @endif
                         </div>
-                        
-                        <!-- Mobile Leaderboard Content -->
-                        <div class="lg:hidden" x-show="activeTab === 'leaderboard'"
-                            x-transition:enter="transition ease-out duration-200" x-transition:enter-start="opacity-0"
-                            x-transition:enter-end="opacity-100">
-                            @include('forum.partials.leaderboard-mobile')
-                        </div>
-                        
-                        <!-- Desktop Leaderboard Content -->
-                        <div class="hidden lg:block" x-show="activeTab === 'leaderboard'"
-                            x-transition:enter="transition ease-out duration-200" x-transition:enter-start="opacity-0"
-                            x-transition:enter-end="opacity-100">
-                            @include('forum.partials.leaderboard-desktop')
-                        </div>
             </div>
         </div>
     </div>
@@ -681,25 +620,15 @@
             return {
                 activeTab: 'discussions',
                 init() {
-                    // Set initial tab based on URL parameter
-                    const urlParams = new URLSearchParams(window.location.search);
-                    const see = urlParams.get('see');
-                    this.activeTab = see === 'leaderboard' ? 'leaderboard' : 'discussions';
+                    // Always show discussions
+                    this.activeTab = 'discussions';
                 },
                 handleTabChange(tab) {
-                    this.activeTab = tab;
-
-                    // Update URL parameter
-                    const url = new URL(window.location);
+                    // Navigate to leaderboard if requested
                     if (tab === 'leaderboard') {
-                        url.searchParams.set('see', 'leaderboard');
-                    } else {
-                        url.searchParams.delete('see');
+                        window.location.href = '{{ route('leaderboard', ['locale' => app()->getLocale()]) }}';
                     }
-
-                    // Update browser history without page reload
-                    window.history.pushState({}, '', url);
-                }
+                },
             }
         }
     </script>

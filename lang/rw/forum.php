@@ -3,7 +3,7 @@
 return [
     // Forum index page
     'general' => 'rusange',
-    'page_title' => 'Ihuriro',
+    'page_title' => 'Sobanukirwa',
     'page_description' => 'Baza ibibazo kandi wungurane ubumenyi n\'abandi',
     'ask_question' => 'Baza Ikibazo',
     'recent_questions' => 'Ibibazo Bibajijwe Vuba',
@@ -44,7 +44,7 @@ return [
     'tags' => 'Ibiranga',
     'no_tags' => 'Nta biranga',
     'tagged_with' => 'Bikubiyemo: :tag',
-    'back_to_forum' => 'Subira kuri Ihuriro',
+    'back_to_forum' => 'Subira Kubiganiro',
     'need_help' => 'Ukeneye ubufasha?',
     'ask_community' => 'Baza ikibazo cyawe mu ihuriro.',
     'community' => 'Ihuriro',
@@ -117,6 +117,21 @@ return [
     'points_for_quiz_completion' => 'Kurangiza umwitozo',
     'back_to_discussions' => 'Garuka kubiganiro',
     'leaderboard_description' => 'Reba abandi bitoza n\'umwanya wawe',
+    'view_leaderboard' => 'Reba Irushanwa',
+    'discussions_description' => 'Ese haricyo utasobanukiwe?
+Baza hano turagusobanurira cg bagenzi bawe bagusubize.',
+    'search_discussions' => 'Shakisha ibiganiro...',
+    'no_discussions_yet' => 'Nta biganirao cg ibibazo byari byabazwa',
+    'be_first_to_ask' => 'Ba mubambere batangiza ibiganiro!',
+    'ask_first_question' => 'Baza Ikibazo cya Mbere',
+    'login_to_ask' => 'Injira Kugira ngo Ubashe Kubaza Ikibazo',
+    'login_to_participate' => 'Injira Kugira ngo Usubize cg Ubaze',
+    'quick_stats' => 'Amakuru Yawe',
+    'total_participants' => 'Abari Muri Kino Kiganiro',
+    'weekly_period' => 'Mucyumweru Gishize',
+    'this_week' => 'Iki Cyumweru',
+    'next_reset' => 'Igihe Bizatangira Bushya',
+    'monday_morning' => 'Kuwa mbere Mugitondo',
     'joined' => 'Yinjiye',
     
     // Pagination

@@ -3,7 +3,7 @@
 use Illuminate\Support\Facades\Route;
 use Illuminate\Support\Facades\Log;
 use Illuminate\Support\Facades\Auth;
-use App\Http\Controllers\Web\NewsDetailController;
+use App\Http\Controllers\NewsController;
 use App\Http\Controllers\LanguageController;
 use App\Models\Blog;
 use App\Http\Controllers\SitemapController;
@@ -439,7 +439,22 @@ Route::prefix('{locale}')
             ->name('subscriptions.destroy');
         });
 
-        // Forum Routes (public viewing, auth required for interactions)
+        // News Routes
+        Route::prefix('news')->name('news.')->group(function () {
+            Route::get('/', [NewsController::class, 'index'])->name('index');
+            Route::get('/{news}', [NewsController::class, 'show'])->name('show');
+            
+            // Admin routes for news management
+            Route::middleware(['auth', 'verified', 'can:isAdmin'])->group(function () {
+                Route::get('/create', [NewsController::class, 'create'])->name('create');
+                Route::post('/', [NewsController::class, 'store'])->name('store');
+                Route::get('/{news}/edit', [NewsController::class, 'edit'])->name('edit');
+                Route::put('/{news}', [NewsController::class, 'update'])->name('update');
+                Route::delete('/{news}', [NewsController::class, 'destroy'])->name('destroy');
+            });
+        });
+    
+    // Forum Routes (public viewing, auth required for interactions)
         Route::prefix('forum')
             ->name('forum.')
             ->group(function () {
@@ -447,6 +462,9 @@ Route::prefix('{locale}')
                 Route::get('/', [\App\Http\Controllers\Web\ForumController::class, 'index'])->name('index');
                 Route::get('/{id}', [\App\Http\Controllers\Web\ForumController::class, 'show'])->name('show');
             });
+        
+        // Leaderboard route (separate from forum)
+        Route::get('/leaderboard', [\App\Http\Controllers\Web\ForumController::class, 'leaderboard'])->name('leaderboard');
         
         // Forum Routes (protected by auth and verified middleware - for interactions)
         Route::middleware(['auth', 'verified'])->group(function () {

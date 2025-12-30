@@ -14,7 +14,8 @@ class DatabaseSeeder extends Seeder
         $this->call([
             PointConfigurationSeeder::class,
             SubscriptionPlanSeeder::class,
-            TestDataSeeder::class,
+            ForumFAQSeeder::class,
+            NewsSeeder::class,
         ]);
     }
 }

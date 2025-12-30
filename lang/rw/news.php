@@ -1,9 +1,20 @@
 <?php
 
 return [
+    'title' => 'Amakuru & Amatangazo',
+    'description' => 'Kurikirana amakuru n\'amatangazo ajyanye no gukora ibizamini mu turere twose.',
+    'article' => 'Amakuru',
+    'no_articles_title' => 'Nta makuru aboneka ubu',
+    'no_articles' => 'Ubu nta makuru dufite, muze kugaruka byibuze mu isaha.',
+    'views' => 'Abayisomye',
+    'comments' => 'ibiganiro',
+    'like' => 'Abayikunze',
+    'share' => 'Sangiza',
+    'last_updated' => 'Igihe Yahinduwe',
+    'related_articles' => 'Andi Makuru',
     'default_title' => 'Inyandiko itarafashwe',
     'default_content' => 'Nta bikubiyemo.',
-    'no_articles' => 'Nta nkuru zibonetse.',
+    'no_articles' => 'Mugaruke mugihe gito.',
     'back_to_news' => 'Subira kuri Amakuru',
     'published_on' => 'Yanditswe ku',
     'by' => 'Na',

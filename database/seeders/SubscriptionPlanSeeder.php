@@ -22,7 +22,7 @@ class SubscriptionPlanSeeder extends Seeder
                     'en' => 'Access to 15 quizzes for 24 hours',
                     'rw' => 'Gerageza ibizamini 15 mu masaha 24'
                 ]),
-                'price' => 1000,
+                'price' => 850,
                 'slug' => 'basic-plan',
                 'features' => json_encode([
                     'en' => ['15 quizzes', '24 hours'],
@@ -45,7 +45,7 @@ class SubscriptionPlanSeeder extends Seeder
                     'en' => 'Access to 25 quizzes for 7 days',
                     'rw' => 'Gerageza ibizamini 25 mu minsi 7'
                 ]),
-                'price' => 2000,
+                'price' => 3000,
                 'slug' => 'standard-plan',
                 'features' => json_encode([
                     'en' => ['25 quizzes', '7 days'],
@@ -68,7 +68,7 @@ class SubscriptionPlanSeeder extends Seeder
                     'en' => 'Unlimited quizzes for 1 month',
                     'rw' => 'Hozaho ku ibizamini byose mu kwezi 1'
                 ]),
-                'price' => 10000,
+                'price' => 9500,
                 'slug' => 'premium-plan',
                 'features' => json_encode([
                     'en' => ['Unlimited quizzes', '1 month'],

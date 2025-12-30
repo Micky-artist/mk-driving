@@ -4,62 +4,42 @@ namespace App\Models;
 
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\Relations\BelongsTo;
-use Illuminate\Database\Eloquent\Relations\HasMany;
-use Illuminate\Database\Eloquent\SoftDeletes;
 
-class ForumQuestion extends Model
+class NewsVersion extends Model
 {
-    use SoftDeletes;
-
     protected $fillable = [
+        'news_id',
         'title',
         'content',
-        'topics',
-        'is_approved',
-        'views',
-        'user_id',
-        'is_news_discussion'
+        'excerpt',
+        'change_summary',
+        'edited_by',
     ];
 
     protected $casts = [
         'title' => 'array',
         'content' => 'array',
-        'topics' => 'array',
-        'is_approved' => 'boolean',
-        'is_news_discussion' => 'boolean',
-        'views' => 'integer'
+        'excerpt' => 'array',
+        'created_at' => 'datetime',
+        'updated_at' => 'datetime',
     ];
 
-    // Relationships
-    public function user(): BelongsTo
-    {
-        return $this->belongsTo(User::class);
-    }
+    protected $appends = ['localized_title', 'localized_content', 'localized_excerpt'];
 
-    public function answers(): HasMany
-    {
-        return $this->hasMany(ForumAnswer::class, 'question_id');
-    }
-
+    /**
+     * Get the news item this version belongs to
+     */
     public function news(): BelongsTo
     {
         return $this->belongsTo(News::class);
     }
 
     /**
-     * Scope for news discussions
+     * Get the user who made this edit
      */
-    public function scopeNewsDiscussion($query)
+    public function editor(): BelongsTo
     {
-        return $query->where('is_news_discussion', true);
-    }
-
-    /**
-     * Scope for regular forum questions
-     */
-    public function scopeRegularQuestions($query)
-    {
-        return $query->where('is_news_discussion', false);
+        return $this->belongsTo(User::class, 'edited_by');
     }
 
     /**
@@ -123,6 +103,39 @@ class ForumQuestion extends Model
         // Fallback to English
         if (isset($contentArray['en']) && !empty($contentArray['en'])) {
             return $contentArray['en'];
+        }
+        
+        return '';
+    }
+
+    /**
+     * Get localized excerpt
+     */
+    public function getLocalizedExcerptAttribute()
+    {
+        $excerpt = $this->getRawOriginal('excerpt');
+        $locale = app()->getLocale();
+        
+        if (empty($excerpt)) {
+            return '';
+        }
+        
+        // Handle array or JSON string
+        $excerptArray = is_array($excerpt) ? $excerpt : (json_decode($excerpt, true) ?: []);
+        
+        // If it's not an array after decoding, return the original value
+        if (!is_array($excerptArray)) {
+            return $excerpt;
+        }
+        
+        // Try current locale
+        if (isset($excerptArray[$locale]) && !empty($excerptArray[$locale])) {
+            return $excerptArray[$locale];
+        }
+        
+        // Fallback to English
+        if (isset($excerptArray['en']) && !empty($excerptArray['en'])) {
+            return $excerptArray['en'];
         }
         
         return '';

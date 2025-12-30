@@ -8,6 +8,7 @@ use App\Models\QuizAttempt;
 use App\Models\Subscription;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
+use Illuminate\Support\Facades\Log;
 use Illuminate\Pagination\LengthAwarePaginator;
 
 class DashboardController extends Controller
@@ -378,17 +379,40 @@ class DashboardController extends Controller
      */
     protected function getAvailableQuizzes($currentSubscriptions)
     {
+        // Get plan slugs from subscription plans (not subscription_plan_slug)
+        $accessiblePlanSlugs = $currentSubscriptions->pluck('plan.slug')->filter()->unique();
+        
+        // Define hierarchy from lowest to highest (same as QuizController)
+        $planHierarchy = [
+            'basic-plan',
+            'standard-plan', 
+            'premium-plan',
+            'gold-unlimited-plan'
+        ];
+        
+        $hierarchicalAccess = collect();
+        
+        foreach ($accessiblePlanSlugs as $planSlug) {
+            $planIndex = array_search($planSlug, $planHierarchy);
+            
+            if ($planIndex !== false) {
+                // Add this plan and all lower-tier plans
+                for ($i = 0; $i <= $planIndex; $i++) {
+                    $hierarchicalAccess->push($planHierarchy[$i]);
+                }
+            }
+        }
+        
+        $hierarchicalAccess = $hierarchicalAccess->unique();
+                
         return Quiz::where('is_active', true)
-            ->where(function($query) use ($currentSubscriptions) {
+            ->where(function($query) use ($hierarchicalAccess) {
                 // Include guest quizzes
                 $query->where('is_guest_quiz', true);
                 
-                // Include quizzes from active subscriptions
-                if ($currentSubscriptions->isNotEmpty()) {
-                    $planSlugs = $currentSubscriptions->pluck('subscription_plan_slug')->filter()->toArray();
-                    if (!empty($planSlugs)) {
-                        $query->orWhereIn('subscription_plan_slug', $planSlugs);
-                    }
+                // Include quizzes from hierarchical access
+                if ($hierarchicalAccess->isNotEmpty()) {
+                    $query->orWhereIn('subscription_plan_slug', $hierarchicalAccess->toArray());
                 }
             });
     }

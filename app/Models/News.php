@@ -15,37 +15,50 @@ class News extends Model
      * @var array
      */
     protected $fillable = [
-        'id',
         'title',
         'slug',
+        'excerpt',
         'content',
-        'image_url',
-        'author_id',
+        'featured_image',
         'is_published',
-        'category',
+        'published_at',
+        'user_id',
         'views',
         'likes_count',
         'comments_count',
         'shares_count',
         'engagement_metrics',
-        'forum_question_id'
+        'forum_question_id',
+        'category',
+        'type',
+        'status',
+        'featured',
+        'likes',
+        'comments',
+        'engagement_rate'
     ];
 
     protected $casts = [
         'title' => 'array',
         'content' => 'array',
+        'excerpt' => 'array',
         'is_published' => 'boolean',
+        'published_at' => 'datetime',
         'views' => 'integer',
         'likes_count' => 'integer',
         'comments_count' => 'integer',
         'shares_count' => 'integer',
         'engagement_metrics' => 'array',
+        'featured' => 'boolean',
+        'likes' => 'integer',
+        'comments' => 'integer',
+        'engagement_rate' => 'float',
         'created_at' => 'datetime',
         'updated_at' => 'datetime',
         'deleted_at' => 'datetime',
     ];
 
-    protected $appends = ['localized_title', 'localized_content', 'localized_meta_description'];
+    protected $appends = ['localized_title', 'localized_content', 'localized_meta_description', 'localized_excerpt'];
     
     /**
      * Get the localized meta description based on the current locale.
@@ -291,11 +304,19 @@ class News extends Model
     }
 
     /**
-     * Get author that owns news.
+     * Get the user that owns the news.
+     */
+    public function user()
+    {
+        return $this->belongsTo(User::class, 'user_id');
+    }
+
+    /**
+     * Get author that owns news (alias for user).
      */
     public function author()
     {
-        return $this->belongsTo(User::class, 'author_id');
+        return $this->belongsTo(User::class, 'user_id');
     }
 
     /**
@@ -304,6 +325,29 @@ class News extends Model
     public function forumQuestion()
     {
         return $this->belongsTo(ForumQuestion::class);
+    }
+
+    /**
+     * Get all versions of this news article
+     */
+    public function versions()
+    {
+        return $this->hasMany(NewsVersion::class)->orderBy('created_at', 'desc');
+    }
+
+    /**
+     * Create a new version when updating content
+     */
+    public function createVersion(array $oldData, ?string $changeSummary = null): NewsVersion
+    {
+        return NewsVersion::create([
+            'news_id' => $this->id,
+            'title' => $oldData['title'] ?? $this->getRawOriginal('title'),
+            'content' => $oldData['content'] ?? $this->getRawOriginal('content'),
+            'excerpt' => $oldData['excerpt'] ?? $this->getRawOriginal('excerpt'),
+            'change_summary' => $changeSummary,
+            'edited_by' => auth()->id(),
+        ]);
     }
 
     /**
@@ -370,11 +414,43 @@ class News extends Model
         $question = ForumQuestion::create([
             'title' => $this->title,
             'content' => $this->content,
-            'user_id' => $this->author_id,
+            'user_id' => $this->user_id,
             'is_approved' => true,
-            'topics' => ['announcement', 'news-discussion']
+            'topics' => ['announcement', 'news-discussion'],
+            'is_news_discussion' => true
         ]);
 
+        $this->update(['forum_question_id' => $question->id]);
+        
+        return $question;
+    }
+
+    /**
+     * Share this news to forum for user discussions
+     */
+    public function shareToForum(): ForumQuestion
+    {
+        // Create a forum question for discussion
+        $discussionTitle = [
+            'en' => 'Discussion: ' . ($this->title['en'] ?? $this->getLocalizedTitleAttribute()),
+            'rw' => 'Ibyifuzo: ' . ($this->title['rw'] ?? $this->getLocalizedTitleAttribute())
+        ];
+
+        $discussionContent = [
+            'en' => "Let's discuss this news article:\n\n**Original Article:**\n" . ($this->content['en'] ?? $this->getLocalizedContentAttribute()) . "\n\nWhat are your thoughts on this? Share your opinions and questions below.",
+            'rw' => "Tuvuge ku iyi nkuru:\n\n**Inkuru Yibanze:**\n" . ($this->content['rw'] ?? $this->getLocalizedContentAttribute()) . "\n\nNi ibihe uvuze kuri iyi nkuru? Seka ibitekerezo n'ibibazo ufitayo munsi y'iki."
+        ];
+
+        $question = ForumQuestion::create([
+            'title' => $discussionTitle,
+            'content' => $discussionContent,
+            'user_id' => $this->user_id,
+            'is_approved' => true,
+            'topics' => ['news-discussion', 'community'],
+            'is_news_discussion' => true
+        ]);
+
+        // Link the news to this forum discussion
         $this->update(['forum_question_id' => $question->id]);
         
         return $question;
@@ -385,10 +461,67 @@ class News extends Model
      */
     public function scopePublished($query)
     {
-        return $query->where('is_published', true)
+        return $query->where('status', 'published')
                     ->where(function($q) {
                         $q->whereNull('published_at')
                           ->orWhere('published_at', '<=', now());
                     });
+    }
+
+    /**
+     * Scope a query to get featured news.
+     */
+    public function scopeFeatured($query)
+    {
+        return $query->where('featured', true);
+    }
+
+    /**
+     * Scope a query to get announcements.
+     */
+    public function scopeAnnouncements($query)
+    {
+        return $query->where('type', 'announcement');
+    }
+
+    /**
+     * Scope a query to get articles.
+     */
+    public function scopeArticles($query)
+    {
+        return $query->where('type', 'article');
+    }
+
+    /**
+     * Get localized excerpt
+     */
+    public function getLocalizedExcerptAttribute()
+    {
+        $excerpt = $this->getRawOriginal('excerpt');
+        $locale = app()->getLocale();
+        
+        if (empty($excerpt)) {
+            return '';
+        }
+        
+        // Handle array or JSON string
+        $excerptArray = is_array($excerpt) ? $excerpt : (json_decode($excerpt, true) ?: []);
+        
+        // If it's not an array after decoding, return the original value
+        if (!is_array($excerptArray)) {
+            return $excerpt;
+        }
+        
+        // Try current locale
+        if (isset($excerptArray[$locale]) && !empty($excerptArray[$locale])) {
+            return $excerptArray[$locale];
+        }
+        
+        // Fallback to English
+        if (isset($excerptArray['en']) && !empty($excerptArray['en'])) {
+            return $excerptArray['en'];
+        }
+        
+        return '';
     }
 }
