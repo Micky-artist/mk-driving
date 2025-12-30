@@ -278,13 +278,8 @@ class QuizController extends Controller
     /**
      * Check if user can access a quiz based on their subscription
      */
-    protected function canAccessQuiz($user, $quiz)
+    public function canAccessQuiz($user, $quiz)
     {
-        // Admins can access all quizzes
-        if ($user->isAdmin()) {
-            return true;
-        }
-
         // Guest users can only access guest quizzes
         if (!$user) {
             return $quiz->is_guest_quiz;
@@ -300,26 +295,58 @@ class QuizController extends Controller
             return true;
         }
 
-        // Check if user has an active subscription to the required plan
-        $activeSubscription = $user->activeSubscriptions()
-            ->whereHas('plan', function($q) use ($quiz) {
-                $q->where('slug', $quiz->subscription_plan_slug);
-            })
-            ->exists();
+        // Get user's current subscriptions and hierarchical access
+        $currentSubscriptions = $user->subscriptions
+            ->where('status', 'ACTIVE')
+            ->where('ends_at', '>=', now());
+        
+        $accessiblePlanSlugs = $currentSubscriptions->pluck('plan.slug')->filter()->unique();
+        $hierarchicalPlans = $this->getHierarchicalPlanAccess($accessiblePlanSlugs);
 
-        if (!$activeSubscription) {
-            return false;
+        // Check if user has hierarchical access to the required plan
+        $hasAccess = $hierarchicalPlans->contains($quiz->subscription_plan_slug);
+
+        // Only check quiz limits if they have access via subscription
+        if ($hasAccess) {
+            // Only enforce limit for starting new quizzes, not for viewing/resuming existing attempts
+            if ($user->hasReachedQuizLimit()) {
+                return false;
+            }
+            return true;
         }
 
-        // Check if user has reached their quiz limit
-        // Only enforce limit for starting new quizzes, not for viewing/resuming existing attempts
-        if ($user->hasReachedQuizLimit()) {
-            return false;
-        }
-
-        return true;
+        return false;
     }
     
+    /**
+     * Get hierarchical plan access - higher tiers get access to lower tiers
+     */
+    private function getHierarchicalPlanAccess($userPlanSlugs): \Illuminate\Support\Collection
+    {
+        // Define hierarchy from lowest to highest
+        $planHierarchy = [
+            'basic-plan',
+            'standard-plan', 
+            'premium-plan',
+            'gold-unlimited-plan'
+        ];
+        
+        $hierarchicalAccess = collect();
+        
+        foreach ($userPlanSlugs as $planSlug) {
+            $planIndex = array_search($planSlug, $planHierarchy);
+            
+            if ($planIndex !== false) {
+                // Add this plan and all lower-tier plans
+                for ($i = 0; $i <= $planIndex; $i++) {
+                    $hierarchicalAccess->push($planHierarchy[$i]);
+                }
+            }
+        }
+        
+        return $hierarchicalAccess->unique();
+    }
+
     /**
      * Check if user can retake the quiz
      */

@@ -52,12 +52,47 @@
         }
         
         if ($requiredPlanSlug) {
-            // Quiz requires a specific plan - check if user has this plan
-            $hasRequiredPlan = $user->activeSubscriptions()
-                ->whereHas('plan', function($query) use ($requiredPlanSlug) {
-                    $query->where('slug', $requiredPlanSlug);
-                })
-                ->exists();
+            // Quiz requires a specific plan - check hierarchical access like QuizController
+            $currentSubscriptions = $user->subscriptions
+                ->where('status', 'ACTIVE')
+                ->where('ends_at', '>=', now());
+            
+            $accessiblePlanSlugs = $currentSubscriptions->pluck('plan.slug')->filter()->unique();
+            
+            // Define hierarchy from lowest to highest (same as QuizController)
+            $planHierarchy = [
+                'basic-plan',
+                'standard-plan', 
+                'premium-plan',
+                'gold-unlimited-plan'
+            ];
+            
+            $hierarchicalAccess = collect();
+            
+            foreach ($accessiblePlanSlugs as $planSlug) {
+                $planIndex = array_search($planSlug, $planHierarchy);
+                
+                if ($planIndex !== false) {
+                    // Add this plan and all lower-tier plans
+                    for ($i = 0; $i <= $planIndex; $i++) {
+                        $hierarchicalAccess->push($planHierarchy[$i]);
+                    }
+                }
+            }
+            
+            $hierarchicalAccess = $hierarchicalAccess->unique();
+            
+            // Check if user has hierarchical access to the required plan
+            $hasRequiredPlan = $hierarchicalAccess->contains($requiredPlanSlug);
+            
+            // Only check quiz limits if they have access via subscription
+            if ($hasRequiredPlan) {
+                // Check if user has reached quiz limit (same logic as QuizController)
+                if (method_exists($user, 'hasReachedQuizLimit') && $user->hasReachedQuizLimit()) {
+                    $hasRequiredPlan = false;
+                }
+            }
+            
             $isLocked = !$hasRequiredPlan;
         } else {
             // Quiz doesn't require a specific plan (free quiz) or is a guest quiz
