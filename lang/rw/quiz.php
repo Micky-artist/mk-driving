@@ -271,7 +271,7 @@ return [
     
     // Results Modal
     'scoreEarned' => 'Amanota',
-    'averageScore' => 'Amanota Rusange',
+    'averageScore' => 'Amanota Yose Hamwe',
     'practiceAgain' => 'Komeza Kwitoza',
     'moreQuizzes' => 'Indi Myitozo',
     'upgradeSubscription' => 'Ongera Ifatabuguzi',

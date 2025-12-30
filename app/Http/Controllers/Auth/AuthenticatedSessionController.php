@@ -68,7 +68,7 @@ class AuthenticatedSessionController extends Controller
         $request->session()->forget('auth_locale');
         $request->session()->forget('socialite_google_state');
         
-        // Redirect to the homepage
-        return redirect('/');
+        // Redirect to the localized homepage
+        return redirect()->route('home', ['locale' => $locale]);
     }
 }

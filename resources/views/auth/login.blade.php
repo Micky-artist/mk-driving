@@ -315,16 +315,17 @@
                                 </button>
                                 </div>
 
-                                <div class="pt-2 text-center">
-                                    <p class="text-sm text-gray-600 dark:text-gray-400">
+                                <div class="pt-6 text-center">
+                                    <p class="text-sm text-gray-600 dark:text-gray-400 mb-4">
                                         {{ __('auth.login.no_account') }}
-                                        <a 
-                                            href="{{ route('register', ['locale' => app()->getLocale()]) }}" 
-                                            class="font-semibold text-[#2563eb] hover:text-[#1d4ed8] hover:underline transition-colors"
-                                        >
-                                            {{ __('auth.login.sign_up') }}
-                                        </a>
                                     </p>
+                                    <a 
+                                        href="{{ route('register', ['locale' => app()->getLocale()]) }}" 
+                                        class="inline-flex items-center justify-center w-full px-6 py-4 text-lg font-bold text-blue-600 dark:text-blue-400 bg-white dark:bg-gray-800 border-2 border-blue-500 dark:border-blue-400 hover:bg-blue-50 dark:hover:bg-gray-700 rounded-xl shadow-lg hover:shadow-xl transform hover:-translate-y-1 transition-all duration-200"
+                                    >
+                                        <i class="fas fa-user-plus mr-3 text-xl"></i>
+                                        {{ __('auth.login.sign_up') }}
+                                    </a>
                                 </div>
                             </form>
                         </div>

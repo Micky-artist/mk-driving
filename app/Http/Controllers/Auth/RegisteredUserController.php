@@ -58,21 +58,26 @@ class RegisteredUserController extends Controller
     {
         try {
             $validated = $request->validate([
-                'first_name' => ['required', 'string', 'max:255'],
-                'last_name' => ['required', 'string', 'max:255'],
+                'name' => ['required', 'string', 'max:255'],
                 'email' => ['required', 'string', 'email', 'max:255', 'unique:users'],
                 'password' => ['required', 'confirmed', Rules\Password::min(6)],
             ], [
                 'email.unique' => __('auth.errors.email_exists')
             ]);
 
+            // Split the full name into first and last name
+            $fullName = trim($validated['name']);
+            $nameParts = explode(' ', $fullName);
+            $firstName = $nameParts[0] ?? '';
+            $lastName = count($nameParts) > 1 ? implode(' ', array_slice($nameParts, 1)) : '';
+
             // Get device fingerprint and location data
             $fingerprints = DeviceTrackingService::generateDeviceFingerprint($request);
             $deviceInfo = Visitor::detectDevice($request->userAgent());
             
             $userData = [
-                'first_name' => $validated['first_name'],
-                'last_name' => $validated['last_name'],
+                'first_name' => $firstName,
+                'last_name' => $lastName,
                 'email' => $validated['email'],
                 'password' => Hash::make($validated['password']),
                 'role' => 'USER', // Must be one of: 'USER', 'ADMIN', or 'INSTRUCTOR'

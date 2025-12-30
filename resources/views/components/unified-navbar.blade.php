@@ -374,21 +374,13 @@
                                 @endcan
 
                                 <!-- Logout -->
-                                <form method="POST" action="{{ route('logout', ['locale' => app()->getLocale()]) }}"
-                                    x-data="{ submitting: false }"
-                                    @submit.prevent="
-                      submitting = true;
-                      const form = this;
-                      setTimeout(() => form.submit(), 100);
-                  ">
+                                <form method="POST" action="{{ route('logout', ['locale' => app()->getLocale()]) }}">
                                     @csrf
-                                    <button type="submit" :disabled="submitting"
-                                        class="w-full text-left group flex items-center px-4 py-3 hover:bg-red-50 dark:hover:bg-red-900/20 transition-colors duration-150 disabled:opacity-75 disabled:cursor-not-allowed">
+                                    <button type="submit"
+                                        class="w-full text-left group flex items-center px-4 py-3 hover:bg-red-50 dark:hover:bg-red-900/20 transition-colors duration-150">
                                         <div
                                             class="flex items-center justify-center w-8 h-8 rounded-full bg-red-500/10 group-hover:bg-red-500/20 transition-colors duration-200 mr-3 flex-shrink-0">
-                                            <i x-show="!submitting" class="fas fa-sign-out-alt text-red-500 text-sm"></i>
-                                            <i x-show="submitting"
-                                                class="fas fa-spinner fa-spin text-red-500 text-sm"></i>
+                                            <i class="fas fa-sign-out-alt text-red-500 text-sm"></i>
                                         </div>
                                         <span
                                             class="text-sm font-medium text-red-600 dark:text-red-400">{{ __('navigation.logout') }}</span>
@@ -403,10 +395,6 @@
                     <a href="{{ route('login', app()->getLocale()) }}"
                         class="text-blue-200 hover:text-white hover:border-blue-200 border-transparent border-b-2 px-3 pt-1 text-base font-semibold transition-colors duration-200">
                         <i class="fas fa-sign-in-alt mr-2"></i>{{ __('navigation.login') }}
-                    </a>
-                    <a href="{{ route('register', app()->getLocale()) }}"
-                        class="text-blue-200 hover:text-white hover:border-blue-200 border-transparent border-b-2 px-3 pt-1 text-base font-semibold transition-colors duration-200">
-                        <i class="fas fa-user-plus mr-2"></i>{{ __('navigation.register') }}
                     </a>
                 </div>
             @endauth

@@ -99,6 +99,7 @@ return [
     'register' => [
         'title' => 'Create Your Account',
         'subtitle' => 'Join MK Scholars Driving School today!',
+        'name' => 'Your Name',
         'first_name' => 'First Name',
         'last_name' => 'Last Name',
         'email' => 'Email',
@@ -131,8 +132,8 @@ return [
     'password_requirements' => [
         'title' => 'Password must contain:',
         'length' => 'At least 6 characters',
-        'letter_number_required' => 'At least 1 letter and 1 number',
         'letter' => 'At least 1 letter',
+        'letter_number_required' => 'At least 1 letter and 1 number',
         'strength' => [
             'weak' => 'Weak',
             'good' => 'Good',
@@ -140,9 +141,12 @@ return [
             'strong' => 'Strong',
             'very_strong' => 'Very Strong'
         ],
-        'match' => 'Passwords match',
-        'mismatch' => 'Passwords do not match'
+        'match' => 'Passwords match'
     ],
+    
+    // Root level password messages
+    'letter_only' => 'At least 1 letter',
+    'mismatch' => 'Passwords do not match',
 
     // Forgot Password page
     'forgot_password_page' => [

@@ -54,7 +54,7 @@ return [
     'students' => 'Abanyeshuri',
     'courses' => 'Amasomo',
     'instructors' => 'Abarimu',
-    'login_button' => 'Kwinjira',
+    'login_button' => 'Injira',
     'start_test_description' => 'Tangira umwitozo wambere nonaha.',
     'upsell_benefit' => 'Menya uko wigeguye!',
     'no_guest_quiz' => 'Imyitozo y\'ubuntu ntayo',

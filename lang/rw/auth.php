@@ -99,6 +99,7 @@ return [
     'register' => [
         'title' => 'Kora Konti Yawe',
         'subtitle' => 'Injira muri MK Scholars Driving School uyu munsi!',
+        'name' => 'Izina Ryawe',
         'first_name' => 'Izina ribanza',
         'last_name' => 'Izina ry\'umurango',
         'email' => 'Imeri',
@@ -131,18 +132,21 @@ return [
     'password_requirements' => [
         'title' => 'Ijambo ry\'ibanga rigomba kuba rifite:',
         'length' => 'Inyuguti 6 byibura',
-        'letter_number_required' => 'Umubare umwe byibura',
         'letter' => 'Inyuguti 1 byibura',
+        'letter_number_required' => 'Umubare umwe byibura',
         'strength' => [
             'weak' => 'Ntarengwa',
             'good' => 'Byiza',
             'medium' => 'Iragerageza',
-            'strong' => 'Ikomeye',
-            'very_strong' => 'Ikomeye cyane'
+            'strong' => 'Byiza cyane',
+            'very_strong' => 'Byiza cyane cyane'
         ],
-        'match' => 'Amajambo y\'ibanga arahuje',
-        'mismatch' => 'Amajambo y\'ibanga ntabwo arahuje'
+        'match' => 'Ijambo y\'ibanga rirahujwe'
     ],
+    
+    // Root level password messages
+    'letter_only' => 'Inyuguti 1 byibura',
+    'mismatch' => 'Ijambo y\'ibanga ntabwo rihujwe',
 
     // Forgot Password page
     'forgot_password_page' => [

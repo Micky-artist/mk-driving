@@ -233,16 +233,16 @@
                     <form id="registerForm" method="POST" action="{{ route('register', app()->getLocale()) }}">
                         @csrf
                         
-                        <div class="grid grid-cols-1 md:grid-cols-2 gap-4 mb-4">
-                            <!-- First Name -->
+                        <div class="mb-4">
+                            <!-- Full Name -->
                             <div class="form-group">
                                 <div class="relative">
                                     <input 
-                                        id="first_name" 
-                                        name="first_name" 
+                                        id="name" 
+                                        name="name" 
                                         type="text" 
-                                        value="{{ old('first_name') }}" 
-                                        placeholder="{{ __('auth.register.first_name') }}"
+                                        value="{{ old('name') }}" 
+                                        placeholder="{{ __('auth.register.name') }}"
                                         class="input-field"
                                         required 
                                         autofocus
@@ -253,30 +253,7 @@
                                         </svg>
                                     </div>
                                 </div>
-                                @error('first_name')
-                                    <p class="text-sm text-red-500 mt-1">{{ $message }}</p>
-                                @enderror
-                            </div>
-
-                            <!-- Last Name -->
-                            <div class="form-group">
-                                <div class="relative">
-                                    <input 
-                                        id="last_name" 
-                                        name="last_name" 
-                                        type="text" 
-                                        value="{{ old('last_name') }}" 
-                                        required 
-                                        placeholder="{{ __('auth.register.last_name') }}"
-                                        class="input-field"
-                                    />
-                                    <div class="absolute left-4 top-1/2 -translate-y-1/2 text-gray-400">
-                                        <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M16 7a4 4 0 11-8 0 4 4 0 018 0zM12 14a7 7 0 00-7 7h14a7 7 0 00-7-7z"></path>
-                                        </svg>
-                                    </div>
-                                </div>
-                                @error('last_name')
+                                @error('name')
                                     <p class="text-sm text-red-500 mt-1">{{ $message }}</p>
                                 @enderror
                             </div>
@@ -355,7 +332,7 @@
                                         <svg class="w-3.5 h-3.5 mr-1.5 text-red-400" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                                             <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M6 18L18 6M6 6l12 12"></path>
                                         </svg>
-                                        <span>{{ __('auth.password_requirements.letter_number_required') }}</span>
+                                        <span>{{ __('auth.letter_only') }}</span>
                                     </div>
                                 </div>
                             </div>
@@ -407,7 +384,7 @@
                                     <svg class="w-4 h-4 mr-1" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                                         <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M6 18L18 6M6 6l12 12"></path>
                                     </svg>
-                                    <span>{{ __('auth.password_requirements.mismatch') }}</span>
+                                    <span>{{ __('auth.mismatch') }}</span>
                                 </p>
                             </div>
                         </div>
@@ -426,12 +403,16 @@
                         </div>
 
                         <div class="mt-6 text-center">
-                            <p class="text-sm text-gray-600 dark:text-gray-400">
+                            <p class="text-sm text-gray-600 dark:text-gray-400 mb-4">
                                 {{ __('auth.register.have_account') }}
-                                <a href="{{ route('login', app()->getLocale()) }}" class="font-medium text-slate-800 hover:text-slate-900 dark:text-slate-200 dark:hover:text-white transition-colors">
-                                    {{ __('auth.register.sign_in') }}
-                                </a>
                             </p>
+                            <a 
+                                href="{{ route('login', app()->getLocale()) }}" 
+                                class="inline-flex items-center justify-center w-full px-6 py-4 text-lg font-bold text-blue-600 dark:text-blue-400 bg-white dark:bg-gray-800 border-2 border-blue-500 dark:border-blue-400 hover:bg-blue-50 dark:hover:bg-gray-700 rounded-xl shadow-lg hover:shadow-xl transform hover:-translate-y-1 transition-all duration-200"
+                            >
+                                <i class="fas fa-sign-in-alt mr-3 text-xl"></i>
+                                {{ __('auth.register.sign_in') }}
+                            </a>
                         </div>
                     </form>
                 </div>
@@ -511,33 +492,28 @@ function validatePassword() {
         return false;
     }
     
-    // Only check for minimum length, at least one letter and one number
+    // Only check for minimum length and at least one letter
     const hasMinLength = password.length >= 6;
     const hasLetter = /[A-Za-z]/.test(password);
-    const hasNumber = /[0-9]/.test(password);
     
     // Update requirement indicators
     updateRequirement('length', hasMinLength);
-    updateRequirement('letter', hasLetter && hasNumber);
+    updateRequirement('letter', hasLetter);
     
     // Calculate password strength (simplified)
     let strength = 0;
     if (hasMinLength) strength += 1;
     if (hasLetter) strength += 1;
-    if (hasNumber) strength += 1;
     
     // Update strength meter
     if (strengthMeter && strengthText) {
-        const width = (strength / 3) * 100;
+        const width = (strength / 2) * 100;
         strengthMeter.style.width = `${width}%`;
         
         // Set color and localized text based on strength
         if (strength <= 1) {
             strengthMeter.className = 'h-full bg-red-500 rounded-full transition-all duration-300';
             strengthText.textContent = '{{ __("auth.password_requirements.strength.weak") }}';
-        } else if (strength === 2) {
-            strengthMeter.className = 'h-full bg-yellow-500 rounded-full transition-all duration-300';
-            strengthText.textContent = '{{ __("auth.password_requirements.strength.good") }}';
         } else {
             strengthMeter.className = 'h-full bg-green-500 rounded-full transition-all duration-300';
             strengthText.textContent = '{{ __("auth.password_requirements.strength.strong") }}';
@@ -545,7 +521,7 @@ function validatePassword() {
     }
     
     // Return true only if all requirements are met
-    return hasMinLength && hasLetter && hasNumber;
+    return hasMinLength && hasLetter;
 }
     
     // Update requirement indicator
@@ -697,7 +673,7 @@ function validatePassword() {
         try {
             // Validate password
             if (!validatePassword()) {
-                showFormError(this, '{{ __("auth.password_requirements.letter_number_required") }}');
+                showFormError(this, '{{ __("auth.letter_only") }}');
                 return;
             }
             
@@ -706,7 +682,7 @@ function validatePassword() {
             const confirmPassword = this.querySelector('input[name="password_confirmation"]').value;
             
             if (password !== confirmPassword) {
-                showFormError(this, '{{ __("auth.password_requirements.mismatch") }}');
+                showFormError(this, '{{ __("auth.mismatch") }}');
                 return;
             }
             
