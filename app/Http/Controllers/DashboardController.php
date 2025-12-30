@@ -60,9 +60,13 @@ class DashboardController extends Controller
         // Calculate stats based on user's subscription access
         $accessiblePlanSlugs = $currentSubscriptions->pluck('plan.slug')->filter()->unique();
         
+        // Add all lower-tier plans for hierarchical access
+        $hierarchicalPlans = $this->getHierarchicalPlanAccess($accessiblePlanSlugs);
+        
         Log::info('Quiz access calculation', [
             'user_id' => $user->id,
-            'accessible_plan_slugs' => $accessiblePlanSlugs->toArray(),
+            'user_plan_slugs' => $accessiblePlanSlugs->toArray(),
+            'hierarchical_access_slugs' => $hierarchicalPlans->toArray(),
             'has_active_subscription' => $currentSubscriptions->count() > 0,
             'is_admin' => $user->isAdmin()
         ]);
@@ -72,14 +76,14 @@ class DashboardController extends Controller
             $totalQuizzes = Quiz::where('is_active', true)->count();
         } else {
             $totalQuizzes = Quiz::where('is_active', true)
-                ->where(function ($query) use ($accessiblePlanSlugs) {
-                    // Check quizzes with subscription_plan_slug
-                    $query->whereIn('subscription_plan_slug', $accessiblePlanSlugs)
+                ->where(function ($query) use ($hierarchicalPlans) {
+                    // Check quizzes with subscription_plan_slug (including hierarchical access)
+                    $query->whereIn('subscription_plan_slug', $hierarchicalPlans)
                           // Check guest quizzes (no subscription required)
                           ->orWhereNull('subscription_plan_slug')
                           // Check quizzes accessible through many-to-many relationship
-                          ->orWhereHas('subscriptionPlans', function ($subQuery) use ($accessiblePlanSlugs) {
-                              $subQuery->whereIn('slug', $accessiblePlanSlugs);
+                          ->orWhereHas('subscriptionPlans', function ($subQuery) use ($hierarchicalPlans) {
+                              $subQuery->whereIn('slug', $hierarchicalPlans);
                           });
                 })
                 ->count();
@@ -254,5 +258,34 @@ class DashboardController extends Controller
         }
 
         return $totalQuestions > 0 ? round(($correctAnswers / $totalQuestions) * 100, 1) : 0;
+    }
+    
+    /**
+     * Get hierarchical plan access - higher tiers get access to lower tiers
+     */
+    private function getHierarchicalPlanAccess($userPlanSlugs): \Illuminate\Support\Collection
+    {
+        // Define hierarchy from lowest to highest
+        $planHierarchy = [
+            'basic-plan',
+            'standard-plan', 
+            'premium-plan',
+            'gold-unlimited-plan'
+        ];
+        
+        $hierarchicalAccess = collect();
+        
+        foreach ($userPlanSlugs as $planSlug) {
+            $planIndex = array_search($planSlug, $planHierarchy);
+            
+            if ($planIndex !== false) {
+                // Add this plan and all lower-tier plans
+                for ($i = 0; $i <= $planIndex; $i++) {
+                    $hierarchicalAccess->push($planHierarchy[$i]);
+                }
+            }
+        }
+        
+        return $hierarchicalAccess->unique();
     }
 }

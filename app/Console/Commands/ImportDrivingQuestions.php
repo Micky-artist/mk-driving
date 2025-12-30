@@ -131,14 +131,15 @@ class ImportDrivingQuestions extends Command
         $isGuestQuiz = $quizIndex === 10; // 0-based index, so 10 is the 11th quiz
         
         // Assign quizzes based on subscription plan hierarchy
+        // Higher tier plans include access to lower tier content
         if ($quizNumber <= 15) {
-            // Basic plan gets quizzes 1-15
+            // Basic plan only
             $subscriptionPlan = \App\Models\SubscriptionPlan::where('slug', 'basic-plan')->first();
         } elseif ($quizNumber <= 25) {
-            // Standard plan gets quizzes 16-25 (plus access to basic)
+            // Standard plan (includes basic content)
             $subscriptionPlan = \App\Models\SubscriptionPlan::where('slug', 'standard-plan')->first();
         } else {
-            // Premium and Unlimited get all quizzes (26+)
+            // Premium and Unlimited plans (includes all content)
             $subscriptionPlan = \App\Models\SubscriptionPlan::where('slug', 'premium-plan')->first();
         }
         
