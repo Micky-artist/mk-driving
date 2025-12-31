@@ -110,6 +110,7 @@ Route::middleware('auth:web')->group(function () {
     Route::post('/quizzes/start', [QuizAttemptController::class, 'start']);
     Route::get('/attempts/{attemptId}', [QuizAttemptController::class, 'getAttempt']);
     Route::put('/attempts/{attemptId}', [QuizAttemptController::class, 'updateAttempt']);
+    Route::post('/attempts/{attemptId}/reset', [QuizAttemptController::class, 'resetAttempt']);
     
     // Quiz submission only (stats route moved above)
     Route::post('/quiz/submit', [QuizAttemptController::class, 'submitQuiz']);

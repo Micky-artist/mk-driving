@@ -5,11 +5,13 @@ namespace App\Http\Controllers\Api;
 use App\Http\Controllers\Api\Controller;
 use App\Models\Quiz;
 use App\Services\OptionTextService;
+use App\Services\ImageUrlCleaner;
 use App\Models\Question;
 use App\Models\Option;
 use App\Models\User;
 use App\Models\Leaderboard;
 use App\Models\PointConfiguration;
+use App\Models\QuizAttempt;
 use App\Services\QuizAttemptService;
 use App\Services\PointsService;
 use Illuminate\Http\JsonResponse;
@@ -296,6 +298,56 @@ class QuizAttemptController extends Controller
     }
 
     /**
+     * Reset a quiz attempt (clear answers and restart)
+     */
+    public function resetAttempt(Request $request, $attemptId): JsonResponse
+    {
+        try {
+            Log::debug('Resetting quiz attempt', [
+                'attempt_id' => $attemptId,
+                'user_id' => Auth::id()
+            ]);
+
+            $attempt = QuizAttempt::where('id', $attemptId)
+                ->where('user_id', Auth::id())
+                ->where('status', 'in_progress')
+                ->firstOrFail();
+
+            // Clear answers and reset progress
+            $attempt->update([
+                'answers' => [],
+                'score' => 0,
+                'started_at' => now(), // Reset start time
+            ]);
+
+            // Delete user answers for this attempt
+            $attempt->userAnswers()->delete();
+
+            Log::info('Quiz attempt reset successfully', [
+                'attempt_id' => $attempt->id,
+                'user_id' => Auth::id()
+            ]);
+
+            return response()->json([
+                'success' => true,
+                'message' => 'Quiz attempt reset successfully'
+            ]);
+
+        } catch (\Exception $e) {
+            Log::error('Error resetting quiz attempt', [
+                'error' => $e->getMessage(),
+                'attempt_id' => $attemptId,
+                'user_id' => Auth::id()
+            ]);
+
+            return response()->json([
+                'success' => false,
+                'message' => 'Failed to reset quiz attempt'
+            ], 500);
+        }
+    }
+
+    /**
      * Submit quiz results and update user stats
      */
     public function submitQuiz(Request $request): JsonResponse
@@ -495,6 +547,48 @@ class QuizAttemptController extends Controller
     }
 
     /**
+     * Extract and clean image URL from option text or image_url field
+     */
+    private static function extractAndCleanImageUrl($option): ?string
+    {
+        Log::info('Processing option for image extraction', [
+            'option_id' => $option->id,
+            'text' => $option->text,
+            'image_url' => $option->image_url
+        ]);
+        
+        // First check if there's an image in the text field
+        if ($option->text) {
+            $imageUrl = ImageUrlCleaner::extractImageUrlFromHtml($option->text);
+            if ($imageUrl) {
+                Log::info('Extracted image from option text', [
+                    'option_id' => $option->id,
+                    'original_text' => $option->text,
+                    'extracted_url' => $imageUrl,
+                    'cleaned_url' => ImageUrlCleaner::clean($imageUrl)
+                ]);
+                return ImageUrlCleaner::clean($imageUrl);
+            }
+        }
+        
+        // Fall back to image_url field
+        if ($option->image_url) {
+            Log::info('Using image_url field', [
+                'option_id' => $option->id,
+                'image_url' => $option->image_url,
+                'cleaned_url' => ImageUrlCleaner::clean($option->image_url)
+            ]);
+            return ImageUrlCleaner::clean($option->image_url);
+        }
+        
+        Log::info('No image found in option', [
+            'option_id' => $option->id
+        ]);
+        
+        return null;
+    }
+
+    /**
      * Format the attempt response
      */
     protected function formatAttemptResponse(QuizAttempt $attempt): array
@@ -536,7 +630,7 @@ class QuizAttemptController extends Controller
                     'selected_option' => $answer->option ? [
                         'id' => $answer->option->id,
                         'text' => OptionTextService::cleanOptionText($answer->option->text),
-                        'image_url' => $answer->option->image_url ? asset($answer->option->image_url) : null,
+                        'image_url' => self::extractAndCleanImageUrl($answer->option),
                         'is_correct' => (bool)$answer->option->is_correct
                     ] : null
                 ];

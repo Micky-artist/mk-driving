@@ -9,6 +9,7 @@ use App\Models\Bookmark;
 use App\Models\QuizAttempt;
 use App\Models\SubscriptionPlan;
 use App\Models\User;
+use App\Services\ImageUrlCleaner;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\Log;
 use Illuminate\Support\Facades\DB;
@@ -756,6 +757,102 @@ class QuizController extends Controller
             }
         }
 
+        // Debug: Log what we're getting from database
+        Log::info('Quiz data before cleaning', [
+            'quiz_id' => $quiz->id,
+            'questions_count' => $quiz->questions->count(),
+            'sample_question' => $quiz->questions->first(),
+            'sample_options' => $quiz->questions->first()?->options->take(2)->toArray()
+        ]);
+
+        // Clean image URLs to prevent HTML injection
+        $quiz->questions = $quiz->questions->map(function ($question) {
+            // Extract image from question text if present
+            if ($question->text) {
+                $originalText = $question->text;
+                $imageUrl = ImageUrlCleaner::extractImageUrlFromHtml($originalText);
+                if ($imageUrl) {
+                    Log::info('Extracted image from question text', [
+                        'question_id' => $question->id,
+                        'original_text' => $originalText,
+                        'extracted_url' => $imageUrl,
+                        'cleaned_url' => ImageUrlCleaner::clean($imageUrl)
+                    ]);
+                    $question->image_url = ImageUrlCleaner::clean($imageUrl);
+                    // Clean the text to remove HTML
+                    $question->text = ImageUrlCleaner::cleanHtmlFromText($originalText);
+                }
+            }
+            
+            // Clean question image
+            if ($question->image_url) {
+                Log::info('Cleaning question image URL', [
+                    'original' => $question->image_url,
+                    'cleaned' => ImageUrlCleaner::clean($question->image_url)
+                ]);
+                $question->image_url = ImageUrlCleaner::clean($question->image_url);
+            }
+            
+            // Clean option images and text
+            $question->options = $question->options->map(function ($option) {
+                // Log the original option data for debugging
+                Log::info('Processing option data', [
+                    'option_id' => $option->id,
+                    'original_option_text' => $option->option_text,
+                    'original_image_url' => $option->image_url,
+                    'option_text_type' => gettype($option->option_text)
+                ]);
+                
+                // Clean option_text field which may contain HTML img tags
+                if ($option->option_text) {
+                    $originalText = $option->option_text;
+                    // Extract image URL from HTML if present
+                    $imageUrl = ImageUrlCleaner::extractImageUrlFromHtml($originalText);
+                    if ($imageUrl) {
+                        Log::info('Extracted image from option_text in Web controller', [
+                            'option_id' => $option->id,
+                            'original_text' => $originalText,
+                            'extracted_url' => $imageUrl,
+                            'cleaned_url' => ImageUrlCleaner::clean($imageUrl)
+                        ]);
+                        // Set the cleaned image_url
+                        $option->image_url = ImageUrlCleaner::clean($imageUrl);
+                        // Clean the text to remove HTML
+                        $option->option_text = ImageUrlCleaner::cleanHtmlFromText($originalText);
+                    }
+                }
+                
+                // Also clean existing image_url field
+                if ($option->image_url) {
+                    Log::info('Cleaning option image URL', [
+                        'option_id' => $option->id,
+                        'original' => $option->image_url,
+                        'cleaned' => ImageUrlCleaner::clean($option->image_url)
+                    ]);
+                    $option->image_url = ImageUrlCleaner::clean($option->image_url);
+                }
+                
+                // Log final option state for debugging
+                Log::info('Final option data', [
+                    'option_id' => $option->id,
+                    'final_option_text' => $option->option_text,
+                    'final_image_url' => $option->image_url,
+                    'image_field' => $option->image ?? 'no_image_field'
+                ]);
+                
+                return $option;
+            });
+            
+            return $question;
+        });
+
+        // Debug: Log what we're passing to view
+        Log::info('Quiz data after cleaning', [
+            'quiz_id' => $quiz->id,
+            'sample_question' => $quiz->questions->first(),
+            'sample_options' => $quiz->questions->first()?->options->take(2)->toArray()
+        ]);
+
         return view('dashboard.quizzes.show', [
             'quiz' => $quiz,
             'attempt' => $attempt, // Pass the specific attempt
@@ -776,7 +873,13 @@ class QuizController extends Controller
      *
      * @param  \Illuminate\Http\Request  $request
      * @param  string  $locale
-
+     * @param  int  $id
+     */
+public function submit(Request $request, $locale, $id) 
+{
+        $answers = $request->input('answers', []);
+        $timeSpent = $request->input('time_spent', []);
+        
         // Log the submission
         Log::info('Quiz submission received', [
             'quiz_id' => $id,
@@ -827,14 +930,6 @@ class QuizController extends Controller
             $selectedOption = $answerId ? $question->options->firstWhere('id', $answerId) : null;
             $isCorrect = $selectedOption ? (bool)$selectedOption->is_correct : false;
             
-            // Log answer validation
-            Log::debug('Answer validation', [
-                'question_id' => $questionId,
-                'answer_id' => $answerId,
-                'is_correct' => $isCorrect,
-                'time_spent' => $questionTimeSpent
-            ]);
-
             // Store the user's answer
             $userAnswer = $attempt->userAnswers()->create([
                 'question_id' => $questionId,
@@ -864,7 +959,7 @@ class QuizController extends Controller
         
         // Calculate score and determine pass/fail
         $score = $totalQuestions > 0 ? round(($correctAnswers / $totalQuestions) * 100) : 0;
-        $passed = $score >= ($quiz->passing_score ?? 70); // Default to 70% if not set
+        $passed = $score >= ($quiz->passing_score ?? 70);
         
         // Update the attempt
         $attempt->update([
@@ -881,19 +976,15 @@ class QuizController extends Controller
         // Commit the transaction
         DB::commit();
         
-        // Log successful submission
-        Log::info('Quiz submission completed', [
-            'quiz_id' => $quiz->id,
-            'attempt_id' => $attempt->id,
+        $responseData = [
+            'success' => true,
+            'message' => 'Quiz submitted successfully!',
             'score' => $score,
             'passed' => $passed,
-            'total_questions' => $totalQuestions,
             'correct_answers' => $correctAnswers,
-            'time_taken' => $request->input('time_taken'),
-            'answers_count' => count($userAnswers),
-            'response_data' => $responseData
-        ]);
-
+            'total_questions' => $totalQuestions
+        ];
+        
         // Return JSON response for AJAX requests
         if ($request->ajax() || $request->wantsJson()) {
             return response()->json($responseData);
@@ -904,11 +995,25 @@ class QuizController extends Controller
             'locale' => $locale,
             'quiz' => $quiz->id
         ])->with('success', $responseData['message']);
+        
+    } catch (\Exception $e) {
+        DB::rollBack();
+        Log::error('Quiz submission error', [
+            'error' => $e->getMessage(),
+            'quiz_id' => $id,
+            'user_id' => Auth::id()
+        ]);
+        
+        return response()->json([
+            'success' => false,
+            'message' => 'Failed to submit quiz'
+        ], 500);
     }
-    
+  }
     /**
      * Toggle bookmark for a quiz
      *
+     * @param  string  $locale
      * @param  int  $id
      * @return \Illuminate\Http\JsonResponse
      */

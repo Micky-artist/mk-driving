@@ -45,7 +45,7 @@ class SubscriptionPlanSeeder extends Seeder
                     'en' => 'Access to 25 quizzes for 7 days',
                     'rw' => 'Gerageza ibizamini 25 mu minsi 7'
                 ]),
-                'price' => 3000,
+                'price' => 2900,
                 'slug' => 'standard-plan',
                 'features' => json_encode([
                     'en' => ['25 quizzes', '7 days'],

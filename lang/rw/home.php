@@ -174,6 +174,6 @@ return [
         'all_rights_reserved' => 'All rights reserved.',
     ],
     'quizViewer' => [
-        'continueWithViewer' => 'Komereza Ahabugenewe',
+        'continueWithViewer' => 'Itoreze Ahabugenewe',
     ],
 ];

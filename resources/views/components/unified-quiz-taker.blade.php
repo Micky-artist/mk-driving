@@ -164,14 +164,23 @@
                     class="bg-gray-100 dark:bg-gray-800 border-b border-gray-200 dark:border-gray-700 px-3 sm:px-4 py-1 text-sm flex items-center justify-between text-gray-800 dark:text-gray-200">
                     <div class="flex items-center gap-2">
                         <span class="font-medium text-sm sm:text-base">Q.<span
-                                x-text="currentQuestionIndex + 1"></span><span class="sm:inline hidden">/<span
+                                x-text="actualQuestionNumber"></span><span class="sm:inline hidden">/<span
                                     x-text="totalQuestions"></span></span></span>
+                        <span class="text-xs text-gray-500 dark:text-gray-400 hidden sm:inline" 
+                              x-text="`(${answeredCount} answered)`"></span>
                         <span x-show="showFeedback" x-text="isAnswerCorrect ? '✓' : '✗'"
                             :class="isAnswerCorrect ? 'text-green-600 dark:text-green-400' : 'text-red-600 dark:text-red-400'"
                             class="text-sm font-bold">
                         </span>
                     </div>
                     <div class="flex items-center gap-1">
+                        <button @click="toggleSound" 
+                            class="p-2 sm:p-2.5 rounded-full hover:bg-gray-200 dark:hover:bg-gray-700"
+                            :class="soundEnabled ? 'text-blue-500' : 'text-gray-400 dark:text-gray-600'"
+                            :title="soundEnabled ? 'Disable sound' : 'Enable sound'">
+                            <i x-show="soundEnabled" class="fas fa-volume-up"></i>
+                            <i x-show="!soundEnabled" class="fas fa-volume-mute"></i>
+                        </button>
                         <button @click="togglePause" :disabled="isGuest"
                             class="p-2 sm:p-2.5 rounded-full hover:bg-gray-200 dark:hover:bg-gray-700 text-gray-600 dark:text-gray-300 disabled:opacity-50 disabled:cursor-not-allowed"
                             :title="isGuest ? __('quiz.loginToUsePause') : (isPaused ? __('quiz.resume') : __('quiz.pause'))">
@@ -215,9 +224,13 @@
                         x-text="currentQuestion.text"></h2>
 
                     <!-- Question Image -->
-                    <div x-show="currentQuestion.image" class="mb-4">
-                        <img :src="currentQuestion.image" alt="{{ __('quiz.questionImage') }}"
-                            class="max-w-full h-auto rounded-lg border border-gray-200 dark:border-gray-700">
+                    <div x-show="currentQuestion.image_url" class="mb-4">
+                        <div 
+                            :style="`background-image: url('${currentQuestion.image_url || '/images/road-sign-placeholder.svg'}'); background-size: contain; background-position: center; background-repeat: no-repeat; min-height: 200px;`"
+                            class="w-full max-w-full rounded-lg border border-gray-200 dark:border-gray-700"
+                            :alt="currentQuestion.text || __('quiz.questionImage')"
+                        >
+                        </div>
                     </div>
 
                     <!-- Answer Options -->
@@ -273,41 +286,85 @@
                                         </div>
                                     </div>
                                     <div class="ml-3 text-sm flex-1">
-                                        <!-- Option Image with Loading State -->
-                                        <div x-show="option.image" class="mb-2 relative">
-                                            <!-- Loading Skeleton with Road Sign Theme -->
-                                            <div x-show="!imageLoaded[option.id]"
-                                                class="w-32 h-24 bg-gray-200 dark:bg-gray-700 rounded-lg border border-gray-300 dark:border-gray-600 animate-pulse flex flex-col items-center justify-center">
-                                                <!-- Road sign silhouette -->
-                                                <div
-                                                    class="w-16 h-12 bg-gray-300 dark:bg-gray-600 rounded-sm transform rotate-45 opacity-50">
+                                        
+                                        <!-- Option Text with Conditional Display -->
+                                        <p x-show="!option.image_url || (option.text && option.text.trim() !== '')"
+                                           x-transition:enter="transition ease-out duration-300"
+                                           class="font-medium text-gray-900 dark:text-gray-100 leading-relaxed"
+                                           x-text="option.text">
+                                        </p>
+                                        
+                                        <!-- Modern Image Container with Loading States -->
+                                        <div x-show="option.image_url" class="mb-2 group relative" x-init="console.log('Option image data:', { optionId: option.id, image: option.image, imageUrl: option.image_url, text: option.text })">
+                                            <!-- Loading Skeleton with Animated Road Sign -->
+                                            <div x-show="option.image_url && !imageLoaded[option.id]" 
+                                                x-transition:enter="transition ease-out duration-300"
+                                                x-transition:enter-start="opacity-0"
+                                                x-transition:enter-end="opacity-100"
+                                                class="w-32 h-24 bg-gradient-to-br from-blue-50 to-blue-100 dark:from-blue-900/30 dark:to-blue-800/20 rounded-xl border border-blue-200 dark:border-blue-700 flex flex-col items-center justify-center overflow-hidden">
+                                                
+                                                <!-- Animated Road Sign Skeleton -->
+                                                <div class="relative">
+                                                    <div class="w-16 h-12 bg-blue-200 dark:bg-blue-700 rounded-sm transform rotate-45 animate-pulse opacity-60"></div>
+                                                    <div class="absolute top-0 left-1/2 transform -translate-x-1/2 w-1 h-6 bg-blue-300 dark:bg-blue-600 animate-pulse opacity-40"></div>
                                                 </div>
-                                                <div class="w-1 h-6 bg-gray-300 dark:bg-gray-600 opacity-50 mt-1">
+                                                
+                                                <!-- Loading Text -->
+                                                <div class="mt-2 text-xs text-blue-600 dark:text-blue-400 font-medium animate-pulse">
+                                                    Loading...
+                                                </div>
+                                                
+                                                <!-- Subtle shimmer effect -->
+                                                <div class="absolute inset-0 bg-gradient-to-r from-transparent via-white/20 to-transparent -skew-x-12 animate-shimmer"></div>
+                                            </div>
+                                            
+                                            <!-- Main Image with Smooth Transition -->
+                                            <div x-show="imageLoaded[option.id] && !imageError[option.id]"
+                                                x-transition:enter="transition ease-out duration-500"
+                                                x-transition:enter-start="opacity-0 transform scale-95"
+                                                x-transition:enter-end="opacity-100 transform scale-100"
+                                                class="relative group">
+                                                
+                                                <!-- CSS Background Image Container -->
+                                                <div 
+                                                    :style="`background-image: url('${option.image_url || '/images/road-sign-placeholder.svg'}'); background-size: cover; background-position: center;`"
+                                                    class="w-32 h-24 rounded-xl"
+                                                    x-init="
+                                                        console.log('Image data at bg element:', { optionId: option.id, imageUrl: option.image_url });
+                                                        imageLoaded[option.id] = true;
+                                                    "
+                                                >
+                                                    <!-- Hover Overlay -->
+                                                    <div class="absolute inset-0 bg-gradient-to-t from-black/20 to-transparent opacity-0 group-hover:opacity-100 transition-opacity duration-300 rounded-xl"></div>
+                                                    
+                                                    <!-- View Larger Button -->
+                                                    <button @click="showImageModal(option.image_url, option.text || 'Option Image')"
+                                                            class="absolute top-2 right-2 bg-white/90 dark:bg-black/80 backdrop-blur-sm rounded-full p-1.5 opacity-0 group-hover:opacity-100 transition-opacity duration-300 hover:bg-white dark:hover:bg-black/90">
+                                                        <svg class="w-4 h-4 text-blue-600 dark:text-blue-400" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M21 21l-6-6m2-5a7 7 0 11-14 0 7 7 0 0114 0zM10 7v3m0 0v3m0-3h3m-3 0H7"></path>
+                                                        </svg>
+                                                    </button>
                                                 </div>
                                             </div>
-                                            <!-- Actual Image -->
-                                            <img x-show="imageLoaded[option.id]" :src="option.image"
-                                                alt="{{ __('quiz.optionImage') }}"
-                                                @load="imageLoaded[option.id] = true"
-                                                @error="imageLoaded[option.id] = true; imageError[option.id] = true"
-                                                class="w-32 h-24 object-cover rounded-lg border border-gray-200 dark:border-gray-700 shadow-sm"
-                                                :class="{ 'hidden': !imageLoaded[option.id] }">
-                                            <!-- Error State with Road Sign Placeholder -->
+                                            
+                                            <!-- Error State with Custom Road Sign Placeholder -->
                                             <div x-show="imageError[option.id]"
-                                                class="w-32 h-24 bg-gray-100 dark:bg-gray-800 rounded-lg border border-gray-300 dark:border-gray-600 flex flex-col items-center justify-center">
-                                                <img :src="document.documentElement.classList.contains('dark') ?
-                                                    '{{ asset('images/road-sign-placeholder-dark.svg') }}' :
-                                                    '{{ asset('images/road-sign-placeholder.svg') }}'"
-                                                    alt="Road sign placeholder"
-                                                    class="w-20 h-16 object-contain opacity-60">
-                                                <span class="text-xs text-gray-500 dark:text-gray-400 mt-1">No
-                                                    Image</span>
+                                                x-transition:enter="transition ease-out duration-300"
+                                                x-transition:enter-start="opacity-0"
+                                                x-transition:enter-end="opacity-100"
+                                                class="w-32 h-24 bg-gradient-to-br from-orange-50 to-orange-100 dark:from-orange-900/30 dark:to-orange-800/20 rounded-xl border-2 border-orange-200 dark:border-orange-700 flex flex-col items-center justify-center">
+                                                
+                                                <!-- Error Road Sign Icon -->
+                                                <div class="relative">
+                                                    <div class="w-16 h-12 bg-orange-300 dark:bg-orange-700 rounded-sm transform rotate-45 opacity-60"></div>
+                                                    <div class="absolute top-1/2 left-1/2 transform -translate-x-1/2 -translate-y-1/2 text-white dark:text-orange-900 font-bold text-lg">!</div>
+                                                </div>
+                                                
+                                                <!-- Error Text -->
+                                                <span class="text-xs text-orange-600 dark:text-orange-400 font-medium mt-1">Image</span>
+                                                <span class="text-xs text-orange-500 dark:text-orange-500">Unavailable</span>
                                             </div>
                                         </div>
-                                        <!-- Option Text - Only show if no image or if text is explicitly provided -->
-                                        <p x-show="!option.image || option.text && option.text.trim() !== ''"
-                                            class="font-medium text-gray-900 dark:text-gray-100" x-text="option.text">
-                                        </p>
                                     </div>
                                 </label>
 
@@ -362,11 +419,11 @@
 
                     <div class="items-center gap-2 hidden sm:flex">
                         <span class="text-sm text-gray-500 dark:text-gray-400"
-                            x-text="`${currentQuestionIndex + 1} of ${totalQuestions}`"></span>
+                            x-text="`${actualQuestionNumber} of ${totalQuestions}`"></span>
                     </div>
 
                     <button @click="nextQuestion"
-                        :disabled="!selectedOption || (autoAdvance && !isLastQuestion) || showResultsModal || isSubmitting"
+                        :disabled="!userAnswers[currentQuestion.id] || (autoAdvance && !isLastQuestion) || showResultsModal || isSubmitting"
                         class="px-3 py-2 sm:px-4 sm:py-2 border border-transparent rounded-md shadow-sm text-sm font-medium text-white bg-blue-600 hover:bg-blue-700 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-blue-500 disabled:opacity-50 disabled:cursor-not-allowed flex-1 sm:flex-none">
                         <template x-if="isSubmitting">
                             <svg class="animate-spin -ml-1 mr-2 h-4 w-4 text-white inline"
@@ -519,13 +576,13 @@
                                             Math.random() * 5)
                                     ]"
                                     :style="`
-                                                                                                                                                                                                                                         left: ${Math.random() * 100}%;
-                                                                                                                                                                                                                                         top: ${Math.random() * 100}%;
-                                                                                                                                                                                                                                         animation: confetti ${1 + Math.random() * 3}s linear infinite;
-                                                                                                                                                                                                                                         transform: scale(${0.5 + Math.random()});
-                                                                                                                                                                                                                                         opacity: ${0.2 + Math.random() * 0.8};
-                                                                                                                                                                                                                                         animation-delay: ${Math.random() * 2}s;
-                                                                                                                                                                                                                                     `">
+                                                                                                                                                                                                     left: ${Math.random() * 100}%;
+                                                                                                                                                                                                     top: ${Math.random() * 100}%;
+                                                                                                                                                                                                     animation: confetti ${1 + Math.random() * 3}s linear infinite;
+                                                                                                                                                                                                     transform: scale(${0.5 + Math.random()});
+                                                                                                                                                                                                     opacity: ${0.2 + Math.random() * 0.8};
+                                                                                                                                                                                                     animation-delay: ${Math.random() * 2}s;
+                                                                                                                                                                                                 `">
                                 </div>
                             </template>
                         </div>
@@ -714,15 +771,25 @@
                     questions: config.questions.map((q, index) => ({
                         id: q.id || `q-${index}`,
                         text: q.text || q.question_text || `Question ${index + 1}`,
-                        image: q.image_url || null,
-                        options: Array.isArray(q.options) ? q.options.map((opt, optIndex) => ({
-                            id: opt.id || `opt-${index}-${optIndex}`,
-                            text: opt.text || opt.option_text ||
-                                `Option ${optIndex + 1}`,
-                            image: opt.image_url || null,
-                            is_correct: opt.is_correct || opt.correct || false,
-                            explanation: opt.explanation || ''
-                        })) : []
+                        image_url: q.image_url || null,
+                        options: Array.isArray(q.options) ? q.options.map((opt, optIndex) => {
+                            // Debug: Log the raw image URL
+                            console.log('Raw option image_url:', opt.image_url, 'Type:', typeof opt.image_url);
+                            
+                            const cleanedOption = {
+                                id: opt.id || `opt-${index}-${optIndex}`,
+                                text: opt.text || opt.option_text ||
+                                    `Option ${optIndex + 1}`,
+                                image_url: opt.image_url || null,
+                                is_correct: opt.is_correct || opt.correct || false,
+                                explanation: opt.explanation || ''
+                            };
+                            
+                            // Debug: Log the cleaned image URL
+                            console.log('Cleaned option image:', cleanedOption.image_url);
+                            
+                            return cleanedOption;
+                        }) : []
                     })),
                     userAnswers: {},
                     correctCount: 0,
@@ -752,9 +819,118 @@
                     get progressPercentage() {
                         return ((this.currentQuestionIndex + 1) / this.totalQuestions) * 100;
                     },
+                    get actualQuestionNumber() {
+                        // Return the real question number (1-based) in the original order
+                        return this.currentQuestionIndex + 1;
+                    },
+                    get answeredCount() {
+                        return Object.keys(this.userAnswers).length;
+                    },
+
+                    // Sound functionality
+                    soundEnabled: true,
+                    correctSound: null,
+                    incorrectSound: null,
+                    
+                    // Initialize audio elements
+                    initSounds() {
+                        // Use Web Audio API to generate distinct sounds
+                        this.audioContext = new (window.AudioContext || window.webkitAudioContext)();
+                    },
+
+                    // Generate correct sound (positive ascending chime)
+                    playCorrectSound() {
+                        if (!this.audioContext) return;
+                        
+                        const oscillator = this.audioContext.createOscillator();
+                        const gainNode = this.audioContext.createGain();
+                        
+                        oscillator.connect(gainNode);
+                        gainNode.connect(this.audioContext.destination);
+                        
+                        // Create ascending notes (C-E-G chord progression)
+                        oscillator.frequency.setValueAtTime(523.25, this.audioContext.currentTime); // C5
+                        oscillator.frequency.setValueAtTime(659.25, this.audioContext.currentTime + 0.1); // E5  
+                        oscillator.frequency.setValueAtTime(783.99, this.audioContext.currentTime + 0.2); // G5
+                        
+                        gainNode.gain.setValueAtTime(0.4, this.audioContext.currentTime);
+                        gainNode.gain.exponentialRampToValueAtTime(0.01, this.audioContext.currentTime + 0.5);
+                        
+                        oscillator.type = 'sine';
+                        oscillator.start(this.audioContext.currentTime);
+                        oscillator.stop(this.audioContext.currentTime + 0.5);
+                    },
+
+                    // Generate incorrect sound (standard two-tone descending error sound)
+                    playIncorrectSound() {
+                        if (!this.audioContext) return;
+                        
+                        // First tone (higher pitch)
+                        const oscillator1 = this.audioContext.createOscillator();
+                        const gainNode1 = this.audioContext.createGain();
+                        
+                        oscillator1.connect(gainNode1);
+                        gainNode1.connect(this.audioContext.destination);
+                        
+                        oscillator1.frequency.setValueAtTime(400, this.audioContext.currentTime);
+                        gainNode1.gain.setValueAtTime(0.3, this.audioContext.currentTime);
+                        gainNode1.gain.exponentialRampToValueAtTime(0.01, this.audioContext.currentTime + 0.15);
+                        
+                        oscillator1.type = 'sine';
+                        oscillator1.start(this.audioContext.currentTime);
+                        oscillator1.stop(this.audioContext.currentTime + 0.15);
+                        
+                        // Second tone (lower pitch) - starts slightly after first
+                        const oscillator2 = this.audioContext.createOscillator();
+                        const gainNode2 = this.audioContext.createGain();
+                        
+                        oscillator2.connect(gainNode2);
+                        gainNode2.connect(this.audioContext.destination);
+                        
+                        oscillator2.frequency.setValueAtTime(300, this.audioContext.currentTime + 0.1);
+                        gainNode2.gain.setValueAtTime(0.3, this.audioContext.currentTime + 0.1);
+                        gainNode2.gain.exponentialRampToValueAtTime(0.01, this.audioContext.currentTime + 0.25);
+                        
+                        oscillator2.type = 'sine';
+                        oscillator2.start(this.audioContext.currentTime + 0.1);
+                        oscillator2.stop(this.audioContext.currentTime + 0.25);
+                    },
+
+                    // Play sound effect
+                    playSound(isCorrect) {
+                        if (!this.soundEnabled) return;
+                        
+                        try {
+                            if (isCorrect) {
+                                this.playCorrectSound();
+                            } else {
+                                this.playIncorrectSound();
+                            }
+                        } catch (error) {
+                            console.log('Sound system error:', error);
+                        }
+                    },
+
+                    // Toggle sound on/off
+                    toggleSound() {
+                        this.soundEnabled = !this.soundEnabled;
+                        // Save preference to localStorage (for both guests and authenticated users)
+                        localStorage.setItem(`quiz_${this.quizId}_sound_enabled`, this.soundEnabled.toString());
+                    },
+
+                    // Load sound preference
+                    loadSoundPreference() {
+                        const saved = localStorage.getItem(`quiz_${this.quizId}_sound_enabled`);
+                        if (saved !== null) {
+                            this.soundEnabled = saved === 'true';
+                        }
+                    },
 
                     // Initialize the quiz
                     init() {
+                        // Initialize sounds first
+                        this.initSounds();
+                        this.loadSoundPreference();
                         // Restore timer state first
                         this.validateAndRestoreTimer();
 
@@ -785,11 +961,8 @@
                             this.userAnswers = JSON.parse(localStorage.getItem(
                                 `quiz_${this.quizId}_answers`));
 
-                            // Update counts
-                            this.correctCount = Object.values(this.userAnswers).filter(a => a.isCorrect)
-                                .length;
-                            this.incorrectCount = Object.values(this.userAnswers).filter(a => !a.isCorrect)
-                                .length;
+                            // Update counts using the proper function
+                            this.updateAnswerCounts();
 
                             // If we have a saved question index, go to it
                             const savedIndex = localStorage.getItem(`quiz_${this.quizId}_current_index`);
@@ -810,7 +983,7 @@
                     initializeImageStates() {
                         this.questions.forEach(question => {
                             question.options.forEach(option => {
-                                if (option.image) {
+                                if (option.image_url) {
                                     this.imageLoaded[option.id] = false;
                                     this.imageError[option.id] = false;
                                 }
@@ -1039,12 +1212,41 @@
                         localStorage.removeItem(`quiz_${this.quizId}_is_paused`);
                         localStorage.removeItem(`quiz_${this.quizId}_pause_timestamp`);
 
+                        // Reset backend attempt if exists
+                        if (this.currentAttempt && !this.isGuest) {
+                            this.resetBackendAttempt();
+                        }
+
                         // Load first question
                         this.loadQuestionState();
 
                         // Restart timer
                         clearInterval(this.timer);
                         this.startTimer();
+                    },
+
+                    // Reset backend attempt
+                    async resetBackendAttempt() {
+                        if (!this.currentAttempt) return;
+                        
+                        try {
+                            const response = await fetch(`/api/attempts/${this.currentAttempt.id}/reset`, {
+                                method: 'POST',
+                                credentials: 'same-origin',
+                                headers: {
+                                    'Content-Type': 'application/json',
+                                    'X-CSRF-TOKEN': document.querySelector('meta[name="csrf-token"]').content
+                                }
+                            });
+
+                            if (response.ok) {
+                                console.log('Backend attempt reset successfully');
+                            } else {
+                                console.warn('Failed to reset backend attempt');
+                            }
+                        } catch (error) {
+                            console.error('Error resetting backend attempt:', error);
+                        }
                     },
 
                     // Question navigation
@@ -1055,17 +1257,24 @@
                             return;
                         }
 
+                        // Check if current question is answered
+                        const currentQuestionId = this.currentQuestion.id;
+                        const isCurrentQuestionAnswered = this.userAnswers[currentQuestionId] !== undefined;
+
+                        // If current question is not answered, don't allow navigation
+                        if (!isCurrentQuestionAnswered) {
+                            // Show a subtle hint that the question needs to be answered
+                            this.showFeedback = true;
+                            this.feedbackMessage = "Please answer this question before continuing.";
+                            return;
+                        }
+
                         if (this.isLastQuestion) {
                             this.finishQuiz();
                             return;
                         }
 
-                        // For authenticated users, proceed normally
-                        if (!this.isAnswerSubmitted) {
-                            // Allow navigation without submitting answer
-                            // but don't save the answer
-                        }
-
+                        // Proceed to next question
                         this.saveQuestionState();
                         this.currentQuestionIndex++;
                         this.loadQuestionState();
@@ -1102,6 +1311,9 @@
                         this.isAnswerCorrect = option.is_correct;
                         this.isAnswerSubmitted = true;
                         this.showFeedback = true;
+
+                        // Play sound effect for feedback
+                        this.playSound(option.is_correct);
 
                         // Set feedback message
                         this.feedbackMessage = option.is_correct ?
@@ -1213,7 +1425,7 @@
 
                         // Initialize image loading states for current question options
                         this.currentQuestion.options.forEach(option => {
-                            if (option.image && !this.imageLoaded[option.id]) {
+                            if (option.image_url && !this.imageLoaded[option.id]) {
                                 this.imageLoaded[option.id] = false;
                                 this.imageError[option.id] = false;
                             }
@@ -1298,33 +1510,25 @@
                         // Update counts based on loaded answers
                         this.updateAnswerCounts();
 
-                        // Reorder questions: answered questions first, then unanswered
-                        const answeredQuestions = [];
-                        const unansweredQuestions = [];
-
-                        this.questions.forEach(question => {
-                            if (this.userAnswers[question.id]) {
-                                answeredQuestions.push(question);
-                            } else {
-                                unansweredQuestions.push(question);
+                        // Find the first unanswered question to resume from
+                        let firstUnansweredIndex = 0;
+                        for (let i = 0; i < this.questions.length; i++) {
+                            if (!this.userAnswers[this.questions[i].id]) {
+                                firstUnansweredIndex = i;
+                                break;
                             }
-                        });
-
-                        // Update the questions array with reordered list
-                        this.questions = [...answeredQuestions, ...unansweredQuestions];
-
-                        // Start from the first unanswered question (or beginning if all answered)
-                        if (unansweredQuestions.length > 0) {
-                            // Find the index of the first unanswered question in the reordered array
-                            this.currentQuestionIndex = answeredQuestions.length;
-                        } else {
-                            // All questions answered, go to the last one
-                            this.currentQuestionIndex = this.questions.length - 1;
+                            // If all questions up to current index are answered, continue to next
+                            if (i === this.questions.length - 1) {
+                                // All questions are answered, go to the last one
+                                firstUnansweredIndex = this.questions.length - 1;
+                            }
                         }
 
-                        console.log('Resumed attempt with reordered questions:', {
-                            answeredCount: answeredQuestions.length,
-                            unansweredCount: unansweredQuestions.length,
+                        this.currentQuestionIndex = firstUnansweredIndex;
+
+                        console.log('Resumed attempt with original question order:', {
+                            totalQuestions: this.questions.length,
+                            answeredCount: Object.keys(this.userAnswers).length,
                             startingFrom: this.currentQuestionIndex + 1
                         });
 
