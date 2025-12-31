@@ -1,2 +1,9 @@
 User-agent: *
-Disallow:
+Disallow: /en/
+Disallow: /admin/
+Disallow: /api/
+Disallow: /dashboard/
+Allow: /rw/
+Allow: /
+
+Sitemap: https://driving.mkscholars.com/sitemap.xml

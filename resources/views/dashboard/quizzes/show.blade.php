@@ -3,6 +3,7 @@
 @section('content')
 <div class="h-[calc(100vh-4rem)]">
     @php
+        use App\Services\OptionTextService;
         // Format quiz data for the unified component
         $formattedQuiz = [
             'id' => $quiz->id,
@@ -15,12 +16,7 @@
                     'text' => $question->getTranslation('text', app()->getLocale()),
                     'image_path' => $question->image_path ? asset('storage/' . $question->image_path) : null,
                     'options' => $question->options->map(function($option) {
-                        return [
-                            'id' => $option->id,
-                            'text' => $option->getTranslation('option_text', app()->getLocale()),
-                            'is_correct' => (bool)$option->is_correct,
-                            'explanation' => $option->getTranslation('explanation', app()->getLocale())
-                        ];
+                        return OptionTextService::processOptionForApi($option);
                     })->toArray()
                 ];
             })->toArray()

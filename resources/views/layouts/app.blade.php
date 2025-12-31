@@ -24,14 +24,21 @@
     <meta name="viewport" content="width=device-width, initial-scale=1">
     <meta name="csrf-token" content="{{ csrf_token() }}">
 
+@php
+    $isRwanda = request()->segment(1) === 'rw';
+    $description = $isRwanda ? 'Itegura ikizami cy\'amategeko y\'umuhanda hamwe na MK Driving - Uburyo bwa mbere bwizewe naba jeune mu Rwanda' : 'Prepare for your driving test with MK Driving - The best way to practice and pass your driving theory test in Rwanda';
+    $titleSuffix = $isRwanda ? 'Tsinda ikizami cyo gutwara mu Rwanda' : 'Pass Your Driving Test in Rwanda';
+    $ogDescription = $isRwanda ? '🚗✨ Itengure kandi utsinde ikizami cyawe na MK Driving. Witoza incuro zose ukeneye, wigana n\'abandi bagutera courage!' : '🚗✨ Prepare & pass your driving test with MK Driving School. Practice tests, expert tips, and everything you need to get your driver\'s license in Rwanda!';
+@endphp
+
     <title>{{ config('app.name', 'MK Driving School') }}</title>
 
     <!-- General Meta Tags -->
-    <meta name="description" content="Prepare for your driving test with MK Driving - The best way to practice and pass your driving theory test in Rwanda">
+    <meta name="description" content="{{ $description }}">
     
     <!-- Open Graph / Social Media Meta Tags (used by Facebook, Instagram, WhatsApp, etc.) -->
-    <meta property="og:title" content="{{ config('app.name', 'MK Driving School') }} - Pass Your Driving Test in Rwanda">
-    <meta property="og:description" content="🚗✨ Prepare & pass your driving test with MK Driving School. Practice tests, expert tips, and everything you need to get your driver's license in Rwanda!">
+    <meta property="og:title" content="{{ config('app.name', 'MK Driving School') }} - {{ $titleSuffix }}">
+    <meta property="og:description" content="{{ $ogDescription }}">
     <meta property="og:image" content="{{ url('/og-image.png') }}">
     <meta property="og:image:width" content="1200">
     <meta property="og:image:height" content="630">
@@ -41,12 +48,12 @@
     
     <!-- WhatsApp Specific -->
     <meta property="og:image:secure_url" content="{{ url('/og-image.png') }}">
-    <meta property="og:image:alt" content="MK Driving School - Pass Your Driving Test in Rwanda">
+    <meta property="og:image:alt" content="MK Driving School - {{ $titleSuffix }}">
     
     <!-- Twitter Card Meta Tags -->
     <meta name="twitter:card" content="summary_large_image">
-    <meta name="twitter:title" content="{{ config('app.name', 'MK Driving School') }} - Pass Your Driving Test in Rwanda">
-    <meta name="twitter:description" content="🚗✨ Prepare & pass your driving test with MK Driving School. Practice tests, expert tips, and everything you need to get your driver's license in Rwanda!">
+    <meta name="twitter:title" content="{{ config('app.name', 'MK Driving School') }} - {{ $titleSuffix }}">
+    <meta name="twitter:description" content="{{ $ogDescription }}">
     <meta name="twitter:image" content="{{ url('/og-image.png') }}">
     
     <!-- Additional Meta Tags for Better Sharing -->
@@ -57,6 +64,19 @@
     <meta name="apple-mobile-web-app-capable" content="yes">
     <meta name="application-name" content="MK Driving">
     <meta name="msapplication-TileColor" content="#1a365d">
+    
+    <!-- SEO Tags for Kinyarwanda Focus -->
+    <link rel="canonical" href="{{ request()->segment(1) === 'en' ? str_replace('/en/', '/rw/', url()->current()) : url()->current() }}">
+    <link rel="alternate" hreflang="rw" href="{{ request()->segment(1) === 'en' ? str_replace('/en/', '/rw/', url()->current()) : url()->current() }}">
+    <link rel="alternate" hreflang="x-default" href="{{ request()->segment(1) === 'en' ? str_replace('/en/', '/rw/', url()->current()) : url()->current() }}">
+    
+    @if(request()->segment(1) === 'en')
+        <!-- Noindex for English pages -->
+        <meta name="robots" content="noindex, nofollow">
+    @else
+        <!-- Index for Kinyarwanda pages -->
+        <meta name="robots" content="index, follow">
+    @endif
 
     <!-- Favicon -->
     <link rel="icon" type="image/png" href="{{ asset('favicon.ico') }}">

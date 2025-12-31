@@ -5,7 +5,7 @@ namespace App\Services;
 use App\Models\Quiz;
 use Illuminate\Support\Facades\Storage;
 use Illuminate\Http\UploadedFile;
-use Illuminate\Support\Str;
+use App\Services\OptionTextService;
 
 class QuizService
 {
@@ -60,7 +60,21 @@ class QuizService
 
     public function getQuizWithQuestions($id)
     {
-        return Quiz::with('questions.options')->findOrFail($id);
+        $quiz = Quiz::with('questions.options')->findOrFail($id);
+        
+        // Process questions and options to clean HTML and add image URLs
+        $quiz->questions->each(function($question) {
+            $question->options->each(function($option) {
+                // Use OptionTextService to process the option
+                $processedOption = OptionTextService::processOptionForApi($option);
+                
+                // Add processed data as attributes
+                $option->clean_text = $processedOption['text'];
+                $option->image_url = $processedOption['image_url'];
+            });
+        });
+        
+        return $quiz;
     }
 
     // Add other business logic methods from the NestJS service

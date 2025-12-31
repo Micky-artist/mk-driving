@@ -4,7 +4,7 @@ namespace App\Http\Controllers\Api;
 
 use App\Http\Controllers\Api\Controller;
 use App\Models\Quiz;
-use App\Models\QuizAttempt;
+use App\Services\OptionTextService;
 use App\Models\Question;
 use App\Models\Option;
 use App\Models\User;
@@ -535,7 +535,8 @@ class QuizAttemptController extends Controller
                     ] : null,
                     'selected_option' => $answer->option ? [
                         'id' => $answer->option->id,
-                        'text' => $answer->option->text,
+                        'text' => OptionTextService::cleanOptionText($answer->option->text),
+                        'image_url' => $answer->option->image_url ? asset($answer->option->image_url) : null,
                         'is_correct' => (bool)$answer->option->is_correct
                     ] : null
                 ];

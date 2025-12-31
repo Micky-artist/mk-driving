@@ -273,12 +273,40 @@
                                         </div>
                                     </div>
                                     <div class="ml-3 text-sm flex-1">
-                                        <!-- Option Image -->
-                                        <div x-show="option.image" class="mb-2">
-                                            <img :src="option.image" alt="{{ __('quiz.optionImage') }}"
-                                                class="max-w-xs h-auto rounded-lg border border-gray-200 dark:border-gray-700">
+                                        <!-- Option Image with Loading State -->
+                                        <div x-show="option.image" class="mb-2 relative">
+                                            <!-- Loading Skeleton with Road Sign Theme -->
+                                            <div x-show="!imageLoaded[option.id]"
+                                                class="w-32 h-24 bg-gray-200 dark:bg-gray-700 rounded-lg border border-gray-300 dark:border-gray-600 animate-pulse flex flex-col items-center justify-center">
+                                                <!-- Road sign silhouette -->
+                                                <div
+                                                    class="w-16 h-12 bg-gray-300 dark:bg-gray-600 rounded-sm transform rotate-45 opacity-50">
+                                                </div>
+                                                <div class="w-1 h-6 bg-gray-300 dark:bg-gray-600 opacity-50 mt-1">
+                                                </div>
+                                            </div>
+                                            <!-- Actual Image -->
+                                            <img x-show="imageLoaded[option.id]" :src="option.image"
+                                                alt="{{ __('quiz.optionImage') }}"
+                                                @load="imageLoaded[option.id] = true"
+                                                @error="imageLoaded[option.id] = true; imageError[option.id] = true"
+                                                class="w-32 h-24 object-cover rounded-lg border border-gray-200 dark:border-gray-700 shadow-sm"
+                                                :class="{ 'hidden': !imageLoaded[option.id] }">
+                                            <!-- Error State with Road Sign Placeholder -->
+                                            <div x-show="imageError[option.id]"
+                                                class="w-32 h-24 bg-gray-100 dark:bg-gray-800 rounded-lg border border-gray-300 dark:border-gray-600 flex flex-col items-center justify-center">
+                                                <img :src="document.documentElement.classList.contains('dark') ?
+                                                    '{{ asset('images/road-sign-placeholder-dark.svg') }}' :
+                                                    '{{ asset('images/road-sign-placeholder.svg') }}'"
+                                                    alt="Road sign placeholder"
+                                                    class="w-20 h-16 object-contain opacity-60">
+                                                <span class="text-xs text-gray-500 dark:text-gray-400 mt-1">No
+                                                    Image</span>
+                                            </div>
                                         </div>
-                                        <p class="font-medium text-gray-900 dark:text-gray-100" x-text="option.text">
+                                        <!-- Option Text - Only show if no image or if text is explicitly provided -->
+                                        <p x-show="!option.image || option.text && option.text.trim() !== ''"
+                                            class="font-medium text-gray-900 dark:text-gray-100" x-text="option.text">
                                         </p>
                                     </div>
                                 </label>
@@ -341,17 +369,24 @@
                         :disabled="!selectedOption || (autoAdvance && !isLastQuestion) || showResultsModal || isSubmitting"
                         class="px-3 py-2 sm:px-4 sm:py-2 border border-transparent rounded-md shadow-sm text-sm font-medium text-white bg-blue-600 hover:bg-blue-700 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-blue-500 disabled:opacity-50 disabled:cursor-not-allowed flex-1 sm:flex-none">
                         <template x-if="isSubmitting">
-                            <svg class="animate-spin -ml-1 mr-2 h-4 w-4 text-white inline" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24">
-                                <circle class="opacity-25" cx="12" cy="12" r="10" stroke="currentColor" stroke-width="4"></circle>
-                                <path class="opacity-75" fill="currentColor" d="M4 12a8 8 0 018-8V0C5.373 0 0 5.373 0 12h4zm2 5.291A7.962 7.962 0 014 12H0c0 3.042 1.135 5.824 3 7.938l3-2.647z"></path>
+                            <svg class="animate-spin -ml-1 mr-2 h-4 w-4 text-white inline"
+                                xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24">
+                                <circle class="opacity-25" cx="12" cy="12" r="10"
+                                    stroke="currentColor" stroke-width="4"></circle>
+                                <path class="opacity-75" fill="currentColor"
+                                    d="M4 12a8 8 0 018-8V0C5.373 0 0 5.373 0 12h4zm2 5.291A7.962 7.962 0 014 12H0c0 3.042 1.135 5.824 3 7.938l3-2.647z">
+                                </path>
                             </svg>
-                            <span x-text="isLastQuestion ? '{{ __("quiz.submitting") }}' : '{{ __("quiz.loading") }}'"></span>
+                            <span
+                                x-text="isLastQuestion ? '{{ __('quiz.submitting') }}' : '{{ __('quiz.loading') }}'"></span>
                         </template>
                         <template x-if="!isSubmitting">
-                            <span x-text="isGuest ? '{{ __('quiz.signUpToContinue') }}' : (isLastQuestion ? '{{ __('quiz.finish') }}' : '{{ __('quiz.next') }}')"></span>
+                            <span
+                                x-text="isGuest ? '{{ __('quiz.signUpToContinue') }}' : (isLastQuestion ? '{{ __('quiz.finish') }}' : '{{ __('quiz.next') }}')"></span>
                             <svg class="w-4 h-4 ml-1 -mr-1 sm:inline hidden" fill="none" stroke="currentColor"
                                 viewBox="0 0 24 24">
-                                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 5l7 7-7 7" />
+                                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
+                                    d="M9 5l7 7-7 7" />
                             </svg>
                         </template>
                     </button>
@@ -484,13 +519,13 @@
                                             Math.random() * 5)
                                     ]"
                                     :style="`
-                                                                                                                                                                 left: ${Math.random() * 100}%;
-                                                                                                                                                                 top: ${Math.random() * 100}%;
-                                                                                                                                                                 animation: confetti ${1 + Math.random() * 3}s linear infinite;
-                                                                                                                                                                 transform: scale(${0.5 + Math.random()});
-                                                                                                                                                                 opacity: ${0.2 + Math.random() * 0.8};
-                                                                                                                                                                 animation-delay: ${Math.random() * 2}s;
-                                                                                                                                                             `">
+                                                                                                                                                                                                     left: ${Math.random() * 100}%;
+                                                                                                                                                                                                     top: ${Math.random() * 100}%;
+                                                                                                                                                                                                     animation: confetti ${1 + Math.random() * 3}s linear infinite;
+                                                                                                                                                                                                     transform: scale(${0.5 + Math.random()});
+                                                                                                                                                                                                     opacity: ${0.2 + Math.random() * 0.8};
+                                                                                                                                                                                                     animation-delay: ${Math.random() * 2}s;
+                                                                                                                                                                                                 `">
                                 </div>
                             </template>
                         </div>
@@ -668,6 +703,9 @@
                     endTime: null,
                     autoAdvance: false,
                     hasPlan: false, // Will be updated in init()
+                    // Image loading states
+                    imageLoaded: {},
+                    imageError: {},
                     xpAnimation: {
                         show: false,
                         points: 0,
@@ -689,7 +727,7 @@
                     userAnswers: {},
                     correctCount: 0,
                     incorrectCount: 0,
-                    
+
                     // Translations
                     translations: {
                         quiz: {
@@ -736,6 +774,9 @@
 
                         this.loadProgress();
 
+                        // Initialize image loading states
+                        this.initializeImageStates();
+
                         // Mark as initialized to hide loading state
                         this.initialized = true;
 
@@ -763,6 +804,18 @@
                             const flagged = JSON.parse(localStorage.getItem(`quiz_${this.quizId}_flagged`));
                             this.flaggedQuestions = new Set(flagged);
                         }
+                    },
+
+                    // Initialize image loading states for all options
+                    initializeImageStates() {
+                        this.questions.forEach(question => {
+                            question.options.forEach(option => {
+                                if (option.image) {
+                                    this.imageLoaded[option.id] = false;
+                                    this.imageError[option.id] = false;
+                                }
+                            });
+                        });
                     },
 
                     // Get saved time left or return default
@@ -1075,7 +1128,7 @@
                                 `quiz_${this.quizId}_answers`,
                                 JSON.stringify(this.userAnswers)
                             );
-                            
+
                             // Also save immediately to backend
                             this.saveCurrentAnswer();
                         }
@@ -1088,8 +1141,10 @@
                                 } else {
                                     // Scroll to next button if it's the last question
                                     this.$nextTick(() => {
-                                        const nextButton = Array.from(this.$el.querySelectorAll('button'))
-                                            .find(btn => btn.textContent?.includes('Finish'));
+                                        const nextButton = Array.from(this.$el
+                                                .querySelectorAll('button'))
+                                            .find(btn => btn.textContent?.includes(
+                                                'Finish'));
                                         if (nextButton) {
                                             nextButton.scrollIntoView({
                                                 behavior: 'smooth',
@@ -1129,22 +1184,23 @@
                         if (savedAnswer) {
                             this.selectedOption = savedAnswer.optionId;
                             this.isAnswerSubmitted = true;
-                            
+
                             // Determine if the answer is correct if not already set
                             if (savedAnswer.isCorrect === null) {
-                                const selectedOption = this.currentQuestion.options.find(opt => opt.id === savedAnswer.optionId);
+                                const selectedOption = this.currentQuestion.options.find(opt => opt.id ===
+                                    savedAnswer.optionId);
                                 this.isAnswerCorrect = selectedOption ? selectedOption.is_correct : false;
                                 // Update the saved answer with the correct status
                                 savedAnswer.isCorrect = this.isAnswerCorrect;
                             } else {
                                 this.isAnswerCorrect = savedAnswer.isCorrect;
                             }
-                            
+
                             this.showFeedback = true;
                             this.feedbackMessage = this.isAnswerCorrect ?
                                 this.translations.quiz.correctFeedback :
                                 this.translations.quiz.incorrectFeedback;
-                                
+
                             // Update counts to ensure accuracy
                             this.updateAnswerCounts();
                         } else {
@@ -1154,6 +1210,14 @@
                             this.showFeedback = false;
                             this.feedbackMessage = '';
                         }
+
+                        // Initialize image loading states for current question options
+                        this.currentQuestion.options.forEach(option => {
+                            if (option.image && !this.imageLoaded[option.id]) {
+                                this.imageLoaded[option.id] = false;
+                                this.imageError[option.id] = false;
+                            }
+                        });
 
                         // Scroll to top of question
                         this.$nextTick(() => {
@@ -1192,21 +1256,22 @@
 
                         // Otherwise, check for existing incomplete attempt or create new one
                         try {
-                            const response = await fetch(`/{{ app()->getLocale() }}/api/quizzes/${this.quizId}/attempt`, {
-                                method: 'GET',
-                                credentials: 'same-origin',
-                                headers: {
-                                    'Content-Type': 'application/json',
-                                    'X-CSRF-TOKEN': document.querySelector(
-                                        'meta[name="csrf-token"]').content
-                                }
-                            });
+                            const response = await fetch(
+                                `/{{ app()->getLocale() }}/api/quizzes/${this.quizId}/attempt`, {
+                                    method: 'GET',
+                                    credentials: 'same-origin',
+                                    headers: {
+                                        'Content-Type': 'application/json',
+                                        'X-CSRF-TOKEN': document.querySelector(
+                                            'meta[name="csrf-token"]').content
+                                    }
+                                });
 
                             if (response.ok) {
                                 const data = await response.json();
                                 this.currentAttempt = data.attempt;
                                 console.log('Using attempt:', this.currentAttempt.id);
-                                
+
                                 // Load the attempt state if it has existing answers
                                 this.loadAttemptState();
                             } else {
@@ -1236,7 +1301,7 @@
                         // Reorder questions: answered questions first, then unanswered
                         const answeredQuestions = [];
                         const unansweredQuestions = [];
-                        
+
                         this.questions.forEach(question => {
                             if (this.userAnswers[question.id]) {
                                 answeredQuestions.push(question);
@@ -1262,7 +1327,7 @@
                             unansweredCount: unansweredQuestions.length,
                             startingFrom: this.currentQuestionIndex + 1
                         });
-                        
+
                         // Load the current question state to show any existing answers
                         this.loadQuestionState();
                     },
@@ -1511,3 +1576,4 @@
             });
         </script>
     @endpush
+</div>

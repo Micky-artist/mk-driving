@@ -4,7 +4,7 @@ namespace App\Http\Controllers\Web;
 
 use App\Http\Controllers\Controller;
 use App\Models\Quiz;
-use App\Models\QuizAttempt;
+use App\Services\OptionTextService;
 use App\Models\UserAnswer;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Log;
@@ -53,12 +53,7 @@ class GuestQuizController extends Controller
                     'text' => $question->getTranslation('text', app()->getLocale()),
                     'image_path' => $question->image_path ? asset('storage/' . $question->image_path) : null,
                     'options' => $question->options->map(function($option) {
-                        return [
-                            'id' => $option->id,
-                            'text' => $option->getTranslation('option_text', app()->getLocale()),
-                            'is_correct' => (bool)$option->is_correct,
-                            'explanation' => $option->getTranslation('explanation', app()->getLocale())
-                        ];
+                        return OptionTextService::processOptionForApi($option);
                     })->toArray()
                 ];
             })->toArray()

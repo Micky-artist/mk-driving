@@ -1,0 +1,19 @@
+<svg width="128" height="96" viewBox="0 0 128 96" fill="none" xmlns="http://www.w3.org/2000/svg">
+  <!-- Background card -->
+  <rect width="128" height="96" rx="8" fill="#F3F4F6"/>
+  <rect x="1" y="1" width="126" height="94" rx="7" fill="white" stroke="#E5E7EB" stroke-width="2"/>
+  
+  <!-- Road sign pole -->
+  <rect x="62" y="60" width="4" height="24" fill="#6B7280"/>
+  
+  <!-- Road sign (diamond shape like warning signs) -->
+  <g transform="translate(64, 35)">
+    <path d="M0,-20 L15,0 L0,20 L-15,0 Z" fill="#FCD34D" stroke="#F59E0B" stroke-width="2"/>
+    <!-- Exclamation mark inside -->
+    <rect x="-2" y="-10" width="4" height="12" fill="#92400E"/>
+    <rect x="-2" y="4" width="4" height="4" fill="#92400E"/>
+  </g>
+  
+  <!-- Small text -->
+  <text x="64" y="85" text-anchor="middle" font-family="Arial, sans-serif" font-size="8" fill="#6B7280">No Image</text>
+</svg>

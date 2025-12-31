@@ -23,22 +23,22 @@ class SitemapController extends Controller
         $now = atomString();
         
         $urls = [
-            // Homepage
-            $this->generateUrl($baseUrl, $now, '1.0', 'daily'),
+            // Homepage - Kinyarwanda only
+            $this->generateUrl("{$baseUrl}/rw", $now, '1.0', 'daily'),
             
-            // Other static pages
-            $this->generateUrl("{$baseUrl}/about", $now, '0.8', 'monthly'),
-            $this->generateUrl("{$baseUrl}/contact", $now, '0.8', 'monthly'),
-            $this->generateUrl("{$baseUrl}/plans", $now, '0.9', 'weekly'),
-            $this->generateUrl("{$baseUrl}/blog", $now, '0.9', 'weekly'),
+            // Other static pages - Kinyarwanda only
+            $this->generateUrl("{$baseUrl}/rw/about", $now, '0.8', 'monthly'),
+            $this->generateUrl("{$baseUrl}/rw/contact", $now, '0.8', 'monthly'),
+            $this->generateUrl("{$baseUrl}/rw/plans", $now, '0.9', 'weekly'),
+            $this->generateUrl("{$baseUrl}/rw/blog", $now, '0.9', 'weekly'),
         ];
 
-        // Add blog posts if Blog model exists
+        // Add blog posts if Blog model exists - Kinyarwanda only
         if (class_exists(Blog::class)) {
             $blogs = Blog::published()->latest()->get();
             foreach ($blogs as $blog) {
                 $urls[] = $this->generateUrl(
-                    "{$baseUrl}/blog/{$blog->slug}",
+                    "{$baseUrl}/rw/news/{$blog->slug}",
                     date('c', strtotime($blog->updated_at)),
                     '0.8',
                     'monthly'

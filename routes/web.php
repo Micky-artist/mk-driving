@@ -8,7 +8,7 @@ use App\Http\Controllers\LanguageController;
 use App\Models\Blog;
 use App\Http\Controllers\SitemapController;
 use App\Models\SubscriptionPlan;
-use App\Services\LocaleService;
+use App\Services\OptionTextService;
 use App\Http\Controllers\Web\PaymentController;
 use App\Http\Middleware\TrackUserActivity;
 
@@ -244,12 +244,7 @@ Route::prefix('{locale}')
                                 'text' => $question->getTranslation('text', $locale),
                                 'image_path' => $question->image_path ? asset('storage/' . $question->image_path) : null,
                                 'options' => $question->options->map(function($option) use ($locale) {
-                                    return [
-                                        'id' => $option->id,
-                                        'text' => $option->getTranslation('option_text', $locale),
-                                        'is_correct' => (bool)$option->is_correct,
-                                        'explanation' => $option->getTranslation('explanation', $locale)
-                                    ];
+                                    return OptionTextService::processOptionForApi($option, $locale);
                                 })->toArray()
                             ];
                         })->toArray()
