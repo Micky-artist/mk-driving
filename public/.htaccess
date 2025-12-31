@@ -5,6 +5,9 @@
 
     RewriteEngine On
 
+    # Redirect root to /rw before Laravel processes
+    RewriteRule ^$ /rw [L,R=301]
+
     # Handle Authorization Header
     RewriteCond %{HTTP:Authorization} .
     RewriteRule .* - [E=HTTP_AUTHORIZATION:%{HTTP:Authorization}]
