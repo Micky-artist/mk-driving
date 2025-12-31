@@ -519,13 +519,13 @@
                                             Math.random() * 5)
                                     ]"
                                     :style="`
-                                                                                                                                                                                                     left: ${Math.random() * 100}%;
-                                                                                                                                                                                                     top: ${Math.random() * 100}%;
-                                                                                                                                                                                                     animation: confetti ${1 + Math.random() * 3}s linear infinite;
-                                                                                                                                                                                                     transform: scale(${0.5 + Math.random()});
-                                                                                                                                                                                                     opacity: ${0.2 + Math.random() * 0.8};
-                                                                                                                                                                                                     animation-delay: ${Math.random() * 2}s;
-                                                                                                                                                                                                 `">
+                                                                                                                                                                                                                                         left: ${Math.random() * 100}%;
+                                                                                                                                                                                                                                         top: ${Math.random() * 100}%;
+                                                                                                                                                                                                                                         animation: confetti ${1 + Math.random() * 3}s linear infinite;
+                                                                                                                                                                                                                                         transform: scale(${0.5 + Math.random()});
+                                                                                                                                                                                                                                         opacity: ${0.2 + Math.random() * 0.8};
+                                                                                                                                                                                                                                         animation-delay: ${Math.random() * 2}s;
+                                                                                                                                                                                                                                     `">
                                 </div>
                             </template>
                         </div>
