@@ -836,11 +836,32 @@
                     initSounds() {
                         // Use Web Audio API to generate distinct sounds
                         this.audioContext = new (window.AudioContext || window.webkitAudioContext)();
+                        
+                        // Resume audio context on first user interaction
+                        const resumeAudio = () => {
+                            if (this.audioContext.state === 'suspended') {
+                                this.audioContext.resume();
+                            }
+                            document.removeEventListener('click', resumeAudio);
+                            document.removeEventListener('touchstart', resumeAudio);
+                        };
+                        document.addEventListener('click', resumeAudio);
+                        document.addEventListener('touchstart', resumeAudio);
                     },
 
                     // Generate correct sound (positive ascending chime)
                     playCorrectSound() {
                         if (!this.audioContext) return;
+                        
+                        // Ensure audio context is running
+                        if (this.audioContext.state === 'suspended') {
+                            this.audioContext.resume().then(() => {
+                                this.playCorrectSound();
+                            }).catch(error => {
+                                console.log('Audio context resume failed:', error);
+                            });
+                            return;
+                        }
                         
                         const oscillator = this.audioContext.createOscillator();
                         const gainNode = this.audioContext.createGain();
@@ -864,6 +885,16 @@
                     // Generate incorrect sound (standard two-tone descending error sound)
                     playIncorrectSound() {
                         if (!this.audioContext) return;
+                        
+                        // Ensure audio context is running
+                        if (this.audioContext.state === 'suspended') {
+                            this.audioContext.resume().then(() => {
+                                this.playIncorrectSound();
+                            }).catch(error => {
+                                console.log('Audio context resume failed:', error);
+                            });
+                            return;
+                        }
                         
                         // First tone (higher pitch)
                         const oscillator1 = this.audioContext.createOscillator();
