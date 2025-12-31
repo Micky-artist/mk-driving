@@ -3,7 +3,7 @@
 return [
     'home' => 'Ahabanza',
     'homepage' => 'Ahabanza',
-    'quizzes' => 'Imyitozo',
+    'quizzes' => 'Imyitozo Yose',
     'news' => 'Amakuru Agezweho',
     'about' => 'Uko tuli',
     'contact' => 'Twandikire',

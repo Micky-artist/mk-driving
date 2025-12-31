@@ -34,4 +34,6 @@ return [
     'business' => 'Business',
     'logout' => 'Sohoka',
     'edit_profile' => 'Hindura Amakuru',
+    'invalid_verification_link' => 'Iyi Link Yarangije Igihe',
+    'invalid_verification_link_message' => 'Muracyenera kongera kwiyoherereza imeli yo kwemeza konti. Iyi link yarangiye.',
 ];

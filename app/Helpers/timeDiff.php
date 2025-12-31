@@ -8,7 +8,7 @@ if (!function_exists('timeDiffForHumans')) {
      * @param string $locale Target locale (defaults to current app locale)
      * @return string Formatted time difference using custom translations
      */
-    function timeDiffForHumans($date, $locale = null)
+    function timeDiffForHumans($date, $locale = null, $short = false)
     {
         $locale = $locale ?: app()->getLocale();
         
@@ -24,7 +24,9 @@ if (!function_exists('timeDiffForHumans')) {
             $years = floor($diff / 31536000);
             if ($locale === 'rw') {
                 // Manual pluralization for Kinyarwanda
-                $translation = $years === 1 ? 'umwaka :count ushize' : 'imyaka :count ishize';
+                $singular = $short ? 'umwaka' : 'umwaka :count ushize';
+                $plural = $short ? 'imyaka' : 'imyaka :count ishize';
+                $translation = (int)$years === 1 ? $singular : $plural;
                 return str_replace(':count', $years, $translation);
             }
             return trans_choice('time.year_ago', $years, ['count' => $years], $locale);
@@ -34,7 +36,9 @@ if (!function_exists('timeDiffForHumans')) {
             $months = floor($diff / 2592000);
             if ($locale === 'rw') {
                 // Manual pluralization for Kinyarwanda
-                $translation = $months === 1 ? 'ukwezi :count gushize' : 'amezi :count ashize';
+                $singular = $short ? 'ukwezi' : 'ukwezi :count gushize';
+                $plural = $short ? 'amezi' : 'amezi :count ashize';
+                $translation = (int)$months === 1 ? $singular : $plural;
                 return str_replace(':count', $months, $translation);
             }
             return trans_choice('time.month_ago', $months, ['count' => $months], $locale);
@@ -44,7 +48,9 @@ if (!function_exists('timeDiffForHumans')) {
             $weeks = floor($diff / 604800);
             if ($locale === 'rw') {
                 // Manual pluralization for Kinyarwanda
-                $translation = $weeks === 1 ? 'icyumweru :count gishize' : 'ibyumweru :count bishize';
+                $singular = $short ? 'icyumweru' : 'icyumweru :count gishize';
+                $plural = $short ? 'ibyumweru' : 'ibyumweru :count bishize';
+                $translation = (int)$weeks === 1 ? $singular : $plural;
                 return str_replace(':count', $weeks, $translation);
             }
             return trans_choice('time.week_ago', $weeks, ['count' => $weeks], $locale);
@@ -54,7 +60,9 @@ if (!function_exists('timeDiffForHumans')) {
             $days = floor($diff / 86400);
             if ($locale === 'rw') {
                 // Manual pluralization for Kinyarwanda
-                $translation = $days === 1 ? 'umunsi :count ushize' : 'iminsi :count ishize';
+                $singular = $short ? 'umunsi' : 'umunsi :count ushize';
+                $plural = $short ? 'iminsi' : 'iminsi :count ishize';
+                $translation = (int)$days === 1 ? $singular : $plural;
                 return str_replace(':count', $days, $translation);
             }
             return trans_choice('time.day_ago', $days, ['count' => $days], $locale);
@@ -64,7 +72,9 @@ if (!function_exists('timeDiffForHumans')) {
             $hours = floor($diff / 3600);
             if ($locale === 'rw') {
                 // Manual pluralization for Kinyarwanda
-                $translation = $hours === 1 ? 'isaha :count ishize' : 'amasaha :count ashize';
+                $singular = $short ? 'isaha' : 'isaha :count ishize';
+                $plural = $short ? 'amasaha' : 'amasaha :count ashize';
+                $translation = (int)$hours === 1 ? $singular : $plural;
                 return str_replace(':count', $hours, $translation);
             }
             return trans_choice('time.hour_ago', $hours, ['count' => $hours], $locale);
@@ -75,7 +85,9 @@ if (!function_exists('timeDiffForHumans')) {
             $key = 'time.minute_ago';
             if ($locale === 'rw') {
                 // Manual pluralization for Kinyarwanda
-                $translation = $minutes === 1 ? 'umunota :count ushize' : 'iminota :count ishize';
+                $singular = $short ? 'umunota' : 'umunota :count ushize';
+                $plural = $short ? 'iminota' : 'iminota :count ishize';
+                $translation = (int)$minutes === 1 ? $singular : $plural;
                 return str_replace(':count', $minutes, $translation);
             }
             return trans_choice($key, $minutes, ['count' => $minutes], $locale);
@@ -84,7 +96,9 @@ if (!function_exists('timeDiffForHumans')) {
         // Less than 1 minute
         if ($locale === 'rw') {
             // Manual pluralization for Kinyarwanda
-            $translation = $diff === 1 ? 'isegonda :count rishize' : 'amasegonda :count ashize';
+            $singular = $short ? 'isegonda' : 'isegonda :count rishize';
+            $plural = $short ? 'amasegonda' : 'amasegonda :count ashize';
+            $translation = (int)$diff === 1 ? $singular : $plural;
             return str_replace(':count', $diff, $translation);
         }
         return trans_choice('time.second_ago', $diff, ['count' => $diff], $locale);

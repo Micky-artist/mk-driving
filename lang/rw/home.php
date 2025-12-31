@@ -159,10 +159,9 @@ return [
     ],
     'footer' => [
         'tagline' => 'Umufatanyabikorwa wizewe mu kwiga amategeko y\'umuhanda. Dukugufasha kwitegura ikizamini cyawe hakoreshejwe ibikoresho n\'ubujyanama bw\'abahanga.',
-        'contact' => 'Twandikire',
-        'faq' => 'Waba wibaza?',
-        'resources' => 'Ifashe',
-        'blog' => 'Inyandiko',
+        'contact' => 'Twandikire: 0798 611 161',
+        'forum' => 'Sobanukirwa?',
+        'news' => 'Amakuru Agezweho',
         'driving_tips' => 'Ubujyanama',
         'testimonials' => 'Ibyo abantu bavuga',
         'help_center' => 'Aho gufashwa',

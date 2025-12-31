@@ -118,7 +118,7 @@
                                             <p class="text-2xl font-semibold text-gray-900">{{ $quiz->last_attempt->score ?? 0 }}/{{ $quiz->questions_count }}</p>
                                             <p class="text-xs text-gray-500 mt-1">
                                                 @if($quiz->last_attempt && $quiz->last_attempt->completed_at)
-                                                    {{ $quiz->last_attempt->completed_at->diffForHumans() }}
+                                                    {{ timeDiffForHumans($quiz->last_attempt->completed_at) }}
                                                 @else
                                                     N/A
                                                 @endif

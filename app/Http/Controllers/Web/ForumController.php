@@ -7,10 +7,10 @@ use App\Models\ForumQuestion;
 use App\Models\ForumAnswer;
 use App\Services\PointsService;
 use Illuminate\Http\Request;
+use Illuminate\Support\Facades\Log;
 use Illuminate\Support\Str;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\DB;
-use Illuminate\Support\Facades\Log;
 
 class ForumController extends Controller
 {
@@ -33,12 +33,8 @@ class ForumController extends Controller
         if ($search) {
             $searchTerm = strtolower($search);
             $query->where(function($q) use ($searchTerm) {
-                // Search in title JSON column for both 'en' and 'rw' locales
-                $q->whereRaw("LOWER(JSON_UNQUOTE(title)) LIKE ?", ["%{$searchTerm}%"])
-                  ->orWhereRaw("LOWER(JSON_UNQUOTE(JSON_EXTRACT(title, '$.en'))) LIKE ?", ["%{$searchTerm}%"])
-                  ->orWhereRaw("LOWER(JSON_UNQUOTE(JSON_EXTRACT(title, '$.rw'))) LIKE ?", ["%{$searchTerm}%"])
-                  // Search in content JSON column for both 'en' and 'rw' locales
-                  ->orWhereRaw("LOWER(JSON_UNQUOTE(content)) LIKE ?", ["%{$searchTerm}%"])
+                // Search in content JSON column for both 'en' and 'rw' locales
+                $q->whereRaw("LOWER(JSON_UNQUOTE(content)) LIKE ?", ["%{$searchTerm}%"])
                   ->orWhereRaw("LOWER(JSON_UNQUOTE(JSON_EXTRACT(content, '$.en'))) LIKE ?", ["%{$searchTerm}%"])
                   ->orWhereRaw("LOWER(JSON_UNQUOTE(JSON_EXTRACT(content, '$.rw'))) LIKE ?", ["%{$searchTerm}%"]);
             });
@@ -51,12 +47,6 @@ class ForumController extends Controller
             $locale = app()->getLocale();
             $fallbackLocale = config('app.fallback_locale', 'en');
             
-            // Ensure title is properly decoded if it's a JSON string
-            $titleData = is_string($question->title) ? json_decode($question->title, true) : $question->title;
-            $title = is_array($titleData) 
-                ? ($titleData[$locale] ?? $titleData[$fallbackLocale] ?? 'No title')
-                : ($question->title ?? 'No title');
-            
             // Ensure content is properly decoded if it's a JSON string
             $contentData = is_string($question->content) ? json_decode($question->content, true) : $question->content;
             $content = is_array($contentData)
@@ -65,11 +55,12 @@ class ForumController extends Controller
             
             return [
                 'id' => $question->id,
-                'title' => $title,
+                'title' => $content, // Use content as title for display
                 'content' => $content,
                 'createdAt' => $question->created_at,
                 'updatedAt' => $question->updated_at,
                 'votes' => $question->votes ?? 0,
+                'user_id' => $question->user_id,
                 'author' => [
                     'firstName' => $question->user && $question->user->first_name ? $question->user->first_name : 'Anonymous',
                     'lastName' => $question->user && $question->user->last_name ? $question->user->last_name : '',
@@ -85,6 +76,7 @@ class ForumController extends Controller
                         'id' => $answer->id,
                         'content' => $answerContent,
                         'votes' => $answer->votes ?? 0,
+                        'user_id' => $answer->user_id,
                         'author' => [
                             'firstName' => $answer->user && $answer->user->first_name ? $answer->user->first_name : 'Anonymous',
                             'lastName' => $answer->user && $answer->user->last_name ? $answer->user->last_name : '',
@@ -145,12 +137,6 @@ class ForumController extends Controller
      */
     public function create()
     {
-        // Check if user is verified
-        if (!Auth::user()->email_verified_at) {
-            return redirect()->route('profile.show', ['locale' => app()->getLocale()])
-                ->with('status', 'Please verify your email address before asking questions in the forum.');
-        }
-        
         $topics = config('forum.topics', []);
         return view('forum.create', compact('topics'));
     }
@@ -160,65 +146,92 @@ class ForumController extends Controller
      */
     public function store(Request $request)
     {
-        // Check if user is verified
-        if (!Auth::user()->email_verified_at) {
-            return redirect()->route('profile.show', ['locale' => app()->getLocale()])
-                ->with('status', 'Please verify your email address before asking questions in the forum.');
+        try {
+            $locale = app()->getLocale();
+            $fallback = config('app.fallback_locale', 'rw');
+            
+            Log::info('Forum store request', [
+                'locale' => $locale,
+                'request_data' => $request->all(),
+                'user_id' => Auth::id()
+            ]);
+            
+            $validated = $request->validate([
+                'content' => 'required|array',
+                'content.'.$locale => 'required|string|min:10|max:255',
+            ]);
+            
+            Log::info('Validation passed', ['validated' => $validated]);
+            
+            // Ensure we have both languages, using current language for fallback if needed
+            $content = [
+                $locale => $validated['content'][$locale],
+                $fallback => $validated['content'][$fallback] ?? $validated['content'][$locale]
+            ];
+
+            Log::info('Content prepared', ['content' => $content]);
+
+            $question = new ForumQuestion([
+                'content' => json_encode($content),
+                'user_id' => Auth::id(),
+                'is_approved' => true,
+            ]);
+
+            $question->save();
+
+            Log::info('Question saved', ['question_id' => $question->id]);
+
+            // Award points for asking a question
+            try {
+                $this->pointsService->awardPoints(Auth::id(), 'question_asked', [
+                    'question_id' => $question->id,
+                    'forum_question_id' => $question->id,
+                ]);
+                Log::info('Points awarded successfully');
+            } catch (\Exception $pointsException) {
+                Log::warning('Points awarding failed', ['error' => $pointsException->getMessage()]);
+                // Continue even if points fail
+            }
+
+            if ($request->wantsJson()) {
+                $responseData = [
+                    'success' => true,
+                    'id' => $question->id,
+                    'title' => $question->content, // Use content as title for response
+                    'content' => $question->content,
+                    'author' => [
+                        'firstName' => $question->user && $question->user->first_name ? $question->user->first_name : 'Anonymous',
+                        'lastName' => $question->user && $question->user->last_name ? $question->user->last_name : '',
+                    ],
+                    'createdAt' => $question->created_at->toIso8601String(),
+                    'answers' => [],
+                ];
+                
+                Log::info('Returning JSON response', ['response_data' => $responseData]);
+                
+                return response()->json($responseData, 201);
+            }
+
+            return redirect()
+                ->route('forum.index')
+                ->with('success', 'Your question has been posted!');
+                
+        } catch (\Exception $e) {
+            Log::error('Forum store error', [
+                'error' => $e->getMessage(),
+                'trace' => $e->getTraceAsString(),
+                'request_data' => $request->all()
+            ]);
+            
+            if ($request->wantsJson()) {
+                return response()->json([
+                    'success' => false,
+                    'message' => $e->getMessage()
+                ], 500);
+            }
+            
+            throw $e;
         }
-        
-        $locale = app()->getLocale();
-        $fallback = config('app.fallback_locale', 'rw');
-        
-        $validated = $request->validate([
-            'title' => 'required|array',
-            'title.'.$locale => 'required|string|min:10|max:255',
-            'content' => 'required|array',
-            'content.'.$locale => 'required|string|min:20',
-        ]);
-        
-        // Ensure we have both languages, using current language for fallback if needed
-        $title = [
-            $locale => $validated['title'][$locale],
-            $fallback => $validated['title'][$fallback] ?? $validated['title'][$locale]
-        ];
-        
-        $content = [
-            $locale => $validated['content'][$locale],
-            $fallback => $validated['content'][$fallback] ?? $validated['content'][$locale]
-        ];
-
-        $question = new ForumQuestion([
-            'title' => json_encode($title),
-            'content' => json_encode($content),
-            'user_id' => Auth::id(),
-            'is_approved' => true,
-        ]);
-
-        $question->save();
-
-        // Award points for asking a question
-        $this->pointsService->awardPoints(Auth::id(), 'question_asked', [
-            'question_id' => $question->id,
-            'forum_question_id' => $question->id,
-        ]);
-
-        if ($request->wantsJson()) {
-            return response()->json([
-                'id' => $question->id,
-                'title' => $question->title,
-                'content' => $question->content,
-                'author' => [
-                    'firstName' => $question->user && $question->user->first_name ? $question->user->first_name : 'Anonymous',
-                    'lastName' => $question->user && $question->user->last_name ? $question->user->last_name : '',
-                ],
-                'createdAt' => $question->created_at->toIso8601String(),
-                'answers' => [],
-            ], 201);
-        }
-
-        return redirect()
-            ->route('forum.index')
-            ->with('success', 'Your question has been posted!');
     }
 
     /**
@@ -236,14 +249,13 @@ class ForumController extends Controller
         $fallbackLocale = config('app.fallback_locale', 'rw');
         
         // Prepare question data with localized content
-        $titleData = is_string($question->title) ? json_decode($question->title, true) : $question->title;
         $contentData = is_string($question->content) ? json_decode($question->content, true) : $question->content;
         
         $questionData = [
             'id' => $question->id,
-            'title' => is_array($titleData) 
-                ? ($titleData[$locale] ?? $titleData[$fallbackLocale] ?? 'No title')
-                : $question->title,
+            'title' => is_array($contentData) 
+                ? ($contentData[$locale] ?? $contentData[$fallbackLocale] ?? 'No content')
+                : $question->content,
             'content' => is_array($contentData) 
                 ? ($contentData[$locale] ?? $contentData[$fallbackLocale] ?? 'No content')
                 : $question->content,
@@ -491,7 +503,188 @@ class ForumController extends Controller
     }
 
     /**
-     * Get popular topics for the sidebar.
+     * Delete a question.
+     */
+    public function deleteQuestion($localeOrId, $id = null)
+    {
+        // Handle locale parameter - if first param is locale, use second as ID
+        if (in_array($localeOrId, ['rw', 'en'])) {
+            $id = $id;
+        } else {
+            $id = $localeOrId;
+        }
+        
+        $question = ForumQuestion::findOrFail($id);
+        
+        // Check if user is owner of the question or admin
+        if ($question->user_id !== Auth::id() && !Auth::user()->hasRole('admin')) {
+            if (request()->wantsJson()) {
+                return response()->json(['success' => false, 'message' => 'Unauthorized'], 403);
+            }
+            abort(403);
+        }
+
+        // Delete all answers associated with the question
+        $question->answers()->delete();
+        
+        // Delete the question
+        $question->delete();
+
+        if (request()->wantsJson()) {
+            return response()->json([
+                'success' => true,
+                'message' => 'Question deleted successfully'
+            ]);
+        }
+
+        return redirect()
+            ->route('forum.index')
+            ->with('success', 'Question deleted successfully!');
+    }
+
+    /**
+     * Delete an answer.
+     */
+    public function deleteAnswer($localeOrId, $id = null)
+    {
+        // Handle locale parameter - if first param is locale, use second as ID
+        if (in_array($localeOrId, ['rw', 'en'])) {
+            $id = $id;
+        } else {
+            $id = $localeOrId;
+        }
+        
+        $answer = ForumAnswer::findOrFail($id);
+        
+        // Check if user is owner of the answer or admin
+        if ($answer->user_id !== Auth::id() && !Auth::user()->hasRole('admin')) {
+            if (request()->wantsJson()) {
+                return response()->json(['success' => false, 'message' => 'Unauthorized'], 403);
+            }
+            abort(403);
+        }
+
+        // If this was the best answer, clear it from the question
+        $question = $answer->question;
+        if ($question->best_answer_id === $answer->id) {
+            $question->update(['best_answer_id' => null]);
+        }
+
+        // Delete the answer
+        $answer->delete();
+
+        if (request()->wantsJson()) {
+            return response()->json([
+                'success' => true,
+                'message' => 'Answer deleted successfully'
+            ]);
+        }
+
+        return back()->with('success', 'Answer deleted successfully!');
+    }
+
+    /**
+     * Update a question.
+     */
+    public function updateQuestion(Request $request, $localeOrId, $id = null)
+    {
+        // Handle locale parameter - if first param is locale, use second as ID
+        if (in_array($localeOrId, ['rw', 'en'])) {
+            $id = $id;
+        } else {
+            $id = $localeOrId;
+        }
+        
+        $question = ForumQuestion::findOrFail($id);
+        
+        // Check if user is owner of question or admin
+        if ($question->user_id !== Auth::id() && !Auth::user()->hasRole('admin')) {
+            if (request()->wantsJson()) {
+                return response()->json(['success' => false, 'message' => 'Unauthorized'], 403);
+            }
+            abort(403);
+        }
+
+        $locale = app()->getLocale();
+        $fallback = config('app.fallback_locale', 'rw');
+        
+        $validated = $request->validate([
+            'content' => 'required|array',
+            'content.'.$locale => 'required|string|min:10|max:255',
+        ]);
+
+        // Get existing content and update only current locale
+        $existingContent = json_decode($question->content, true) ?: [];
+        
+        $existingContent[$locale] = $validated['content'][$locale];
+
+        $question->update([
+            'content' => json_encode($existingContent),
+        ]);
+
+        if (request()->wantsJson()) {
+            return response()->json([
+                'success' => true,
+                'message' => 'Question updated successfully',
+                'title' => $existingContent[$locale],
+                'content' => $existingContent[$locale]
+            ]);
+        }
+
+        return back()->with('success', 'Question updated successfully!');
+    }
+
+    /**
+     * Update an answer.
+     */
+    public function updateAnswer(Request $request, $localeOrId, $id = null)
+    {
+        // Handle locale parameter - if first param is locale, use second as ID
+        if (in_array($localeOrId, ['rw', 'en'])) {
+            $id = $id;
+        } else {
+            $id = $localeOrId;
+        }
+        
+        $answer = ForumAnswer::findOrFail($id);
+        
+        // Check if user is owner of answer or admin
+        if ($answer->user_id !== Auth::id() && !Auth::user()->hasRole('admin')) {
+            if (request()->wantsJson()) {
+                return response()->json(['success' => false, 'message' => 'Unauthorized'], 403);
+            }
+            abort(403);
+        }
+
+        $locale = app()->getLocale();
+        $fallback = config('app.fallback_locale', 'en');
+        
+        $validated = $request->validate([
+            'content' => 'required|array',
+            "content.{$locale}" => 'required|string|min:10',
+        ]);
+
+        // Get existing content and update only current locale
+        $existingContent = json_decode($answer->content, true) ?: [];
+        $existingContent[$locale] = $validated['content'][$locale];
+
+        $answer->update([
+            'content' => json_encode($existingContent),
+        ]);
+
+        if (request()->wantsJson()) {
+            return response()->json([
+                'success' => true,
+                'message' => 'Answer updated successfully',
+                'content' => $existingContent[$locale]
+            ]);
+        }
+
+        return back()->with('success', 'Answer updated successfully!');
+    }
+
+    /**
+     * Get popular topics for sidebar.
      */
     private function getPopularTopics()
     {
@@ -507,5 +700,60 @@ class ForumController extends Controller
             ->take(10);
 
         return $topics;
+    }
+
+    /**
+     * Post a new answer to a question.
+     */
+    public function postAnswer(Request $request, $questionId)
+    {
+        $locale = app()->getLocale();
+        
+        Log::info('postAnswer called', [
+            'locale' => $locale,
+            'questionId' => $questionId,
+            'request_data' => $request->all(),
+            'user_id' => Auth::id()
+        ]);
+
+        $request->validate([
+            'content' => 'required|array',
+            'content.*' => 'required|string|min:10|max:2000',
+            'parent_id' => 'nullable|exists:forum_answers,id'
+        ]);
+
+        Log::info('Validation passed');
+
+        $question = ForumQuestion::findOrFail($questionId);
+        Log::info('Question found', ['question_id' => $question->id]);
+
+        $answer = ForumAnswer::create([
+            'question_id' => $questionId,
+            'user_id' => Auth::id(),
+            'content' => $request->content,
+            'parent_id' => $request->parent_id,
+            'votes' => 0
+        ]);
+
+        Log::info('Answer created', ['answer_id' => $answer->id]);
+
+        $responseData = [
+            'success' => true,
+            'message' => 'Answer posted successfully.',
+            'answer' => [
+                'id' => $answer->id,
+                'content' => $answer->content,
+                'question_id' => $answer->question_id,
+                'author' => [
+                    'firstName' => Auth::user()->firstName,
+                    'lastName' => Auth::user()->lastName
+                ],
+                'created_at' => $answer->created_at
+            ]
+        ];
+
+        Log::info('Returning response', ['response_data' => $responseData]);
+
+        return response()->json($responseData);
     }
 }

@@ -18,4 +18,7 @@ return [
     'change_password' => 'Change Password',
     'logout' => 'Logout',
     'edit_profile' => 'Edit Profile',
+    'invalid_verification_link' => 'Invalid Verification Link',
+    'invalid_verification_link_message' => 'The verification link you clicked is invalid or has expired. Please request a new verification email below.',
+    'forum_verification_required' => 'Email verification is required to participate in forum discussions. Please verify your email to ask questions and post answers.',
 ];

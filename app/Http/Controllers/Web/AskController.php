@@ -25,12 +25,6 @@ class AskController extends Controller
                 ->with('status', __('auth.forum_login_required'));
         }
         
-        // Check if user is verified
-        if (!Auth::user()->email_verified_at) {
-            return redirect()->route('profile.show', ['locale' => app()->getLocale()])
-                ->with('status', 'Please verify your email address before asking questions in the forum.');
-        }
-        
         $topics = config('forum.topics', []);
         return view('forum.create', compact('topics'));
     }
@@ -46,43 +40,26 @@ class AskController extends Controller
                 ->with('status', __('auth.forum_login_required'));
         }
         
-        // Check if user is verified
-        if (!Auth::user()->email_verified_at) {
-            return redirect()->route('profile.show', ['locale' => app()->getLocale()])
-                ->with('status', 'Please verify your email address before asking questions in the forum.');
-        }
-        
         $locale = app()->getLocale();
         $fallback = config('app.fallback_locale', 'rw');
         
         $validated = $request->validate([
-            'title' => 'required|array',
-            'title.'.$locale => 'required|string|min:10|max:255',
             'content' => 'required|array',
-            'content.'.$locale => 'required|string|min:20',
+            'content.'.$locale => 'required|string|min:10|max:255',
         ], [
-            'title.required' => __('forum.validation.title_required'),
-            'title.'.$locale.'.required' => __('forum.validation.title_required'),
-            'title.'.$locale.'.min' => __('forum.validation.title_min', ['min' => 10]),
-            'title.'.$locale.'.max' => __('forum.validation.title_max', ['max' => 255]),
             'content.required' => __('forum.validation.content_required'),
             'content.'.$locale.'.required' => __('forum.validation.content_required'),
-            'content.'.$locale.'.min' => __('forum.validation.content_min', ['min' => 20]),
+            'content.'.$locale.'.min' => __('forum.validation.content_min', ['min' => 10]),
+            'content.'.$locale.'.max' => __('forum.validation.content_max', ['max' => 255]),
         ]);
         
         // Ensure we have both languages, using current language for fallback if needed
-        $title = [
-            $locale => $validated['title'][$locale],
-            $fallback => $validated['title'][$fallback] ?? $validated['title'][$locale]
-        ];
-        
         $content = [
             $locale => $validated['content'][$locale],
             $fallback => $validated['content'][$fallback] ?? $validated['content'][$locale]
         ];
 
         $question = new ForumQuestion([
-            'title' => json_encode($title),
             'content' => json_encode($content),
             'user_id' => Auth::id(),
             'is_approved' => true,

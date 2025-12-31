@@ -12,7 +12,6 @@ class ForumQuestion extends Model
     use SoftDeletes;
 
     protected $fillable = [
-        'title',
         'content',
         'topics',
         'is_approved',
@@ -22,7 +21,6 @@ class ForumQuestion extends Model
     ];
 
     protected $casts = [
-        'title' => 'array',
         'content' => 'array',
         'topics' => 'array',
         'is_approved' => 'boolean',
@@ -63,42 +61,9 @@ class ForumQuestion extends Model
     }
 
     /**
-     * Get localized title
+     * Get localized question (content)
      */
-    public function getLocalizedTitleAttribute()
-    {
-        $title = $this->getRawOriginal('title');
-        $locale = app()->getLocale();
-        
-        if (empty($title)) {
-            return '';
-        }
-        
-        // Handle array or JSON string
-        $titleArray = is_array($title) ? $title : (json_decode($title, true) ?: []);
-        
-        // If it's not an array after decoding, return the original value
-        if (!is_array($titleArray)) {
-            return $title;
-        }
-        
-        // Try current locale
-        if (isset($titleArray[$locale]) && !empty($titleArray[$locale])) {
-            return $titleArray[$locale];
-        }
-        
-        // Fallback to English
-        if (isset($titleArray['en']) && !empty($titleArray['en'])) {
-            return $titleArray['en'];
-        }
-        
-        return '';
-    }
-
-    /**
-     * Get localized content
-     */
-    public function getLocalizedContentAttribute()
+    public function getLocalizedQuestionAttribute()
     {
         $content = $this->getRawOriginal('content');
         $locale = app()->getLocale();
@@ -126,5 +91,13 @@ class ForumQuestion extends Model
         }
         
         return '';
+    }
+
+    /**
+     * Get localized content (alias for question)
+     */
+    public function getLocalizedContentAttribute()
+    {
+        return $this->getLocalizedQuestionAttribute();
     }
 }

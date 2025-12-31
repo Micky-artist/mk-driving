@@ -463,8 +463,8 @@ Route::prefix('{locale}')
         // Leaderboard route (separate from forum)
         Route::get('/leaderboard', [\App\Http\Controllers\Web\ForumController::class, 'leaderboard'])->name('leaderboard');
         
-        // Forum Routes (protected by auth and verified middleware - for interactions)
-        Route::middleware(['auth', 'verified'])->group(function () {
+        // Forum Routes (protected by auth middleware - email verification handled in controllers)
+        Route::middleware(['auth'])->group(function () {
             Route::prefix('forum')
                 ->name('forum.')
                 ->group(function () {
@@ -472,8 +472,8 @@ Route::prefix('{locale}')
                     Route::post('/', [\App\Http\Controllers\Web\ForumController::class, 'store'])->name('store');
                     
                     // Answers
-                    Route::post('/{questionId}/answers', [\App\Http\Controllers\Web\ForumController::class, 'storeAnswer'])
-                        ->name('answers.store');
+                    // Route::post('/{questionId}/answers', [\App\Http\Controllers\Web\ForumController::class, 'storeAnswer'])
+                    //     ->name('answers.store');
                         
                     // Voting
                     Route::post('/{type}/{id}/vote', [\App\Http\Controllers\Web\ForumController::class, 'vote'])
@@ -482,6 +482,22 @@ Route::prefix('{locale}')
                     // Mark as best answer
                     Route::post('/{questionId}/best-answer/{answerId}', [\App\Http\Controllers\Web\ForumController::class, 'markAsBestAnswer'])
                         ->name('best-answer');
+                        
+                    // Post answer
+                    Route::post('/{questionId}/answers', [\App\Http\Controllers\Web\ForumController::class, 'postAnswer'])
+                        ->name('answers.store');
+                        
+                    // Delete routes
+                    Route::delete('/questions/{id}', [\App\Http\Controllers\Web\ForumController::class, 'deleteQuestion'])
+                        ->name('questions.delete');
+                    Route::delete('/answers/{id}', [\App\Http\Controllers\Web\ForumController::class, 'deleteAnswer'])
+                        ->name('answers.delete');
+                        
+                    // Edit routes
+                    Route::put('/questions/{id}', [\App\Http\Controllers\Web\ForumController::class, 'updateQuestion'])
+                        ->name('questions.update');
+                    Route::put('/answers/{id}', [\App\Http\Controllers\Web\ForumController::class, 'updateAnswer'])
+                        ->name('answers.update');
                 });
         });
         

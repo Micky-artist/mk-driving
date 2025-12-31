@@ -167,4 +167,15 @@ Baza hano turagusobanurira cg bagenzi bawe bagusubize.',
             'success' => 'Murakoze kwiyandikisha!',
         ],
     ],
+    
+    // New forum localization strings
+    'whats_your_question' => 'Baza ikibazo cyawe',
+    'write_your_answer' => 'Andika igisubizo cyawe...',
+    'write_your_reply' => 'Andika igisubizo cyawe...',
+    'cancel' => 'Hagarika',
+    'post_question' => 'Ohereza ikibazo',
+    'post_answer' => 'Ohereza igisubizo',
+    'post_reply' => 'Ohereza igisubizo',
+    'reply' => 'Subiza',
+    'replies' => 'Ibiganiro',
 ];

@@ -151,7 +151,7 @@ class ForumService
                     'answersCount' => $topQuestion->answers_count ?? 0,
                     'votes' => $topQuestion->votes ?? 0,
                     'createdAt' => $topQuestion->created_at->toISOString(),
-                    'timeAgo' => $topQuestion->created_at->diffForHumans()
+                    'timeAgo' => timeDiffForHumans($topQuestion->created_at)
                 ],
                 'author' => [
                     'firstName' => $topQuestion->user->first_name ?? 'Anonymous',
@@ -181,7 +181,7 @@ class ForumService
                         'stats' => [
                             'votes' => $answer->votes ?? 0,
                             'createdAt' => $answer->created_at->toISOString(),
-                            'timeAgo' => $answer->created_at->diffForHumans()
+                            'timeAgo' => timeDiffForHumans($answer->created_at)
                         ]
                     ];
                 })->toArray()

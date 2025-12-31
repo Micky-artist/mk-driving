@@ -332,7 +332,7 @@
                         </a>
                     @else
                         <button type="button"
-                            onclick="event.preventDefault(); @if ($canRetake || $hasRequiredPlan || $isGuestQuiz) window.location.href='{{ $buttonLink }}' @else showRetakeRestriction('{{ $nextRetakeTime ? $nextRetakeTime->diffForHumans() : '' }}') @endif"
+                            onclick="event.preventDefault(); @if ($canRetake || $hasRequiredPlan || $isGuestQuiz) window.location.href='{{ $buttonLink }}' @else showRetakeRestriction('{{ $nextRetakeTime ? timeDiffForHumans($nextRetakeTime) : '' }}') @endif"
                             class="w-full flex items-center justify-center px-4 py-2 border border-transparent rounded-lg text-sm font-medium text-white focus:outline-none focus:ring-2 focus:ring-offset-2 transition-colors duration-200 bg-blue-600 hover:bg-blue-700 focus:ring-blue-500 {{ !$canRetake && !$hasRequiredPlan && !$isGuestQuiz ? 'opacity-75' : '' }}">
                             {{ $buttonText }}
                             <svg class="ml-2 -mr-1 w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">

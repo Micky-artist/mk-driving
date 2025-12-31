@@ -3,14 +3,11 @@
 namespace App\Http\Controllers\Auth;
 
 use App\Http\Controllers\Controller;
-use Illuminate\Foundation\Auth\VerifiesEmails;
 use Illuminate\Http\Request;
 use Illuminate\Http\Response;
 
 class VerifyEmailController extends Controller
 {
-    use VerifiesEmails;
-
     /**
      * Where to redirect users after verification.
      *
@@ -51,12 +48,18 @@ class VerifyEmailController extends Controller
      */
     public function verify(Request $request)
     {
+        // Check if user is authenticated
+        if (!$request->user()) {
+            return redirect(app()->getLocale() . '/login?message=auth_required');
+        }
+
+        // Validate the verification link
         if (! hash_equals((string) $request->route('id'), (string) $request->user()->getKey())) {
-            return response()->json(['message' => 'Invalid verification link'], 403);
+            return redirect(app()->getLocale() . '/profile?error=invalid_verification_link');
         }
 
         if (! hash_equals((string) $request->route('hash'), sha1($request->user()->getEmailForVerification()))) {
-            return response()->json(['message' => 'Invalid verification link'], 403);
+            return redirect(app()->getLocale() . '/profile?error=invalid_verification_link');
         }
 
         if ($request->user()->hasVerifiedEmail()) {
@@ -89,5 +92,19 @@ class VerifyEmailController extends Controller
         return $request->wantsJson()
                     ? new Response('', 202)
                     : back()->with('status', 'verification-link-sent');
+    }
+
+    /**
+     * Get the post register / login redirect path.
+     *
+     * @return string
+     */
+    public function redirectPath()
+    {
+        if (method_exists($this, 'redirectTo')) {
+            return $this->redirectTo();
+        }
+
+        return property_exists($this, 'redirectTo') ? $this->redirectTo : '/dashboard';
     }
 }

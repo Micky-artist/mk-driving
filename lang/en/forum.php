@@ -165,4 +165,15 @@ return [
             'success' => 'Thank you for subscribing!',
         ],
     ],
+    
+    // New forum localization strings
+    'whats_your_question' => "What's your question?",
+    'write_your_answer' => 'Write your answer...',
+    'write_your_reply' => 'Write your reply...',
+    'cancel' => 'Cancel',
+    'post_question' => 'Post Question',
+    'post_answer' => 'Post Answer',
+    'post_reply' => 'Post Reply',
+    'reply' => 'Reply',
+    'replies' => 'Replies',
 ];

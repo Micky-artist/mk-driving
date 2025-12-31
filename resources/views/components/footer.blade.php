@@ -1,82 +1,73 @@
-<footer class="bg-blue-900 text-white py-2 mt-2">
-    <div class="max-w-7xl mx-auto px-2 sm:px-6 lg:px-8">
-        <!-- Mobile Layout -->
-        <div class="sm:hidden">
-
-            <!-- Contact Info -->
-            <div class="flex items-center justify-center space-x-4 text-xs">
-                <button onclick="window.location.href='mailto:mkscholars250@gmail.com'" class="flex items-center space-x-1 text-gray-300 hover:text-white transition-colors">
-                    <i class="fas fa-envelope"></i>
-                    <span>mkscholars250@gmail.com</span>
-                </button>
-                <button onclick="window.location.href='tel:+250798611161'" class="flex items-center space-x-1 text-gray-300 hover:text-white transition-colors">
-                    <i class="fas fa-phone"></i>
-                    <span>+250 798 611 161</span>
-                </button>
+<footer class="bg-gradient-to-b from-blue-900 to-blue-950 text-white mt-6">
+    <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-12">
+        <!-- Main Footer Content -->
+        <div class="grid grid-cols-1 md:grid-cols-4 gap-8 mb-8">
+            <!-- About Section -->
+            <div class="col-span-1 md:col-span-2">
+                <div class="flex items-center mb-4">
+                    <img class="h-10 w-auto" src="{{ asset('logo.png') }}" alt="MK Scholars Logo">
+                    <span class="ml-3 text-xl font-bold bg-gradient-to-r from-orange-400 to-orange-300 bg-clip-text text-transparent">
+                        MK Driving
+                    </span>
+                </div>
+                <p class="text-blue-100 text-sm leading-relaxed">
+                    {{ __('home.footer.tagline') }}
+                </p>
+                <div class="mt-4 flex space-x-2">
+                    <!-- WhatsApp Button -->
+                    <button onclick="window.open('https://wa.me/250798611161', '_blank')" class="bg-green-500 hover:bg-green-600 text-white rounded-full w-10 h-10 flex items-center justify-center transition-all duration-300 transform hover:scale-110">
+                        <i class="fab fa-whatsapp text-sm"></i>
+                    </button>
+                    
+                    <!-- Instagram Button -->
+                    <button onclick="window.open('https://instagram.com/mkdrivingschool_', '_blank')" class="bg-gradient-to-r from-pink-500 via-purple-500 to-yellow-500 hover:opacity-90 rounded-full w-10 h-10 flex items-center justify-center transition-all duration-300 transform hover:scale-110">
+                        <i class="fab fa-instagram text-sm text-white"></i>
+                    </button>
+                    <a href="tel:250798611161" class="flex items-center text-blue-300 hover:text-white transition-colors">
+                        <svg class="h-5 w-5 mr-1" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="1.5" d="M3 5a2 2 0 012-2h3.28a1 1 0 01.948.684l1.498 4.493a1 1 0 01-.502 1.21l-2.257 1.13a11.042 11.042 0 005.516 5.516l1.13-2.257a1 1 0 011.21-.502l4.493 1.498a1 1 0 01.684.949V19a2 2 0 01-2 2h-1C9.716 21 3 14.284 3 6V5z" />
+                        </svg>
+                        <span class="text-sm">+250 798 611 161</span>
+                    </a>
+                </div>
             </div>
-            <!-- Social Media Icons -->
-            <div class="flex justify-center space-x-6 mb-4">
-                <!-- WhatsApp Button -->
-                <button onclick="window.open('https://wa.me/250798611161', '_blank')" class="bg-green-500 hover:bg-green-600 text-white rounded-full p-2 transition-all duration-300 transform hover:scale-110">
-                    <i class="fab fa-whatsapp text-sm"></i>
-                </button>
-                
-                <!-- Instagram Button -->
-                <button onclick="window.open('https://instagram.com/mkdrivingschool_', '_blank')" class="bg-gradient-to-r from-pink-500 via-purple-500 to-yellow-500 hover:opacity-90 rounded-full p-2 transition-all duration-300 transform hover:scale-110">
-                    <i class="fab fa-instagram text-sm text-white"></i>
-                </button>
-                
-                <!-- Email Button -->
-                <button onclick="window.location.href='mailto:mkscholars250@gmail.com'" class="bg-blue-500 hover:bg-blue-600 text-white rounded-full p-2 transition-all duration-300 transform hover:scale-110">
-                    <i class="fas fa-envelope text-sm"></i>
-                </button>
+
+            <!-- Quick Links -->
+            <div>
+                <h3 class="text-sm font-semibold text-orange-400 uppercase tracking-wider mb-4">Quick Links</h3>
+                <ul class="space-y-2">
+                    <li><a href="{{ route('home') }}" class="text-blue-100 hover:text-white transition-colors text-sm">{{ __('navigation.home') }}</a></li>
+                    <li><a href="{{ route('quizzes') }}" class="text-blue-100 hover:text-white transition-colors text-sm">{{ __('navigation.quizzes') }}</a></li>
+                    <li><a href="#" class="text-blue-100 hover:text-white transition-colors text-sm">{{ __('home.footer.news') }}</a></li>
+                    <li><a href="#" class="text-blue-100 hover:text-white transition-colors text-sm">{{ __('home.footer.forum') }}</a></li>
+                </ul>
             </div>
 
-            <!-- Copyright -->
-            <div class="text-xs text-gray-300 pt-2 border-t border-blue-800 text-center">
-                &copy; {{ date('Y') }} {{ config('app.name') }}. All rights reserved.
+            <!-- Legal -->
+            <div>
+                <h3 class="text-sm font-semibold text-orange-400 uppercase tracking-wider mb-4">{{ __('home.footer.legal') }}</h3>
+                <ul class="space-y-2">
+                    <li><a href="#" class="text-blue-100 hover:text-white transition-colors text-sm">{{ __('home.footer.terms_of_service') }}</a></li>
+                    <li><a href="#" class="text-blue-100 hover:text-white transition-colors text-sm">{{ __('home.footer.privacy_policy') }}</a></li>
+                    <li><a href="#" class="text-blue-100 hover:text-white transition-colors text-sm">{{ __('home.footer.cookie_policy') }}</a></li>
+                    <li><a href="#" class="text-blue-100 hover:text-white transition-colors text-sm">{{ __('home.footer.refund_policy') }}</a></li>
+                </ul>
             </div>
         </div>
 
-        <!-- Desktop Layout -->
-        <div class="hidden sm:flex sm:flex-row items-center justify-between">
-            <!-- Social Media Icons -->
-            <div class="flex space-x-3">
-                <!-- WhatsApp Button -->
-                <a href="https://wa.me/250798611161" target="_blank" class="bg-green-500 hover:bg-green-600 text-white rounded-full p-2 transition-all duration-300 transform hover:scale-110">
-                    <i class="fab fa-whatsapp text-sm w-4 h-4 flex items-center justify-center"></i>
-                </a>
-                
-                <!-- Instagram Button -->
-                <a href="https://instagram.com/mkdrivingschool_" target="_blank" class="bg-gradient-to-r from-pink-500 via-purple-500 to-yellow-500 hover:opacity-90 rounded-full p-2 transition-all duration-300 transform hover:scale-110">
-                    <i class="fab fa-instagram text-sm w-4 h-4 flex items-center justify-center text-white"></i>
-                </a>
-                
-                <!-- Email Button -->
-                <a href="mailto:mkscholars250@gmail.com" class="bg-blue-500 hover:bg-blue-600 text-white rounded-full p-2 transition-all duration-300 transform hover:scale-110">
-                    <i class="fas fa-envelope text-sm w-4 h-4 flex items-center justify-center"></i>
-                </a>
-            </div>
-
-            <!-- Contact Info -->
-            <div class="flex flex-row items-center space-x-4 text-xs">
-                <div class="flex items-center space-x-1">
-                    <svg class="h-3 w-3 text-gray-300" fill="none" viewBox="0 0 24 24" stroke="currentColor">
-                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M3 8l7.89 5.26a2 2 0 002.22 0L21 8M5 19h14a2 2 0 002-2V7a2 2 0 00-2-2H5a2 2 0 00-2 2v10a2 2 0 002 2z" />
-                    </svg>
-                    <a href="mailto:mkscholars250@gmail.com" class="text-gray-300 hover:text-white transition-colors">mkscholars250@gmail.com</a>
+        <!-- Bottom Bar -->
+        <div class="border-t border-blue-800 pt-8">
+            <div class="flex flex-col md:flex-row justify-between items-center">
+                <p class="text-blue-300 text-sm">
+                    &copy; {{ date('Y') }} MK Scholars. {{ __('home.footer.all_rights_reserved') }}
+                </p>
+                <div class="mt-4 md:mt-0 flex space-x-2">
+                    <a href="#" class="text-blue-300 hover:text-white text-sm">{{ __('home.footer.contact') }}</a>
+                    <span class="text-blue-700">|</span>
+                    <a href="#" class="text-blue-300 hover:text-white text-sm">{{ __('home.footer.terms_of_service') }}</a>
+                    <span class="text-blue-700">|</span>
+                    <a href="#" class="text-blue-300 hover:text-white text-sm">{{ __('home.footer.privacy_policy') }}</a>
                 </div>
-                <div class="flex items-center space-x-1">
-                    <svg class="h-3 w-3 text-gray-300" fill="none" viewBox="0 0 24 24" stroke="currentColor">
-                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M3 5a2 2 0 012-2h3.28a1 1 0 01.948.684l1.498 4.493a1 1 0 01-.502 1.21l-2.257 1.13a11.042 11.042 0 005.516 5.516l1.13-2.257a1 1 0 011.21-.502l4.493 1.498a1 1 0 01.684.949V19a2 2 0 01-2 2h-1C9.716 21 3 14.284 3 6V5z" />
-                    </svg>
-                    <a href="tel:+250798611161" class="text-gray-300 hover:text-white transition-colors">+250 798 611 161</a>
-                </div>
-            </div>
-
-            <!-- Copyright -->
-            <div class="text-xs text-gray-300">
-                &copy; {{ date('Y') }} {{ config('app.name') }}. All rights reserved.
             </div>
         </div>
     </div>

@@ -23,7 +23,7 @@
                     <div>
                         <h1 class="text-2xl font-bold text-gray-900">{{ $question->title }}</h1>
                         <div class="mt-1 flex items-center text-sm text-gray-500">
-                            <span>Asked {{ $question->created_at->diffForHumans() }} by {{ $question->user->name }}</span>
+                            <span>Asked {{ timeDiffForHumans($question->created_at) }} by {{ $question->user->name }}</span>
                             <span class="mx-2">•</span>
                             <span>{{ $question->views }} {{ Str::plural('view', $question->views) }}</span>
                         </div>
@@ -145,7 +145,7 @@
                                                         <img class="h-8 w-8 rounded-full" src="https://ui-avatars.com/api/?name={{ urlencode($answer->user->name) }}&color=7F9CF5&background=EBF4FF" alt="">
                                                         <div class="ml-2">
                                                             <div class="font-medium text-gray-900">{{ $answer->user->name }}</div>
-                                                            <div>Answered {{ $answer->created_at->diffForHumans() }}</div>
+                                                            <div>Answered {{ timeDiffForHumans($answer->created_at) }}</div>
                                                         </div>
                                                     </div>
                                                 </div>

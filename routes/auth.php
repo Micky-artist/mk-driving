@@ -64,10 +64,9 @@ Route::prefix('{locale}')->where(['locale' => '(rw|en)'])->group(function () {
         return view('auth.verify');
     })->middleware('auth')->name('verification.notice');
 
-    Route::get('/verify-email/{id}/{hash}', function (\Illuminate\Foundation\Auth\EmailVerificationRequest $request) {
-        $request->fulfill();
-        return redirect(app()->getLocale() . '/dashboard?verified=1');
-    })->middleware(['auth', 'signed', 'throttle:6,1'])->name('verification.verify');
+    Route::get('/verify-email/{id}/{hash}', [VerifyEmailController::class, 'verify'])
+        ->middleware(['auth', 'signed', 'throttle:6,1'])
+        ->name('verification.verify');
 
     Route::post('/email/verification-notification', function (Request $request) {
         $request->user()->sendEmailVerificationNotification();
