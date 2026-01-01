@@ -834,133 +834,37 @@
                     
                     // Initialize audio elements
                     initSounds() {
-                        // Use Web Audio API to generate distinct sounds
-                        try {
-                            this.audioContext = new (window.AudioContext || window.webkitAudioContext)();
-                            
-                            // Resume audio context on first user interaction (mobile-friendly)
-                            const resumeAudio = async () => {
-                                if (this.audioContext.state === 'suspended') {
-                                    try {
-                                        await this.audioContext.resume();
-                                        console.log('Audio context resumed successfully');
-                                    } catch (error) {
-                                        console.log('Audio context resume failed:', error);
-                                        // Fallback: try creating silent audio to unlock
-                                        this.unlockAudio();
-                                    }
-                                }
-                                // Remove listeners after first interaction
-                                document.removeEventListener('click', resumeAudio);
-                                document.removeEventListener('touchstart', resumeAudio);
-                                document.removeEventListener('touchend', resumeAudio);
-                            };
-                            
-                            // Add multiple event listeners for mobile compatibility
-                            document.addEventListener('click', resumeAudio);
-                            document.addEventListener('touchstart', resumeAudio);
-                            document.addEventListener('touchend', resumeAudio);
-                            
-                        } catch (error) {
-                            console.log('Web Audio API not supported:', error);
-                            this.audioContext = null;
-                        }
-                    },
-                    
-                    // Fallback method to unlock audio on mobile
-                    unlockAudio() {
-                        if (!this.audioContext) return;
+                        // Create audio objects for WAV files
+                        this.correctSound = new Audio('/assets/sounds/correct.wav');
+                        this.incorrectSound = new Audio('/assets/sounds/incorrect.wav');
                         
-                        // Create and play a silent sound to unlock audio
-                        const oscillator = this.audioContext.createOscillator();
-                        const gainNode = this.audioContext.createGain();
+                        // Set volume for both sounds
+                        this.correctSound.volume = 0.5;
+                        this.incorrectSound.volume = 0.5;
                         
-                        oscillator.connect(gainNode);
-                        gainNode.connect(this.audioContext.destination);
-                        
-                        // Silent sound (0 volume)
-                        gainNode.gain.setValueAtTime(0, this.audioContext.currentTime);
-                        
-                        oscillator.start(this.audioContext.currentTime);
-                        oscillator.stop(this.audioContext.currentTime + 0.01);
+                        // Preload sounds
+                        this.correctSound.load();
+                        this.incorrectSound.load();
                     },
 
-                    // Generate correct sound (positive ascending chime)
+                    // Play correct sound
                     playCorrectSound() {
-                        if (!this.audioContext) return;
-                        
-                        // Ensure audio context is running
-                        if (this.audioContext.state === 'suspended') {
-                            this.audioContext.resume().then(() => {
-                                this.playCorrectSound();
-                            }).catch(error => {
-                                console.log('Audio context resume failed:', error);
+                        if (this.correctSound) {
+                            this.correctSound.currentTime = 0;
+                            this.correctSound.play().catch(error => {
+                                console.log('Correct sound play failed:', error);
                             });
-                            return;
                         }
-                        
-                        const oscillator = this.audioContext.createOscillator();
-                        const gainNode = this.audioContext.createGain();
-                        
-                        oscillator.connect(gainNode);
-                        gainNode.connect(this.audioContext.destination);
-                        
-                        // Create ascending notes (C-E-G chord progression)
-                        oscillator.frequency.setValueAtTime(523.25, this.audioContext.currentTime); // C5
-                        oscillator.frequency.setValueAtTime(659.25, this.audioContext.currentTime + 0.1); // E5  
-                        oscillator.frequency.setValueAtTime(783.99, this.audioContext.currentTime + 0.2); // G5
-                        
-                        gainNode.gain.setValueAtTime(0.4, this.audioContext.currentTime);
-                        gainNode.gain.exponentialRampToValueAtTime(0.01, this.audioContext.currentTime + 0.5);
-                        
-                        oscillator.type = 'sine';
-                        oscillator.start(this.audioContext.currentTime);
-                        oscillator.stop(this.audioContext.currentTime + 0.5);
                     },
 
-                    // Generate incorrect sound (standard two-tone descending error sound)
+                    // Play incorrect sound
                     playIncorrectSound() {
-                        if (!this.audioContext) return;
-                        
-                        // Ensure audio context is running
-                        if (this.audioContext.state === 'suspended') {
-                            this.audioContext.resume().then(() => {
-                                this.playIncorrectSound();
-                            }).catch(error => {
-                                console.log('Audio context resume failed:', error);
+                        if (this.incorrectSound) {
+                            this.incorrectSound.currentTime = 0;
+                            this.incorrectSound.play().catch(error => {
+                                console.log('Incorrect sound play failed:', error);
                             });
-                            return;
                         }
-                        
-                        // First tone (higher pitch)
-                        const oscillator1 = this.audioContext.createOscillator();
-                        const gainNode1 = this.audioContext.createGain();
-                        
-                        oscillator1.connect(gainNode1);
-                        gainNode1.connect(this.audioContext.destination);
-                        
-                        oscillator1.frequency.setValueAtTime(400, this.audioContext.currentTime);
-                        gainNode1.gain.setValueAtTime(0.3, this.audioContext.currentTime);
-                        gainNode1.gain.exponentialRampToValueAtTime(0.01, this.audioContext.currentTime + 0.15);
-                        
-                        oscillator1.type = 'sine';
-                        oscillator1.start(this.audioContext.currentTime);
-                        oscillator1.stop(this.audioContext.currentTime + 0.15);
-                        
-                        // Second tone (lower pitch) - starts slightly after first
-                        const oscillator2 = this.audioContext.createOscillator();
-                        const gainNode2 = this.audioContext.createGain();
-                        
-                        oscillator2.connect(gainNode2);
-                        gainNode2.connect(this.audioContext.destination);
-                        
-                        oscillator2.frequency.setValueAtTime(300, this.audioContext.currentTime + 0.1);
-                        gainNode2.gain.setValueAtTime(0.3, this.audioContext.currentTime + 0.1);
-                        gainNode2.gain.exponentialRampToValueAtTime(0.01, this.audioContext.currentTime + 0.25);
-                        
-                        oscillator2.type = 'sine';
-                        oscillator2.start(this.audioContext.currentTime + 0.1);
-                        oscillator2.stop(this.audioContext.currentTime + 0.25);
                     },
 
                     // Play sound effect
@@ -981,18 +885,6 @@
                     // Toggle sound on/off
                     toggleSound() {
                         this.soundEnabled = !this.soundEnabled;
-                        
-                        // On mobile, try to resume audio context when user enables sound
-                        if (this.soundEnabled && this.audioContext && this.audioContext.state === 'suspended') {
-                            this.audioContext.resume().then(() => {
-                                console.log('Audio context resumed via sound toggle');
-                                // Play a test sound to confirm it's working
-                                this.playCorrectSound();
-                            }).catch(error => {
-                                console.log('Audio context resume via toggle failed:', error);
-                            });
-                        }
-                        
                         // Save preference to localStorage (for both guests and authenticated users)
                         localStorage.setItem(`quiz_${this.quizId}_sound_enabled`, this.soundEnabled.toString());
                     },
