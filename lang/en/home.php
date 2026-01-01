@@ -158,6 +158,7 @@ return [
         'cookie_policy' => 'Cookie Policy',
         'refund_policy' => 'Refund Policy',
         'all_rights_reserved' => 'All rights reserved.',
+        'quick_links' => 'Quick Links',
     ],
     'quizViewer' => [
         'continueWithViewer' => 'Continue with Quiz Viewer',

@@ -5,9 +5,9 @@
             <!-- About Section -->
             <div class="col-span-1 md:col-span-2">
                 <div class="flex items-center mb-4">
-                    <img class="h-10 w-auto" src="{{ asset('logo.png') }}" alt="MK Scholars Logo">
+                    <img class="h-10 w-auto" src="{{ asset('logo.png') }}" alt="MK DRIVING SCHOOL Logo">
                     <span class="ml-3 text-xl font-bold bg-gradient-to-r from-orange-400 to-orange-300 bg-clip-text text-transparent">
-                        MK Driving
+                        MK DRIVING SCHOOL
                     </span>
                 </div>
                 <p class="text-blue-100 text-sm leading-relaxed">
@@ -34,7 +34,7 @@
 
             <!-- Quick Links -->
             <div>
-                <h3 class="text-sm font-semibold text-orange-400 uppercase tracking-wider mb-4">Quick Links</h3>
+                <h3 class="text-sm font-semibold text-orange-400 uppercase tracking-wider mb-4">{{ __('home.footer.quick_links') }}</h3>
                 <ul class="space-y-2">
                     <li><a href="{{ route('home') }}" class="text-blue-100 hover:text-white transition-colors text-sm">{{ __('navigation.home') }}</a></li>
                     <li><a href="{{ route('quizzes') }}" class="text-blue-100 hover:text-white transition-colors text-sm">{{ __('navigation.quizzes') }}</a></li>
@@ -59,7 +59,7 @@
         <div class="border-t border-blue-800 pt-8">
             <div class="flex flex-col md:flex-row justify-between items-center">
                 <p class="text-blue-300 text-sm">
-                    &copy; {{ date('Y') }} MK Scholars. {{ __('home.footer.all_rights_reserved') }}
+                    &copy; {{ date('Y') }} MK DRIVING SCHOOL. {{ __('home.footer.all_rights_reserved') }}
                 </p>
                 <div class="mt-4 md:mt-0 flex space-x-2">
                     <a href="#" class="text-blue-300 hover:text-white text-sm">{{ __('home.footer.contact') }}</a>

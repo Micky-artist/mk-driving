@@ -158,7 +158,7 @@ return [
         'continue_as_guest' => 'Komeza nk\'umushyitsi',
     ],
     'footer' => [
-        'tagline' => 'Umufatanyabikorwa wizewe mu kwiga amategeko y\'umuhanda. Dukugufasha kwitegura ikizamini cyawe hakoreshejwe ibikoresho n\'ubujyanama bw\'abahanga.',
+        'tagline' => 'Urubuga rwizewe rugufasha kubona ibibazo by\'kizamini cya provisoire n\'ibisubizo byabyo, bigufasha kwiga vuba, neza no gutsinda byoroshye - aho waba uri hose. 🚗',
         'contact' => 'Twandikire: 0798 611 161',
         'forum' => 'Sobanukirwa?',
         'news' => 'Amakuru Agezweho',
@@ -171,6 +171,7 @@ return [
         'cookie_policy' => 'Ibigenga imisurire yacu',
         'refund_policy' => 'Gusubizwa Ubwishyu',
         'all_rights_reserved' => 'All rights reserved.',
+        'quick_links' => 'Reba Ibindi',
     ],
     'quizViewer' => [
         'continueWithViewer' => 'Itoreze Ahabugenewe',
