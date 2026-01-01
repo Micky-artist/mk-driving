@@ -835,18 +835,54 @@
                     // Initialize audio elements
                     initSounds() {
                         // Use Web Audio API to generate distinct sounds
-                        this.audioContext = new (window.AudioContext || window.webkitAudioContext)();
+                        try {
+                            this.audioContext = new (window.AudioContext || window.webkitAudioContext)();
+                            
+                            // Resume audio context on first user interaction (mobile-friendly)
+                            const resumeAudio = async () => {
+                                if (this.audioContext.state === 'suspended') {
+                                    try {
+                                        await this.audioContext.resume();
+                                        console.log('Audio context resumed successfully');
+                                    } catch (error) {
+                                        console.log('Audio context resume failed:', error);
+                                        // Fallback: try creating silent audio to unlock
+                                        this.unlockAudio();
+                                    }
+                                }
+                                // Remove listeners after first interaction
+                                document.removeEventListener('click', resumeAudio);
+                                document.removeEventListener('touchstart', resumeAudio);
+                                document.removeEventListener('touchend', resumeAudio);
+                            };
+                            
+                            // Add multiple event listeners for mobile compatibility
+                            document.addEventListener('click', resumeAudio);
+                            document.addEventListener('touchstart', resumeAudio);
+                            document.addEventListener('touchend', resumeAudio);
+                            
+                        } catch (error) {
+                            console.log('Web Audio API not supported:', error);
+                            this.audioContext = null;
+                        }
+                    },
+                    
+                    // Fallback method to unlock audio on mobile
+                    unlockAudio() {
+                        if (!this.audioContext) return;
                         
-                        // Resume audio context on first user interaction
-                        const resumeAudio = () => {
-                            if (this.audioContext.state === 'suspended') {
-                                this.audioContext.resume();
-                            }
-                            document.removeEventListener('click', resumeAudio);
-                            document.removeEventListener('touchstart', resumeAudio);
-                        };
-                        document.addEventListener('click', resumeAudio);
-                        document.addEventListener('touchstart', resumeAudio);
+                        // Create and play a silent sound to unlock audio
+                        const oscillator = this.audioContext.createOscillator();
+                        const gainNode = this.audioContext.createGain();
+                        
+                        oscillator.connect(gainNode);
+                        gainNode.connect(this.audioContext.destination);
+                        
+                        // Silent sound (0 volume)
+                        gainNode.gain.setValueAtTime(0, this.audioContext.currentTime);
+                        
+                        oscillator.start(this.audioContext.currentTime);
+                        oscillator.stop(this.audioContext.currentTime + 0.01);
                     },
 
                     // Generate correct sound (positive ascending chime)
@@ -945,6 +981,18 @@
                     // Toggle sound on/off
                     toggleSound() {
                         this.soundEnabled = !this.soundEnabled;
+                        
+                        // On mobile, try to resume audio context when user enables sound
+                        if (this.soundEnabled && this.audioContext && this.audioContext.state === 'suspended') {
+                            this.audioContext.resume().then(() => {
+                                console.log('Audio context resumed via sound toggle');
+                                // Play a test sound to confirm it's working
+                                this.playCorrectSound();
+                            }).catch(error => {
+                                console.log('Audio context resume via toggle failed:', error);
+                            });
+                        }
+                        
                         // Save preference to localStorage (for both guests and authenticated users)
                         localStorage.setItem(`quiz_${this.quizId}_sound_enabled`, this.soundEnabled.toString());
                     },
