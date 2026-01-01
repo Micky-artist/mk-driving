@@ -123,15 +123,6 @@
                                     <div>
                                         <p class="text-xs text-gray-500 dark:text-gray-400 uppercase tracking-wide">{{ __('subscription.expires') }}</p>
                                         <p class="text-sm font-semibold text-gray-900 dark:text-white">{{ $subscription->ends_at->format('m/d/Y') }}</p>
-                                        @if ($subscription->status === 'ACTIVE' && $subscription->ends_at->isFuture())
-                                            <p class="text-xs text-{{ $statusConfig['text'] }}-600 dark:text-{{ $statusConfig['text'] }}-400">
-                                                {{ __('subscription.expires_in', ['time' => timeDiffForHumans($subscription->ends_at, null, true)]) }}
-                                            </p>
-                                        @elseif ($subscription->status === 'EXPIRED' || ($subscription->ends_at && $subscription->ends_at->isPast()))
-                                            <p class="text-xs text-red-600 dark:text-red-400">
-                                                {{ __('subscription.expired_since', ['time' => timeDiffForHumans($subscription->ends_at, null, true)]) }}
-                                            </p>
-                                        @endif
                                     </div>
                                 </div>
                             @endif

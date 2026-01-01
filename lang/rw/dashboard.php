@@ -47,7 +47,7 @@ return [
     ],
     'quizzes' => [
         'all_quizzes' => 'Ibizamini Byose',
-        'completed' => 'Ibytojwe',
+        'completed' => 'Ibyitojwe',
         'view_only' => 'Kureba Gusa',
         'available_text' => 'Ibyakwitozwa Nanone',
         'completed_quizzes' => 'Ibizamini Byitojwe',
@@ -93,7 +93,7 @@ return [
         'questions_count' => 'ikibazo kimwe|ibibazo :count',
         'unlock_all_quizzes' => 'Fungura Ibizamini Byose',
         'more_quizzes' => 'Indi Myitozo',
-        'history' => 'Amateka y\'Imyitozo',
+        'history' => 'Uko Imyitozo Yakozwe',
         'resume' => 'Komeza',
         'free' => 'Bisanzwe',
         'premium' => 'Ifatabuguzi',

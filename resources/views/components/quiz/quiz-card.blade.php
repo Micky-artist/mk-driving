@@ -114,12 +114,35 @@
     if ($showDashboardFeatures && is_object($quiz) && isset($quiz->attempts) && $quiz->attempts->isNotEmpty()) {
         $attemptsCount = $quiz->attempts->count();
         $latestAttempt = $quiz->attempts->sortByDesc('created_at')->first();
-        $score = $latestAttempt ? $latestAttempt->score : 0;
+        
+        // Get the best completed attempt for display in score badge
+        $bestCompletedAttempt = $quiz->attempts
+            ->where('status', 'COMPLETED')
+            ->sortByDesc('score')
+            ->first();
+        
+        // Calculate average score for progress bar
+        $completedAttempts = $quiz->attempts->where('status', 'COMPLETED');
+        if ($completedAttempts->isNotEmpty()) {
+            $averageScore = $completedAttempts->avg('score');
+        } else {
+            $averageScore = 0;
+        }
+        
+        // Use best completed score for display, fallback to latest attempt score
+        if ($bestCompletedAttempt) {
+            $score = $bestCompletedAttempt->score;
+        } elseif ($latestAttempt) {
+            $score = $latestAttempt->score;
+        } else {
+            $score = 0;
+        }
 
         // The score field is already a percentage (0-100), so use it directly
-        $progressPercent = min(100, max(0, $score));
+        // For progress bar, use average score
+        $progressPercent = min(100, max(0, $averageScore));
 
-        // Determine status
+        // Determine status based on latest attempt
         $status = $latestAttempt && $latestAttempt->completed_at ? 'completed' : 'in_progress';
 
         // Check retake restrictions
