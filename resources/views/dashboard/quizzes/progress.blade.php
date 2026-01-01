@@ -59,7 +59,7 @@
                     </div>
                     <p class="text-2xl font-bold text-gray-900 dark:text-white">{{ $stats['completed_attempts'] }}</p>
                     <p class="text-xs text-gray-500 dark:text-gray-400 mt-2">
-                        {{ $stats['completion_rate'] }}% {{ __('dashboard.progress.completion_rate') }}
+                        {{ __('dashboard.progress.completion_rate') }}: {{ $stats['completion_rate'] }}% 
                     </p>
                 </div>
 
@@ -128,21 +128,39 @@
                             <h2 class="text-lg font-semibold text-gray-900 dark:text-white">{{ __('dashboard.progress.leaderboard') }}</h2>
                         </div>
                         <div class="p-4 space-y-3">
-                            @foreach($leaderboard as $index => $entry)
+                            @php
+                                // Create a modified leaderboard that always includes the user
+                                $userInLeaderboard = $leaderboard->contains('is_current_user', true);
+                                $displayLeaderboard = $leaderboard;
+                                
+                                // If user is not in top 10, add them to the leaderboard
+                                if (!$userInLeaderboard && $userPosition <= 50) {
+                                    $userEntry = [
+                                        'user' => Auth::user(),
+                                        'total_points' => Auth::user()->total_points ?? 0,
+                                        'completed_quizzes' => Auth::user()->quizAttempts()->whereNotNull('completed_at')->count(),
+                                        'is_current_user' => true
+                                    ];
+                                    
+                                    // Insert user at correct position
+                                    $insertIndex = $userPosition - 1;
+                                    $displayLeaderboard = $leaderboard->take($insertIndex)->push($userEntry)->concat($leaderboard->skip($insertIndex));
+                                }
+                            @endphp
+                            
+                            @foreach($displayLeaderboard as $index => $entry)
                                 <div class="flex items-center justify-between p-3 {{ $entry['is_current_user'] ?? false ? 'bg-blue-50 dark:bg-blue-900/20 rounded-lg border-2 border-blue-200 dark:border-blue-700' : '' }}">
                                     <div class="flex items-center space-x-3">
                                         <div class="flex-shrink-0">
-                                            @if($entry['is_current_user'] ?? false)
-                                                <div class="w-8 h-8 bg-blue-500 text-white rounded-full flex items-center justify-center text-sm font-bold">#{{ $userPosition }}</div>
-                                            @elseif($index === 0 && !($leaderboard[0]['is_current_user'] ?? false))
-                                                <div class="w-8 h-8 bg-yellow-400 text-white rounded-full flex items-center justify-center text-sm font-bold">1</div>
-                                            @elseif($index === 1 && !($leaderboard[1]['is_current_user'] ?? false))
-                                                <div class="w-8 h-8 bg-gray-400 text-white rounded-full flex items-center justify-center text-sm font-bold">2</div>
-                                            @elseif($index === 2 && !($leaderboard[2]['is_current_user'] ?? false))
-                                                <div class="w-8 h-8 bg-orange-400 text-white rounded-full flex items-center justify-center text-sm font-bold">3</div>
+                                            @if($index === 0)
+                                                <div class="w-8 h-8 {{ $entry['is_current_user'] ?? false ? 'bg-blue-500' : 'bg-yellow-400' }} text-white rounded-full flex items-center justify-center text-sm font-bold">{{ $index + 1 }}</div>
+                                            @elseif($index === 1)
+                                                <div class="w-8 h-8 {{ $entry['is_current_user'] ?? false ? 'bg-blue-500' : 'bg-gray-400' }} text-white rounded-full flex items-center justify-center text-sm font-bold">{{ $index + 1 }}</div>
+                                            @elseif($index === 2)
+                                                <div class="w-8 h-8 {{ $entry['is_current_user'] ?? false ? 'bg-blue-500' : 'bg-orange-400' }} text-white rounded-full flex items-center justify-center text-sm font-bold">{{ $index + 1 }}</div>
                                             @else
-                                                <div class="w-8 h-8 bg-gray-200 dark:bg-gray-600 text-gray-700 dark:text-gray-300 rounded-full flex items-center justify-center text-sm font-bold">
-                                                    {{ $entry['is_current_user'] ?? false ? $userPosition : ($index + 1 - ($leaderboard[0]['is_current_user'] ?? false ? 1 : 0)) }}
+                                                <div class="w-8 h-8 {{ $entry['is_current_user'] ?? false ? 'bg-blue-500' : 'bg-gray-200 dark:bg-gray-600' }} {{ $entry['is_current_user'] ?? false ? 'text-white' : 'text-gray-700 dark:text-gray-300' }} rounded-full flex items-center justify-center text-sm font-bold">
+                                                    {{ $index + 1 }}
                                                 </div>
                                             @endif
                                         </div>
@@ -161,6 +179,18 @@
                                     </div>
                                 </div>
                             @endforeach
+                            
+                            @if(!$userInLeaderboard && $userPosition > 50)
+                                <!-- Show message if user is beyond top 50 -->
+                                <div class="text-center py-4 px-3 bg-gray-50 dark:bg-gray-700 rounded-lg">
+                                    <p class="text-sm text-gray-600 dark:text-gray-400">
+                                        {{ __('dashboard.progress.your_position') }}: #{{ $userPosition }} {{ __('dashboard.progress.out_of') }} {{ $leaderboard->count() + 1 }}+ {{ __('dashboard.progress.active_users') }}
+                                    </p>
+                                    <p class="text-xs text-gray-500 dark:text-gray-400 mt-1">
+                                        {{ __('dashboard.progress.keep_improving') }}
+                                    </p>
+                                </div>
+                            @endif
                         </div>
                     </div>
                 </div>

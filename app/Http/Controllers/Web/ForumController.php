@@ -111,10 +111,12 @@ class ForumController extends Controller
         // Get user's rank if authenticated
         $userRank = null;
         $userPoints = 0;
+        $isAdmin = false;
         
         if (Auth::check()) {
             $userPoints = $this->pointsService->getUserPoints(Auth::id());
             $userRank = $this->pointsService->getUserRank(Auth::id(), 'weekly');
+            $isAdmin = Auth::user()->hasRole('admin');
         }
 
         if ($request->wantsJson()) {
@@ -122,6 +124,7 @@ class ForumController extends Controller
                 'leaderboard' => $leaderboard,
                 'userRank' => $userRank,
                 'userPoints' => $userPoints,
+                'isAdmin' => $isAdmin,
             ]);
         }
 
@@ -129,6 +132,7 @@ class ForumController extends Controller
             'leaderboard' => $leaderboard,
             'userRank' => $userRank,
             'userPoints' => $userPoints,
+            'isAdmin' => $isAdmin,
         ]);
     }
 

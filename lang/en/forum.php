@@ -176,4 +176,6 @@ return [
     'post_reply' => 'Post Reply',
     'reply' => 'Reply',
     'replies' => 'Replies',
+    'admin_status' => 'Administrator',
+    'admin_leaderboard_note' => 'As an administrator, you are not eligible for leaderboard rankings',
 ];

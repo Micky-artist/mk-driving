@@ -27,7 +27,7 @@ return [
     'success' => 'Byagenze neza',
     'submission_success' => 'Ikimenyetso cyawe cyo kwishyura cyakiriwe neza! Turaza kugisuzuma kandi tukagufasha kwiyandikisha vuba.',
     'success_messages' => [
-        'subscribed' => 'Urakoze kwiyandikisha muri :plan',
+        'subscribed' => 'Urakoze kwiyandikisha :plan',
         'cancelled' => 'Kwiyandikisha byahagaritswe neza',
     ],
     'errors' => [

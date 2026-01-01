@@ -25,6 +25,8 @@ return [
     'previousAttempts' => 'Previous Attempts',
     'explanation' => 'Explanation',
     'submitQuiz' => 'Submit Quiz',
+    'isLoading' => 'Loading...',
+    'isSubmitting' => 'Submitting...',
     'viewResults' => 'View Detailed Results',
     'confirmSubmit' => 'Are you sure you want to submit your answers? You won\'t be able to change them after submission.',
     'timeUp' => 'Time\'s Up!',

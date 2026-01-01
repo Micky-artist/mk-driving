@@ -159,6 +159,8 @@ return [
     'next' => 'Igikurikira',
     'submitQuiz' => 'Kohereza ibisubizo',
     'correct' => 'Byagenze neza',
+    'isLoading' => 'Biri gukorwa...',
+    'isSubmitting' => 'Turi Kwakira Ibisubizo...',
     'incorrect' => 'Ntibyagenze neza',
     'results' => 'Ibisubizo',
     'youGot' => 'Wakoze neza',
@@ -169,7 +171,7 @@ return [
     'yourProgress' => 'Iterambere ryawe',
     'currentScore' => 'Amanota ufite ubu',
     'previousBest' => 'Amanota y\'ubushize',
-    'improvement' => 'Uko wiyongereye',
+    'improvement' => 'Ikigeranyo n\'ubushize',
     'reviewAnswers' => 'Reba ibisubizo',
     'retakeQuiz' => 'Ongera ugerageze',
     'backToQuizzes' => 'Subira ku myitozo',
@@ -270,7 +272,7 @@ return [
     'loginToSaveProgress' => 'Iyandikishe wibuke aho wageze.',
     
     // Leaderboard and Achievement Messages
-    'newPosition' => 'Umwanya wahindutse',
+    'newPosition' => 'Ubu ugeze ku mwanya wa: ',
     'firstPlace' => 'Uri Uwambere, Komerezaho!',
     'firstPlaceMessage' => 'Ongera imyitozo Uzamuke!',
     'topTenMessage' => 'Ukomeje gukora neza! Uri mu bantu 10 bambere!',

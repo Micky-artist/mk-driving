@@ -31,7 +31,21 @@
                 
                 <!-- User Position and Points -->
                 @auth
-                    @if($userPoints)
+                    @if($isAdmin)
+                        <div class="mt-4 p-4 bg-amber-50 dark:bg-amber-900/20 rounded-lg border border-amber-200 dark:border-amber-800">
+                            <div class="flex items-center space-x-3">
+                                <div class="w-10 h-10 bg-amber-500 rounded-full flex items-center justify-center text-white font-bold">
+                                    <svg class="w-5 h-5" fill="currentColor" viewBox="0 0 20 20">
+                                        <path fill-rule="evenodd" d="M6.267 3.455a3.066 3.066 0 001.745-.723 3.066 3.066 0 013.976 0 3.066 3.066 0 001.745.723 3.066 3.066 0 012.812 2.812c.051.643.304 1.254.723 1.745a3.066 3.066 0 010 3.976 3.066 3.066 0 00-.723 1.745 3.066 3.066 0 01-2.812 2.812 3.066 3.066 0 00-1.745.723 3.066 3.066 0 01-3.976 0 3.066 3.066 0 00-1.745-.723 3.066 3.066 0 01-2.812-2.812 3.066 3.066 0 00-.723-1.745 3.066 3.066 0 010-3.976 3.066 3.066 0 00.723-1.745 3.066 3.066 0 012.812-2.812zm7.44 5.252a1 1 0 00-1.414-1.414L9 10.586 7.707 9.293a1 1 0 00-1.414 1.414l2 2a1 1 0 001.414 0l4-4z" clip-rule="evenodd" />
+                                    </svg>
+                                </div>
+                                <div>
+                                    <p class="text-sm font-medium text-amber-900 dark:text-amber-100">{{ __('forum.admin_status') }}</p>
+                                    <p class="text-xs text-amber-700 dark:text-amber-300">{{ __('forum.admin_leaderboard_note') }}</p>
+                                </div>
+                            </div>
+                        </div>
+                    @elseif($userPoints)
                         <div class="mt-4 p-4 bg-blue-50 dark:bg-blue-900/20 rounded-lg border border-blue-200 dark:border-blue-800">
                             <div class="flex items-center justify-between">
                                 <div class="flex items-center space-x-3">
@@ -245,25 +259,6 @@
                                 <span>{{ __('forum.points_for_quiz_completion') }}</span>
                             </li>
                         </ul>
-                    </div>
-
-                    <!-- Quick Stats -->
-                    <div class="bg-white dark:bg-gray-800 rounded-xl shadow-sm border border-gray-200 dark:border-gray-700 p-6">
-                        <h3 class="text-lg font-semibold text-gray-900 dark:text-white mb-4">{{ __('forum.quick_stats') }}</h3>
-                        <div class="space-y-3">
-                            <div class="flex justify-between items-center">
-                                <span class="text-sm text-gray-600 dark:text-gray-400">{{ __('forum.total_participants') }}</span>
-                                <span class="text-sm font-medium text-gray-900 dark:text-white">{{ count($leaderboard) }}</span>
-                            </div>
-                            <div class="flex justify-between items-center">
-                                <span class="text-sm text-gray-600 dark:text-gray-400">{{ __('forum.weekly_period') }}</span>
-                                <span class="text-sm font-medium text-gray-900 dark:text-white">{{ __('forum.this_week') }}</span>
-                            </div>
-                            <div class="flex justify-between items-center">
-                                <span class="text-sm text-gray-600 dark:text-gray-400">{{ __('forum.next_reset') }}</span>
-                                <span class="text-sm font-medium text-gray-900 dark:text-white">{{ __('forum.monday_morning') }}</span>
-                            </div>
-                        </div>
                     </div>
                 </div>
             </div>

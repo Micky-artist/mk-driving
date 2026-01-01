@@ -446,7 +446,7 @@
                                 </path>
                             </svg>
                             <span
-                                x-text="isLastQuestion ? '{{ __('quiz.submitting') }}' : '{{ __('quiz.loading') }}'"></span>
+                                x-text="isLastQuestion ? '{{ __('quiz.isSubmitting') }}' : '{{ __('quiz.isLoading') }}'"></span>
                         </template>
                         <template x-if="!isSubmitting">
                             <span
@@ -550,12 +550,6 @@
                             </svg>
                         </div>
                     </div>
-                    <h3 class="text-lg font-semibold text-gray-900 dark:text-white mb-2">
-                        {{ __('quiz.submitting') }}
-                    </h3>
-                    <p class="text-sm text-gray-600 dark:text-gray-400">
-                        {{ __('quiz.submittingMessage') || 'Please wait while we save your results...' }}
-                    </p>
                 </div>
             </div>
 
@@ -682,48 +676,57 @@
                     </div>
 
                     <!-- Action Links for Users with Plan -->
-                    <div x-show="updatedStats && updatedStats.hasPlan" class="space-y-2">
-                        <a href="#" @click="showResultsModal = false"
-                            class="block w-full text-center px-4 py-2 bg-blue-600 text-white rounded-lg hover:bg-blue-700">
-                            {{ __('quiz.practiceAgain') }}
-                        </a>
-                        <a href="{{ route('dashboard.quizzes.index') }}"
-                            class="block w-full text-center px-4 py-2 bg-gray-600 text-white rounded-lg hover:bg-gray-700">
-                            {{ __('quiz.moreQuizzes') }}
-                        </a>
-                        <a href="{{ route('plans') }}"
-                            class="block w-full text-center px-4 py-2 bg-yellow-600 text-white rounded-lg hover:bg-yellow-700">
-                            {{ __('quiz.upgradeSubscription') }}
-                        </a>
-                        <a href="{{ route('dashboard.progress') }}"
-                            class="block w-full text-center px-4 py-2 bg-green-600 text-white rounded-lg hover:bg-green-700">
-                            {{ __('quiz.checkProgress') }}
-                        </a>
-                    </div>
-
-                    <!-- Upsell for Users without Plan -->
-                    <div x-show="updatedStats && !updatedStats.hasPlan" class="space-y-3">
-                        <div
-                            class="bg-yellow-50 dark:bg-yellow-900/20 p-4 rounded-lg border border-yellow-200 dark:border-yellow-800">
-                            <h4 class="text-yellow-800 dark:text-yellow-200 font-semibold mb-2">
-                                {{ __('quiz.unlockMoreFeatures') }}
-                            </h4>
-                            <p class="text-yellow-700 dark:text-yellow-300 text-sm mb-3">
-                                {{ __('quiz.subscriptionMessage') }}
-                            </p>
-                            <a href="{{ route('plans') }}"
-                                class="block w-full text-center px-4 py-2 bg-yellow-600 text-white rounded-lg hover:bg-yellow-700">
-                                {{ __('quiz.getPlanToPractice') }}
+                    <div x-show="updatedStats && updatedStats.hasPlan" class="mt-6">
+                        <div class="flex flex-col sm:flex-row gap-3">
+                            <a href="#" @click="showResultsModal = false"
+                                class="flex-1 text-center px-4 py-2.5 bg-blue-600 hover:bg-blue-700 text-white rounded-lg font-medium transition-colors duration-200">
+                                {{ __('quiz.practiceAgain') }}
+                            </a>
+                            <a href="{{ route('dashboard.progress') }}"
+                                class="flex-1 text-center px-4 py-2.5 bg-indigo-600 hover:bg-indigo-700 text-white rounded-lg font-medium transition-colors duration-200">
+                                {{ __('quiz.checkProgress') }}
                             </a>
                         </div>
                     </div>
 
+                    <!-- Upsell for Users without Plan -->
+                    <div x-show="updatedStats && !updatedStats.hasPlan" class="mt-6">
+                        <div class="bg-gradient-to-r from-orange-50 to-amber-50 dark:from-orange-900/20 dark:to-amber-900/20 p-5 rounded-xl border border-orange-200 dark:border-orange-800/50">
+                            <div class="flex items-start">
+                                <div class="flex-shrink-0 mr-3 mt-0.5">
+                                    <div class="flex items-center justify-center w-8 h-8 rounded-full bg-orange-100 dark:bg-orange-900/50 text-orange-600 dark:text-orange-300">
+                                        <svg xmlns="http://www.w3.org/2000/svg" class="h-5 w-5" viewBox="0 0 20 20" fill="currentColor">
+                                            <path fill-rule="evenodd" d="M10 18a8 8 0 100-16 8 8 0 000 16zm1-11a1 1 0 10-2 0v3.586L7.707 9.293a1 1 0 00-1.414 1.414l3 3a1 1 0 001.414 0l3-3a1 1 0 00-1.414-1.414L11 10.586V7z" clip-rule="evenodd" />
+                                        </svg>
+                                    </div>
+                                </div>
+                                <div>
+                                    <h4 class="text-orange-800 dark:text-orange-200 font-semibold mb-1">
+                                        {{ __('quiz.unlockMoreFeatures') }}
+                                    </h4>
+                                    <p class="text-orange-700 dark:text-orange-300 text-sm mb-3">
+                                        {{ __('quiz.subscriptionMessage') }}
+                                    </p>
+                                    <a href="{{ route('plans') }}"
+                                        class="inline-flex items-center justify-center w-full px-4 py-2.5 bg-gradient-to-r from-orange-500 to-yellow-500 hover:from-orange-600 hover:to-yellow-600 text-white rounded-lg font-medium transition-colors duration-200">
+                                        {{ __('quiz.getPlanToPractice') }}
+                                        <svg xmlns="http://www.w3.org/2000/svg" class="h-4 w-4 ml-1.5" viewBox="0 0 20 20" fill="currentColor">
+                                            <path fill-rule="evenodd" d="M10.293 5.293a1 1 0 011.414 0l4 4a1 1 0 010 1.414l-4 4a1 1 0 01-1.414-1.414L12.586 11H5a1 1 0 110-2h7.586l-2.293-2.293a1 1 0 010-1.414z" clip-rule="evenodd" />
+                                        </svg>
+                                    </a>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+
                     <!-- Close Button -->
-                    <div class="mt-6 flex justify-end">
-                        <button @click="showResultsModal = false"
-                            class="px-4 py-2 border border-gray-300 dark:border-gray-600 rounded-md text-sm font-medium text-gray-700 dark:text-gray-200 bg-white dark:bg-gray-700 hover:bg-gray-50 dark:hover:bg-gray-600">
-                            {{ __('quiz.close') }}
-                        </button>
+                    <div class="mt-6 pt-4 border-t border-gray-200 dark:border-gray-700">
+                        <div class="flex justify-center sm:justify-end">
+                            <button @click="showResultsModal = false"
+                                class="w-full sm:w-auto px-6 py-2.5 text-sm font-medium text-gray-700 dark:text-gray-200 bg-white dark:bg-gray-700 border border-gray-300 dark:border-gray-600 rounded-lg hover:bg-gray-50 dark:hover:bg-gray-600 transition-colors duration-200">
+                                {{ __('quiz.close') }}
+                            </button>
+                        </div>
                     </div>
                 </div>
             </div>
