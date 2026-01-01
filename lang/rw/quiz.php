@@ -269,6 +269,16 @@ return [
     'toggleAutoNext' => 'Hindura ikurikira ryihuse',
     'loginToSaveProgress' => 'Iyandikishe wibuke aho wageze.',
     
+    // Leaderboard and Achievement Messages
+    'newPosition' => 'Umwanya wahindutse',
+    'firstPlace' => 'Uri Uwambere, Komerezaho!',
+    'firstPlaceMessage' => 'Ongera imyitozo Uzamuke!',
+    'topTenMessage' => 'Ukomeje gukora neza! Uri mu bantu 10 bambere!',
+    'keepImproving' => 'Komeza kwitoza wongere uzamuke!',
+    'seeMore' => 'Reba n\'izindi',
+    'practiceAgain' => 'Itoze Nanone',
+    'submittingMessage' => 'Mutegereze turi kwakira ibisubizo...',
+    
     // Results Modal
     'scoreEarned' => 'Amanota',
     'averageScore' => 'Amanota Yose Hamwe',

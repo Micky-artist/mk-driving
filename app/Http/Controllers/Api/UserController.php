@@ -230,8 +230,13 @@ class UserController extends Controller
         $averageScore = $this->calculateUserAverageScore($user);
         
         // Calculate or get user stats
+        $totalQuestionsAnswered = $user->quizAttempts()
+            ->where('status', 'completed')
+            ->sum('total_questions') ?? 0;
+            
         $stats = [
             'averageScore' => $averageScore,
+            'totalQuestionsAnswered' => $totalQuestionsAnswered,
             'leaderboardPosition' => $pointsService->getUserRank($user->id), // Use PointsService for consistent ranking
             'streak' => $user->streak_days ?? 0,
             'xp' => $userPoints['total'], // Use unified points system

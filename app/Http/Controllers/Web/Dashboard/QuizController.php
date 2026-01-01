@@ -545,6 +545,27 @@ class QuizController extends Controller
             }])
             ->findOrFail($id);
             
+        // Process image URLs to fix path issues
+        $quiz->questions->each(function($question) {
+            // Fix question image URL
+            if ($question->image_url) {
+                $question->image_url = asset($question->image_url);
+            }
+            
+            // Fix option image URLs
+            $question->options->each(function($option) {
+                // Check if option_text contains images and extract them
+                if ($option->option_text) {
+                    $option->option_text = ImageUrlCleaner::processOptionText($option->option_text);
+                }
+                
+                // Fix option image_url if it exists
+                if ($option->image_url) {
+                    $option->image_url = asset($option->image_url);
+                }
+            });
+        });
+            
         // Check if user can access this quiz
         $user = Auth::user();
         if (!$this->canAccessQuiz($user, $quiz)) {

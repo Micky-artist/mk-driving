@@ -287,6 +287,41 @@ document.addEventListener('DOMContentLoaded', function() {
             </div>
         @endif
 
+        <!-- Permanent Practice Bar -->
+        <div class="bg-gray-100 dark:bg-gray-700 rounded-xl shadow-lg p-6 text-gray-900 dark:text-white border border-gray-200 dark:border-gray-600">
+            <div class="flex flex-col sm:flex-row sm:items-center sm:justify-between gap-4">
+                <div class="flex-1">
+                    <h2 class="text-xl font-bold mb-2">{{ __('dashboard.practice_bar.title') }}</h2>
+                    <p class="text-gray-600 dark:text-gray-300 text-sm sm:text-base">{{ __('dashboard.practice_bar.subtitle') }}</p>
+                    <div class="mt-3 flex items-center gap-4">
+                        <div class="flex items-center gap-2">
+                            <svg xmlns="http://www.w3.org/2000/svg" class="h-5 w-5" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 12h6m-6 4h6m2 5H7a2 2 0 01-2-2V5a2 2 0 012-2h5.586a1 1 0 01.707.293l5.414 5.414a1 1 0 01.293.707V19a2 2 0 01-2 2z" />
+                            </svg>
+                            <span class="font-medium">{{ __('dashboard.availableQuizzes') }}: {{ $stats['total_quizzes'] }}</span>
+                        </div>
+                        @if($stats['completed_count'] > 0)
+                        <div class="flex items-center gap-2">
+                            <svg xmlns="http://www.w3.org/2000/svg" class="h-5 w-5" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 12l2 2 4-4m6 2a9 9 0 11-18 0 9 9 0 0118 0z" />
+                            </svg>
+                            <span class="font-medium">{{ __('dashboard.completed') }}: {{ $stats['completed_count'] }}</span>
+                        </div>
+                        @endif
+                    </div>
+                </div>
+                <div class="flex-shrink-0">
+                    <a href="{{ route('dashboard.quizzes.index', ['locale' => app()->getLocale()]) }}" 
+                       class="inline-flex items-center px-6 py-3 bg-blue-600 hover:bg-blue-700 text-white font-bold text-lg rounded-lg transition-colors shadow-md">
+                        {{ __('dashboard.practice_bar.start_practicing') }}
+                        <svg xmlns="http://www.w3.org/2000/svg" class="h-5 w-5 ml-2" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M14 5l7 7m0 0l-7 7m7-7H3" />
+                        </svg>
+                    </a>
+                </div>
+            </div>
+        </div>
+
         <!-- Quiz Stats -->
         <div class="grid grid-cols-2 lg:grid-cols-4 gap-4">
             <a href="{{ route('dashboard.quizzes.index', ['locale' => app()->getLocale(), 'see' => 'in-progress']) }}" 

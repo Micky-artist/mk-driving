@@ -244,4 +244,9 @@ return [
         'see_more_quizzes' => 'See more quizzes',
         'not_enough_data' => 'Complete more quizzes to see your readiness',
     ],
+    'practice_bar' => [
+        'title' => 'Ready to practice?',
+        'subtitle' => 'Choose from our available quizzes and start improving your driving skills',
+        'start_practicing' => 'Start Practicing',
+    ],
 ];

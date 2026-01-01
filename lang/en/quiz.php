@@ -268,6 +268,16 @@ return [
     'toggleAutoNext' => 'Toggle auto-next',
     'loginToSaveProgress' => 'Please login to save your progress and access all features.',
     
+    // Leaderboard and Achievement Messages
+    'newPosition' => 'New Position',
+    'firstPlace' => 'First Place, Keep Going!',
+    'firstPlaceMessage' => 'Keep up the great work!',
+    'topTenMessage' => 'Great job! You\'re in the top 10!',
+    'keepImproving' => 'Keep practicing to climb the leaderboard!',
+    'seeMore' => 'See More',
+    'practiceAgain' => 'Practice Again',
+    'submittingMessage' => 'Please wait while we save your results...',
+
     // Results Modal
     'scoreEarned' => 'Score Earned',
     'averageScore' => 'Average Score',

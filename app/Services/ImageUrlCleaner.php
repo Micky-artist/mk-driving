@@ -208,4 +208,37 @@ class ImageUrlCleaner
             return $item;
         }, $data);
     }
+    
+    /**
+     * Process option text to fix image URLs
+     */
+    public static function processOptionText($optionText)
+    {
+        // Handle if optionText is an array (translated content)
+        if (is_array($optionText)) {
+            return array_map(function($text) {
+                return self::processOptionText($text);
+            }, $optionText);
+        }
+        
+        // Ensure it's a string
+        if (!is_string($optionText)) {
+            return $optionText;
+        }
+        
+        if (preg_match_all('/<img[^>]*src=[\"\']?([^\s\"\'>]+)/i', $optionText, $matches)) {
+            foreach ($matches[1] as $imgSrc) {
+                // Convert relative paths to absolute URLs
+                if (str_starts_with($imgSrc, '../examMedia/')) {
+                    $newSrc = asset(str_replace('../', '', $imgSrc));
+                    $optionText = str_replace($imgSrc, $newSrc, $optionText);
+                } elseif (str_starts_with($imgSrc, 'examMedia/')) {
+                    $newSrc = asset($imgSrc);
+                    $optionText = str_replace($imgSrc, $newSrc, $optionText);
+                }
+            }
+        }
+        
+        return $optionText;
+    }
 }

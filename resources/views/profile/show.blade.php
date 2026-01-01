@@ -147,29 +147,29 @@
         </div>
 
         <!-- Actions -->
-        <div class="mt-6 flex justify-end space-x-3">
+        <div class="mt-6 flex flex-col sm:flex-row sm:justify-end sm:space-x-3 space-y-3 sm:space-y-0">
             @can('isAdmin')
                 <a href="{{ route('admin.portal', ['locale' => app()->getLocale()]) }}" 
-                   class="inline-flex items-center px-6 py-3 bg-purple-600 hover:bg-purple-700 text-white font-medium rounded-lg shadow-md hover:shadow-lg transition-all duration-200 transform hover:scale-105">
+                   class="inline-flex items-center justify-center sm:justify-start sm:w-auto w-full px-6 py-3 bg-purple-600 hover:bg-purple-700 text-white font-medium rounded-lg shadow-md hover:shadow-lg transition-all duration-200 transform hover:scale-105">
                     <i class="fas fa-briefcase mr-2"></i>
                     {{ __('profile.business') }}
                 </a>
             @endcan
             <a href="{{ route('profile.password.request', ['locale' => app()->getLocale()]) }}" 
-               class="inline-flex items-center px-6 py-3 bg-gray-600 hover:bg-gray-700 text-white font-medium rounded-lg shadow-md hover:shadow-lg transition-all duration-200 transform hover:scale-105">
+               class="inline-flex items-center justify-center sm:justify-start sm:w-auto w-full px-6 py-3 bg-gray-600 hover:bg-gray-700 text-white font-medium rounded-lg shadow-md hover:shadow-lg transition-all duration-200 transform hover:scale-105">
                 <i class="fas fa-key mr-2"></i>
                 {{ __('profile.change_password') }}
             </a>
             <form method="POST" action="{{ route('logout', ['locale' => app()->getLocale()]) }}" class="inline">
                 @csrf
                 <button type="submit" 
-                        class="inline-flex items-center px-6 py-3 bg-red-500 hover:bg-red-600 text-white font-medium rounded-lg shadow-md hover:shadow-lg transition-all duration-200 transform hover:scale-105">
+                        class="inline-flex items-center justify-center sm:justify-start sm:w-auto w-full px-6 py-3 bg-red-500 hover:bg-red-600 text-white font-medium rounded-lg shadow-md hover:shadow-lg transition-all duration-200 transform hover:scale-105">
                     <i class="fas fa-sign-out-alt mr-2"></i>
                     {{ __('profile.logout') }}
                 </button>
             </form>
             <a href="{{ route('profile.edit', ['locale' => app()->getLocale()]) }}" 
-               class="inline-flex items-center px-6 py-3 bg-blue-600 hover:bg-blue-700 text-white font-medium rounded-lg shadow-md hover:shadow-lg transition-all duration-200 transform hover:scale-105">
+               class="inline-flex items-center justify-center sm:justify-start sm:w-auto w-full px-6 py-3 bg-blue-600 hover:bg-blue-700 text-white font-medium rounded-lg shadow-md hover:shadow-lg transition-all duration-200 transform hover:scale-105">
                 <i class="fas fa-edit mr-2"></i>
                 {{ __('profile.edit_profile') }}
             </a>

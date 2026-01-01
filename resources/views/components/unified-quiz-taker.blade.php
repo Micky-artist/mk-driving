@@ -151,8 +151,7 @@
                     <div class="w-full dark:bg-gray-700 bg-gray-200 rounded-full h-1.5 mt-2">
                         <div class="h-1.5 rounded-full transition-colors duration-300"
                             :style="{
-                                'width': (currentQuestionIndex >= 19 ? 100 : ((currentQuestionIndex / totalQuestions) *
-                                    100)) + '%',
+                                'width': Math.max(0, Math.min(100, (answeredCount / totalQuestions) * 100)) + '%',
                                 'background-color': getProgressBarColor()
                             }">
                         </div>
@@ -422,8 +421,20 @@
                             x-text="`${actualQuestionNumber} of ${totalQuestions}`"></span>
                     </div>
 
-                    <button @click="nextQuestion"
-                        :disabled="!userAnswers[currentQuestion.id] || (autoAdvance && !isLastQuestion) || showResultsModal || isSubmitting"
+                    <!-- See More Button (shown after quiz completion) -->
+                    <button x-show="quizCompleted" @click="window.location.href = '{{ route('dashboard.quizzes.index', ['locale' => app()->getLocale()]) }}'"
+                        class="px-3 py-2 sm:px-4 sm:py-2 border border-transparent rounded-md shadow-sm text-sm font-medium text-white bg-blue-600 hover:bg-blue-700 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-blue-500 flex-1 sm:flex-none">
+                        {{ __('quiz.seeMore') }}
+                        <svg class="w-4 h-4 ml-1 -mr-1 sm:inline hidden" fill="none" stroke="currentColor"
+                            viewBox="0 0 24 24">
+                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
+                                d="M9 5l7 7-7 7" />
+                        </svg>
+                    </button>
+
+                    <!-- Regular Next/Finish Button (hidden after quiz completion) -->
+                    <button x-show="!quizCompleted" @click="nextQuestion"
+                        :disabled="!userAnswers[currentQuestion.id] || (autoAdvance && !isLastQuestion) || isSubmitting"
                         class="px-3 py-2 sm:px-4 sm:py-2 border border-transparent rounded-md shadow-sm text-sm font-medium text-white bg-blue-600 hover:bg-blue-700 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-blue-500 disabled:opacity-50 disabled:cursor-not-allowed flex-1 sm:flex-none">
                         <template x-if="isSubmitting">
                             <svg class="animate-spin -ml-1 mr-2 h-4 w-4 text-white inline"
@@ -527,6 +538,27 @@
                 </div>
             </div>
 
+            <!-- Quiz Submission Loading Modal -->
+            <div x-cloak x-show="isSubmitting" x-cloak
+                class="fixed inset-0 bg-black bg-opacity-50 flex items-center justify-center z-50">
+                <div class="bg-white dark:bg-gray-800 rounded-lg p-6 max-w-sm w-full mx-4 text-center">
+                    <div class="mb-4">
+                        <div class="inline-flex items-center justify-center w-12 h-12 bg-blue-100 dark:bg-blue-900/20 rounded-full">
+                            <svg class="animate-spin h-6 w-6 text-blue-600" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24">
+                                <circle class="opacity-25" cx="12" cy="12" r="10" stroke="currentColor" stroke-width="4"></circle>
+                                <path class="opacity-75" fill="currentColor" d="M4 12a8 8 0 018-8V0C5.373 0 0 5.373 0 12h4zm2 5.291A7.962 7.962 0 014 12H0c0 3.042 1.135 5.824 3 7.938l3-2.647z"></path>
+                            </svg>
+                        </div>
+                    </div>
+                    <h3 class="text-lg font-semibold text-gray-900 dark:text-white mb-2">
+                        {{ __('quiz.submitting') }}
+                    </h3>
+                    <p class="text-sm text-gray-600 dark:text-gray-400">
+                        {{ __('quiz.submittingMessage') || 'Please wait while we save your results...' }}
+                    </p>
+                </div>
+            </div>
+
             <!-- Results Modal -->
             <div x-cloak x-show="showResultsModal" x-cloak
                 class="fixed inset-0 bg-black bg-opacity-50 flex items-center justify-center z-50">
@@ -588,16 +620,51 @@
                         </div>
                     </div>
 
+                    <!-- Leaderboard Position -->
+                    <div x-show="updatedStats && updatedStats.leaderboardPosition" class="mb-6">
+                        <div class="bg-gradient-to-r from-yellow-50 to-orange-50 dark:from-yellow-900/20 dark:to-orange-900/20 p-3 sm:p-4 rounded-lg border-2 border-yellow-300 dark:border-yellow-700">
+                            <div class="text-center">
+                                <div class="text-base sm:text-lg font-bold text-yellow-800 dark:text-yellow-200 mb-2">
+                                    <span x-show="updatedStats.leaderboardPosition === 1">
+                                        🏆 {{ __('quiz.firstPlace') }}
+                                    </span>
+                                    <span x-show="updatedStats.leaderboardPosition !== 1">
+                                        {{ __('quiz.newPosition') }}: #<span x-text="updatedStats.leaderboardPosition"></span>
+                                    </span>
+                                </div>
+                                <div class="text-xs sm:text-sm text-yellow-700 dark:text-yellow-300 flex flex-col sm:flex-row sm:items-center sm:justify-between gap-2">
+                                    <div class="text-center sm:text-left">
+                                        <span x-show="updatedStats.leaderboardPosition === 1">
+                                            {{ __('quiz.firstPlaceMessage') }}
+                                        </span>
+                                        <span x-show="updatedStats.leaderboardPosition !== 1 && updatedStats.leaderboardPosition <= 10">
+                                            {{ __('quiz.topTenMessage') }}
+                                        </span>
+                                        <span x-show="updatedStats.leaderboardPosition > 10">
+                                            {{ __('quiz.keepImproving') }}
+                                        </span>
+                                    </div>
+                                    <a href="{{ route('leaderboard') }}" 
+                                       class="text-xs font-medium text-yellow-600 dark:text-yellow-400 hover:text-yellow-800 dark:hover:text-yellow-200 underline whitespace-nowrap">
+                                        {{ app()->getLocale() === 'rw' ? 'Reba Irushanwa' : 'View Leaderboard' }}
+                                    </a>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+
                     <!-- Stats Display -->
                     <div class="space-y-3 mb-6">
                         <div class="bg-green-50 dark:bg-green-900/20 p-3 rounded-lg">
                             <p class="text-green-800 dark:text-green-200 font-medium">
-                                {{ __('quiz.scoreEarned') }}: <span x-text="currentScore"></span>%
+                                {{ __('quiz.scoreEarned') }}: <span x-text="correctCount"></span>/<span x-text="totalQuestions"></span> 
+                                (<span x-text="currentScore"></span>%)
                             </p>
                         </div>
                         <div x-show="updatedStats" class="bg-blue-50 dark:bg-blue-900/20 p-3 rounded-lg">
-                            <p class="text-blue-800 dark:text-blue-200">
-                                {{ __('quiz.averageScore') }}: <span x-text="updatedStats.averageScore"></span>%
+                            <p class="text-blue-800 dark:text-blue-200 font-medium">
+                                {{ __('quiz.averageScore') }}: <span x-text="Math.round(updatedStats.averageScore * updatedStats.totalQuestionsAnswered / 100)"></span>/<span x-text="updatedStats.totalQuestionsAnswered"></span> 
+                                (<span x-text="updatedStats.averageScore"></span>%)
                             </p>
                         </div>
                         <div x-show="updatedStats && updatedStats.quizComparison"
@@ -752,6 +819,7 @@
                     showLoginModal: false,
                     showResultsModal: false,
                     isSubmitting: false,
+                    quizCompleted: false, // New state to track completion independently of modal
                     updatedStats: null,
                     currentScore: 0,
                     flaggedQuestions: new Set(),
@@ -926,28 +994,6 @@
 
                         // Mark as initialized to hide loading state
                         this.initialized = true;
-
-                        // Load saved answers if any (only if user is logged in)
-                        if (!this.isGuest && localStorage.getItem(`quiz_${this.quizId}_answers`)) {
-                            this.userAnswers = JSON.parse(localStorage.getItem(
-                                `quiz_${this.quizId}_answers`));
-
-                            // Update counts using the proper function
-                            this.updateAnswerCounts();
-
-                            // If we have a saved question index, go to it
-                            const savedIndex = localStorage.getItem(`quiz_${this.quizId}_current_index`);
-                            if (savedIndex !== null) {
-                                this.currentQuestionIndex = parseInt(savedIndex);
-                                this.loadQuestionState();
-                            }
-                        }
-
-                        // Load flagged questions (only if user is logged in)
-                        if (!this.isGuest && localStorage.getItem(`quiz_${this.quizId}_flagged`)) {
-                            const flagged = JSON.parse(localStorage.getItem(`quiz_${this.quizId}_flagged`));
-                            this.flaggedQuestions = new Set(flagged);
-                        }
                     },
 
                     // Initialize image loading states for all options
@@ -1466,45 +1512,25 @@
                     },
 
                     loadAttemptState() {
-                        if (!this.currentAttempt || !this.currentAttempt.answers) return;
+                        if (!this.currentAttempt) return;
 
-                        // Load existing answers from the attempt
-                        const answers = this.currentAttempt.answers;
-                        Object.keys(answers).forEach(questionId => {
-                            this.userAnswers[questionId] = {
-                                optionId: answers[questionId],
-                                isCorrect: null, // We'll determine this when loading the question
-                                timestamp: new Date().toISOString()
-                            };
-                        });
+                        // First, fetch fresh progress from database
+                        this.fetchAttemptProgress();
 
-                        // Update counts based on loaded answers
-                        this.updateAnswerCounts();
+                        // Then load any existing answers from the attempt (legacy support)
+                        if (this.currentAttempt.answers) {
+                            const answers = this.currentAttempt.answers;
+                            Object.keys(answers).forEach(questionId => {
+                                this.userAnswers[questionId] = {
+                                    optionId: answers[questionId],
+                                    isCorrect: null, // We'll determine this when loading the question
+                                    timestamp: new Date().toISOString()
+                                };
+                            });
 
-                        // Find the first unanswered question to resume from
-                        let firstUnansweredIndex = 0;
-                        for (let i = 0; i < this.questions.length; i++) {
-                            if (!this.userAnswers[this.questions[i].id]) {
-                                firstUnansweredIndex = i;
-                                break;
-                            }
-                            // If all questions up to current index are answered, continue to next
-                            if (i === this.questions.length - 1) {
-                                // All questions are answered, go to the last one
-                                firstUnansweredIndex = this.questions.length - 1;
-                            }
+                            // Update counts based on loaded answers
+                            this.updateAnswerCounts();
                         }
-
-                        this.currentQuestionIndex = firstUnansweredIndex;
-
-                        console.log('Resumed attempt with original question order:', {
-                            totalQuestions: this.questions.length,
-                            answeredCount: Object.keys(this.userAnswers).length,
-                            startingFrom: this.currentQuestionIndex + 1
-                        });
-
-                        // Load the current question state to show any existing answers
-                        this.loadQuestionState();
                     },
 
                     updateAnswerCounts() {
@@ -1565,6 +1591,9 @@
                         const score = Math.round(
                             (this.correctCount / this.totalQuestions) * 100
                         );
+
+                        // Mark quiz as completed
+                        this.quizCompleted = true;
 
                         // Save results
                         this.saveResults(score);
@@ -1630,7 +1659,78 @@
                     },
 
                     loadProgress() {
-                        // Load from localStorage if needed
+                        // Load progress from database via API if user is authenticated
+                        if (!this.isGuest && this.currentAttempt && this.currentAttempt.id) {
+                            this.fetchAttemptProgress();
+                        }
+                    },
+
+                    // Fetch current attempt progress from database
+                    async fetchAttemptProgress() {
+                        try {
+                            const response = await fetch(`/api/attempts/${this.currentAttempt.id}`, {
+                                method: 'GET',
+                                credentials: 'same-origin',
+                                headers: {
+                                    'Content-Type': 'application/json',
+                                    'X-CSRF-TOKEN': document.querySelector('meta[name="csrf-token"]').content
+                                }
+                            });
+
+                            if (response.ok) {
+                                const data = await response.json();
+                                if (data.success && data.attempt) {
+                                    this.syncProgressFromDatabase(data.attempt);
+                                }
+                            }
+                        } catch (error) {
+                            console.error('Error fetching attempt progress:', error);
+                        }
+                    },
+
+                    // Sync progress from database response
+                    syncProgressFromDatabase(attemptData) {
+                        // Update user answers from database
+                        if (attemptData.user_answers && attemptData.user_answers.length > 0) {
+                            const updatedAnswers = {};
+                            
+                            attemptData.user_answers.forEach(answer => {
+                                if (answer.question_id && answer.option_id) {
+                                    updatedAnswers[answer.question_id] = {
+                                        optionId: answer.option_id,
+                                        isCorrect: Boolean(answer.is_correct), // Ensure boolean conversion
+                                        timestamp: answer.time_spent || Date.now()
+                                    };
+                                }
+                            });
+                            
+                            this.userAnswers = updatedAnswers;
+                            
+                            // Update answer counts to reflect database state
+                            this.updateAnswerCounts();
+                            
+                            // Navigate to the first unanswered question based on database data
+                            this.navigateToFirstUnanswered();
+                        }
+                    },
+
+                    // Navigate to the first unanswered question based on current answers
+                    navigateToFirstUnanswered() {
+                        let firstUnansweredIndex = 0;
+                        for (let i = 0; i < this.questions.length; i++) {
+                            if (!this.userAnswers[this.questions[i].id]) {
+                                firstUnansweredIndex = i;
+                                break;
+                            }
+                            // If all questions up to current index are answered, continue to next
+                            if (i === this.questions.length - 1) {
+                                // All questions are answered, go to the last one
+                                firstUnansweredIndex = this.questions.length - 1;
+                            }
+                        }
+                        
+                        this.currentQuestionIndex = firstUnansweredIndex;
+                        this.loadQuestionState();
                     },
 
                     // Animate XP points
@@ -1659,14 +1759,8 @@
                     },
 
                     clearProgress() {
-                        // Clear saved state (only if user is logged in)
-                        if (!this.isGuest) {
-                            localStorage.removeItem(`quiz_${this.quizId}_answers`);
-                            localStorage.removeItem(`quiz_${this.quizId}_current_index`);
-                            localStorage.removeItem(`quiz_${this.quizId}_time_left`);
-                            localStorage.removeItem(`quiz_${this.quizId}_time_timestamp`);
-                            localStorage.removeItem(`quiz_${this.quizId}_flagged`);
-                        }
+                        // Progress is now managed by database, no localStorage to clear
+                        console.log('Progress cleared - database will handle reset');
                     },
 
                     // Additional features

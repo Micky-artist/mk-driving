@@ -32,7 +32,7 @@ return [
     'search_placeholder' => 'Shakisha ibibazo...',
     'search' => 'Shakisha',
     // Add these to the root level of the array
-    'ask_community_help' => 'Baza ikibazo cyawe mu ihuriro.',
+    'ask_community_help' => 'Baza ikibazo cyawe.',
     'optional' => 'singombwa',
     'terms_notice' => 'Ukurikize amategeko n\'amabwiriza yacu',
     'clear' => 'Vanaho',
@@ -46,8 +46,8 @@ return [
     'tagged_with' => 'Bikubiyemo: :tag',
     'back_to_forum' => 'Subira Kubiganiro',
     'need_help' => 'Ukeneye ubufasha?',
-    'ask_community' => 'Baza ikibazo cyawe mu ihuriro.',
-    'community' => 'Ihuriro',
+    'ask_community' => 'Baza ikibazo cyawe.',
+    'community' => 'Sobanukirwa',
     'recent_questions_subtitle' => 'Reba ibibazo bibajijwe vuba',
     'no_questions_yet' => 'Nta biganiro bihari',
     'be_the_first_to_ask' => 'Tangira ubaza ikibazo!',
@@ -140,7 +140,7 @@ Baza hano turagusobanurira cg bagenzi bawe bagusubize.',
     
     // Forum Introduction
     'community_discussions' => 'Ibiganiro',
-    'join_community' => 'Baza ikibazo cyawe mu ihuriro.',
+    'join_community' => 'Baza ikibazo cyawe.',
     'popular' => 'Ikunzwe',
     'top_answer' => 'Igisubizo Cyiza',
     'more_replies' => 'ibindi bisubizo',

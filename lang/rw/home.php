@@ -165,7 +165,7 @@ return [
         'driving_tips' => 'Ubujyanama',
         'testimonials' => 'Ibyo abantu bavuga',
         'help_center' => 'Aho gufashwa',
-        'legal' => 'Amategeko',
+        'legal' => 'Amabwiriza',
         'privacy_policy' => 'Ibigenga amakuru muduha',
         'terms_of_service' => 'Ibigenga ikoreshwa',
         'cookie_policy' => 'Ibigenga imisurire yacu',
