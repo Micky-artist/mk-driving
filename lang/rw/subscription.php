@@ -42,7 +42,7 @@ return [
     'current' => 'Iriho None',
     'unknown' => 'Ntibizwi',
     'plan_type' => 'Icyiciro',
-    'history_subtitle' => 'Mufite amafatabuguzi :count',
+    'history_subtitle' => 'Ifatabuguzi (:count)',
     'expires_in' => 'Rizarangira :time',
     'expired_since' => 'Ryarangiye :time',
     'cancelled' => 'Ryarahagaritswe',
