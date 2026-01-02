@@ -27,7 +27,7 @@ class AuthController extends Controller
     {
         $data = $request->validated();
         $result = $this->authService->register($data);
-
+        
         return response()->json([
             'message' => __('auth.register_success'),
             'user' => $result['user'],

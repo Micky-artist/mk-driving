@@ -709,55 +709,49 @@ class ForumController extends Controller
     /**
      * Post a new answer to a question.
      */
-    public function postAnswer(Request $request, $questionId)
-    {
-        $locale = app()->getLocale();
-        
-        Log::info('postAnswer called', [
-            'locale' => $locale,
-            'questionId' => $questionId,
-            'request_data' => $request->all(),
-            'user_id' => Auth::id()
-        ]);
+   public function postAnswer(Request $request, $localeOrId, $id = null)
+{
+    // Handle locale parameter - if first param is locale, use second as ID
+    $questionId = $id ?? $localeOrId;
+    
+    $question = ForumQuestion::findOrFail($questionId);
+    
+    $locale = app()->getLocale();
+    $fallback = config('app.fallback_locale', 'en');
+    
+    $validated = $request->validate([
+        'content' => 'required|array',
+        "content.{$locale}" => 'required|string|min:10',
+        'parent_id' => 'nullable|exists:forum_answers,id',
+    ]);
 
-        $request->validate([
-            'content' => 'required|array',
-            'content.*' => 'required|string|min:10|max:2000',
-            'parent_id' => 'nullable|exists:forum_answers,id'
-        ]);
+    $answer = new ForumAnswer([
+        'content' => json_encode([
+            $locale => $validated['content'][$locale],
+            $fallback => $validated['content'][$locale] // Use same content for fallback
+        ]),
+        'user_id' => Auth::id(),
+        'question_id' => $questionId,
+        'parent_id' => $validated['parent_id'] ?? null,
+        'is_approved' => true,
+    ]);
 
-        Log::info('Validation passed');
+    $answer->save();
 
-        $question = ForumQuestion::findOrFail($questionId);
-        Log::info('Question found', ['question_id' => $question->id]);
+    // Award points for answering a question
+    $this->pointsService->awardPoints(Auth::id(), 'question_answered', [
+        'answer_id' => $answer->id,
+        'question_id' => $questionId,
+    ]);
 
-        $answer = ForumAnswer::create([
-            'question_id' => $questionId,
-            'user_id' => Auth::id(),
-            'content' => $request->content,
-            'parent_id' => $request->parent_id,
-            'votes' => 0
-        ]);
-
-        Log::info('Answer created', ['answer_id' => $answer->id]);
-
-        $responseData = [
+    if ($request->wantsJson()) {
+        return response()->json([
             'success' => true,
-            'message' => 'Answer posted successfully.',
-            'answer' => [
-                'id' => $answer->id,
-                'content' => $answer->content,
-                'question_id' => $answer->question_id,
-                'author' => [
-                    'firstName' => Auth::user()->firstName,
-                    'lastName' => Auth::user()->lastName
-                ],
-                'created_at' => $answer->created_at
-            ]
-        ];
-
-        Log::info('Returning response', ['response_data' => $responseData]);
-
-        return response()->json($responseData);
+            'message' => 'Answer posted successfully',
+            'answer' => $answer->load('user')
+        ]);
     }
+
+    return redirect()->back()->with('success', 'Answer posted successfully');
+}
 }

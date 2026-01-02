@@ -3,8 +3,7 @@
 @section('content')
     <div class="bg-gray-50 dark:bg-gray-900 transition-colors duration-300 min-h-screen">
         <!-- Main Content Container -->
-        <div class="max-w-7xl mx-auto px-3 sm:px-4 lg:px-16 py-8">
-            <!-- Header -->
+        <div class="max-w-7xl mx-auto px-3 sm:px-4 lg:px-16 py-8">    
             <div class="bg-white dark:bg-gray-800 rounded-xl shadow-sm border border-gray-200 dark:border-gray-700 p-6 mb-8">
                 <div class="flex items-center justify-between">
                     <div class="flex items-center space-x-3">

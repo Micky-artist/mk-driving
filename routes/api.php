@@ -13,6 +13,7 @@ use App\Http\Controllers\Api\UploadController;
 use App\Http\Controllers\Api\UserController;
 use App\Http\Controllers\Api\BookmarkController;
 use App\Http\Controllers\Api\QuizAttemptController;
+use App\Http\Controllers\Api\LeaderboardChangesController;
 
 // Public routes
 Route::post('/register', [AuthController::class, 'register']);
@@ -86,6 +87,7 @@ Route::middleware('auth:web')->group(function () {
 // Web authenticated routes for components that use web auth middleware  
 Route::middleware('auth:web')->group(function () {
     Route::get('/user/stats', [UserController::class, 'getUserStats']);
+    Route::get('/leaderboard/changes', [LeaderboardChangesController::class, 'index']);
     Route::get('/subscriptions/active', [SubscriptionController::class, 'getActiveUserSubscriptions']);
 });
 

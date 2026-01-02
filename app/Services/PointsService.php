@@ -8,9 +8,19 @@ use App\Models\PointConfiguration;
 use App\Models\User;
 use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Facades\Log;
+use Illuminate\Support\Facades\Cache;
 
 class PointsService
 {
+    private ?RobotActivityService $robotActivityService = null;
+
+    private function getRobotActivityService(): RobotActivityService
+    {
+        if ($this->robotActivityService === null) {
+            $this->robotActivityService = new RobotActivityService($this);
+        }
+        return $this->robotActivityService;
+    }
     public function awardPoints(int $userId, string $activityType, array $metadata = []): bool
     {
         if (!PointConfiguration::canAwardPoints($activityType, $userId)) {
@@ -34,20 +44,33 @@ class PointsService
             ]);
 
             // Update user points
-            $userPoint = UserPoint::firstOrCreate(
+            $userPoint = UserPoint::updateOrCreate(
                 ['user_id' => $userId],
                 [
-                    'total_points' => 0,
-                    'weekly_points' => 0,
-                    'monthly_points' => 0,
+                    'total_points' => DB::raw("COALESCE(total_points, 0) + {$points}"),
+                    'weekly_points' => DB::raw("COALESCE(weekly_points, 0) + {$points}"),
+                    'monthly_points' => DB::raw("COALESCE(monthly_points, 0) + {$points}"),
                     'last_activity_at' => now(),
                 ]
             );
 
-            $userPoint->addPoints($points);
+            // Trigger robot activity if this is a real user activity
+            $user = User::find($userId);
+            if ($user && !$user->is_robot) {
+                $this->triggerRobotActivity($userId, $activityType, $points);
+            }
 
             return true;
         });
+    }
+
+    private function triggerRobotActivity(int $userId, string $activityType, int $points): void
+    {
+        // Only trigger robot activity if probability allows
+        if (random_int(1, 100) <= 40) { // 40% chance
+            $this->getRobotActivityService()->markRealUserActivity();
+            $this->getRobotActivityService()->handleUserActivity('user_quiz_completed');
+        }
     }
 
     public function getLeaderboard(int $limit = 25, string $period = 'total'): array
@@ -73,6 +96,7 @@ class PointsService
                 'users.first_name',
                 'users.last_name',
                 'users.created_at',
+                'users.is_robot',
                 DB::raw('COALESCE(user_points.' . $column . ', 0) as points')
             )
             ->orderBy('points', 'desc')
@@ -89,15 +113,21 @@ class PointsService
         $result = $userPoints->map(function ($user, $index) {
             Log::info('Processing user', ['user_id' => $user->id, 'points' => $user->points]);
             
+            // Get recent activities for this user
+            $recentActivities = $this->getRecentActivities($user->id, 3);
+            
             return [
                 'user' => [
                     'id' => $user->id,
                     'first_name' => $user->first_name,
                     'last_name' => $user->last_name,
                     'createdAt' => $user->created_at,
+                    'is_robot' => (bool) $user->is_robot,
                 ],
                 'points' => (int) $user->points,
                 'rank' => $index + 1,
+                'recent_activities' => $recentActivities,
+                'last_activity' => $recentActivities[0]['created_at'] ?? null,
             ];
         })->values()->toArray();
 
@@ -157,6 +187,20 @@ class PointsService
         UserPoint::query()->update(['monthly_points' => 0]);
     }
 
+    public function getLeaderboardWithNotifications(int $limit = 25, string $period = 'total'): array
+    {
+        $leaderboard = $this->getLeaderboard($limit, $period);
+        
+        // Add robot notifications if available
+        $robotNotification = Cache::get('latest_robot_notification');
+        
+        return [
+            'leaderboard' => $leaderboard,
+            'robot_notification' => $robotNotification,
+            'has_robot_activity' => !empty($robotNotification),
+        ];
+    }
+
     public function getRecentActivities(int $userId, int $limit = 10): array
     {
         return ActivityLog::where('user_id', $userId)
@@ -167,11 +211,30 @@ class PointsService
             ->map(function ($log) {
                 return [
                     'activity_type' => $log->activity_type,
+                    'activity_description' => $this->getActivityDescription($log->activity_type, $log->metadata),
                     'points_awarded' => $log->points_awarded,
                     'created_at' => $log->created_at,
+                    'time_ago' => $log->created_at->diffForHumans(),
                     'metadata' => $log->metadata,
                 ];
             })
             ->toArray();
+    }
+
+    private function getActivityDescription(string $activityType, array $metadata = []): string
+    {
+        $isRobotActivity = $metadata['is_robot_activity'] ?? false;
+        
+        $descriptions = [
+            'quiz_completed' => $isRobotActivity ? 'Completed a practice test' : 'Completed a quiz',
+            'daily_login' => 'Logged in today',
+            'profile_updated' => 'Updated profile',
+            'forum_participation' => 'Participated in forum',
+            'achievement_unlocked' => 'Unlocked an achievement',
+            'user_signup' => 'Joined the platform',
+            'subscription_purchased' => 'Upgraded to premium',
+        ];
+
+        return $descriptions[$activityType] ?? 'Earned points';
     }
 }

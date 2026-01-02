@@ -113,7 +113,18 @@
             @if ($showHeader)
                 <!-- Header Line 1: Quiz Info -->
                 <div x-cloak
-                    class="bg-gray-50 dark:bg-gray-800 border-b border-gray-200 dark:border-gray-700 px-3 sm:px-4 py-2">
+                    class="bg-gray-50 dark:bg-gray-800 border-b border-gray-200 dark:border-gray-700 px-3 sm:px-4 py-2 relative">
+                    <!-- Live Activity Notification -->
+                    <div x-show="liveNotification" x-transition:enter="transition ease-out duration-300"
+                        x-transition:enter-start="opacity-0 transform -translate-y-2"
+                        x-transition:enter-end="opacity-100 transform translate-y-0"
+                        x-transition:leave="transition ease-in duration-200"
+                        x-transition:leave-start="opacity-100 transform translate-y-0"
+                        x-transition:leave-end="opacity-0 transform -translate-y-2"
+                        class="absolute top-full left-0 right-0 bg-green-500 text-white text-center py-1 text-sm z-10 shadow-lg">
+                        <span x-text="liveNotification.message"></span>
+                    </div>
+                    
                     <div class="flex items-center justify-between text-sm">
                         <div class="flex items-center gap-3 sm:gap-4">
                             <h1
@@ -614,6 +625,30 @@
                         </div>
                     </div>
 
+                    <!-- Recent Leaderboard Changes -->
+                    <div x-show="leaderboardChanges && leaderboardChanges.length > 0" class="mb-4 p-3 bg-blue-50 dark:bg-blue-900/20 rounded-lg border border-blue-200 dark:border-blue-700">
+                        <div class="flex items-center space-x-2 mb-2">
+                            <div class="text-lg">📊</div>
+                            <h4 class="text-sm font-semibold text-blue-800 dark:text-blue-200">{{ __('quiz.recentActivity') }}</h4>
+                        </div>
+                        <div class="space-y-2">
+                            <template x-for="change in leaderboardChanges" :key="change.id">
+                                <div class="flex items-center justify-between text-sm p-2 bg-white dark:bg-gray-800 rounded">
+                                    <div class="flex items-center space-x-2">
+                                        <div class="w-6 h-6 rounded-full bg-gradient-to-br from-blue-500 to-purple-500 flex items-center justify-center text-white text-xs font-bold">
+                                            <span x-text="change.user.first_name.charAt(0)"></span>
+                                        </div>
+                                        <div>
+                                            <p class="font-medium text-gray-900 dark:text-gray-100" x-text="change.message"></p>
+                                            <p class="text-xs text-gray-500 dark:text-gray-400" x-text="change.time_ago"></p>
+                                        </div>
+                                    </div>
+                                    <div class="text-xs font-medium text-blue-600 dark:text-blue-400" x-text="change.points_change"></div>
+                                </div>
+                            </template>
+                        </div>
+                    </div>
+
                     <!-- Leaderboard Position -->
                     <div x-show="updatedStats && updatedStats.leaderboardPosition" class="mb-6">
                         <div class="bg-gradient-to-r from-yellow-50 to-orange-50 dark:from-yellow-900/20 dark:to-orange-900/20 p-3 sm:p-4 rounded-lg border-2 border-yellow-300 dark:border-yellow-700">
@@ -902,6 +937,11 @@
                     soundEnabled: true,
                     correctSound: null,
                     incorrectSound: null,
+                    
+                    // Live notifications
+                    liveNotification: null,
+                    leaderboardChanges: [],
+                    notificationTimer: null,
                     
                     // Initialize audio elements
                     initSounds() {
@@ -1605,6 +1645,7 @@
                         setTimeout(() => {
                             if (!this.isGuest) {
                                 this.fetchUpdatedStats();
+                                this.loadLeaderboardChanges();
                             } else {
                                 // For guests, show modal immediately
                                 this.showResultsModal = true;
@@ -1843,6 +1884,37 @@
                                 streak: this.updatedStats.streak
                             }
                         }));
+                    },
+
+                    // Notification methods
+                    loadLeaderboardChanges() {
+                        fetch('/api/leaderboard/changes')
+                            .then(response => response.json())
+                            .then(data => {
+                                this.leaderboardChanges = data.changes || [];
+                                this.showLiveNotifications();
+                            })
+                            .catch(error => console.error('Error loading leaderboard changes:', error));
+                    },
+
+                    showLiveNotifications() {
+                        // Show header notification if there are recent changes
+                        if (this.leaderboardChanges.length > 0 && !this.isGuest) {
+                            const latestChange = this.leaderboardChanges[0];
+                            this.liveNotification = {
+                                message: latestChange.message,
+                                type: 'info'
+                            };
+                            
+                            // Hide notification after 5 seconds
+                            setTimeout(() => {
+                                this.liveNotification = null;
+                            }, 5000);
+                        }
+                    },
+
+                    hideNotification() {
+                        this.liveNotification = null;
                     }
                 }));
             });
