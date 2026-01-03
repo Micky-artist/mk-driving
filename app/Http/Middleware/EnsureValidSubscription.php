@@ -114,18 +114,51 @@ class EnsureValidSubscription
     }
     
     /**
-     * Check if user has active subscription for specific plan
+     * Check if user has active subscription for specific plan (with hierarchical access)
      */
     private function hasActiveSubscriptionForPlan($user, string $planSlug): bool
     {
-        return $user->subscriptions()
+        // Get user's current subscriptions
+        $currentSubscriptions = $user->subscriptions()
             ->where('status', SubscriptionStatus::ACTIVE->value)
-            ->where('starts_at', '<=', now())
             ->where('ends_at', '>', now())
-            ->whereHas('plan', function($query) use ($planSlug) {
-                $query->where('slug', $planSlug);
-            })
-            ->exists();
+            ->with('subscriptionPlan')
+            ->get();
+        
+        $accessiblePlanSlugs = $currentSubscriptions->pluck('subscriptionPlan.slug')->filter()->unique();
+        $hierarchicalPlans = $this->getHierarchicalPlanAccess($accessiblePlanSlugs);
+
+        // Check if user has hierarchical access to the required plan
+        return $hierarchicalPlans->contains($planSlug);
+    }
+    
+    /**
+     * Get hierarchical plan access - higher tiers get access to lower tiers
+     */
+    private function getHierarchicalPlanAccess($userPlanSlugs): \Illuminate\Support\Collection
+    {
+        // Define hierarchy from lowest to highest
+        $planHierarchy = [
+            'basic-plan',
+            'standard-plan', 
+            'premium-plan',
+            'gold-unlimited-plan'
+        ];
+        
+        $hierarchicalAccess = collect();
+        
+        foreach ($userPlanSlugs as $planSlug) {
+            $planIndex = array_search($planSlug, $planHierarchy);
+            
+            if ($planIndex !== false) {
+                // Add this plan and all lower-tier plans
+                for ($i = 0; $i <= $planIndex; $i++) {
+                    $hierarchicalAccess->push($planHierarchy[$i]);
+                }
+            }
+        }
+        
+        return $hierarchicalAccess->unique();
     }
     
     /**

@@ -180,7 +180,7 @@ class SubscriptionController extends Controller
     {
         $user = Auth::user();
         $subscriptions = $user->subscriptions()
-            ->where('status', 'active')
+            ->where('status', 'ACTIVE')
             ->where('ends_at', '>', now())
             ->with('plan')
             ->latest()
@@ -224,7 +224,7 @@ class SubscriptionController extends Controller
         
         // Check if user has an active subscription that includes this quiz
         $hasAccess = $user->subscriptions()
-            ->where('status', 'active')
+            ->where('status', 'ACTIVE')
             ->where('ends_at', '>', now())
             ->whereHas('plan', function($query) use ($quiz) {
                 $query->whereHas('quizzes', function($q) use ($quiz) {
