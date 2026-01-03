@@ -658,7 +658,7 @@
                                         🏆 {{ __('quiz.firstPlace') }}
                                     </span>
                                     <span x-show="updatedStats.leaderboardPosition !== 1">
-                                        {{ __('quiz.newPosition') }}: #<span x-text="updatedStats.leaderboardPosition"></span>
+                                        {{ __('quiz.newPosition') }}: #<span x-text="updatedStats.leaderboardPosition"></span>/25
                                     </span>
                                 </div>
                                 <div class="text-xs sm:text-sm text-yellow-700 dark:text-yellow-300 flex flex-col sm:flex-row sm:items-center sm:justify-between gap-2">

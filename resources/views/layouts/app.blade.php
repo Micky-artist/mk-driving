@@ -28,7 +28,7 @@
     $isRwanda = request()->segment(1) === 'rw';
     $description = $isRwanda ? 'Itegura ikizami cy\'amategeko y\'umuhanda hamwe na MK Driving - Uburyo bwa mbere bwizewe naba jeune mu Rwanda' : 'Prepare for your driving test with MK Driving - The best way to practice and pass your driving theory test in Rwanda';
     $titleSuffix = $isRwanda ? 'Tsinda ikizami cyo gutwara mu Rwanda' : 'Pass Your Driving Test in Rwanda';
-    $ogDescription = $isRwanda ? '🚗✨ Itengure kandi utsinde ikizami cyawe na MK Driving. Witoza incuro zose ukeneye, wigana n\'abandi bagutera courage!' : '🚗✨ Prepare & pass your driving test with MK Driving School. Practice tests, expert tips, and everything you need to get your driver\'s license in Rwanda!';
+    $ogDescription = $isRwanda ? 'Urubuga rwizewe rugufasha kubona ibibazo by\'kizamini cya provisoire n\'ibisubizo byabyo, bigufasha kwiga vuba, neza no gutsinda byoroshye - aho waba uri hose. 🚗' : '🚗✨ Prepare & pass your driving test with MK Driving School. Practice tests, expert tips, and everything you need to get your driver\'s license in Rwanda!';
 @endphp
 
     <title>{{ config('app.name', 'MK Driving School') }}</title>

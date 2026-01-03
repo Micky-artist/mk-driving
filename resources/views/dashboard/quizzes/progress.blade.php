@@ -128,13 +128,26 @@
                             <h2 class="text-lg font-semibold text-gray-900 dark:text-white">{{ __('dashboard.progress.leaderboard') }}</h2>
                         </div>
                         <div class="p-4 space-y-3">
+                            @if(Auth::user()->hasRole('admin'))
+                                <!-- Show message for admin users at the top -->
+                                <div class="text-center py-4 px-3 bg-blue-50 dark:bg-blue-900/20 rounded-lg border border-blue-100 dark:border-blue-800 mb-4">
+                                    <p class="text-sm text-blue-700 dark:text-blue-300">
+                                        {{ __('Admins are not shown in the leaderboard to keep it fair for regular users.') }}
+                                    </p>
+                                </div>
+                            @endif
                             @php
-                                // Create a modified leaderboard that always includes the user
-                                $userInLeaderboard = $leaderboard->contains('is_current_user', true);
-                                $displayLeaderboard = $leaderboard;
+                                // Filter out admin users from the leaderboard
+                                $filteredLeaderboard = $leaderboard->filter(function($entry) {
+                                    return !$entry['user']->hasRole('admin');
+                                })->values();
                                 
-                                // If user is not in top 10, add them to the leaderboard
-                                if (!$userInLeaderboard && $userPosition <= 50) {
+                                // Create a modified leaderboard that always includes the current user (if not admin)
+                                $userInLeaderboard = $filteredLeaderboard->contains('is_current_user', true);
+                                $displayLeaderboard = $filteredLeaderboard;
+                                
+                                // If user is not in top 10 and not an admin, add them to the leaderboard
+                                if (!$userInLeaderboard && $userPosition <= 50 && !Auth::user()->hasRole('admin')) {
                                     $userEntry = [
                                         'user' => Auth::user(),
                                         'total_points' => Auth::user()->total_points ?? 0,
@@ -144,7 +157,7 @@
                                     
                                     // Insert user at correct position
                                     $insertIndex = $userPosition - 1;
-                                    $displayLeaderboard = $leaderboard->take($insertIndex)->push($userEntry)->concat($leaderboard->skip($insertIndex));
+                                    $displayLeaderboard = $filteredLeaderboard->take($insertIndex)->push($userEntry)->concat($filteredLeaderboard->skip($insertIndex));
                                 }
                             @endphp
                             
@@ -180,11 +193,11 @@
                                 </div>
                             @endforeach
                             
-                            @if(!$userInLeaderboard && $userPosition > 50)
+                            @if(!$userInLeaderboard && $userPosition > 50 && !Auth::user()->hasRole('admin'))
                                 <!-- Show message if user is beyond top 50 -->
                                 <div class="text-center py-4 px-3 bg-gray-50 dark:bg-gray-700 rounded-lg">
                                     <p class="text-sm text-gray-600 dark:text-gray-400">
-                                        {{ __('dashboard.progress.your_position') }}: #{{ $userPosition }} {{ __('dashboard.progress.out_of') }} {{ $leaderboard->count() + 1 }}+ {{ __('dashboard.progress.active_users') }}
+                                        {{ __('dashboard.progress.your_position') }}: #{{ $userPosition }} {{ __('dashboard.progress.out_of') }} {{ $filteredLeaderboard->count() + 1 }}+ {{ __('dashboard.progress.active_users') }}
                                     </p>
                                     <p class="text-xs text-gray-500 dark:text-gray-400 mt-1">
                                         {{ __('dashboard.progress.keep_improving') }}
