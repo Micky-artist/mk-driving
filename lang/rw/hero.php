@@ -4,7 +4,7 @@ return [
     // Main heading and subheading
     'be_our_guest' => 'Murakaza neza!',
     'title' => 'Injira m\'umubare w\'abatsinda ku ncuro yambere!',
-    'trust_section_title' => 'MK Driving irizewe',
+    'trust_section_title' => 'MK Driving School irizewe',
     'driving_test' => 'Ikizamini cy\'umuhanda',
     'first_try' => 'ku ncuro ya mbere. Nta gushidikanya.',
     'subtitle_short' => 'Nta stress. Itoze n\'ibibazo 650+ byizewe, bikurikiza neza iby\'ibyo uzakora. Dutsindisha 97%.',

@@ -158,6 +158,11 @@ return [
         'top_performers' => 'Abimbere',
         'your_position' => 'Umwanya wawe',
         'keep_improving' => 'Komeza kwitoza kugirango uzamuke ku rutonde!',
+        'quiz_scores' => 'Amanota ku ibizamini',
+        'cumulative_average' => 'Impuzandengo yose',
+        'recent_quizzes' => 'Ibizamini byashize',
+        'no_data' => 'Nta data y\'imyigire ihari',
+        'start_quizzes' => 'Tangira imyitozo kugirango ubone urutonde rw\'imyigire yawe',
     ],
     'available_quizzes' => 'Ibizamini Bihari',
     'questions' => 'ibibazo',
@@ -217,7 +222,7 @@ return [
         'renewal_date' => 'Itariki yo kuvugurura: :date',
     ],
     'welcome' => [
-        'title' => 'Murakaza neza kuri MK Driving, :name!',
+        'title' => 'Murakaza neza kuri MK Driving School, :name!',
         'subtitle' => 'Urugendo rwo kuba umushoferi wizewe rutangirira aha',
         'points_earned' => 'Wakiriye :points amanota yo kwinjira!',
         'points_message' => 'Amanota afasha gukurikira uko wigana n\'abandi',
@@ -233,6 +238,7 @@ return [
     ],
     'readiness' => [
         'title' => 'Aho Mugeze Mwitegura Gukora Ikizami',
+        'readiness' => 'Imyitegurire',
         'percentage' => 'Mwiteguye :percentage% ',
         'tests_completed' => 'Imyitozo :count yakozwe',
         'average_score' => 'Amanota yose hamwe: :score%',

@@ -227,6 +227,9 @@ class DashboardController extends Controller
             'completed_quizzes_count' => $completedQuizzes->count()
         ]);
 
+        // Calculate progress data for chart
+        $progressData = $this->calculateProgressData($completedQuizzes);
+
         return view('dashboard.index', [
             'currentSubscriptions' => $currentSubscriptions,
             'availablePlans' => $availablePlans,
@@ -236,6 +239,7 @@ class DashboardController extends Controller
             'stats' => $stats,
             'subscriptionStats' => $subscriptionStats,
             'readinessData' => $readinessData,
+            'progressData' => $progressData,
         ]);
     }
 
@@ -260,6 +264,46 @@ class DashboardController extends Controller
         return $totalQuestions > 0 ? round(($correctAnswers / $totalQuestions) * 100, 1) : 0;
     }
     
+    /**
+     * Calculate progress data for chart
+     */
+    private function calculateProgressData($completedQuizzes): array
+    {
+        $scores = [];
+        $labels = [];
+        $averages = [];
+        $quizTitles = [];
+        $cumulativeSum = 0;
+        $count = 0;
+
+        // Get recent completed quizzes (up to 10 for chart)
+        $recentQuizzes = $completedQuizzes
+            ->sortByDesc('completed_at')
+            ->take(10)
+            ->reverse(); // Reverse to show chronological order
+
+        foreach ($recentQuizzes as $quiz) {
+            $score = $quiz->score ?? $this->calculateScoreFromAnswers($quiz->answers);
+            
+            $scores[] = $score;
+            $labels[] = $quiz->completed_at?->format('M j') ?? 'Unknown';
+            $quizTitles[] = $quiz->quiz->title ?? 'Quiz';
+            
+            // Calculate cumulative average
+            $cumulativeSum += $score;
+            $count++;
+            $averages[] = round($cumulativeSum / $count, 1);
+        }
+
+        return [
+            'has_data' => count($scores) > 0,
+            'scores' => $scores,
+            'labels' => $labels,
+            'averages' => $averages,
+            'quiz_titles' => $quizTitles,
+        ];
+    }
+
     /**
      * Get hierarchical plan access - higher tiers get access to lower tiers
      */

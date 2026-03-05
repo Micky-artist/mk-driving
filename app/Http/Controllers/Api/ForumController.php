@@ -22,13 +22,25 @@ class ForumController extends Controller
     {
         $validated = $request->validated();
         
-        $question = ForumQuestion::create([
-            'title' => $validated['title'],
-            'content' => $validated['content'],
-            'topics' => $validated['topics'] ?? [],
+        // Handle both full forum questions and companion sidebar questions
+        $questionData = [
             'user_id' => Auth::id(),
             'is_approved' => false, // Default to false, admin can approve later
-        ]);
+        ];
+
+        if (isset($validated['title'])) {
+            // Full forum question
+            $questionData['title'] = $validated['title'];
+            $questionData['content'] = $validated['content'];
+            $questionData['topics'] = $validated['topics'] ?? [];
+        } else {
+            // Companion sidebar question (simplified)
+            $questionData['title'] = substr($validated['question'], 0, 100);
+            $questionData['content'] = $validated['question'];
+            $questionData['quiz_id'] = $validated['quiz_id'] ?? null;
+        }
+
+        $question = ForumQuestion::create($questionData);
 
         return response()->json([
             'message' => 'Question created successfully',
@@ -43,12 +55,38 @@ class ForumController extends Controller
      */
     public function getQuestions(): JsonResponse
     {
-        $questions = ForumQuestion::with(['user', 'answers.user'])
-            ->latest()
-            ->get();
+        $query = ForumQuestion::with(['user', 'answers.user'])
+            ->latest();
+
+        // Filter by quiz_id if provided (for companion sidebar)
+        if (request()->has('quiz_id')) {
+            $query->where('quiz_id', request('quiz_id'));
+        }
+
+        $questions = $query->get();
+
+        // Format for companion sidebar
+        $formattedQuestions = $questions->map(function ($question) {
+            return [
+                'id' => $question->id,
+                'question' => $question->content,
+                'user_name' => $question->user->first_name . ' ' . $question->user->last_name,
+                'created_at' => $question->created_at->diffForHumans(),
+                'is_current_user' => $question->user_id === Auth::id(),
+                'answers' => $question->answers->map(function ($answer) {
+                    return [
+                        'id' => $answer->id,
+                        'answer' => $answer->content,
+                        'user_name' => $answer->user->first_name . ' ' . $answer->user->last_name,
+                        'created_at' => $answer->created_at->diffForHumans(),
+                        'is_helpful' => $answer->is_helpful ?? false
+                    ];
+                })->toArray()
+            ];
+        });
 
         return response()->json([
-            'data' => $questions
+            'questions' => $formattedQuestions
         ]);
     }
 

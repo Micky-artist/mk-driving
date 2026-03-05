@@ -1,6 +1,6 @@
 @extends('layouts.app')
 
-@section('title', __('My Quizzes'))
+@section('title', __('common.my_quizzes'))
 
 @section('content')
     
@@ -10,9 +10,9 @@
             <div class="max-w-7xl mx-auto px-1  sm:px-6 lg:px-8">
                 <!-- Title and Count Row -->
                 <div class="py-4 flex items-center justify-between">
-                    <h1 class="text-xl sm:text-2xl font-semibold text-gray-900 dark:text-white">{{ __('My Quizzes') }}</h1>
+                    <h1 class="text-xl sm:text-2xl font-semibold text-gray-900 dark:text-white">{{ __('common.my_quizzes') }}</h1>
                     <span class="inline-flex items-center px-2.5 sm:px-3 py-1.5 rounded-full text-xs font-medium bg-blue-100 dark:bg-blue-900/20 text-blue-800 dark:text-blue-300">
-                        {{ $quizzes->total() }} {{ __('Quizzes') }}
+                        {{ $quizzes->total() }} {{ __('common.quizzes') }}
                     </span>
                 </div>
                 

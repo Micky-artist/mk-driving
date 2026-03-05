@@ -29,12 +29,15 @@
     questions: {{ json_encode($questions) }},
     currentAttempt: {{ json_encode($attempt) }},
     allowNavigation: {{ $allowNavigation ? 'true' : 'false' }}
-})" x-init="init()" class="flex flex-col h-full bg-white dark:bg-gray-900">
+})" x-init="init()" x-destroy="destroy()"
+    class="flex flex-col h-full bg-gradient-to-br from-white to-gray-50 dark:from-gray-900 dark:to-gray-800 rounded-2xl shadow-lg border border-gray-100 dark:border-gray-700">
 
     <!-- Loading Skeleton (shown before Alpine initializes) -->
-    <div x-show="!initialized" class="flex flex-col h-full bg-white dark:bg-gray-900">
+    <div x-show="!initialized"
+        class="flex flex-col h-full bg-gradient-to-br from-white to-gray-50 dark:from-gray-900 dark:to-gray-800">
         @if ($showHeader)
-            <div class="bg-gray-50 dark:bg-gray-800 border-b border-gray-200 dark:border-gray-700 px-3 sm:px-4 py-2">
+            <div
+                class="bg-gradient-to-r from-gray-50 to-gray-100 dark:from-gray-800 dark:to-gray-700 border-b border-gray-200/50 dark:border-gray-600/50 px-3 sm:px-4 py-3 md:rounded-t-2xl">
                 <div class="flex items-center justify-between text-sm">
                     <div class="flex items-center gap-3 sm:gap-4">
                         <!-- Title skeleton -->
@@ -54,20 +57,31 @@
                     </div>
                 </div>
                 <!-- Progress bar skeleton -->
-                <div class="w-full dark:bg-gray-700 bg-gray-200 rounded-full h-1.5 mt-2">
-                    <div class="h-1.5 rounded-full bg-gray-300/60 dark:bg-gray-600/40 animate-pulse"></div>
+                <div class="w-full dark:bg-gray-600/50 bg-gray-200/50 rounded-full h-2 mt-3 shadow-inner">
+                    <div
+                        class="h-2 rounded-full bg-gradient-to-r from-blue-400 to-blue-600 dark:from-blue-500 dark:to-blue-400 animate-pulse shadow-sm">
+                    </div>
                 </div>
             </div>
 
             <!-- Second header line skeleton -->
-            <div class="bg-gray-100 dark:bg-gray-800 border-b border-gray-200 dark:border-gray-700 px-3 sm:px-4 py-1">
+            <div
+                class="bg-gradient-to-r from-gray-100 to-gray-150 dark:from-gray-750 dark:to-gray-700 border-b border-gray-200/50 dark:border-gray-600/50 px-3 sm:px-4 py-2">
                 <div class="flex items-center justify-between">
                     <div class="h-4 w-16 bg-gray-300/60 dark:bg-gray-600/40 rounded animate-pulse"></div>
                     <div class="flex gap-1">
-                        <div class="h-8 w-8 bg-gray-300/60 dark:bg-gray-600/40 rounded-full animate-pulse"></div>
-                        <div class="h-8 w-8 bg-gray-300/60 dark:bg-gray-600/40 rounded-full animate-pulse"></div>
-                        <div class="h-8 w-8 bg-gray-300/60 dark:bg-gray-600/40 rounded-full animate-pulse"></div>
-                        <div class="h-8 w-8 bg-gray-300/60 dark:bg-gray-600/40 rounded-full animate-pulse"></div>
+                        <div
+                            class="h-8 w-8 bg-gradient-to-br from-gray-200 to-gray-300 dark:from-gray-600 dark:to-gray-700 rounded-xl animate-pulse shadow-sm">
+                        </div>
+                        <div
+                            class="h-8 w-8 bg-gradient-to-br from-gray-200 to-gray-300 dark:from-gray-600 dark:to-gray-700 rounded-xl animate-pulse shadow-sm">
+                        </div>
+                        <div
+                            class="h-8 w-8 bg-gradient-to-br from-gray-200 to-gray-300 dark:from-gray-600 dark:to-gray-700 rounded-xl animate-pulse shadow-sm">
+                        </div>
+                        <div
+                            class="h-8 w-8 bg-gradient-to-br from-gray-200 to-gray-300 dark:from-gray-600 dark:to-gray-700 rounded-xl animate-pulse shadow-sm">
+                        </div>
                     </div>
                 </div>
             </div>
@@ -82,9 +96,11 @@
                 <!-- Answer options skeleton -->
                 <div class="space-y-3">
                     @for ($i = 0; $i < 4; $i++)
-                        <div class="p-4 border border-gray-200 dark:border-gray-600 rounded-lg">
+                        <div
+                            class="p-4 border border-gray-200/60 dark:border-gray-600/60 rounded-xl hover:shadow-sm transition-shadow duration-200">
                             <div class="flex items-center">
-                                <div class="w-5 h-5 rounded-full border-2 border-gray-300 dark:border-gray-500 mr-3">
+                                <div
+                                    class="w-5 h-5 rounded-xl border-2 border-gray-300/60 dark:border-gray-500/60 mr-3">
                                 </div>
                                 <div class="flex-1">
                                     <div class="h-4 w-full bg-gray-300/60 dark:bg-gray-600/40 rounded animate-pulse">
@@ -98,37 +114,55 @@
         </div>
 
         <!-- Controls skeleton -->
-        <div class="border-t border-gray-200 dark:border-gray-700 bg-white dark:bg-gray-800 p-2 sm:p-4">
+        <div
+            class="border-t border-gray-200/60 dark:border-gray-700/60 bg-gradient-to-r from-white to-gray-50 dark:from-gray-800 dark:to-gray-750 p-3 sm:p-4 md:rounded-b-2xl">
             <div class="flex justify-between items-center gap-2">
-                <div class="h-10 w-20 bg-gray-300/60 dark:bg-gray-600/40 rounded animate-pulse"></div>
-                <div class="h-10 w-32 bg-gray-300/60 dark:bg-gray-600/40 rounded animate-pulse"></div>
+                <div
+                    class="h-10 w-20 bg-gradient-to-r from-gray-200 to-gray-300 dark:from-gray-600 dark:to-gray-700 rounded-xl animate-pulse">
+                </div>
+                <div
+                    class="h-10 w-32 bg-gradient-to-r from-blue-400 to-blue-500 dark:from-blue-500 dark:to-blue-600 rounded-xl animate-pulse">
+                </div>
             </div>
         </div>
     </div>
 
     <!-- Quiz Content (shown when initialized) -->
-    <div x-cloak class="flex flex-col h-full min-h-0">
-        <div x-show="initialized" x-transition class="flex flex-col h-full min-h-0">
+    <div x-cloak class="flex flex-col lg:h-full min-h-0">
+        <div x-show="initialized" x-transition class="flex flex-col lg:h-full min-h-0">
 
             @if ($showHeader)
                 <!-- Header Line 1: Quiz Info -->
                 <div x-cloak
-                    class="bg-gray-50 dark:bg-gray-800 border-b border-gray-200 dark:border-gray-700 px-3 sm:px-4 py-2 relative">
-                    <!-- Live Activity Notification -->
+                    class="bg-gradient-to-r from-gray-50 to-gray-100 dark:from-gray-800 dark:to-gray-700 border-b border-gray-200/50 dark:border-gray-600/50 px-3 sm:px-4 py-3 relative md:rounded-t-2xl">
+                    <!-- Desktop Live Activity Notification -->
                     <div x-show="liveNotification" x-transition:enter="transition ease-out duration-300"
                         x-transition:enter-start="opacity-0 transform -translate-y-2"
                         x-transition:enter-end="opacity-100 transform translate-y-0"
                         x-transition:leave="transition ease-in duration-200"
                         x-transition:leave-start="opacity-100 transform translate-y-0"
                         x-transition:leave-end="opacity-0 transform -translate-y-2"
-                        class="absolute top-full left-0 right-0 bg-green-500 text-white text-center py-1 text-sm z-10 shadow-lg">
-                        <span x-text="liveNotification.message"></span>
+                        class="hidden lg:block absolute top-full left-0 right-0 text-center py-2 text-sm z-10 rounded-b-xl border-t"
+                        :class="{
+                            'bg-gradient-to-r from-green-500 to-green-600 text-white border-green-400/30': (liveNotification && liveNotification.type !== 'robot_companion'),
+                            'bg-gradient-to-r from-purple-500 to-purple-600 text-white border-purple-400/30': (liveNotification && liveNotification.type === 'robot_companion')
+                        }">
+                        <div class="flex items-center justify-center gap-2">
+                            <span x-show="liveNotification && liveNotification.type === 'robot_companion'" class="text-lg">🤖</span>
+                            <span x-show="liveNotification && liveNotification.robot_name" class="font-semibold" x-text="(liveNotification && liveNotification.robot_name ? liveNotification.robot_name + ':' : '')"></span>
+                            <span x-text="liveNotification && liveNotification.message ? liveNotification.message : ''"></span>
+                            <span x-show="liveNotification && liveNotification.is_correct !== undefined" 
+                                  class="ml-2" 
+                                  :class="(liveNotification && liveNotification.is_correct) ? 'text-green-200' : 'text-yellow-200'"
+                                  x-text="(liveNotification && liveNotification.is_correct) ? '✓' : '✗'"></span>
+                        </div>
                     </div>
+
                     
                     <div class="flex items-center justify-between text-sm">
                         <div class="flex items-center gap-3 sm:gap-4">
                             <h1
-                                class="font-semibold truncate max-w-[120px] sm:max-w-[180px] md:max-w-[250px] text-gray-800 dark:text-gray-100 text-sm sm:text-base">
+                                class="hidden lg:block font-semibold truncate max-w-[120px] sm:max-w-[180px] md:max-w-[250px] text-gray-800 dark:text-gray-100 text-sm sm:text-base">
                                 {{ $quizTitle }}</h1>
                             <div class="flex items-center gap-1.5 text-gray-600 dark:text-gray-300">
                                 <svg class="w-5 h-5 flex-shrink-0" fill="none" stroke="currentColor"
@@ -138,91 +172,68 @@
                                 </svg>
                                 <span x-text="formatTime(timeLeft)" class="font-medium text-sm sm:text-base"></span>
                             </div>
-                            <div class="hidden sm:flex items-center gap-1.5 text-gray-600 dark:text-gray-300">
-                                <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
-                                        d="M9 12h6m-6 4h6m2 5H7a2 2 0 01-2-2V5a2 2 0 012-2h5.586a1 1 0 01.707.293l5.414 5.414a1 1 0 01.293.707V19a2 2 0 01-2 2z" />
-                                </svg>
-                                <span class="font-medium">{{ $totalQuestions }}Q</span>
+                            <!-- Replace 20Q with correct/incorrect count -->
+                            <div class="flex items-center gap-1.5 text-gray-600 dark:text-gray-300">
+                                <span class="font-medium text-sm sm:text-base">
+                                    <span x-text="correctCount" class="text-green-600 dark:text-green-400 font-bold"></span>
+                                    <span class="mx-1">/</span>
+                                    <span x-text="incorrectCount" class="text-red-600 dark:text-red-400 font-bold"></span>
+                                </span>
+                                <span class="text-xs text-gray-500 dark:text-gray-400 hidden sm:inline">answers</span>
                             </div>
                         </div>
-                        <div class="flex items-center gap-2">
-                            <span
-                                class="bg-green-500 text-white px-2 py-1 rounded text-xs sm:text-sm min-w-[36px] text-center font-medium">
-                                <span x-text="correctCount">0</span>
-                            </span>
-                            <span
-                                class="bg-red-500 text-white px-2 py-1 rounded text-xs sm:text-sm min-w-[36px] text-center font-medium">
-                                <span x-text="incorrectCount">0</span>
-                            </span>
+                        <!-- Move action buttons here -->
+                        <div class="flex items-center gap-1">
+                            <button @click="toggleSound"
+                                class="p-2 sm:p-2.5 rounded-xl hover:bg-gray-200/80 dark:hover:bg-gray-700/80 transition-all duration-200"
+                                :class="soundEnabled ?
+                                    'text-blue-500 bg-gradient-to-r from-blue-50 to-blue-100 dark:from-blue-900/30 dark:to-blue-800/20' :
+                                    'text-gray-400 dark:text-gray-600'"
+                                :title="soundEnabled ? 'Disable sound' : 'Enable sound'">
+                                <i x-show="soundEnabled" class="fas fa-volume-up"></i>
+                                <i x-show="!soundEnabled" class="fas fa-volume-mute"></i>
+                            </button>
+                            <button @click="togglePause" :disabled="isGuest"
+                                class="p-2 sm:p-2.5 rounded-xl hover:bg-gray-200/80 dark:hover:bg-gray-700/80 text-gray-600 dark:text-gray-300 disabled:opacity-50 disabled:cursor-not-allowed transition-all duration-200"
+                                :title="isGuest ? __('quiz.loginToUsePause') : (isPaused ? __('quiz.resume') : __('quiz.pause'))">
+                                <i x-show="!isPaused" class="fas fa-pause"></i>
+                                <i x-show="isPaused" class="fas fa-play"></i>
+                            </button>
+                            <button @click="resetQuiz" x-show="hasPlan && !isGuest"
+                                class="p-2 sm:p-2.5 rounded-xl hover:bg-red-50 dark:hover:bg-red-900/20 text-red-600 dark:text-red-400 transition-all duration-200"
+                                title="{{ __('quiz.resetQuiz') }}">
+                                <i class="fas fa-sync-alt"></i>
+                            </button>
+                            <button @click="autoAdvance = !autoAdvance" :disabled="isGuest"
+                                class="p-2 sm:p-2.5 rounded-xl hover:bg-gray-200/80 dark:hover:bg-gray-700/80 disabled:opacity-50 disabled:cursor-not-allowed transition-all duration-200"
+                                :class="autoAdvance ?
+                                    'text-blue-500 bg-gradient-to-r from-blue-50 to-blue-100 dark:from-blue-900/30 dark:to-blue-800/20' :
+                                    'text-gray-600 dark:text-gray-300'"
+                                :title="isGuest ? __('quiz.loginToUseAutoAdvance') : __('quiz.toggleAutoNext')">
+                                <i class="fas fa-forward"></i>
+                            </button>
                         </div>
                     </div>
 
                     <!-- Progress Bar -->
-                    <div class="w-full dark:bg-gray-700 bg-gray-200 rounded-full h-1.5 mt-2">
-                        <div class="h-1.5 rounded-full transition-colors duration-300"
+                    <div class="w-full dark:bg-gray-600/50 bg-gray-200/50 rounded-full h-2 mt-3">
+                        <div class="h-2 rounded-full transition-all duration-500 ease-out"
                             :style="{
                                 'width': Math.max(0, Math.min(100, (answeredCount / totalQuestions) * 100)) + '%',
-                                'background-color': getProgressBarColor()
+                                'background': 'linear-gradient(to right, ' + getProgressBarColor() + ', ' +
+                                    getProgressBarColor() + ')'
                             }">
                         </div>
-                    </div>
-                </div>
-
-                <!-- Header Line 2: Question Navigation -->
-                <div x-cloak
-                    class="bg-gray-100 dark:bg-gray-800 border-b border-gray-200 dark:border-gray-700 px-3 sm:px-4 py-1 text-sm flex items-center justify-between text-gray-800 dark:text-gray-200">
-                    <div class="flex items-center gap-2">
-                        <span class="font-medium text-sm sm:text-base">Q.<span
-                                x-text="actualQuestionNumber"></span><span class="sm:inline hidden">/<span
-                                    x-text="totalQuestions"></span></span></span>
-                        <span class="text-xs text-gray-500 dark:text-gray-400 hidden sm:inline" 
-                              x-text="`(${answeredCount} answered)`"></span>
-                        <span x-show="showFeedback" x-text="isAnswerCorrect ? '✓' : '✗'"
-                            :class="isAnswerCorrect ? 'text-green-600 dark:text-green-400' : 'text-red-600 dark:text-red-400'"
-                            class="text-sm font-bold">
-                        </span>
-                    </div>
-                    <div class="flex items-center gap-1">
-                        <button @click="toggleSound" 
-                            class="p-2 sm:p-2.5 rounded-full hover:bg-gray-200 dark:hover:bg-gray-700"
-                            :class="soundEnabled ? 'text-blue-500' : 'text-gray-400 dark:text-gray-600'"
-                            :title="soundEnabled ? 'Disable sound' : 'Enable sound'">
-                            <i x-show="soundEnabled" class="fas fa-volume-up"></i>
-                            <i x-show="!soundEnabled" class="fas fa-volume-mute"></i>
-                        </button>
-                        <button @click="togglePause" :disabled="isGuest"
-                            class="p-2 sm:p-2.5 rounded-full hover:bg-gray-200 dark:hover:bg-gray-700 text-gray-600 dark:text-gray-300 disabled:opacity-50 disabled:cursor-not-allowed"
-                            :title="isGuest ? __('quiz.loginToUsePause') : (isPaused ? __('quiz.resume') : __('quiz.pause'))">
-                            <i x-show="!isPaused" class="fas fa-pause"></i>
-                            <i x-show="isPaused" class="fas fa-play"></i>
-                        </button>
-                        <button @click="resetQuiz" x-show="hasPlan && !isGuest"
-                            class="p-2 sm:p-2.5 rounded-full hover:bg-gray-200 dark:hover:bg-gray-700 text-red-600 dark:text-red-400"
-                            title="{{ __('quiz.resetQuiz') }}">
-                            <i class="fas fa-sync-alt"></i>
-                        </button>
-                        <button @click="flagQuestion" :disabled="isGuest"
-                            class="p-2 sm:p-2.5 rounded-full hover:bg-gray-200 dark:hover:bg-gray-700 disabled:opacity-50 disabled:cursor-not-allowed"
-                            :class="isQuestionFlagged ? 'text-yellow-500' : 'text-gray-600 dark:text-gray-300'"
-                            :title="isGuest ? __('quiz.loginToFlagQuestions') : __('quiz.flagQuestion')">
-                            <i class="fas fa-flag"></i>
-                        </button>
-                        <button @click="autoAdvance = !autoAdvance" :disabled="isGuest"
-                            class="p-2 sm:p-2.5 rounded-full hover:bg-gray-200 dark:hover:bg-gray-700 disabled:opacity-50 disabled:cursor-not-allowed"
-                            :class="autoAdvance ? 'text-blue-500' : 'text-gray-600 dark:text-gray-300'"
-                            :title="isGuest ? __('quiz.loginToUseAutoAdvance') : __('quiz.toggleAutoNext')">
-                            <i class="fas fa-forward"></i>
-                        </button>
                     </div>
                 </div>
             @endif
 
             <!-- Quiz Content -->
-            <div x-cloak class="flex-1 overflow-y-auto p-4 min-h-0">
+            <div x-cloak
+                class="flex-1 overflow-y-auto p-4 min-h-0 bg-gradient-to-br from-white/50 to-gray-50/30 dark:from-gray-900/50 dark:to-gray-800/30">
                 <!-- Guest Notice -->
                 <div x-show="isGuest"
-                    class="mb-4 p-4 bg-yellow-50 dark:bg-yellow-900/20 border-l-4 border-yellow-400">
+                    class="mb-4 p-4 bg-gradient-to-r from-yellow-50 to-orange-50 dark:from-yellow-900/20 dark:to-orange-900/20 border-l-4 border-yellow-400 rounded-xl">
                     <p class="text-yellow-800 dark:text-yellow-200">
                         {{ __('quiz.loginToSaveProgress') }}
                     </p>
@@ -230,16 +241,15 @@
 
                 <!-- Current Question -->
                 <div class="mb-6">
-                    <h2 id="quiz-question-title" class="text-xl font-semibold mb-4 text-gray-800 dark:text-gray-100"
+                    <h2 id="quiz-question-title"
+                        class="text-xl font-semibold mb-4 text-gray-800 dark:text-gray-100 leading-relaxed"
                         x-text="currentQuestion.text"></h2>
 
                     <!-- Question Image -->
                     <div x-show="currentQuestion.image_url" class="mb-4">
-                        <div 
-                            :style="`background-image: url('${currentQuestion.image_url || '/images/road-sign-placeholder.svg'}'); background-size: contain; background-position: center; background-repeat: no-repeat; min-height: 200px;`"
-                            class="w-full max-w-full rounded-lg border border-gray-200 dark:border-gray-700"
-                            :alt="currentQuestion.text || __('quiz.questionImage')"
-                        >
+                        <div :style="`background-image: url('${currentQuestion.image_url || '/images/road-sign-placeholder.svg'}'); background-size: contain; background-position: center; background-repeat: no-repeat; min-height: 200px;`"
+                            class="w-full max-w-full rounded-2xl border border-gray-200/60 dark:border-gray-600/60 hover:shadow-sm transition-all duration-300"
+                            :alt="currentQuestion.text || __('quiz.questionImage')">
                         </div>
                     </div>
 
@@ -252,35 +262,40 @@
                                     x-model="selectedOption" :disabled="isAnswerSubmitted" class="hidden peer"
                                     @change="handleOptionSelect(option)">
                                 <label :for="'option-' + option.id"
-                                    class="answer-option flex items-center p-4 border rounded-lg cursor-pointer transition-colors"
+                                    class="answer-option flex items-center p-4 border rounded-xl cursor-pointer transition-all duration-200 hover:-translate-y-0.5"
                                     :class="{
-                                        'border-blue-500 bg-blue-50 dark:bg-blue-900/20': selectedOption === option
+                                        'border-blue-500 bg-gradient-to-r from-blue-50 to-blue-100 dark:from-blue-900/20 dark:to-blue-800/20': selectedOption ===
+                                            option
                                             .id && !
                                             isAnswerSubmitted,
-                                        'border-green-500 bg-green-50 dark:bg-green-900/20': isAnswerSubmitted && option
+                                        'border-green-500 bg-gradient-to-r from-green-50 to-green-100 dark:from-green-900/20 dark:to-green-800/20': isAnswerSubmitted &&
+                                            option
                                             .is_correct,
-                                        'border-red-500 bg-red-50 dark:bg-red-900/20': isAnswerSubmitted &&
+                                        'border-red-500 bg-gradient-to-r from-red-50 to-red-100 dark:from-red-900/20 dark:to-red-800/20': isAnswerSubmitted &&
                                             selectedOption ===
                                             option.id && !option.is_correct,
-                                        'border-gray-200 dark:border-gray-600 hover:bg-gray-50 dark:hover:bg-gray-800':
+                                        'border-gray-200/60 dark:border-gray-600/60 hover:bg-gradient-to-r hover:from-gray-50 hover:to-gray-100 dark:hover:from-gray-800 dark:hover:to-gray-700':
                                             !
                                             isAnswerSubmitted || (isAnswerSubmitted && !option.is_correct)
                                     }">
                                     <div class="flex items-center h-5">
-                                        <div class="w-5 h-5 rounded-full border flex items-center justify-center"
+                                        <div class="w-5 h-5 rounded-xl border-2 flex items-center justify-center transition-all duration-200"
                                             :class="{
-                                                'border-blue-500 bg-blue-500': selectedOption === option.id && !
+                                                'border-blue-500 bg-gradient-to-r from-blue-500 to-blue-600': selectedOption ===
+                                                    option.id && !
                                                     isAnswerSubmitted,
-                                                'border-green-500 bg-green-500': isAnswerSubmitted && option.is_correct,
-                                                'border-red-500 bg-red-500': isAnswerSubmitted && selectedOption ===
+                                                'border-green-500 bg-gradient-to-r from-green-500 to-green-600': isAnswerSubmitted &&
+                                                    option.is_correct,
+                                                'border-red-500 bg-gradient-to-r from-red-500 to-red-600': isAnswerSubmitted &&
+                                                    selectedOption ===
                                                     option
                                                     .id && !option.is_correct,
-                                                'border-gray-300 dark:border-gray-500': !selectedOption || (
+                                                'border-gray-300/60 dark:border-gray-500/60': !selectedOption || (
                                                     selectedOption !==
                                                     option.id && !(isAnswerSubmitted && option.is_correct))
                                             }">
                                             <div x-show="selectedOption === option.id && !isAnswerSubmitted"
-                                                class="w-3 h-3 rounded-full bg-white"></div>
+                                                class="w-2.5 h-2.5 rounded-full bg-white"></div>
                                             <svg x-show="isAnswerSubmitted && option.is_correct"
                                                 class="w-3 h-3 text-white" fill="none" stroke="currentColor"
                                                 viewBox="0 0 24 24">
@@ -296,83 +311,99 @@
                                         </div>
                                     </div>
                                     <div class="ml-3 text-sm flex-1">
-                                        
+
                                         <!-- Option Text with Conditional Display -->
                                         <p x-show="!option.image_url || (option.text && option.text.trim() !== '')"
-                                           x-transition:enter="transition ease-out duration-300"
-                                           class="font-medium text-gray-900 dark:text-gray-100 leading-relaxed"
-                                           x-text="option.text">
+                                            x-transition:enter="transition ease-out duration-300"
+                                            class="font-medium text-gray-900 dark:text-gray-100 leading-relaxed"
+                                            x-text="option.text">
                                         </p>
-                                        
+
                                         <!-- Modern Image Container with Loading States -->
-                                        <div x-show="option.image_url" class="mb-2 group relative" x-init="console.log('Option image data:', { optionId: option.id, image: option.image, imageUrl: option.image_url, text: option.text })">
+                                        <div x-show="option.image_url" class="mb-2 group relative"
+                                            x-init="console.log('Option image data:', { optionId: option.id, image: option.image, imageUrl: option.image_url, text: option.text })">
                                             <!-- Loading Skeleton with Animated Road Sign -->
-                                            <div x-show="option.image_url && !imageLoaded[option.id]" 
+                                            <div x-show="option.image_url && !imageLoaded[option.id]"
                                                 x-transition:enter="transition ease-out duration-300"
                                                 x-transition:enter-start="opacity-0"
                                                 x-transition:enter-end="opacity-100"
                                                 class="w-32 h-24 bg-gradient-to-br from-blue-50 to-blue-100 dark:from-blue-900/30 dark:to-blue-800/20 rounded-xl border border-blue-200 dark:border-blue-700 flex flex-col items-center justify-center overflow-hidden">
-                                                
+
                                                 <!-- Animated Road Sign Skeleton -->
                                                 <div class="relative">
-                                                    <div class="w-16 h-12 bg-blue-200 dark:bg-blue-700 rounded-sm transform rotate-45 animate-pulse opacity-60"></div>
-                                                    <div class="absolute top-0 left-1/2 transform -translate-x-1/2 w-1 h-6 bg-blue-300 dark:bg-blue-600 animate-pulse opacity-40"></div>
+                                                    <div
+                                                        class="w-16 h-12 bg-blue-200 dark:bg-blue-700 rounded-sm transform rotate-45 animate-pulse opacity-60">
+                                                    </div>
+                                                    <div
+                                                        class="absolute top-0 left-1/2 transform -translate-x-1/2 w-1 h-6 bg-blue-300 dark:bg-blue-600 animate-pulse opacity-40">
+                                                    </div>
                                                 </div>
-                                                
+
                                                 <!-- Loading Text -->
-                                                <div class="mt-2 text-xs text-blue-600 dark:text-blue-400 font-medium animate-pulse">
+                                                <div
+                                                    class="mt-2 text-xs text-blue-600 dark:text-blue-400 font-medium animate-pulse">
                                                     Loading...
                                                 </div>
-                                                
+
                                                 <!-- Subtle shimmer effect -->
-                                                <div class="absolute inset-0 bg-gradient-to-r from-transparent via-white/20 to-transparent -skew-x-12 animate-shimmer"></div>
+                                                <div
+                                                    class="absolute inset-0 bg-gradient-to-r from-transparent via-white/20 to-transparent -skew-x-12 animate-shimmer">
+                                                </div>
                                             </div>
-                                            
+
                                             <!-- Main Image with Smooth Transition -->
                                             <div x-show="imageLoaded[option.id] && !imageError[option.id]"
                                                 x-transition:enter="transition ease-out duration-500"
                                                 x-transition:enter-start="opacity-0 transform scale-95"
                                                 x-transition:enter-end="opacity-100 transform scale-100"
                                                 class="relative group">
-                                                
+
                                                 <!-- CSS Background Image Container -->
-                                                <div 
-                                                    :style="`background-image: url('${option.image_url || '/images/road-sign-placeholder.svg'}'); background-size: cover; background-position: center;`"
-                                                    class="w-32 h-24 rounded-xl"
-                                                    x-init="
-                                                        console.log('Image data at bg element:', { optionId: option.id, imageUrl: option.image_url });
-                                                        imageLoaded[option.id] = true;
-                                                    "
-                                                >
+                                                <div :style="`background-image: url('${option.image_url || '/images/road-sign-placeholder.svg'}'); background-size: cover; background-position: center;`"
+                                                    class="w-32 h-24 rounded-xl" x-init="console.log('Image data at bg element:', { optionId: option.id, imageUrl: option.image_url });
+                                                    imageLoaded[option.id] = true;">
                                                     <!-- Hover Overlay -->
-                                                    <div class="absolute inset-0 bg-gradient-to-t from-black/20 to-transparent opacity-0 group-hover:opacity-100 transition-opacity duration-300 rounded-xl"></div>
-                                                    
+                                                    <div
+                                                        class="absolute inset-0 bg-gradient-to-t from-black/20 to-transparent opacity-0 group-hover:opacity-100 transition-opacity duration-300 rounded-xl">
+                                                    </div>
+
                                                     <!-- View Larger Button -->
-                                                    <button @click="showImageModal(option.image_url, option.text || 'Option Image')"
-                                                            class="absolute top-2 right-2 bg-white/90 dark:bg-black/80 backdrop-blur-sm rounded-full p-1.5 opacity-0 group-hover:opacity-100 transition-opacity duration-300 hover:bg-white dark:hover:bg-black/90">
-                                                        <svg class="w-4 h-4 text-blue-600 dark:text-blue-400" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                                                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M21 21l-6-6m2-5a7 7 0 11-14 0 7 7 0 0114 0zM10 7v3m0 0v3m0-3h3m-3 0H7"></path>
+                                                    <button
+                                                        @click="showImageModal(option.image_url, option.text || 'Option Image')"
+                                                        class="absolute top-2 right-2 bg-white/90 dark:bg-black/80 backdrop-blur-sm rounded-full p-1.5 opacity-0 group-hover:opacity-100 transition-opacity duration-300 hover:bg-white dark:hover:bg-black/90">
+                                                        <svg class="w-4 h-4 text-blue-600 dark:text-blue-400"
+                                                            fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                                            <path stroke-linecap="round" stroke-linejoin="round"
+                                                                stroke-width="2"
+                                                                d="M21 21l-6-6m2-5a7 7 0 11-14 0 7 7 0 0114 0zM10 7v3m0 0v3m0-3h3m-3 0H7">
+                                                            </path>
                                                         </svg>
                                                     </button>
                                                 </div>
                                             </div>
-                                            
+
                                             <!-- Error State with Custom Road Sign Placeholder -->
                                             <div x-show="imageError[option.id]"
                                                 x-transition:enter="transition ease-out duration-300"
                                                 x-transition:enter-start="opacity-0"
                                                 x-transition:enter-end="opacity-100"
                                                 class="w-32 h-24 bg-gradient-to-br from-orange-50 to-orange-100 dark:from-orange-900/30 dark:to-orange-800/20 rounded-xl border-2 border-orange-200 dark:border-orange-700 flex flex-col items-center justify-center">
-                                                
+
                                                 <!-- Error Road Sign Icon -->
                                                 <div class="relative">
-                                                    <div class="w-16 h-12 bg-orange-300 dark:bg-orange-700 rounded-sm transform rotate-45 opacity-60"></div>
-                                                    <div class="absolute top-1/2 left-1/2 transform -translate-x-1/2 -translate-y-1/2 text-white dark:text-orange-900 font-bold text-lg">!</div>
+                                                    <div
+                                                        class="w-16 h-12 bg-orange-300 dark:bg-orange-700 rounded-sm transform rotate-45 opacity-60">
+                                                    </div>
+                                                    <div
+                                                        class="absolute top-1/2 left-1/2 transform -translate-x-1/2 -translate-y-1/2 text-white dark:text-orange-900 font-bold text-lg">
+                                                        !</div>
                                                 </div>
-                                                
+
                                                 <!-- Error Text -->
-                                                <span class="text-xs text-orange-600 dark:text-orange-400 font-medium mt-1">Image</span>
-                                                <span class="text-xs text-orange-500 dark:text-orange-500">Unavailable</span>
+                                                <span
+                                                    class="text-xs text-orange-600 dark:text-orange-400 font-medium mt-1">Image</span>
+                                                <span
+                                                    class="text-xs text-orange-500 dark:text-orange-500">Unavailable</span>
                                             </div>
                                         </div>
                                     </div>
@@ -387,10 +418,11 @@
                         </template>
 
                         <!-- Feedback section -->
-                        <div x-show="showFeedback" class="mt-4 p-4 rounded-lg"
+                        <div x-show="showFeedback" class="mt-4 p-4 rounded-xl transition-all duration-300"
                             :class="{
-                                'bg-green-50 dark:bg-green-900/20 border border-green-200 dark:border-green-800': isAnswerCorrect,
-                                'bg-red-50 dark:bg-red-900/20 border border-red-200 dark:border-red-800': !
+                                'bg-gradient-to-r from-green-50 to-green-100 dark:from-green-900/20 dark:to-green-800/20 border border-green-200/60 dark:border-green-800/60': isAnswerCorrect,
+                                'bg-gradient-to-r from-red-50 to-red-100 dark:from-red-900/20 dark:to-red-800/20 border border-red-200/60 dark:border-red-800/60':
+                                    !
                                     isAnswerCorrect &&
                                     isAnswerSubmitted
                             }">
@@ -416,10 +448,11 @@
             </div>
 
             <!-- Quiz Controls -->
-            <div x-cloak class="border-t border-gray-200 dark:border-gray-700 bg-white dark:bg-gray-800 p-2 sm:p-4">
+            <div x-cloak
+                class="border-t border-gray-200/60 dark:border-gray-700/60 bg-gradient-to-r from-white to-gray-50 dark:from-gray-800 dark:to-gray-750 p-3 sm:p-4 md:rounded-b-2xl">
                 <div class="flex justify-between items-center gap-2">
                     <button @click="previousQuestion" :disabled="currentQuestionIndex === 0"
-                        class="px-3 py-2 sm:px-4 sm:py-2 border border-gray-300 dark:border-gray-600 rounded-md text-sm font-medium text-gray-700 dark:text-gray-200 bg-white dark:bg-gray-700 hover:bg-gray-50 dark:hover:bg-gray-600 disabled:opacity-50 disabled:cursor-not-allowed">
+                        class="px-4 py-2.5 sm:px-5 sm:py-2.5 border border-gray-300/60 dark:border-gray-600/60 rounded-xl text-sm font-medium text-gray-700 dark:text-gray-200 bg-gradient-to-r from-white to-gray-50 dark:from-gray-700 dark:to-gray-600 hover:from-gray-50 hover:to-gray-100 dark:hover:from-gray-600 dark:hover:to-gray-500 disabled:opacity-50 disabled:cursor-not-allowed transition-all duration-200 hover:-translate-y-0.5">
                         <span class="hidden sm:inline">{{ __('quiz.previous') }}</span>
                         <svg class="w-4 h-4 sm:hidden" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                             <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
@@ -433,20 +466,20 @@
                     </div>
 
                     <!-- See More Button (shown after quiz completion) -->
-                    <button x-show="quizCompleted" @click="window.location.href = '{{ route('dashboard.quizzes.index', ['locale' => app()->getLocale()]) }}'"
-                        class="px-3 py-2 sm:px-4 sm:py-2 border border-transparent rounded-md shadow-sm text-sm font-medium text-white bg-blue-600 hover:bg-blue-700 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-blue-500 flex-1 sm:flex-none">
+                    <button x-show="quizCompleted"
+                        @click="window.location.href = '{{ route('dashboard.quizzes.index', ['locale' => app()->getLocale()]) }}'"
+                        class="px-4 py-2.5 sm:px-5 sm:py-2.5 border border-transparent rounded-xl text-sm font-medium text-white bg-gradient-to-r from-blue-500 to-blue-600 hover:from-blue-600 hover:to-blue-700 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-blue-500 flex-1 sm:flex-none transition-all duration-200 hover:-translate-y-0.5">
                         {{ __('quiz.seeMore') }}
                         <svg class="w-4 h-4 ml-1 -mr-1 sm:inline hidden" fill="none" stroke="currentColor"
                             viewBox="0 0 24 24">
-                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
-                                d="M9 5l7 7-7 7" />
+                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 5l7 7-7 7" />
                         </svg>
                     </button>
 
                     <!-- Regular Next/Finish Button (hidden after quiz completion) -->
                     <button x-show="!quizCompleted" @click="nextQuestion"
                         :disabled="!userAnswers[currentQuestion.id] || (autoAdvance && !isLastQuestion) || isSubmitting"
-                        class="px-3 py-2 sm:px-4 sm:py-2 border border-transparent rounded-md shadow-sm text-sm font-medium text-white bg-blue-600 hover:bg-blue-700 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-blue-500 disabled:opacity-50 disabled:cursor-not-allowed flex-1 sm:flex-none">
+                        class="px-4 py-2.5 sm:px-5 sm:py-2.5 border border-transparent rounded-xl text-sm font-medium text-white bg-gradient-to-r from-blue-500 to-blue-600 hover:from-blue-600 hover:to-blue-700 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-blue-500 disabled:opacity-50 disabled:cursor-not-allowed flex-1 sm:flex-none transition-all duration-200 hover:-translate-y-0.5 disabled:hover:translate-y-0">
                         <template x-if="isSubmitting">
                             <svg class="animate-spin -ml-1 mr-2 h-4 w-4 text-white inline"
                                 xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24">
@@ -476,19 +509,19 @@
             <div x-cloak x-show="showLoginModal" x-cloak
                 class="fixed inset-0 bg-black/60 backdrop-blur-sm flex items-center justify-center z-50 p-4">
                 <div
-                    class="bg-white dark:bg-gray-800 rounded-2xl p-8 max-w-md w-full mx-4 shadow-2xl border border-gray-100 dark:border-gray-700 transform transition-all duration-300 scale-100">
+                    class="bg-gradient-to-br from-white to-gray-50 dark:from-gray-800 dark:to-gray-750 rounded-3xl p-8 max-w-md w-full mx-4 shadow-lg border border-gray-100/60 dark:border-gray-700/60 transform transition-all duration-300 scale-100">
                     <!-- Header with icon -->
                     <div class="text-center mb-6">
                         <div
-                            class="w-16 h-16 bg-gradient-to-r from-blue-500 to-orange-500 rounded-full flex items-center justify-center mx-auto mb-4 shadow-lg">
-                            <svg class="w-8 h-8 text-white" fill="none" stroke="currentColor"
+                            class="w-20 h-20 bg-gradient-to-r from-blue-500 to-orange-500 rounded-2xl flex items-center justify-center mx-auto mb-6 shadow-lg transition-all duration-300">
+                            <svg class="w-10 h-10 text-white" fill="none" stroke="currentColor"
                                 viewBox="0 0 24 24">
                                 <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
                                     d="M16 7a4 4 0 11-8 0 4 4 0 018 0zM12 14a7 7 0 00-7 7h14a7 7 0 00-7-7z" />
                             </svg>
                         </div>
                         <h3
-                            class="text-xl font-bold bg-gradient-to-r from-blue-700 to-blue-900 dark:from-blue-300 dark:to-blue-500 bg-clip-text text-transparent mb-3">
+                            class="text-2xl font-bold bg-gradient-to-r from-blue-700 to-blue-900 dark:from-blue-300 dark:to-blue-500 bg-clip-text text-transparent mb-4">
                             {{ __('quiz.signUpRequired') }}
                         </h3>
                         <p class="text-gray-600 dark:text-gray-300 text-sm leading-relaxed">
@@ -554,10 +587,15 @@
                 class="fixed inset-0 bg-black bg-opacity-50 flex items-center justify-center z-50">
                 <div class="bg-white dark:bg-gray-800 rounded-lg p-6 max-w-sm w-full mx-4 text-center">
                     <div class="mb-4">
-                        <div class="inline-flex items-center justify-center w-12 h-12 bg-blue-100 dark:bg-blue-900/20 rounded-full">
-                            <svg class="animate-spin h-6 w-6 text-blue-600" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24">
-                                <circle class="opacity-25" cx="12" cy="12" r="10" stroke="currentColor" stroke-width="4"></circle>
-                                <path class="opacity-75" fill="currentColor" d="M4 12a8 8 0 018-8V0C5.373 0 0 5.373 0 12h4zm2 5.291A7.962 7.962 0 014 12H0c0 3.042 1.135 5.824 3 7.938l3-2.647z"></path>
+                        <div
+                            class="inline-flex items-center justify-center w-12 h-12 bg-blue-100 dark:bg-blue-900/20 rounded-full">
+                            <svg class="animate-spin h-6 w-6 text-blue-600" xmlns="http://www.w3.org/2000/svg"
+                                fill="none" viewBox="0 0 24 24">
+                                <circle class="opacity-25" cx="12" cy="12" r="10"
+                                    stroke="currentColor" stroke-width="4"></circle>
+                                <path class="opacity-75" fill="currentColor"
+                                    d="M4 12a8 8 0 018-8V0C5.373 0 0 5.373 0 12h4zm2 5.291A7.962 7.962 0 014 12H0c0 3.042 1.135 5.824 3 7.938l3-2.647z">
+                                </path>
                             </svg>
                         </div>
                     </div>
@@ -613,68 +651,79 @@
                                             Math.random() * 5)
                                     ]"
                                     :style="`
-                                                                                                                                                                                                     left: ${Math.random() * 100}%;
-                                                                                                                                                                                                     top: ${Math.random() * 100}%;
-                                                                                                                                                                                                     animation: confetti ${1 + Math.random() * 3}s linear infinite;
-                                                                                                                                                                                                     transform: scale(${0.5 + Math.random()});
-                                                                                                                                                                                                     opacity: ${0.2 + Math.random() * 0.8};
-                                                                                                                                                                                                     animation-delay: ${Math.random() * 2}s;
-                                                                                                                                                                                                 `">
+                                                                                                                                                                                                                                         left: ${Math.random() * 100}%;
+                                                                                                                                                                                                                                         top: ${Math.random() * 100}%;
+                                                                                                                                                                                                                                         animation: confetti ${1 + Math.random() * 3}s linear infinite;
+                                                                                                                                                                                                                                         transform: scale(${0.5 + Math.random()});
+                                                                                                                                                                                                                                         opacity: ${0.2 + Math.random() * 0.8};
+                                                                                                                                                                                                                                         animation-delay: ${Math.random() * 2}s;
+                                                                                                                                                                                                                                     `">
                                 </div>
                             </template>
                         </div>
                     </div>
 
                     <!-- Recent Leaderboard Changes -->
-                    <div x-show="leaderboardChanges && leaderboardChanges.length > 0" class="mb-4 p-3 bg-blue-50 dark:bg-blue-900/20 rounded-lg border border-blue-200 dark:border-blue-700">
+                    <div x-show="leaderboardChanges && leaderboardChanges.length > 0"
+                        class="mb-4 p-3 bg-blue-50 dark:bg-blue-900/20 rounded-lg border border-blue-200 dark:border-blue-700">
                         <div class="flex items-center space-x-2 mb-2">
                             <div class="text-lg">📊</div>
-                            <h4 class="text-sm font-semibold text-blue-800 dark:text-blue-200">{{ __('quiz.recentActivity') }}</h4>
+                            <h4 class="text-sm font-semibold text-blue-800 dark:text-blue-200">
+                                {{ __('quiz.recentActivity') }}</h4>
                         </div>
                         <div class="space-y-2">
                             <template x-for="change in leaderboardChanges" :key="change.id">
-                                <div class="flex items-center justify-between text-sm p-2 bg-white dark:bg-gray-800 rounded">
+                                <div
+                                    class="flex items-center justify-between text-sm p-2 bg-white dark:bg-gray-800 rounded">
                                     <div class="flex items-center space-x-2">
-                                        <div class="w-6 h-6 rounded-full bg-gradient-to-br from-blue-500 to-purple-500 flex items-center justify-center text-white text-xs font-bold">
+                                        <div
+                                            class="w-6 h-6 rounded-full bg-gradient-to-br from-blue-500 to-purple-500 flex items-center justify-center text-white text-xs font-bold">
                                             <span x-text="change.user.first_name.charAt(0)"></span>
                                         </div>
                                         <div>
-                                            <p class="font-medium text-gray-900 dark:text-gray-100" x-text="change.message"></p>
-                                            <p class="text-xs text-gray-500 dark:text-gray-400" x-text="change.time_ago"></p>
+                                            <p class="font-medium text-gray-900 dark:text-gray-100"
+                                                x-text="change.message"></p>
+                                            <p class="text-xs text-gray-500 dark:text-gray-400"
+                                                x-text="change.time_ago"></p>
                                         </div>
                                     </div>
-                                    <div class="text-xs font-medium text-blue-600 dark:text-blue-400" x-text="change.points_change"></div>
+                                    <div class="text-xs font-medium text-blue-600 dark:text-blue-400"
+                                        x-text="change.points_change"></div>
                                 </div>
                             </template>
                         </div>
                     </div>
 
                     <!-- Leaderboard Position -->
-                    <div x-show="updatedStats && updatedStats.leaderboardPosition" class="mb-6">
-                        <div class="bg-gradient-to-r from-yellow-50 to-orange-50 dark:from-yellow-900/20 dark:to-orange-900/20 p-3 sm:p-4 rounded-lg border-2 border-yellow-300 dark:border-yellow-700">
+                    <div x-show="updatedStats && updatedStats.leaderboardPosition !== null && updatedStats.leaderboardPosition !== undefined" class="mb-6">
+                        <div
+                            class="bg-gradient-to-r from-yellow-50 to-orange-50 dark:from-yellow-900/20 dark:to-orange-900/20 p-3 sm:p-4 rounded-lg border-2 border-yellow-300 dark:border-yellow-700">
                             <div class="text-center">
                                 <div class="text-base sm:text-lg font-bold text-yellow-800 dark:text-yellow-200 mb-2">
                                     <span x-show="updatedStats.leaderboardPosition === 1">
                                         🏆 {{ __('quiz.firstPlace') }}
                                     </span>
                                     <span x-show="updatedStats.leaderboardPosition !== 1">
-                                        {{ __('quiz.newPosition') }}: #<span x-text="updatedStats.leaderboardPosition"></span>/25
+                                        {{ __('quiz.newPosition') }}: #<span
+                                            x-text="updatedStats.leaderboardPosition"></span>/25
                                     </span>
                                 </div>
-                                <div class="text-xs sm:text-sm text-yellow-700 dark:text-yellow-300 flex flex-col sm:flex-row sm:items-center sm:justify-between gap-2">
+                                <div
+                                    class="text-xs sm:text-sm text-yellow-700 dark:text-yellow-300 flex flex-col sm:flex-row sm:items-center sm:justify-between gap-2">
                                     <div class="text-center sm:text-left">
                                         <span x-show="updatedStats.leaderboardPosition === 1">
                                             {{ __('quiz.firstPlaceMessage') }}
                                         </span>
-                                        <span x-show="updatedStats.leaderboardPosition !== 1 && updatedStats.leaderboardPosition <= 10">
+                                        <span
+                                            x-show="updatedStats.leaderboardPosition !== 1 && updatedStats.leaderboardPosition <= 10">
                                             {{ __('quiz.topTenMessage') }}
                                         </span>
                                         <span x-show="updatedStats.leaderboardPosition > 10">
                                             {{ __('quiz.keepImproving') }}
                                         </span>
                                     </div>
-                                    <a href="{{ route('leaderboard') }}" 
-                                       class="text-xs font-medium text-yellow-600 dark:text-yellow-400 hover:text-yellow-800 dark:hover:text-yellow-200 underline whitespace-nowrap">
+                                    <a href="{{ route('leaderboard') }}"
+                                        class="text-xs font-medium text-yellow-600 dark:text-yellow-400 hover:text-yellow-800 dark:hover:text-yellow-200 underline whitespace-nowrap">
                                         {{ app()->getLocale() === 'rw' ? 'Reba Irushanwa' : 'View Leaderboard' }}
                                     </a>
                                 </div>
@@ -686,13 +735,16 @@
                     <div class="space-y-3 mb-6">
                         <div class="bg-green-50 dark:bg-green-900/20 p-3 rounded-lg">
                             <p class="text-green-800 dark:text-green-200 font-medium">
-                                {{ __('quiz.scoreEarned') }}: <span x-text="correctCount"></span>/<span x-text="totalQuestions"></span> 
+                                {{ __('quiz.scoreEarned') }}: <span x-text="correctCount"></span>/<span
+                                    x-text="totalQuestions"></span>
                                 (<span x-text="currentScore"></span>%)
                             </p>
                         </div>
                         <div x-show="updatedStats" class="bg-blue-50 dark:bg-blue-900/20 p-3 rounded-lg">
                             <p class="text-blue-800 dark:text-blue-200 font-medium">
-                                {{ __('quiz.averageScore') }}: <span x-text="Math.round(updatedStats.averageScore * updatedStats.totalQuestionsAnswered / 100)"></span>/<span x-text="updatedStats.totalQuestionsAnswered"></span> 
+                                {{ __('quiz.averageScore') }}: <span
+                                    x-text="Math.round(updatedStats.averageScore * updatedStats.totalQuestionsAnswered / 100)"></span>/<span
+                                    x-text="updatedStats.totalQuestionsAnswered"></span>
                                 (<span x-text="updatedStats.averageScore"></span>%)
                             </p>
                         </div>
@@ -726,12 +778,17 @@
 
                     <!-- Upsell for Users without Plan -->
                     <div x-show="updatedStats && !updatedStats.hasPlan" class="mt-6">
-                        <div class="bg-gradient-to-r from-orange-50 to-amber-50 dark:from-orange-900/20 dark:to-amber-900/20 p-5 rounded-xl border border-orange-200 dark:border-orange-800/50">
+                        <div
+                            class="bg-gradient-to-r from-orange-50 to-amber-50 dark:from-orange-900/20 dark:to-amber-900/20 p-5 rounded-xl border border-orange-200 dark:border-orange-800/50">
                             <div class="flex items-start">
                                 <div class="flex-shrink-0 mr-3 mt-0.5">
-                                    <div class="flex items-center justify-center w-8 h-8 rounded-full bg-orange-100 dark:bg-orange-900/50 text-orange-600 dark:text-orange-300">
-                                        <svg xmlns="http://www.w3.org/2000/svg" class="h-5 w-5" viewBox="0 0 20 20" fill="currentColor">
-                                            <path fill-rule="evenodd" d="M10 18a8 8 0 100-16 8 8 0 000 16zm1-11a1 1 0 10-2 0v3.586L7.707 9.293a1 1 0 00-1.414 1.414l3 3a1 1 0 001.414 0l3-3a1 1 0 00-1.414-1.414L11 10.586V7z" clip-rule="evenodd" />
+                                    <div
+                                        class="flex items-center justify-center w-8 h-8 rounded-full bg-orange-100 dark:bg-orange-900/50 text-orange-600 dark:text-orange-300">
+                                        <svg xmlns="http://www.w3.org/2000/svg" class="h-5 w-5" viewBox="0 0 20 20"
+                                            fill="currentColor">
+                                            <path fill-rule="evenodd"
+                                                d="M10 18a8 8 0 100-16 8 8 0 000 16zm1-11a1 1 0 10-2 0v3.586L7.707 9.293a1 1 0 00-1.414 1.414l3 3a1 1 0 001.414 0l3-3a1 1 0 00-1.414-1.414L11 10.586V7z"
+                                                clip-rule="evenodd" />
                                         </svg>
                                     </div>
                                 </div>
@@ -745,8 +802,11 @@
                                     <a href="{{ route('plans') }}"
                                         class="inline-flex items-center justify-center w-full px-4 py-2.5 bg-gradient-to-r from-orange-500 to-yellow-500 hover:from-orange-600 hover:to-yellow-600 text-white rounded-lg font-medium transition-colors duration-200">
                                         {{ __('quiz.getPlanToPractice') }}
-                                        <svg xmlns="http://www.w3.org/2000/svg" class="h-4 w-4 ml-1.5" viewBox="0 0 20 20" fill="currentColor">
-                                            <path fill-rule="evenodd" d="M10.293 5.293a1 1 0 011.414 0l4 4a1 1 0 010 1.414l-4 4a1 1 0 01-1.414-1.414L12.586 11H5a1 1 0 110-2h7.586l-2.293-2.293a1 1 0 010-1.414z" clip-rule="evenodd" />
+                                        <svg xmlns="http://www.w3.org/2000/svg" class="h-4 w-4 ml-1.5"
+                                            viewBox="0 0 20 20" fill="currentColor">
+                                            <path fill-rule="evenodd"
+                                                d="M10.293 5.293a1 1 0 011.414 0l4 4a1 1 0 010 1.414l-4 4a1 1 0 01-1.414-1.414L12.586 11H5a1 1 0 110-2h7.586l-2.293-2.293a1 1 0 010-1.414z"
+                                                clip-rule="evenodd" />
                                         </svg>
                                     </a>
                                 </div>
@@ -880,8 +940,9 @@
                         image_url: q.image_url || null,
                         options: Array.isArray(q.options) ? q.options.map((opt, optIndex) => {
                             // Debug: Log the raw image URL
-                            console.log('Raw option image_url:', opt.image_url, 'Type:', typeof opt.image_url);
-                            
+                            console.log('Raw option image_url:', opt.image_url, 'Type:',
+                                typeof opt.image_url);
+
                             const cleanedOption = {
                                 id: opt.id || `opt-${index}-${optIndex}`,
                                 text: opt.text || opt.option_text ||
@@ -890,10 +951,11 @@
                                 is_correct: opt.is_correct || opt.correct || false,
                                 explanation: opt.explanation || ''
                             };
-                            
+
                             // Debug: Log the cleaned image URL
-                            console.log('Cleaned option image:', cleanedOption.image_url);
-                            
+                            console.log('Cleaned option image:', cleanedOption
+                                .image_url);
+
                             return cleanedOption;
                         }) : []
                     })),
@@ -937,22 +999,25 @@
                     soundEnabled: true,
                     correctSound: null,
                     incorrectSound: null,
-                    
-                    // Live notifications
                     liveNotification: null,
                     leaderboardChanges: [],
                     notificationTimer: null,
                     
+                    // Robot companions
+                    robotResponses: [],
+                    robotSummary: [],
+                    robotNotificationTimer: null,
+
                     // Initialize audio elements
                     initSounds() {
                         // Create audio objects for WAV files
                         this.correctSound = new Audio('/assets/sounds/correct.wav');
                         this.incorrectSound = new Audio('/assets/sounds/incorrect.wav');
-                        
+
                         // Set volume for both sounds
                         this.correctSound.volume = 0.5;
                         this.incorrectSound.volume = 0.5;
-                        
+
                         // Preload sounds
                         this.correctSound.load();
                         this.incorrectSound.load();
@@ -981,7 +1046,7 @@
                     // Play sound effect
                     playSound(isCorrect) {
                         if (!this.soundEnabled) return;
-                        
+
                         try {
                             if (isCorrect) {
                                 this.playCorrectSound();
@@ -997,7 +1062,8 @@
                     toggleSound() {
                         this.soundEnabled = !this.soundEnabled;
                         // Save preference to localStorage (for both guests and authenticated users)
-                        localStorage.setItem(`quiz_${this.quizId}_sound_enabled`, this.soundEnabled.toString());
+                        localStorage.setItem(`quiz_${this.quizId}_sound_enabled`, this.soundEnabled
+                            .toString());
                     },
 
                     // Load sound preference
@@ -1037,6 +1103,59 @@
 
                         // Mark as initialized to hide loading state
                         this.initialized = true;
+                        
+                        // Fetch historical activity immediately when quiz loads
+                        this.fetchLiveActivities();
+                        
+                        // Add page unload cleanup
+                        window.addEventListener('beforeunload', () => {
+                            this.destroy();
+                        });
+                        
+                        // Add visibility change cleanup (when user switches tabs)
+                        document.addEventListener('visibilitychange', () => {
+                            if (document.hidden) {
+                                // Optionally pause timer when tab is not visible
+                                if (this.timer && !this.isPaused) {
+                                    this.pauseQuiz();
+                                }
+                            }
+                        });
+                    },
+
+                    // Clean up when navigating away from quiz
+                    destroy() {
+                        console.log('Cleaning up quiz state...');
+                        
+                        // Clear timer
+                        if (this.timer) {
+                            clearInterval(this.timer);
+                            this.timer = null;
+                        }
+                        
+                        // Clear quiz state from memory
+                        this.currentQuestionIndex = 0;
+                        this.selectedOption = null;
+                        this.isAnswerSubmitted = false;
+                        this.isAnswerCorrect = false;
+                        this.showFeedback = false;
+                        this.feedbackMessage = '';
+                        this.userAnswers = {};
+                        this.correctCount = 0;
+                        this.incorrectCount = 0;
+                        this.quizCompleted = false;
+                        this.isSubmitting = false;
+                        this.startTime = null;
+                        this.endTime = null;
+                        this.initialized = false;
+                        
+                        // Clear image states
+                        this.imageLoaded = {};
+                        this.imageError = {};
+                        
+                        // Don't clear localStorage data as user might want to resume later
+                        // But clear any in-memory progress
+                        console.log('Quiz state cleaned up');
                     },
 
                     // Initialize image loading states for all options
@@ -1288,16 +1407,18 @@
                     // Reset backend attempt
                     async resetBackendAttempt() {
                         if (!this.currentAttempt) return;
-                        
+
                         try {
-                            const response = await fetch(`/api/attempts/${this.currentAttempt.id}/reset`, {
-                                method: 'POST',
-                                credentials: 'same-origin',
-                                headers: {
-                                    'Content-Type': 'application/json',
-                                    'X-CSRF-TOKEN': document.querySelector('meta[name="csrf-token"]').content
-                                }
-                            });
+                            const response = await fetch(
+                                `/api/attempts/${this.currentAttempt.id}/reset`, {
+                                    method: 'POST',
+                                    credentials: 'same-origin',
+                                    headers: {
+                                        'Content-Type': 'application/json',
+                                        'X-CSRF-TOKEN': document.querySelector(
+                                            'meta[name="csrf-token"]').content
+                                    }
+                                });
 
                             if (response.ok) {
                                 console.log('Backend attempt reset successfully');
@@ -1605,20 +1726,76 @@
                                         'meta[name="csrf-token"]').content
                                 },
                                 body: JSON.stringify({
-                                    answers: {
-                                        [currentQuestion.id]: this.selectedOption
-                                    },
+                                    answers: [{
+                                        question_id: currentQuestion.id,
+                                        option_id: this.selectedOption,
+                                        time_spent: this.timeTaken
+                                    }],
                                     time_taken: this.timeTaken
                                 })
                             });
 
                             if (response.ok) {
+                                const data = await response.json();
                                 console.log('Answer saved successfully');
+                                
+                                // Fetch live activities after submitting answer
+                                console.log('Fetching live activities after answer submission...');
+                                this.fetchLiveActivities();
+                                
+                                // Handle robot companion responses
+                                if (data.robot_responses && data.robot_responses.length > 0) {
+                                    this.robotResponses = data.robot_responses;
+                                    this.showRobotCompanionNotifications();
+                                    
+                                    // Emit for companion sidebar
+                                    window.dispatchEvent(new CustomEvent('robotResponses', {
+                                        detail: {
+                                            robotResponses: data.robot_responses
+                                        }
+                                    }));
+                                }
                             } else {
                                 console.warn('Failed to save answer:', response.status);
                             }
                         } catch (error) {
                             console.error('Error saving answer:', error);
+                        }
+                    },
+
+                    // Fetch live activities after submitting answer
+                    async fetchLiveActivities() {
+                        try {
+                            console.log('Making API call to /api/live-activities...');
+                            const response = await fetch('/api/live-activities?quiz_id=' + this.quizId, {
+                                headers: {
+                                    'X-CSRF-TOKEN': document.querySelector('meta[name="csrf-token"]')?.content,
+                                    'Accept': 'application/json'
+                                }
+                            });
+                            
+                            if (response.ok) {
+                                const data = await response.json();
+                                console.log('Live activities API response:', data);
+                                
+                                if (data.success) {
+                                    console.log('Emitting liveActivityUpdate event with:', {
+                                        activities: data.activities || [],
+                                        notification: data.notification
+                                    });
+                                    // Emit for companion sidebar
+                                    window.dispatchEvent(new CustomEvent('liveActivityUpdate', {
+                                        detail: {
+                                            activities: data.activities || [],
+                                            notification: data.notification
+                                        }
+                                    }));
+                                }
+                            } else {
+                                console.error('Live activities API returned error:', response.status);
+                            }
+                        } catch (error) {
+                            console.error('Error fetching live activities:', error);
                         }
                     },
 
@@ -1638,6 +1815,11 @@
                         // Mark quiz as completed
                         this.quizCompleted = true;
 
+                        // Emit quiz completion event
+                        window.dispatchEvent(new CustomEvent('quizCompleted', {
+                            detail: { quizId: this.quizId }
+                        }));
+
                         // Save results
                         this.saveResults(score);
 
@@ -1646,6 +1828,7 @@
                             if (!this.isGuest) {
                                 this.fetchUpdatedStats();
                                 this.loadLeaderboardChanges();
+                                this.loadRobotSummary();
                             } else {
                                 // For guests, show modal immediately
                                 this.showResultsModal = true;
@@ -1717,7 +1900,8 @@
                                 credentials: 'same-origin',
                                 headers: {
                                     'Content-Type': 'application/json',
-                                    'X-CSRF-TOKEN': document.querySelector('meta[name="csrf-token"]').content
+                                    'X-CSRF-TOKEN': document.querySelector(
+                                        'meta[name="csrf-token"]').content
                                 }
                             });
 
@@ -1737,22 +1921,23 @@
                         // Update user answers from database
                         if (attemptData.user_answers && attemptData.user_answers.length > 0) {
                             const updatedAnswers = {};
-                            
+
                             attemptData.user_answers.forEach(answer => {
                                 if (answer.question_id && answer.option_id) {
                                     updatedAnswers[answer.question_id] = {
                                         optionId: answer.option_id,
-                                        isCorrect: Boolean(answer.is_correct), // Ensure boolean conversion
+                                        isCorrect: Boolean(answer
+                                        .is_correct), // Ensure boolean conversion
                                         timestamp: answer.time_spent || Date.now()
                                     };
                                 }
                             });
-                            
+
                             this.userAnswers = updatedAnswers;
-                            
+
                             // Update answer counts to reflect database state
                             this.updateAnswerCounts();
-                            
+
                             // Navigate to the first unanswered question based on database data
                             this.navigateToFirstUnanswered();
                         }
@@ -1772,7 +1957,7 @@
                                 firstUnansweredIndex = this.questions.length - 1;
                             }
                         }
-                        
+
                         this.currentQuestionIndex = firstUnansweredIndex;
                         this.loadQuestionState();
                     },
@@ -1905,7 +2090,7 @@
                                 message: latestChange.message,
                                 type: 'info'
                             };
-                            
+
                             // Hide notification after 5 seconds
                             setTimeout(() => {
                                 this.liveNotification = null;
@@ -1913,10 +2098,54 @@
                         }
                     },
 
+                    // Robot companion methods
+                    showRobotCompanionNotifications() {
+                        if (this.robotResponses.length === 0) return;
+
+                        // Show individual robot messages with staggered timing
+                        this.robotResponses.forEach((robot, index) => {
+                            setTimeout(() => {
+                                // Show live notification on desktop
+                                this.liveNotification = {
+                                    message: robot.message,
+                                    type: 'robot_companion',
+                                    robot_name: robot.robot_name,
+                                    is_correct: robot.is_correct
+                                };
+
+                                // Hide after 4 seconds
+                                setTimeout(() => {
+                                    this.liveNotification = null;
+                                }, 4000);
+                            }, index * 1000); // Stagger notifications by 1 second
+                        });
+                    },
+
+                    async loadRobotSummary() {
+                        if (this.isGuest) return;
+
+                        try {
+                            const response = await fetch(`/api/robot/summary?quiz_id=${this.quizId}`, {
+                                credentials: 'same-origin',
+                                headers: {
+                                    'X-CSRF-TOKEN': document.querySelector('meta[name="csrf-token"]').content
+                                }
+                            });
+
+                            if (response.ok) {
+                                const data = await response.json();
+                                this.robotSummary = data.robot_summary || [];
+                            }
+                        } catch (error) {
+                            console.error('Error loading robot summary:', error);
+                        }
+                    },
+
                     hideNotification() {
                         this.liveNotification = null;
-                    }
-                }));
+                    },
+                    
+                                    }));
             });
         </script>
     @endpush

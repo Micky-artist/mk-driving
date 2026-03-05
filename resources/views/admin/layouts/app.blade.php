@@ -1,30 +1,33 @@
 <!DOCTYPE html>
-<html lang="{{ str_replace('_', '-', app()->getLocale()) }}" class="h-full" x-data="{ darkMode: localStorage.getItem('darkMode') === 'true' }" x-init="
-    // Check for saved user preference, if any, on load
-    if (localStorage.getItem('darkMode') === null) {
-        // If no preference saved, check system preference
-        darkMode = window.matchMedia('(prefers-color-scheme: dark)').matches;
-    }
-    
-    // Apply the initial theme
-    $watch('darkMode', value => {
-        localStorage.setItem('darkMode', value);
-        document.documentElement.classList.toggle('dark', value);
-    });
-    
-    // Watch for system theme changes
-    window.matchMedia('(prefers-color-scheme: dark)').addEventListener('change', e => {
-        if (!('darkMode' in localStorage)) {  // Only if user hasn't explicitly set a preference
-            darkMode = e.matches;
-        }
-    });
-">
+<html lang="{{ str_replace('_', '-', app()->getLocale()) }}" class="h-full">
 
 <head>
     <meta charset="utf-8">
     <meta name="viewport" content="width=device-width, initial-scale=1">
     <meta name="csrf-token" content="{{ csrf_token() }}">
-    <title>@yield('title', config('app.name', 'MK Driving')) - Admin</title>
+    
+    <!-- Flash-prevention script for theme -->
+    <script>
+        (function() {
+            const savedTheme = localStorage.getItem('theme');
+            const prefersDark = window.matchMedia('(prefers-color-scheme: dark)').matches;
+            const shouldUseDark = savedTheme === 'dark' || (!savedTheme && prefersDark);
+            
+            if (shouldUseDark) {
+                document.documentElement.classList.add('dark');
+            } else {
+                document.documentElement.classList.remove('dark');
+            }
+            
+            // Set meta theme-color
+            const metaThemeColor = document.querySelector('meta[name="theme-color"]');
+            if (metaThemeColor) {
+                metaThemeColor.content = shouldUseDark ? '#1e3a8a' : '#1e40af';
+            }
+        })();
+    </script>
+    
+    <title>@yield('title', config('app.name', 'MK Driving School')) - Admin</title>
 
     <!-- Favicon -->
     <link rel="icon" href="{{ asset('favicon.ico') }}">
@@ -36,6 +39,18 @@
     <!-- Styles -->
     <link href="https://cdn.jsdelivr.net/npm/tailwindcss@2.2.19/dist/tailwind.min.css" rel="stylesheet">
     <script src="https://cdn.tailwindcss.com"></script>
+    <script>
+        tailwind.config = {
+            darkMode: 'class',
+            theme: {
+                extend: {
+                    fontFamily: {
+                        sans: ['Figtree', 'sans-serif'],
+                    },
+                }
+            }
+        }
+    </script>
     <script src="https://cdn.jsdelivr.net/gh/alpinejs/alpine@v2.8.2/dist/alpine.min.js" defer></script>
 
     <style>
@@ -400,7 +415,7 @@
         /* Firefox scrollbar styles */
         html {
             scrollbar-width: thin;
-            scrollbar-color: rgb(55 65 81) rgb(31 41 55);
+            scrollbar-color: rgb(203 213 225) transparent;
         }
 
         .dark html {
@@ -410,7 +425,7 @@
         /* Utility classes for scrollable containers */
         .scrollbar-thin {
             scrollbar-width: thin;
-            scrollbar-color: rgb(55 65 81) rgb(31 41 55);
+            scrollbar-color: rgb(203 213 225) transparent;
         }
 
         .dark .scrollbar-thin {
@@ -452,7 +467,7 @@
                 <a href="{{ route('home', ['locale' => app()->getLocale()]) }}" class="block">
                     <div
                         class="flex items-center justify-between h-16 px-4 bg-gradient-to-r from-blue-600 to-blue-700 dark:from-gray-800 dark:to-gray-900 hover:from-blue-700 hover:to-blue-800 transition-all duration-200 shadow-lg">
-                        <span class="text-xl font-bold text-white">MK Driving</span>
+                        <span class="text-xl font-bold text-white">MK Driving School</span>
                         
                         <!-- Notifications Bell -->
                         <div x-data="{ 
@@ -696,7 +711,7 @@
                         <div class="flex-1 h-0 pt-5 pb-4 overflow-y-auto">
                             <div class="flex-shrink-0 flex items-center px-4 mb-4">
                                 <a href="{{ route('home', ['locale' => app()->getLocale()]) }}" class="text-xl font-bold text-gray-900 dark:text-white">
-                                    MK Driving 
+                                    MK Driving School
                                 </a>
                             </div>
                             <nav class="px-2 space-y-1">

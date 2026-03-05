@@ -23,8 +23,10 @@ class StoreQuestionRequest extends FormRequest
     public function rules(): array
     {
         return [
-            'title' => ['required', 'string', 'max:255'],
-            'content' => ['required', 'string'],
+            'title' => ['sometimes', 'required_without:question', 'string', 'max:255'],
+            'content' => ['sometimes', 'required_without:question', 'string'],
+            'question' => ['sometimes', 'required_without:title,content', 'string', 'max:500'],
+            'quiz_id' => ['sometimes', 'nullable', 'exists:quizzes,id'],
             'topics' => ['sometimes', 'array'],
             'topics.*' => ['string', 'max:50'],
         ];

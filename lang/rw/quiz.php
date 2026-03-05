@@ -292,4 +292,77 @@ return [
     'subscriptionMessage' => 'Imyitozo idashira, igihe cyose kugeza utsinze.',
     'getPlanToPractice' => 'Ongera Ifatabuguzi',
     'close' => 'Funga',
+
+    // Robot Companion Messages
+    'companion' => [
+        'robot_correct' => ':name yagikoze!',
+        'robot_nailed' => ':name akomeje neza!',
+        'robot_aced' => ':name akomeje neza!',
+        'robot_mastered' => ':name ntagihusha!',
+        'robot_wrong' => ':name yakishe',
+        'robot_tricky' => ':name aracyakimenyereza',
+        'robot_missed' => ':name yakishe',
+        'robot_struggled' => ':name aracyakitoza',
+        
+        // Learner Messages
+        'learner_correct' => ':name yagikoze!',
+        'learner_nailed' => ':name yagikoze!',
+        'learner_got_correct' => ':name yagikoze!',
+        'learner_aced' => ':name yagikoze neza!',
+        'learner_mastered' => ':name ntajya agihusha!',
+        'learner_figured' => ':name yagikoze!',
+        'learner_got_right' => ':name yagikoze!',
+        'learner_wrong' => ':name yakishe',
+        'learner_struggled' => ':name gikunze kumugora',
+        'learner_tricky' => ':name yakishe',
+        'learner_wrong_too' => ':name nawe yakishe',
+        'learner_missed' => ':name yakishe',
+        'learner_didnt_get' => ':name yakishe',
+        'learner_wrong_dont_worry' => ':name yakishe - ntakibazo',
+        
+        // Competitive Messages (fallbacks)
+        'both_correct' => ':learnerName wese mwe maze!',
+        'user_correct_learner_wrong' => ':learnerName akomeza kwiga!',
+        'user_wrong_learner_correct' => ':learnerName yagize!',
+        'both_wrong' => ':learnerName nawe mukiga hamwe!',
+        'default_message' => ':learnerName akora!',
+        
+        // Personality-based competitive messages
+        'supportive' => [
+            'both_correct' => [
+                ':learnerName wese mwe maze!',
+                ':learnerName nawe wabonye!',
+                ':learnerName arimo imbaraga!'
+            ],
+            'user_correct_learner_wrong' => [
+                ':learnerName akomeza kwiga, wowe wakize!',
+                ':learnerName uzabona ikikurikira!',
+                ':learnerName akugerageza kufunga!'
+            ],
+            'user_wrong_learner_correct' => [
+                ':learnerName yagize! Wizakize!',
+                ':learnerName yerekanze uburyo!',
+                ':learnerName arashobora kuyobora!'
+            ],
+            'both_wrong' => [
+                ':learnerName nawe mukiga hamwe!',
+                ':learnerName nawe mwigisubizo!',
+                ':learnerName akora kuri iyi!'
+            ]
+        ],
+        'competitive' => [
+            'both_correct' => [
+                ':learnerName nawe muri irushanwa!',
+                ':learnerName akurikira uko wakize!',
+                ':learnerName wose muzashaka!'
+            ]
+        ],
+        'friendly' => [
+            'both_correct' => [
+                ':learnerName nawe mwiza!',
+                ':learnerName yagize neza!',
+                ':learnerName arakundana!'
+            ]
+        ]
+    ],
 ];

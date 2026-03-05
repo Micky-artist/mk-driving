@@ -3,8 +3,13 @@
 <head>
     <meta charset="utf-8">
     <meta name="viewport" content="width=device-width, initial-scale=1">
-    <title>MK Driving</title>
+    <title>MK Driving School</title>
     <script src="https://cdn.tailwindcss.com"></script>
+    <script>
+        tailwind.config = {
+            darkMode: 'class'
+        }
+    </script>
 </head>
 <body class="min-h-screen bg-blue-50 flex items-center justify-center px-4">
     <div class="text-center max-w-md">

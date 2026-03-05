@@ -14,6 +14,7 @@ use App\Models\PointConfiguration;
 use App\Models\QuizAttempt;
 use App\Services\QuizAttemptService;
 use App\Services\PointsService;
+use App\Services\RobotCompanionService;
 use Illuminate\Http\JsonResponse;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
@@ -23,10 +24,12 @@ use Illuminate\Support\Facades\Log;
 class QuizAttemptController extends Controller
 {
     protected $quizAttemptService;
+    protected $robotCompanionService;
 
-    public function __construct(QuizAttemptService $quizAttemptService)
+    public function __construct(QuizAttemptService $quizAttemptService, RobotCompanionService $robotCompanionService)
     {
         $this->quizAttemptService = $quizAttemptService;
+        $this->robotCompanionService = $robotCompanionService;
         $this->middleware('auth:web');
     }
 
@@ -192,12 +195,27 @@ class QuizAttemptController extends Controller
             if ($request->has('answers')) {
                 Log::debug('Processing answers', [
                     'attempt_id' => $attemptId,
-                    'answer_count' => count($request->answers)
+                    'answer_count' => count($request->answers),
+                    'answers_data' => $request->answers,
+                    'quiz_id' => $attempt->quiz_id
                 ]);
 
-                foreach ($request->answers as $questionId => $optionId) {
+                foreach ($request->answers as $answer) {
+                    $questionId = $answer['question_id'] ?? null;
+                    $optionId = $answer['option_id'] ?? null;
+                    
+                    if (!$questionId || !$optionId) {
+                        continue;
+                    }
+                    
                     $question = $attempt->quiz->questions->firstWhere('id', $questionId);
                     if (!$question) {
+                        Log::error('Question not found', [
+                            'question_id' => $questionId,
+                            'quiz_id' => $attempt->quiz_id,
+                            'available_questions' => $attempt->quiz->questions->pluck('id')->toArray(),
+                            'total_questions' => $attempt->quiz->questions->count()
+                        ]);
                         throw new \Exception("Question not found in this quiz");
                     }
 
@@ -216,13 +234,21 @@ class QuizAttemptController extends Controller
                         'is_correct' => $isCorrect
                     ]);
 
+                    // Trigger enhanced robot activity based on quiz answer
+                    $this->robotCompanionService->handleQuizAnswerActivity(
+                        $attempt->quiz_id,
+                        Auth::id(),
+                        $questionId,
+                        $isCorrect
+                    );
+
                     // Update or create user answer
                     $attempt->userAnswers()->updateOrCreate(
                         ['question_id' => $questionId],
                         [
                             'option_id' => $optionId,
                             'is_correct' => $isCorrect,
-                            'time_spent' => $request->time_taken ?? 0
+                            'time_spent' => $answer['time_spent'] ?? 0
                         ]
                     );
 
@@ -276,7 +302,8 @@ class QuizAttemptController extends Controller
 
             return response()->json([
                 'success' => true,
-                'attempt' => $this->formatAttemptResponse($attempt->fresh())
+                'attempt' => $this->formatAttemptResponse($attempt->fresh()),
+                'activities' => $this->robotCompanionService->getLatestActivities()
             ]);
 
         } catch (\Exception $e) {
@@ -586,6 +613,113 @@ class QuizAttemptController extends Controller
         ]);
         
         return null;
+    }
+
+    /**
+     * Get live quiz activities and companion feed
+     */
+    public function getLiveActivities(Request $request): JsonResponse
+    {
+        try {
+            $user = $request->user();
+            
+            Log::info('getLiveActivities API called', [
+                'user_id' => $user->id,
+                'quiz_id' => $request->quiz_id ?? 'not provided'
+            ]);
+            
+            // Get historical activities (last 50)
+            $historicalActivities = $this->robotCompanionService->getHistoricalActivity(
+                $request->quiz_id ?? 1, // Get quiz_id from request or default
+                $user->id
+            );
+            
+            // Get latest companion messages (new incremental activities)
+            $latestActivities = $this->robotCompanionService->getLatestActivities();
+            
+            // Combine historical + new activities
+            $allActivities = array_merge($historicalActivities, $latestActivities);
+            
+            // Sort by timestamp (newest first) and limit to 50
+            usort($allActivities, function($a, $b) {
+                $timestampA = $a['timestamp'] ?? (is_string($a['timestamp']) ? strtotime($a['timestamp']) : $a['timestamp']);
+                $timestampB = $b['timestamp'] ?? (is_string($b['timestamp']) ? strtotime($b['timestamp']) : $b['timestamp']);
+                return $timestampB - $timestampA;
+            });
+            
+            $activities = array_slice($allActivities, 0, 50);
+            
+            // Get any recent notification (optional)
+            $notification = $this->robotCompanionService->getLatestLiveNotification();
+
+            Log::info('Returning live activities', [
+                'activities_count' => count($activities),
+                'historical_count' => count($historicalActivities),
+                'new_count' => count($latestActivities),
+                'has_notification' => !is_null($notification)
+            ]);
+
+            return response()->json([
+                'success' => true,
+                'activities' => $activities,
+                'notification' => $notification,
+                'active_users_count' => $this->getActiveUsersCount()
+            ]);
+
+        } catch (\Exception $e) {
+            Log::error('Error fetching live activities', [
+                'error' => $e->getMessage(),
+                'user_id' => $request->user()->id
+            ]);
+
+            return response()->json([
+                'success' => false,
+                'message' => 'Failed to fetch live activities'
+            ], 500);
+        }
+    }
+
+    /**
+     * Get count of active users
+     */
+    private function getActiveUsersCount(): int
+    {
+        return QuizAttempt::where('status', 'in_progress')
+            ->where('updated_at', '>', now()->subMinutes(30))
+            ->distinct('user_id')
+            ->count();
+    }
+
+    /**
+     * Get robot companion summary for completed quiz
+     */
+    public function getRobotSummary(Request $request): JsonResponse
+    {
+        try {
+            $request->validate([
+                'quiz_id' => 'required|exists:quizzes,id'
+            ]);
+
+            $user = $request->user();
+            $robotSummary = $this->robotCompanionService->getRobotSessionSummary($user->id, $request->quiz_id);
+
+            return response()->json([
+                'success' => true,
+                'robot_summary' => $robotSummary
+            ]);
+
+        } catch (\Exception $e) {
+            Log::error('Error getting robot summary', [
+                'error' => $e->getMessage(),
+                'user_id' => $request->user()->id,
+                'quiz_id' => $request->quiz_id
+            ]);
+
+            return response()->json([
+                'success' => false,
+                'message' => 'Failed to get robot summary'
+            ], 500);
+        }
     }
 
     /**

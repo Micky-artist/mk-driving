@@ -45,4 +45,7 @@ return [
     'points_for_answer' => 'Points for Answers',
     'points_for_daily_visit' => 'Points for Daily Visit',
     'points_for_forum_post' => 'Points for Forum Posts',
+    'my_quizzes' => 'My Quizzes',
+    'quizzes' => 'Quizzes',
+    'answered' => 'answered',
 ];

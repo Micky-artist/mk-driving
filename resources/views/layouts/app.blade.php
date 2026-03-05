@@ -1,32 +1,34 @@
 <!DOCTYPE html>
-<html lang="{{ str_replace('_', '-', app()->getLocale()) }}" class="h-full" x-data="{ darkMode: localStorage.getItem('darkMode') === 'true' }" x-init="
-    // Check for saved user preference, if any, on load
-    if (localStorage.getItem('darkMode') === null) {
-        // If no preference saved, check system preference
-        darkMode = window.matchMedia('(prefers-color-scheme: dark)').matches;
-    }
-    
-    // Apply the initial theme
-    $watch('darkMode', value => {
-        localStorage.setItem('darkMode', value);
-        document.documentElement.classList.toggle('dark', value);
-    });
-    
-    // Watch for system theme changes
-    window.matchMedia('(prefers-color-scheme: dark)').addEventListener('change', e => {
-        if (!('darkMode' in localStorage)) {  // Only if user hasn't explicitly set a preference
-            darkMode = e.matches;
-        }
-    });
-">
+<html lang="{{ str_replace('_', '-', app()->getLocale()) }}" class="h-full">
 <head>
     <meta charset="utf-8">
     <meta name="viewport" content="width=device-width, initial-scale=1">
     <meta name="csrf-token" content="{{ csrf_token() }}">
+    
+    <!-- Flash-prevention script for theme -->
+    <script>
+        (function() {
+            const savedTheme = localStorage.getItem('theme');
+            const prefersDark = window.matchMedia('(prefers-color-scheme: dark)').matches;
+            const shouldUseDark = savedTheme === 'dark' || (!savedTheme && prefersDark);
+            
+            if (shouldUseDark) {
+                document.documentElement.classList.add('dark');
+            } else {
+                document.documentElement.classList.remove('dark');
+            }
+            
+            // Set meta theme-color
+            const metaThemeColor = document.querySelector('meta[name="theme-color"]');
+            if (metaThemeColor) {
+                metaThemeColor.content = shouldUseDark ? '#1e3a8a' : '#1e40af';
+            }
+        })();
+    </script>
 
 @php
     $isRwanda = request()->segment(1) === 'rw';
-    $description = $isRwanda ? 'Itegura ikizami cy\'amategeko y\'umuhanda hamwe na MK Driving - Uburyo bwa mbere bwizewe naba jeune mu Rwanda' : 'Prepare for your driving test with MK Driving - The best way to practice and pass your driving theory test in Rwanda';
+    $description = $isRwanda ? 'Itegure ikizami cy\'amategeko y\'umuhanda hamwe na MK Driving School - Uburyo bwa mbere bwizewe naba jeune mu Rwanda' : 'Prepare for your driving test with MK Driving School - The best way to practice and pass your driving theory test in Rwanda';
     $titleSuffix = $isRwanda ? 'Tsinda ikizami cyo gutwara mu Rwanda' : 'Pass Your Driving Test in Rwanda';
     $ogDescription = $isRwanda ? 'Urubuga rwizewe rugufasha kubona ibibazo by\'kizamini cya provisoire n\'ibisubizo byabyo, bigufasha kwiga vuba, neza no gutsinda byoroshye - aho waba uri hose. 🚗' : '🚗✨ Prepare & pass your driving test with MK Driving School. Practice tests, expert tips, and everything you need to get your driver\'s license in Rwanda!';
 @endphp
@@ -59,10 +61,10 @@
     <!-- Additional Meta Tags for Better Sharing -->
     <meta name="theme-color" content="#1a365d"> <!-- Dark blue from your color scheme -->
     <meta name="mobile-web-app-capable" content="yes">
-    <meta name="apple-mobile-web-app-title" content="MK Driving">
+    <meta name="apple-mobile-web-app-title" content="MK Driving School">
     <meta name="apple-mobile-web-app-status-bar-style" content="default">
     <meta name="apple-mobile-web-app-capable" content="yes">
-    <meta name="application-name" content="MK Driving">
+    <meta name="application-name" content="MK Driving School">
     <meta name="msapplication-TileColor" content="#1a365d">
     
     <!-- SEO Tags for Kinyarwanda Focus -->
@@ -87,6 +89,18 @@
 
     <!-- Tailwind CSS -->
     <script src="https://cdn.tailwindcss.com"></script>
+    <script>
+        tailwind.config = {
+            darkMode: 'class',
+            theme: {
+                extend: {
+                    fontFamily: {
+                        sans: ['Figtree', 'sans-serif'],
+                    },
+                }
+            }
+        }
+    </script>
     
     <!-- Font Awesome -->
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css" integrity="sha512-iecdLmaskl7CVkqkXNQ/ZH/XLlvWZOJyj7Yy7tcenmpD1ypASozpmT/E0iPtmFIB46ZmdtAc9eNBvH0H/ZpiBw==" crossorigin="anonymous" referrerpolicy="no-referrer" />
@@ -163,7 +177,7 @@
         /* Firefox scrollbar styles */
         html {
             scrollbar-width: thin;
-            scrollbar-color: rgb(55 65 81) rgb(31 41 55);
+            scrollbar-color: rgb(203 213 225) transparent;
         }
 
         .dark html {
@@ -173,7 +187,7 @@
         /* Utility classes for scrollable containers */
         .scrollbar-thin {
             scrollbar-width: thin;
-            scrollbar-color: rgb(55 65 81) rgb(31 41 55);
+            scrollbar-color: rgb(203 213 225) transparent;
         }
 
         .dark .scrollbar-thin {
@@ -333,6 +347,36 @@
     </style>
 </head>
 <body class="font-sans antialiased text-gray-900 dark:text-gray-100 min-h-screen transition-colors duration-200 bg-gradient-to-br from-white to-gray-50 dark:from-gray-900 dark:to-gray-800 bg-fixed overflow-x-hidden m-0 p-0">
+    <!-- App Loading State -->
+    <div id="app-loader" class="fixed inset-0 bg-gray-50 dark:bg-gray-900 z-[9999] flex items-center justify-center transition-opacity duration-300">
+        <div class="text-center max-w-sm mx-auto px-6">
+            <!-- App Logo -->
+            <div class="flex items-center justify-center mb-8">
+                <img src="{{ asset('logo.png') }}" alt="MK Driving School Logo" 
+                     class="h-16 w-16 md:h-20 md:w-20 rounded-lg shadow-lg"
+                     onerror="this.onerror=null; this.src='{{ asset('images/logo.png') }}'">
+            </div>
+            
+            <!-- Logo Text -->
+            <div class="mb-8">
+                <h1 class="text-xl md:text-2xl font-bold text-gray-900 dark:text-white leading-tight">
+                    MK Driving School
+                </h1>
+            </div>
+            
+            <!-- Loading Progress Bar -->
+            <div class="w-full">
+                <div class="h-2 bg-gray-200 dark:bg-gray-700 rounded-full overflow-hidden">
+                    <div id="loading-progress" 
+                         class="h-full bg-gradient-to-r from-blue-500 to-blue-600 dark:from-blue-400 dark:to-blue-500 rounded-full transition-all duration-300 ease-out" 
+                         style="width: 0%;"></div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Main App Content (Hidden Initially) -->
+    <div id="app-content" class="opacity-0 transition-opacity duration-500">
     <!-- Header -->
     @if (!request()->is('dashboard*') && !request()->is('login'))
         <x-unified-navbar :showUserStats="true" />
@@ -347,13 +391,176 @@
 
     <!-- Footer -->
     @include('components.footer')
+    </div>
 
     @stack('scripts')
     
     <!-- Notifications Component -->
     <x-notifications />
     
+    <!-- Global Toast Component -->
+    <x-global-toast />
+    
     <script>
+        // App Loading System
+        class AppLoader {
+            constructor() {
+                this.loader = document.getElementById('app-loader');
+                this.content = document.getElementById('app-content');
+                this.progressBar = document.getElementById('loading-progress');
+                this.resources = new Set();
+                this.loadedResources = 0;
+                this.totalResources = 0;
+                this.minLoadTime = 800; // Minimum loading time for UX
+                this.startTime = Date.now();
+            }
+
+            // Track all resources
+            trackResources() {
+                // Track images
+                document.querySelectorAll('img').forEach(img => {
+                    this.resources.add('image:' + img.src);
+                    this.totalResources++;
+                });
+
+                // Track stylesheets
+                document.querySelectorAll('link[rel="stylesheet"]').forEach(link => {
+                    this.resources.add('style:' + link.href);
+                    this.totalResources++;
+                });
+
+                // Track scripts
+                document.querySelectorAll('script[src]').forEach(script => {
+                    if (!script.defer) {
+                        this.resources.add('script:' + script.src);
+                        this.totalResources++;
+                    }
+                });
+
+                // Track fonts
+                if (document.fonts) {
+                    document.fonts.forEach(font => {
+                        if (font.status === 'unloaded') {
+                            this.resources.add('font:' + font.family);
+                            this.totalResources++;
+                        }
+                    });
+                }
+
+                // Add some buffer time for dynamic content
+                this.totalResources += 2;
+            }
+
+            // Update progress
+            updateProgress() {
+                const progress = Math.min((this.loadedResources / this.totalResources) * 100, 95);
+                if (this.progressBar) {
+                    this.progressBar.style.width = progress + '%';
+                }
+            }
+
+            // Mark resource as loaded
+            resourceLoaded(type) {
+                this.loadedResources++;
+                this.updateProgress();
+                
+                if (this.loadedResources >= this.totalResources) {
+                    this.complete();
+                }
+            }
+
+            // Complete loading
+            complete() {
+                const elapsed = Date.now() - this.startTime;
+                const remainingTime = Math.max(0, this.minLoadTime - elapsed);
+                
+                setTimeout(() => {
+                    // Final progress to 100%
+                    if (this.progressBar) {
+                        this.progressBar.style.width = '100%';
+                    }
+                    
+                    // Fade out loader
+                    setTimeout(() => {
+                        if (this.loader) {
+                            this.loader.style.opacity = '0';
+                            setTimeout(() => {
+                                this.loader.style.display = 'none';
+                            }, 300);
+                        }
+                        
+                        // Fade in content
+                        if (this.content) {
+                            this.content.style.opacity = '1';
+                        }
+                        
+                        // Enable scrolling
+                        document.body.style.overflow = '';
+                    }, 200);
+                }, remainingTime);
+            }
+
+            // Initialize
+            init() {
+                // Prevent scrolling during load
+                document.body.style.overflow = 'hidden';
+                
+                // Track resources
+                this.trackResources();
+                
+                // Monitor resource loading
+                this.monitorResources();
+                
+                // Fallback timeout
+                setTimeout(() => {
+                    this.complete();
+                }, 5000);
+            }
+
+            // Monitor resource loading
+            monitorResources() {
+                // Monitor images
+                document.querySelectorAll('img').forEach(img => {
+                    if (img.complete) {
+                        this.resourceLoaded('image');
+                    } else {
+                        img.addEventListener('load', () => this.resourceLoaded('image'));
+                        img.addEventListener('error', () => this.resourceLoaded('image'));
+                    }
+                });
+
+                // Monitor stylesheets
+                document.querySelectorAll('link[rel="stylesheet"]').forEach(link => {
+                    if (link.sheet) {
+                        this.resourceLoaded('style');
+                    } else {
+                        link.addEventListener('load', () => this.resourceLoaded('style'));
+                        link.addEventListener('error', () => this.resourceLoaded('style'));
+                    }
+                });
+
+                // Monitor fonts
+                if (document.fonts) {
+                    document.fonts.ready.then(() => {
+                        this.resourceLoaded('font');
+                    });
+                }
+
+                // Monitor DOM ready
+                if (document.readyState === 'complete') {
+                    this.resourceLoaded('dom');
+                } else {
+                    window.addEventListener('load', () => this.resourceLoaded('dom'));
+                }
+            }
+        }
+
+        // Initialize app loader
+        document.addEventListener('DOMContentLoaded', function() {
+            const appLoader = new AppLoader();
+            appLoader.init();
+        });
+
         document.addEventListener('alpine:init', () => {
             // Display any server-side flash notifications
             @if(session('notification'))
@@ -388,6 +595,180 @@
             fadeElements.forEach(element => {
                 observer.observe(element);
             });
+        });
+
+        // Quiz Companion Live Competition System
+        document.addEventListener('alpine:init', () => {
+            Alpine.data('quizCompanion', (config) => ({
+                quizId: config.quizId,
+                isGuest: config.isGuest,
+                showLeaderboard: config.showLeaderboard,
+                showQA: config.showQA,
+                showRobots: config.showRobots,
+                
+                // Data
+                robotMessages: [],
+                leaderboard: [],
+                questions: [],
+                liveActivities: [],
+                notification: null,
+                activeUsersCount: 0,
+                
+                // UI State
+                isMobile: false,
+                mobileOpen: false,
+                unreadCount: 0,
+                newQuestion: '',
+                submittingQuestion: false,
+                
+                init() {
+                    this.isMobile = window.innerWidth < 1024;
+                    this.checkUnreadMessages();
+                    
+                    // Listen for live activity updates from other users
+                    window.addEventListener('liveActivityUpdate', (event) => {
+                        console.log('Live activity update received:', event.detail);
+                        this.updateLiveActivities(event.detail.activities || []);
+                        this.updateNotification(event.detail.notification);
+                    });
+                    
+                    // Listen for window resize
+                    window.addEventListener('resize', () => {
+                        this.isMobile = window.innerWidth < 1024;
+                    });
+                },
+                
+                destroy() {
+                    console.log('Cleaning up companion sidebar state...');
+                    // Clear robot messages and activities
+                    this.robotMessages = [];
+                    this.liveActivities = [];
+                    this.leaderboard = [];
+                    this.questions = [];
+                    this.notification = null;
+                    this.activeUsersCount = 0;
+                    this.unreadCount = 0;
+                    this.newQuestion = '';
+                    this.submittingQuestion = false;
+                    console.log('Companion sidebar state cleaned up');
+                },
+
+                updateLiveActivities(activities) {
+                    console.log('Updating live activities with:', activities);
+                    
+                    // Ensure activities is always an array
+                    const activitiesArray = Array.isArray(activities) ? activities : [];
+                    const previousCount = (this.liveActivities || []).length;
+                    
+                    this.liveActivities = activitiesArray;
+                    
+                    // Extract all robot messages from the complete activity list
+                    const allRobotMessages = activitiesArray
+                        .filter(activity => activity.type === 'learner_answer')
+                        .map((activity, index) => ({
+                            id: `${activity.learner_id}_${activity.question_id}_${activity.timestamp}_${index}`,
+                            robot_name: activity.learner_name,
+                            message: activity.message,
+                            timestamp_human: activity.timestamp_human,
+                            is_correct: activity.is_correct
+                        }));
+                    
+                    // Replace robotMessages with the complete updated list
+                    this.robotMessages = allRobotMessages;
+                    
+                    console.log('Robot messages updated:', this.robotMessages.length, 'Total activities:', activitiesArray.length);
+                    
+                    // Dispatch event for global toast
+                    console.log('Dispatching robotCompanionUpdate event with:', {
+                        robotMessages: this.robotMessages,
+                        activitiesCount: activitiesArray.length
+                    });
+                    window.dispatchEvent(new CustomEvent('robotCompanionUpdate', {
+                        detail: {
+                            robotMessages: this.robotMessages,
+                            activitiesCount: activitiesArray.length
+                        }
+                    }));
+                    
+                    // Update unread count based on new activities
+                    if (activitiesArray.length > previousCount) {
+                        this.unreadCount = Math.min(activitiesArray.length - previousCount + this.unreadCount, 99);
+                    }
+                },
+                
+                updateNotification(notification) {
+                    if (notification && notification.type === 'live_competition') {
+                        this.notification = {
+                            message: notification.message,
+                            timestamp: notification.timestamp,
+                            active_users: notification.active_users,
+                            robot_responses: notification.robot_responses || []
+                        };
+                    }
+                },
+                
+                formatTime(timestamp) {
+                    const date = new Date(timestamp);
+                    const now = new Date();
+                    const diff = now - date;
+                    
+                    if (diff < 60000) return 'just now';
+                    if (diff < 3600000) return `${Math.floor(diff / 60000)}m ago`;
+                    if (diff < 86400000) return `${Math.floor(diff / 3600000)}h ago`;
+                    return date.toLocaleDateString();
+                },
+                
+                toggleMobileOpen() {
+                    this.mobileOpen = !this.mobileOpen;
+                    if (this.mobileOpen) {
+                        this.unreadCount = 0;
+                    }
+                },
+                
+                checkUnreadMessages() {
+                    // Check for existing unread messages
+                    const unread = this.robotMessages.filter(msg => !msg.read).length;
+                    this.unreadCount = Math.min(unread, 99);
+                },
+                
+                async submitQuestion() {
+                    if (!this.newQuestion.trim() || this.submittingQuestion) return;
+                    
+                    this.submittingQuestion = true;
+                    
+                    try {
+                        const response = await fetch('/api/forum/questions', {
+                            method: 'POST',
+                            headers: {
+                                'X-CSRF-TOKEN': document.querySelector('meta[name="csrf-token"]')?.content,
+                                'Content-Type': 'application/json',
+                                'Accept': 'application/json'
+                            },
+                            body: JSON.stringify({
+                                question: this.newQuestion.trim(),
+                                quiz_id: this.quizId
+                            })
+                        });
+                        
+                        if (response.ok) {
+                            this.newQuestion = '';
+                            // Show success notification
+                            if (window.notify?.success) {
+                                window.notify.success('Question posted successfully!');
+                            }
+                        } else {
+                            throw new Error('Failed to post question');
+                        }
+                    } catch (error) {
+                        console.error('Error posting question:', error);
+                        if (window.notify?.error) {
+                            window.notify.error('Failed to post question');
+                        }
+                    } finally {
+                        this.submittingQuestion = false;
+                    }
+                }
+            }));
         });
     </script>
 </body>

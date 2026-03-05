@@ -6,6 +6,7 @@ use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\Relations\BelongsTo;
 use Illuminate\Database\Eloquent\Relations\HasMany;
 use Illuminate\Database\Eloquent\SoftDeletes;
+use App\Models\Quiz;
 
 class ForumQuestion extends Model
 {
@@ -17,7 +18,9 @@ class ForumQuestion extends Model
         'is_approved',
         'views',
         'user_id',
-        'is_news_discussion'
+        'is_news_discussion',
+        'quiz_id',
+        'title'
     ];
 
     protected $casts = [
@@ -42,6 +45,11 @@ class ForumQuestion extends Model
     public function news(): BelongsTo
     {
         return $this->belongsTo(News::class);
+    }
+
+    public function quiz(): BelongsTo
+    {
+        return $this->belongsTo(Quiz::class);
     }
 
     /**

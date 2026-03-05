@@ -291,4 +291,107 @@ return [
     'subscriptionMessage' => 'Get a subscription to practice unlimited quizzes and track your progress.',
     'getPlanToPractice' => 'Get Plan to Practice More',
     'close' => 'Close',
+
+    // Robot Companion Messages
+    'companion' => [
+        'robot_correct' => ':name just got this right!',
+        'robot_nailed' => ':name nailed this one!',
+        'robot_aced' => ':name aced this question!',
+        'robot_mastered' => ':name mastered this!',
+        'robot_wrong' => ':name just got it wrong',
+        'robot_tricky' => ':name found this tricky',
+        'robot_missed' => ':name missed this one',
+        'robot_struggled' => ':name struggled with this one',
+        
+        // Learner Messages
+        'learner_correct' => ':name just got this right!',
+        'learner_nailed' => ':name nailed this one!',
+        'learner_got_correct' => ':name got it correct!',
+        'learner_aced' => ':name aced this question!',
+        'learner_mastered' => ':name mastered this!',
+        'learner_figured' => ':name figured it out!',
+        'learner_got_right' => ':name got this one right!',
+        'learner_wrong' => ':name just got it wrong',
+        'learner_struggled' => ':name struggled with this one',
+        'learner_tricky' => ':name found this tricky',
+        'learner_wrong_too' => ':name got this wrong too',
+        'learner_missed' => ':name missed this one',
+        'learner_didnt_get' => ':name didn\'t get this one',
+        'learner_wrong_dont_worry' => ':name got it wrong - don\'t worry',
+        
+        // Competitive Messages (fallbacks)
+        'both_correct' => ':learnerName got it right too!',
+        'user_correct_learner_wrong' => ':learnerName is still learning!',
+        'user_wrong_learner_correct' => ':learnerName got this one!',
+        'both_wrong' => ':learnerName is learning too!',
+        'default_message' => ':learnerName is working!',
+        
+        // Personality-based competitive messages
+        'supportive' => [
+            'both_correct' => [
+                ':learnerName got it right too! Great minds think alike!',
+                'Nice! :learnerName also got this one correct.',
+                ':learnerName is on fire with that correct answer!'
+            ],
+            'user_correct_learner_wrong' => [
+                ':learnerName is still learning this one, but you got it!',
+                'Don\'t worry, :learnerName will get the next one!',
+                ':learnerName is catching up to your correct answer!'
+            ],
+            'user_wrong_learner_correct' => [
+                ':learnerName got this one! You\'ll get the next one!',
+                'Nice job by :learnerName! Keep trying!',
+                ':learnerName shows how it\'s done! You can do this too!'
+            ],
+            'both_wrong' => [
+                ':learnerName is working through this one too!',
+                'Both :learnerName and you are learning together!',
+                ':learnerName is figuring this out, just like you!'
+            ]
+        ],
+        'competitive' => [
+            'both_correct' => [
+                ':learnerName also nailed it! This is a race!',
+                ':learnerName is keeping up with your correct answer!',
+                'Both you and :learnerName got this right! Who\'s faster?'
+            ],
+            'user_correct_learner_wrong' => [
+                'You got it but :learnerName didn\'t! You\'re winning!',
+                ':learnerName missed this one but you didn\'t!',
+                'Your correct answer puts you ahead of :learnerName!'
+            ],
+            'user_wrong_learner_correct' => [
+                ':learnerName got this one and you didn\'t!',
+                ':learnerName is taking the lead with that answer!',
+                ':learnerName shows you how it\'s done this time!'
+            ],
+            'both_wrong' => [
+                'Both you and :learnerName missed this one!',
+                ':learnerName is struggling too, keep pushing!',
+                'This question got both you and :learnerName!'
+            ]
+        ],
+        'friendly' => [
+            'both_correct' => [
+                ':learnerName got it right too! High five!',
+                'Awesome! :learnerName also got this correct!',
+                ':learnerName is rocking this quiz with you!'
+            ],
+            'user_correct_learner_wrong' => [
+                'You got it! :learnerName will get the next one!',
+                'Nice work! :learnerName is learning from you!',
+                ':learnerName needs your help on this one!'
+            ],
+            'user_wrong_learner_correct' => [
+                ':learnerName got this one! Team effort!',
+                ':learnerName got it! Let\'s help each other!',
+                'Great job :learnerName! We\'ll get the next one!'
+            ],
+            'both_wrong' => [
+                ':learnerName is learning with you on this one!',
+                'Team struggle! You and :learnerName will get the next one!',
+                ':learnerName is in the same boat, keep going!'
+            ]
+        ]
+    ],
 ];

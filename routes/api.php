@@ -2,6 +2,7 @@
 
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Route;
+use Illuminate\Support\Facades\Auth;
 use App\Http\Controllers\Api\AuthController;
 use App\Http\Controllers\Api\ChatbotController;
 use App\Http\Controllers\Api\ForumController;
@@ -113,6 +114,8 @@ Route::middleware('auth:web')->group(function () {
     Route::get('/attempts/{attemptId}', [QuizAttemptController::class, 'getAttempt']);
     Route::put('/attempts/{attemptId}', [QuizAttemptController::class, 'updateAttempt']);
     Route::post('/attempts/{attemptId}/reset', [QuizAttemptController::class, 'resetAttempt']);
+    Route::get('/robot/summary', [QuizAttemptController::class, 'getRobotSummary']);
+    Route::get('/live-activities', [QuizAttemptController::class, 'getLiveActivities']);
     
     // Quiz submission only (stats route moved above)
     Route::post('/quiz/submit', [QuizAttemptController::class, 'submitQuiz']);

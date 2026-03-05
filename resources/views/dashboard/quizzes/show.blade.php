@@ -1,7 +1,6 @@
 @extends('layouts.app')
 
 @section('content')
-<div class="h-[calc(100vh-4rem)]">
     @php
     use App\Services\OptionTextService;
     // Use the cleaned quiz data directly from controller
@@ -30,12 +29,12 @@
     ];
     @endphp
 
-    @include('components.unified-quiz-taker', [
-        'quiz' => $formattedQuiz,
-        'attempt' => $attempt ?? null,
-        'showHeader' => true,
-        'compactMode' => false,
-        'allowNavigation' => true
-    ])
-</div>
+    <x-quiz-with-companion 
+        :quiz="$formattedQuiz"
+        :attempt="$attempt ?? null"
+        :showHeader="true"
+        :compactMode="false"
+        :allowNavigation="true"
+        :showCompanion="true"
+    />
 @endsection

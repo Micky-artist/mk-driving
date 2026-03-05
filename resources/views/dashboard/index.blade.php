@@ -80,130 +80,6 @@ document.addEventListener('DOMContentLoaded', function() {
         <!-- Main Content Area that overlays the subscription section -->
         <div class="relative z-10 space-y-6">
 
-        <!-- Test Readiness Progress Bar -->
-        @php
-            // Log what we received from controller
-            \Log::info('Dashboard view - readinessData received', [
-                'readinessData_exists' => isset($readinessData),
-                'readinessData_value' => $readinessData ?? 'NOT_SET'
-            ]);
-            
-            // Fallback if readinessData is not available
-            $readinessData = $readinessData ?? [
-                'percentage' => 0,
-                'average_score' => 0,
-                'total_tests' => 0,
-                'is_ready' => false,
-                'getting_ready' => false,
-            ];
-            
-            // Log final readiness data being used
-            \Log::info('Dashboard view - final readiness data', [
-                'percentage' => $readinessData['percentage'],
-                'total_tests' => $readinessData['total_tests'],
-                'average_score' => $readinessData['average_score']
-            ]);
-        @endphp
-        <div class="bg-white dark:bg-gray-800 rounded-xl shadow-sm border border-gray-200 dark:border-gray-700 p-4">
-            <div class="space-y-3">
-                <!-- Title and Status -->
-                <div class="flex flex-col sm:flex-row sm:items-center sm:justify-between gap-2">
-                    <h3 class="text-base font-semibold text-gray-900 dark:text-white">
-                        {{ __('dashboard.readiness.title') }}
-                    </h3>
-                    <div class="flex items-center gap-2">
-                        @if($readinessData['is_ready'])
-                            <span class="inline-flex items-center px-2 py-1 text-xs font-medium rounded-full bg-green-100 text-green-800 dark:bg-green-900/20 dark:text-green-400">
-                                {{ __('dashboard.readiness.ready') }}
-                            </span>
-                        @elseif($readinessData['getting_ready'])
-                            <span class="inline-flex items-center px-2 py-1 text-xs font-medium rounded-full bg-yellow-100 text-yellow-800 dark:bg-yellow-900/20 dark:text-yellow-400">
-                                {{ __('dashboard.readiness.getting_ready') }}
-                            </span>
-                        @else
-                            <span class="inline-flex items-center px-2 py-1 text-xs font-medium rounded-full bg-blue-100 text-blue-800 dark:bg-blue-900/20 dark:text-blue-400">
-                                {{ __('dashboard.readiness.keep_practicing') }}
-                            </span>
-                        @endif
-                        <span class="text-sm font-medium text-gray-900 dark:text-white">
-                            {{ __('dashboard.readiness.percentage', ['percentage' => $readinessData['percentage']]) }}
-                        </span>
-                    </div>
-                </div>
-
-                <!-- Progress Bar -->
-                <div class="space-y-2">
-                    <div class="w-full bg-gray-200 dark:bg-gray-700 rounded-full h-3 overflow-hidden">
-                        <div class="h-full rounded-full transition-all duration-500 ease-out relative"
-                             style="width: {{ $readinessData['percentage'] }}%; 
-                                    background: linear-gradient(to right, 
-                                        #ef4444 0%, 
-                                        #f97316 25%, 
-                                        #eab308 50%, 
-                                        #84cc16 75%, 
-                                        #10b981 100%);">
-                            @if($readinessData['percentage'] > 10)
-                                <div class="absolute inset-0 bg-white/20 animate-pulse"></div>
-                            @endif
-                        </div>
-                    </div>
-                    
-                    <!-- Progress Markers -->
-                    <div class="relative h-2">
-                        <div class="absolute inset-0 flex justify-between text-xs text-gray-500 dark:text-gray-400">
-                            <span>0%</span>
-                            <span>25%</span>
-                            <span>50%</span>
-                            <span>75%</span>
-                            <span>100%</span>
-                        </div>
-                    </div>
-                </div>
-
-                <!-- Stats and Nudge -->
-                <div class="flex flex-col sm:flex-row sm:items-center sm:justify-between gap-3 pt-2 border-t border-gray-200 dark:border-gray-700">
-                    <div class="flex flex-col sm:flex-row sm:items-center gap-2 sm:gap-4 text-xs text-gray-600 dark:text-gray-400">
-                        @if($readinessData['total_tests'] > 0)
-                            <span>{{ __('dashboard.readiness.tests_completed', ['count' => $readinessData['total_tests']]) }}</span>
-                            <span>{{ __('dashboard.readiness.average_score', ['score' => $readinessData['average_score']]) }}</span>
-                        @else
-                            <span>{{ __('dashboard.readiness.not_enough_data') }}</span>
-                        @endif
-                    </div>
-                    
-                    <div class="flex flex-col sm:flex-row gap-2">
-                        @if(!$readinessData['is_ready'] && $readinessData['total_tests'] > 0)
-                            @if($readinessData['total_tests'] < 25)
-                                <p class="text-xs text-gray-600 dark:text-gray-400">
-                                    {{ __('dashboard.readiness.need_more_tests') }}
-                                </p>
-                            @elseif($readinessData['average_score'] < 60)
-                                <p class="text-xs text-gray-600 dark:text-gray-400">
-                                    {{ __('dashboard.readiness.need_better_scores') }}
-                                </p>
-                            @endif
-                        @endif
-                        <div class="flex gap-2">
-                            <a href="{{ route('dashboard.quizzes.index', ['locale' => app()->getLocale()]) }}" 
-                               class="inline-flex items-center px-3 py-1.5 text-xs font-medium text-blue-600 dark:text-blue-400 bg-blue-50 dark:bg-blue-900/20 rounded-md hover:bg-blue-100 dark:hover:bg-blue-900/30 transition-colors">
-                                {{ __('dashboard.readiness.see_more_quizzes') }}
-                                <svg xmlns="http://www.w3.org/2000/svg" class="h-3 w-3 ml-1" fill="none" viewBox="0 0 24 24" stroke="currentColor">
-                                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 5l7 7-7 7" />
-                                </svg>
-                            </a>
-                            <a href="{{ route('dashboard.progress', ['locale' => app()->getLocale()]) }}" 
-                               class="inline-flex items-center px-3 py-1.5 text-xs font-medium text-purple-600 dark:text-purple-400 bg-purple-50 dark:bg-purple-900/20 rounded-md hover:bg-purple-100 dark:hover:bg-purple-900/30 transition-colors">
-                                {{ __('dashboard.progress.title') }}
-                                <svg xmlns="http://www.w3.org/2000/svg" class="h-3 w-3 ml-1" fill="none" viewBox="0 0 24 24" stroke="currentColor">
-                                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 19v-6a2 2 0 00-2-2H5a2 2 0 00-2 2v6a2 2 0 002 2h2a2 2 0 002-2zm0 0V9a2 2 0 012-2h2a2 2 0 012 2v10m-6 0a2 2 0 002 2h2a2 2 0 002-2m0 0V5a2 2 0 012-2h2a2 2 0 012 2v14a2 2 0 01-2 2h-2a2 2 0 01-2-2z" />
-                                </svg>
-                            </a>
-                        </div>
-                    </div>
-                </div>
-            </div>
-        </div>
-
         <!-- Current/Recently Opened Quiz -->
         @if ($inProgressQuizzes->count() > 0)
             <div class="bg-white dark:bg-gray-800 rounded-xl shadow-sm border border-gray-200 dark:border-gray-700 overflow-hidden">
@@ -441,6 +317,72 @@ document.addEventListener('DOMContentLoaded', function() {
             </div>
         @endif
 
+        <!-- User Progress Line Graph -->
+        <div class="bg-white dark:bg-gray-800 rounded-xl shadow-sm border border-gray-200 dark:border-gray-700 overflow-hidden">
+            <div class="p-4 border-b border-gray-200 dark:border-gray-700">
+                <div class="flex items-center justify-between">
+                    <h2 class="text-lg font-semibold text-gray-900 dark:text-white">{{ __('dashboard.progress.title') }}</h2>
+                    <div class="flex items-center gap-2">
+                        @if($readinessData['is_ready'])
+                            <span class="inline-flex items-center px-2 py-1 text-xs font-medium rounded-full bg-green-100 text-green-800 dark:bg-green-900/20 dark:text-green-400">
+                                {{ __('dashboard.readiness.ready') }}
+                            </span>
+                        @elseif($readinessData['getting_ready'])
+                            <span class="inline-flex items-center px-2 py-1 text-xs font-medium rounded-full bg-yellow-100 text-yellow-800 dark:bg-yellow-900/20 dark:text-yellow-400">
+                                {{ __('dashboard.readiness.getting_ready') }}
+                            </span>
+                        @else
+                            <span class="inline-flex items-center px-2 py-1 text-xs font-medium rounded-full bg-blue-100 text-blue-800 dark:bg-blue-900/20 dark:text-blue-400">
+                                {{ __('dashboard.readiness.keep_practicing') }}
+                            </span>
+                        @endif
+                        <span class="text-sm font-medium text-gray-900 dark:text-white">
+                            {{ __('dashboard.readiness.percentage', ['percentage' => $readinessData['percentage']]) }}
+                        </span>
+                    </div>
+                </div>
+            </div>
+            <div class="p-4">
+                @if($progressData['has_data'])
+                    <div class="relative h-64 w-full">
+                        <canvas id="progressChart"></canvas>
+                    </div>
+                    <div class="mt-4 grid grid-cols-2 sm:grid-cols-4 gap-4 text-center">
+                        <div>
+                            <p class="text-2xl font-bold text-gray-900 dark:text-white">{{ $readinessData['percentage'] }}%</p>
+                            <p class="text-xs text-gray-600 dark:text-gray-400">{{ __('dashboard.readiness.readiness') }}</p>
+                        </div>
+                        <div>
+                            <p class="text-2xl font-bold text-gray-900 dark:text-white">{{ $readinessData['average_score'] }}%</p>
+                            <p class="text-xs text-gray-600 dark:text-gray-400">{{ __('dashboard.readiness.average_score', ['score' => $readinessData['average_score']]) }}</p>
+                        </div>
+                        <div>
+                            <p class="text-2xl font-bold text-gray-900 dark:text-white">{{ $readinessData['total_tests'] }}</p>
+                            <p class="text-xs text-gray-600 dark:text-gray-400">{{ __('dashboard.readiness.tests_completed', ['count' => $readinessData['total_tests']]) }}</p>
+                        </div>
+                        <div>
+                            <p class="text-2xl font-bold text-gray-900 dark:text-white">{{ count($progressData['scores']) }}</p>
+                            <p class="text-xs text-gray-600 dark:text-gray-400">{{ __('dashboard.progress.recent_quizzes') }}</p>
+                        </div>
+                    </div>
+                @else
+                    <div class="text-center py-8">
+                        <div class="mx-auto flex items-center justify-center h-12 w-12 rounded-full bg-blue-100 dark:bg-blue-900/20 text-blue-600 dark:text-blue-400 mb-4">
+                            <svg xmlns="http://www.w3.org/2000/svg" class="h-6 w-6" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 19v-6a2 2 0 00-2-2H5a2 2 0 00-2 2v6a2 2 0 002 2h2a2 2 0 002-2zm0 0V9a2 2 0 012-2h2a2 2 0 012 2v10m-6 0a2 2 0 002 2h2a2 2 0 002-2m0 0V5a2 2 0 012-2h2a2 2 0 012 2v14a2 2 0 01-2 2h-2a2 2 0 01-2-2z" />
+                            </svg>
+                        </div>
+                        <h3 class="text-lg font-medium text-gray-900 dark:text-white mb-2">{{ __('dashboard.progress.no_data') }}</h3>
+                        <p class="text-gray-600 dark:text-gray-400 mb-4">{{ __('dashboard.progress.start_quizzes') }}</p>
+                        <a href="{{ route('dashboard.quizzes.index', ['locale' => app()->getLocale()]) }}" 
+                           class="inline-flex items-center px-4 py-2 bg-blue-600 hover:bg-blue-700 text-white font-medium rounded-lg transition-colors">
+                            {{ __('dashboard.readiness.see_more_quizzes') }}
+                        </a>
+                    </div>
+                @endif
+            </div>
+        </div>
+
         <!-- Quiz History -->
         @if ($completedQuizzes->count() > 0 || $inProgressQuizzes->count() > 0)
             <div class="bg-white dark:bg-gray-800 rounded-xl shadow-sm border border-gray-200 dark:border-gray-700 overflow-hidden">
@@ -585,4 +527,113 @@ document.addEventListener('DOMContentLoaded', function() {
             </div>
         @endif
     </div>
+
+@push('scripts')
+<script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+<script>
+document.addEventListener('DOMContentLoaded', function() {
+    // Initialize Progress Chart
+    @if($progressData['has_data'])
+        const ctx = document.getElementById('progressChart').getContext('2d');
+        const progressChart = new Chart(ctx, {
+            type: 'line',
+            data: {
+                labels: @json($progressData['labels']),
+                datasets: [{
+                    label: '{{ __("dashboard.progress.quiz_scores") }}',
+                    data: @json($progressData['scores']),
+                    borderColor: 'rgb(59, 130, 246)',
+                    backgroundColor: 'rgba(59, 130, 246, 0.1)',
+                    tension: 0.4,
+                    fill: true,
+                    pointRadius: 4,
+                    pointHoverRadius: 6,
+                    pointBackgroundColor: 'rgb(59, 130, 246)',
+                    pointBorderColor: '#fff',
+                    pointBorderWidth: 2
+                }, {
+                    label: '{{ __("dashboard.progress.cumulative_average") }}',
+                    data: @json($progressData['averages']),
+                    borderColor: 'rgb(168, 85, 247)',
+                    backgroundColor: 'rgba(168, 85, 247, 0.1)',
+                    tension: 0.4,
+                    fill: true,
+                    pointRadius: 4,
+                    pointHoverRadius: 6,
+                    pointBackgroundColor: 'rgb(168, 85, 247)',
+                    pointBorderColor: '#fff',
+                    pointBorderWidth: 2
+                }]
+            },
+            options: {
+                responsive: true,
+                maintainAspectRatio: false,
+                plugins: {
+                    legend: {
+                        display: true,
+                        position: 'top',
+                        labels: {
+                            usePointStyle: true,
+                            padding: 20,
+                            font: {
+                                size: 12
+                            }
+                        }
+                    },
+                    tooltip: {
+                        backgroundColor: 'rgba(0, 0, 0, 0.8)',
+                        titleColor: '#fff',
+                        bodyColor: '#fff',
+                        borderColor: 'rgb(59, 130, 246)',
+                        borderWidth: 1,
+                        padding: 12,
+                        displayColors: true,
+                        callbacks: {
+                            title: function(context) {
+                                const index = context[0].dataIndex;
+                                return @json($progressData['quiz_titles'])[index] || context[0].label;
+                            },
+                            label: function(context) {
+                                return context.dataset.label + ': ' + context.parsed.y + '%';
+                            }
+                        }
+                    }
+                },
+                scales: {
+                    y: {
+                        beginAtZero: true,
+                        max: 100,
+                        ticks: {
+                            callback: function(value) {
+                                return value + '%';
+                            },
+                            font: {
+                                size: 11
+                            }
+                        },
+                        grid: {
+                            color: 'rgba(156, 163, 175, 0.1)'
+                        }
+                    },
+                    x: {
+                        ticks: {
+                            font: {
+                                size: 11
+                            }
+                        },
+                        grid: {
+                            color: 'rgba(156, 163, 175, 0.1)'
+                        }
+                    }
+                },
+                interaction: {
+                    intersect: false,
+                    mode: 'index'
+                }
+            }
+        });
+    @endif
+});
+</script>
+@endpush
 @endsection

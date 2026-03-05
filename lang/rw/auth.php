@@ -161,11 +161,11 @@ return [
     
     // Welcome Email
     'welcome_email' => [
-        'subject' => 'Murakaza neza kuri MK Driving! Tangira urugendo rwawe none',
-        'title' => 'Murakaza neza kuri MK Driving!',
+        'subject' => 'Murakaza neza kuri MK Driving School! Tangira urugendo rwawe none',
+        'title' => 'Murakaza neza kuri MK Driving School!',
         'subtitle' => 'Urugendo rwo kuba umushoferi wizewe rutangirira aha',
         'greeting' => 'Murakaza neza, :name',
-        'marketing_intro' => 'Murakoze kwiyandikisha kuri MK Driving! Twishimiye kubakira no kubafasha gutangira urugendo rwo kuba umushoferi. Tangira byoroshye:',
+        'marketing_intro' => 'Murakoze kwiyandikisha kuri MK Driving School! Twishimiye kubakira no kubafasha gutangira urugendo rwo kuba umushoferi. Tangira byoroshye:',
         'verify_button' => 'Kwemeza Imeri Yawe',
         'verify_description' => 'Bungabunga konti witoze ufite umutekano',
         'free_quiz_button' => 'Gerageza Umwitozo w\'Ubuntu',
@@ -173,7 +173,7 @@ return [
         'pricing_button' => 'Kwandikisha Ifatabuguzi',
         'pricing_description' => 'Ihitamo ifatabuguzi rikunogeye',
         'alternative' => 'Urubuga rwo hejuru nirudakora kopiya iyi mpuza muri browser yawe:',
-        'benefits_title' => 'Kuki Wahitamo MK Driving?',
+        'benefits_title' => 'Kuki Wahitamo MK Driving School?',
         'benefits_description' => 'Ufite konti natwe, ubasha kubona imyitozo yose, igihe wakwiyandikisha n\'ubumenyi bwawe uko bwiyongera',
         'contact_support' => 'Ufite ikibazo? Twandikire kuri :email'
     ],

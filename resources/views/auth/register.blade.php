@@ -2,199 +2,20 @@
 
 @push('styles')
 <style>
-    :root {
-        --primary-color: #2563eb;
-        --primary-hover: #1d4ed8;
-        --text-primary: #1f2937;
-        --text-secondary: #4b5563;
-        --bg-primary: #ffffff;
-        --bg-secondary: #f9fafb;
-        --border-color: #e5e7eb;
-        --input-bg: #ffffff;
-        --input-border: #e5e7eb;
-        --card-bg: rgba(255, 255, 255, 0.95);
-        --card-border: rgba(255, 255, 255, 0.2);
-        --card-shadow: 0 10px 30px rgba(0, 0, 0, 0.15), 0 0 0 1px rgba(0, 0, 0, 0.05);
-        --card-hover-shadow: 0 20px 40px rgba(0, 0, 0, 0.2), 0 0 0 1px rgba(0, 0, 0, 0.1);
-    }
-
-    @media (prefers-color-scheme: dark) {
-        :root {
-            --primary-color: #2563eb;
-            --primary-hover: #1d4ed8;
-            --text-primary: #f3f4f6;
-            --text-secondary: #9ca3af;
-            --bg-primary: #0f172a;
-            --bg-secondary: #1e293b;
-            --border-color: #334155;
-            --input-bg: #1e293b;
-            --input-border: #334155;
-            --card-bg: rgba(30, 41, 59, 0.95);
-            --card-border: rgba(255, 255, 255, 0.1);
-            --card-shadow: 0 10px 30px rgba(0, 0, 0, 0.3), 0 0 0 1px rgba(255, 255, 255, 0.05);
-            --card-hover-shadow: 0 20px 40px rgba(0, 0, 0, 0.4), 0 0 0 1px rgba(255, 255, 255, 0.1);
-        }
-    }
-
-    .gradient-bg {
-        background: linear-gradient(135deg, var(--bg-primary) 0%, var(--bg-secondary) 100%);
-        min-height: 100vh;
-    }
-    
     .login-card {
-        background: var(--card-bg);
-        border-radius: 16px;
-        box-shadow: var(--card-shadow);
-        border: 1px solid var(--card-border);
-        transform: translateZ(0);
-        transition: all 0.4s cubic-bezier(0.4, 0, 0.2, 1);
-        overflow: hidden;
-        backdrop-filter: blur(10px);
         max-width: 28rem;
         width: 100%;
-    }
-    
-    .login-card:hover {
-        transform: translateY(-4px) translateZ(0);
-        box-shadow: var(--card-hover-shadow);
-    }
-    
-    .input-field {
-        width: 100%;
-        padding: 1.25rem 1rem 1.25rem 4rem;
-        border-radius: 1rem;
-        border: 2px solid var(--input-border);
-        background-color: var(--input-bg);
-        color: var(--text-primary);
-        font-weight: 500;
-        font-size: 1rem;
-        transition: all 0.2s ease-out;
-        height: 56px;
-        margin-bottom: 0.25rem;
-    }
-    
-    .input-field:focus {
-        transform: translateY(-1px);
-        box-shadow: 0 0 0 3px rgba(37, 99, 235, 0.2);
-        border-color: var(--primary-color);
-        outline: none;
-    }
-    
-    .btn-primary {
-        width: 100%;
-        padding: 1.25rem 2rem;
-        border-radius: 0.75rem;
-        background: linear-gradient(135deg, #2563eb 0%, #1d4ed8 100%);
-        color: white;
-        font-weight: 700;
-        font-size: 1.125rem;
-        letter-spacing: 0.5px;
-        text-transform: uppercase;
-        border: 2px solid rgba(255, 255, 255, 0.2);
-        box-shadow: 0 10px 20px -5px rgba(37, 99, 235, 0.3);
-        transition: all 0.3s ease-out;
-        cursor: pointer;
-    }
-    
-    .btn-primary:hover:not(:disabled) {
-        transform: translateY(-2px);
-        box-shadow: 0 15px 30px -5px rgba(37, 99, 235, 0.4);
-        border-color: rgba(255, 255, 255, 0.3);
-    }
-    
-    .btn-primary:active {
-        transform: translateY(1px);
-        box-shadow: 0 5px 15px rgba(0, 0, 0, 0.2);
-    }
-
-    .btn-primary:disabled {
-        opacity: 0.7;
-        cursor: not-allowed;
-    }
-
-    .btn-google {
-        border: 2px solid var(--border-color);
-        border-radius: 0.75rem;
-        background: var(--input-bg);
-        color: var(--text-primary);
-        font-weight: 600;
-        transition: all 0.3s ease;
-        padding: 0.75rem 1rem;
-    }
-
-    .btn-google:hover {
-        transform: translateY(-2px);
-        box-shadow: 0 10px 20px rgba(0, 0, 0, 0.1);
-        border-color: var(--primary-color);
-    }
-
-    .divider {
-        display: flex;
-        align-items: center;
-        text-align: center;
-        color: var(--text-secondary);
-        font-size: 0.875rem;
-        margin: 1.5rem 0;
-    }
-
-    .divider::before,
-    .divider::after {
-        content: '';
-        flex: 1;
-        border-bottom: 1px solid var(--border-color);
-    }
-
-    .divider::before {
-        margin-right: 1rem;
-    }
-
-    .divider::after {
-        margin-left: 1rem;
-    }
-    
-    /* Text colors */
-    .text-gray-900 {
-        color: var(--text-primary);
-    }
-    
-    .text-gray-600 {
-        color: var(--text-secondary);
-    }
-
-    /* Password visibility toggle button */
-    .toggle-password-btn {
-        position: absolute;
-        right: 1rem;
-        top: 50%;
-        transform: translateY(-50%);
-        background: none;
-        border: none;
-        cursor: pointer;
-        color: var(--text-secondary);
-        padding: 0.5rem;
-        display: flex;
-        align-items: center;
-        justify-content: center;
-        transition: color 0.2s;
-    }
-
-    .toggle-password-btn:hover {
-        color: var(--text-primary);
-    }
-
-    .toggle-password-btn:focus {
-        outline: none;
     }
 </style>
 @endpush
 
 @section('content')
-<div class="w-full min-h-screen flex flex-col relative overflow-hidden gradient-bg">
+<div class="w-full min-h-screen flex flex-col relative overflow-hidden bg-gradient-to-br from-white to-gray-50 dark:from-gray-900 dark:to-gray-800">
     <input type="hidden" id="returnTo" value="{{ request()->input('return_to') }}">
     
     <div class="flex-grow flex items-center justify-center px-4 py-8 relative z-10">
         <div class="w-full max-w-md mx-auto">
-            <div class="login-card rounded-2xl p-8">
+            <div class="bg-white/95 dark:bg-gray-800/95 backdrop-blur-lg rounded-2xl p-8 shadow-xl dark:shadow-2xl border border-white/20 dark:border-gray-700 hover:shadow-2xl dark:hover:shadow-3xl transition-all duration-300 hover:-translate-y-1 login-card">
                 <div class="text-center pb-4">
                     <div class="flex justify-center mb-6">
                         <a href="{{ route('home', ['locale' => app()->getLocale()]) }}" class="flex items-center space-x-1">
@@ -243,11 +64,11 @@
                                         type="text" 
                                         value="{{ old('name') }}" 
                                         placeholder="{{ __('auth.register.name') }}"
-                                        class="input-field"
+                                        class="w-full px-4 py-4 rounded-xl border-2 border-gray-300 dark:border-gray-600 bg-white dark:bg-gray-700 text-gray-900 dark:text-white font-medium text-base transition-all duration-200 focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-transparent hover:border-gray-400 dark:hover:border-gray-500"
                                         required 
                                         autofocus
                                     />
-                                    <div class="absolute left-4 top-1/2 -translate-y-1/2 text-gray-400">
+                                    <div class="absolute left-4 top-1/2 -translate-y-1/2 text-gray-400 dark:text-gray-500">
                                         <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                                             <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M16 7a4 4 0 11-8 0 4 4 0 018 0zM12 14a7 7 0 00-7 7h14a7 7 0 00-7-7z"></path>
                                         </svg>
@@ -270,9 +91,9 @@
                                     required 
                                     autocomplete="username"
                                     placeholder="{{ __('auth.register.email') }}"
-                                    class="input-field"
+                                    class="w-full pl-12 pr-4 py-4 rounded-xl border-2 border-gray-300 dark:border-gray-600 bg-white dark:bg-gray-700 text-gray-900 dark:text-white font-medium text-base transition-all duration-200 focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-transparent hover:border-gray-400 dark:hover:border-gray-500"
                                 />
-                                <div class="absolute left-4 top-1/2 -translate-y-1/2 text-gray-400">
+                                <div class="absolute left-4 top-1/2 -translate-y-1/2 text-gray-400 dark:text-gray-500">
                                     <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                                         <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M3 8l7.89 5.26a2 2 0 002.22 0L21 8M5 19h14a2 2 0 002-2V7a2 2 0 00-2-2H5a2 2 0 00-2 2v10a2 2 0 002 2z"></path>
                                     </svg>
@@ -293,15 +114,15 @@
                                     required 
                                     autocomplete="new-password"
                                     placeholder="{{ __('auth.register.password') }}"
-                                    class="input-field pr-12"
+                                    class="w-full pl-12 pr-12 py-4 rounded-xl border-2 border-gray-300 dark:border-gray-600 bg-white dark:bg-gray-700 text-gray-900 dark:text-white font-medium text-base transition-all duration-200 focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-transparent hover:border-gray-400 dark:hover:border-gray-500"
                                 />
-                                <div class="absolute left-4 top-1/2 -translate-y-1/2 text-gray-400">
+                                <div class="absolute left-4 top-1/2 -translate-y-1/2 text-gray-400 dark:text-gray-500">
                                     <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                                         <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 15v2m-6 4h12a2 2 0 002-2v-6a2 2 0 00-2-2H6a2 2 0 00-2 2v6a2 2 0 002 2zm10-10V7a4 4 0 00-8 0v4h8z" />
                                     </svg>
                                 </div>
                                 <button type="button" 
-                                        class="toggle-password-btn"
+                                        class="absolute inset-y-0 right-0 pr-4 flex items-center text-gray-400 dark:text-gray-500 hover:text-gray-600 dark:hover:text-gray-400 focus:outline-none transition-all duration-200"
                                         onclick="togglePasswordVisibility('password')"
                                         aria-label="Toggle password visibility">
                                     <svg id="eye-icon-password" class="w-5 h-5" fill="none" viewBox="0 0 24 24" stroke="currentColor">
@@ -352,15 +173,15 @@
                                     required 
                                     autocomplete="new-password"
                                     placeholder="{{ __('auth.register.confirm_password') }}"
-                                    class="input-field pr-12"
+                                    class="w-full pl-12 pr-12 py-4 rounded-xl border-2 border-gray-300 dark:border-gray-600 bg-white dark:bg-gray-700 text-gray-900 dark:text-white font-medium text-base transition-all duration-200 focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-transparent hover:border-gray-400 dark:hover:border-gray-500"
                                 />
-                                <div class="absolute left-4 top-1/2 -translate-y-1/2 text-gray-400">
+                                <div class="absolute left-4 top-1/2 -translate-y-1/2 text-gray-400 dark:text-gray-500">
                                     <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                                         <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 12l2 2 4-4m5.618-4.016A11.955 11.955 0 0112 2.944a11.955 11.955 0 01-8.618 3.04A12.02 12.02 0 003 9c0 5.591 3.824 10.29 9 11.622 5.176-1.332 9-6.03 9-11.622 0-1.042-.133-2.052-.382-3.016z" />
                                     </svg>
                                 </div>
                                 <button type="button" 
-                                        class="toggle-password-btn"
+                                        class="absolute inset-y-0 right-0 pr-4 flex items-center text-gray-400 dark:text-gray-500 hover:text-gray-600 dark:hover:text-gray-400 focus:outline-none transition-all duration-200"
                                         onclick="togglePasswordVisibility('password_confirmation')"
                                         aria-label="Toggle password confirmation visibility">
                                     <svg id="eye-icon-password_confirmation" class="w-5 h-5" fill="none" viewBox="0 0 24 24" stroke="currentColor">
@@ -397,7 +218,7 @@
                         @endif
 
                         <div class="mt-6">
-                            <button type="submit" id="submitBtn" class="btn-primary">
+                            <button type="submit" id="submitBtn" class="w-full py-5 px-8 rounded-xl bg-gradient-to-r from-blue-600 to-blue-700 hover:from-blue-700 hover:to-blue-800 text-white font-bold text-lg uppercase tracking-wide transition-all duration-300 transform hover:-translate-y-1 shadow-lg hover:shadow-xl focus:outline-none focus:ring-2 focus:ring-blue-500 focus:ring-offset-2 focus:ring-offset-white dark:focus:ring-offset-gray-800 disabled:opacity-60 disabled:cursor-not-allowed disabled:transform-none">
                                 <span id="buttonText">{{ __('auth.register.register_button') }}</span>
                             </button>
                         </div>

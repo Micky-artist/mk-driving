@@ -26,5 +26,8 @@ return [
     'user_deleted' => 'Umukoresha yasibwe neza',
     'user_status_updated' => 'Uko umukoresha akora byahinduwe neza',
     'back_to_home' => 'Subira Ahabanza',
-    'contact_support' => 'Vugana n\'abafasha'
+    'contact_support' => 'Vugana n\'abafasha',
+    'my_quizzes' => 'Imyitozo Yanjye',
+    'quizzes' => 'Imyitozo',
+    'answered' => 'yasubijwe',
 ];

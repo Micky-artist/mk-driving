@@ -2,153 +2,21 @@
 
 @push('styles')
 <style>
-    /* Override some styles for the login page */
-    :root {
-        --primary-color: #2563eb;
-        --primary-hover: #1d4ed8;
-        --text-primary: #1f2937;
-        --text-secondary: #4b5563;
-        --bg-primary: #ffffff;
-        --bg-secondary: #f9fafb;
-        --border-color: #e5e7eb;
-        --input-bg: #ffffff;
-        --input-border: #e5e7eb;
-        --card-bg: rgba(255, 255, 255, 0.98);
-        --card-border: rgba(255, 255, 255, 0.2);
-        --card-shadow: 0 10px 30px rgba(0, 0, 0, 0.15), 0 0 0 1px rgba(0, 0, 0, 0.05);
-        --card-hover-shadow: 0 20px 40px rgba(0, 0, 0, 0.2), 0 0 0 1px rgba(0, 0, 0, 0.1);
-    }
-    
     /* Ensure the login form is properly spaced below the navbar */
     .login-container {
         min-height: calc(100vh - 5rem); /* Account for navbar height */
         padding-top: 0.5rem; /* Space for fixed navbar */
-    }
-
-    @media (prefers-color-scheme: dark) {
-        :root {
-            --primary-color: #2563eb;
-            --primary-hover: #1d4ed8;
-            --text-primary: #f3f4f6;
-            --text-secondary: #9ca3af;
-            --bg-primary: #0f172a;
-            --bg-secondary: #1e293b;
-            --border-color: #334155;
-            --input-bg: #1e293b;
-            --input-border: #334155;
-            --card-bg: rgba(30, 41, 59, 0.9);
-            --card-border: rgba(255, 255, 255, 0.1);
-            --card-shadow: 0 10px 30px rgba(0, 0, 0, 0.3), 0 0 0 1px rgba(255, 255, 255, 0.05);
-            --card-hover-shadow: 0 20px 40px rgba(0, 0, 0, 0.4), 0 0 0 1px rgba(255, 255, 255, 0.1);
-        }
-    }
-
-    .gradient-bg {
-        background: linear-gradient(135deg, var(--bg-primary) 0%, var(--bg-secondary) 100%);
-        min-height: 100vh;
-    }
-    
-    .login-card {
-        background: var(--card-bg);
-        border-radius: 16px;
-        box-shadow: var(--card-shadow);
-        border: 1px solid var(--card-border);
-        transform: translateZ(0);
-        transition: all 0.4s cubic-bezier(0.4, 0, 0.2, 1);
-        overflow: hidden;
-        backdrop-filter: blur(10px);
-    }
-    
-    .login-card:hover {
-        transform: translateY(-4px) translateZ(0);
-        box-shadow: var(--card-hover-shadow);
-    }
-    
-    .input-field:focus ~ .input-icon,
-    .input-field:not(:placeholder-shown) ~ .input-icon {
-        color: var(--primary-color);
-    }
-    
-    .input-field {
-        width: 100%;
-        padding: 1.25rem 1rem 1.25rem 4rem;
-        border-radius: 1rem;
-        border: 2px solid var(--input-border);
-        background-color: var(--input-bg);
-        color: var(--text-primary);
-        font-weight: 500;
-        font-size: 1rem;
-        transition: all 0.2s ease-out;
-        height: 60px;
-    }
-    
-    .input-field:focus {
-        transform: translateY(-1px);
-        box-shadow: 0 0 0 3px rgba(37, 99, 235, 0.2);
-        border-color: var(--primary-color);
-        outline: none;
-    }
-    
-    .btn-primary {
-        width: 100%;
-        padding: 1.25rem 2rem;
-        border-radius: 0.75rem;
-        background: linear-gradient(135deg, #2563eb 0%, #1d4ed8 100%);
-        color: white;
-        font-weight: 700;
-        font-size: 1.125rem;
-        letter-spacing: 0.5px;
-        text-transform: uppercase;
-        border: 2px solid rgba(255, 255, 255, 0.2);
-        box-shadow: 0 10px 20px -5px rgba(37, 99, 235, 0.3);
-        transition: all 0.3s ease-out;
-        cursor: pointer;
-    }
-    
-    .btn-primary:hover {
-        transform: translateY(-2px);
-        box-shadow: 0 15px 25px -5px rgba(37, 99, 235, 0.4);
-    }
-    
-    .btn-primary:active {
-        transform: translateY(1px);
-        box-shadow: 0 5px 15px rgba(0, 0, 0, 0.2);
-    }
-    
-    /* Text colors */
-    .text-gray-900 {
-        color: var(--text-primary);
-    }
-    
-    .text-gray-600 {
-        color: var(--text-secondary);
-    }
-    
-    /* Remember me checkbox */
-    .form-checkbox {
-        background-color: var(--input-bg);
-        border-color: var(--border-color);
-    }
-    
-    /* Links */
-    a {
-        color: var(--primary-color);
-        transition: color 0.2s ease;
-    }
-    
-    a:hover {
-        color: var(--primary-hover);
     }
 </style>
 @endpush
 
 @section('content')
 @section('content')
-<div class="w-full min-h-screen flex flex-col relative overflow-hidden gradient-bg login-container py-8">
+<div class="w-full min-h-screen flex flex-col relative overflow-hidden bg-gradient-to-br from-white to-gray-50 dark:from-gray-900 dark:to-gray-800 login-container py-8">
     
     <div class="flex-grow flex items-center justify-center px-1 relative z-10">
         <div class="w-full max-w-md mx-auto">
-            <div class="login-card rounded-2xl p-8">
+            <div class="bg-white/95 dark:bg-gray-800/95 backdrop-blur-lg rounded-2xl p-8 shadow-xl dark:shadow-2xl border border-white/20 dark:border-gray-700 hover:shadow-2xl dark:hover:shadow-3xl transition-all duration-300 hover:-translate-y-1">
                         <div class="text-center pb-4">
                             <div class="flex justify-center mb-6">
                                 <a href="{{ route('home', ['locale' => app()->getLocale()]) }}" class="flex items-center space-x-1">
@@ -159,7 +27,7 @@
                             <h1 class="text-4xl font-extrabold text-gray-900 dark:text-white mb-3">
                                 {{ __('auth.login.title') }}
                             </h1>
-                            <p class="text-gray-600 text-base font-medium dark:text-gray-300">
+                            <p class="text-gray-600 dark:text-gray-300 text-base font-medium">
                                 {{ __('auth.login.subtitle') }}
                             </p>
                         </div>
@@ -226,9 +94,9 @@
                                             autofocus
                                             autocomplete="username"
                                             placeholder="{{ __('auth.login.email') }}"
-                                            class="input-field pl-12"
+                                            class="w-full pl-12 pr-4 py-4 rounded-xl border-2 border-gray-300 dark:border-gray-600 bg-white dark:bg-gray-700 text-gray-900 dark:text-white font-medium text-base transition-all duration-200 focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-transparent hover:border-gray-400 dark:hover:border-gray-500"
                                         >
-                                        <div class="absolute left-4 top-1/2 -translate-y-1/2 text-gray-400">
+                                        <div class="absolute left-4 top-1/2 -translate-y-1/2 text-gray-400 dark:text-gray-500">
                                             <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg">
                                                 <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M16 12a4 4 0 10-8 0 4 4 0 008 0zm0 0v1.5a2.5 2.5 0 005 0V12a9 9 0 10-9 9m4.5-1.206a8.959 8.959 0 01-4.5 1.207"></path>
                                             </svg>
@@ -250,9 +118,9 @@
                                                 required
                                                 autocomplete="current-password"
                                                 placeholder="{{ __('auth.login.password') }}"
-                                                class="input-field pl-12 pr-12"
+                                                class="w-full pl-12 pr-12 py-4 rounded-xl border-2 border-gray-300 dark:border-gray-600 bg-white dark:bg-gray-700 text-gray-900 dark:text-white font-medium text-base transition-all duration-200 focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-transparent hover:border-gray-400 dark:hover:border-gray-500"
                                             >
-                                            <div class="absolute left-4 top-1/2 -translate-y-1/2 text-gray-400">
+                                            <div class="absolute left-4 top-1/2 -translate-y-1/2 text-gray-400 dark:text-gray-500">
                                                 <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg">
                                                     <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 15v2m-6 4h12a2 2 0 002-2v-6a2 2 0 00-2-2H6a2 2 0 00-2 2v6a2 2 0 002 2zm10-10V7a4 4 0 00-8 0v4h8z"></path>
                                                 </svg>
@@ -260,7 +128,7 @@
                                         <button 
                                             type="button" 
                                             onclick="togglePasswordVisibility()" 
-                                            class="absolute inset-y-0 right-0 pr-4 flex items-center text-gray-400 hover:text-gray-700 focus:outline-none transition-all duration-200" 
+                                            class="absolute inset-y-0 right-0 pr-4 flex items-center text-gray-400 dark:text-gray-500 hover:text-gray-600 dark:hover:text-gray-400 focus:outline-none transition-all duration-200" 
                                             tabindex="-1"
                                             aria-label="Toggle password visibility"
                                         >
@@ -285,7 +153,7 @@
                                                 id="remember_me" 
                                                 type="checkbox" 
                                                 name="remember" 
-                                                class="h-5 w-5 text-[#2563eb] focus:ring-[#2563eb] border-2 border-gray-300 rounded-lg transition-all duration-200 focus:ring-2 focus:ring-offset-2 focus:ring-offset-white cursor-pointer"
+                                                class="h-5 w-5 text-blue-600 focus:ring-blue-500 border-2 border-gray-300 dark:border-gray-600 rounded-lg transition-all duration-200 focus:ring-2 focus:ring-offset-2 focus:ring-offset-white dark:focus:ring-offset-gray-800 cursor-pointer"
                                             >
                                         </div>
                                         <label for="remember_me" class="ml-3 block text-sm font-medium text-gray-700 dark:text-gray-300 cursor-pointer hover:text-gray-900 dark:hover:text-white transition-colors">
@@ -296,7 +164,7 @@
                                     <div class="text-right">
                                         <a 
                                             href="{{ route('password.request', ['locale' => app()->getLocale()]) }}" 
-                                            class="text-sm font-semibold text-[#2563eb] hover:text-[#1d4ed8] hover:underline transition-colors"
+                                            class="text-sm font-semibold text-blue-600 dark:text-blue-400 hover:text-blue-800 dark:hover:text-blue-300 hover:underline transition-colors"
                                         >
                                             {{ __('auth.login.forgot_password') }}
                                         </a>
@@ -304,7 +172,7 @@
                                 </div>
 
                                 <div>
-                                    <button type="submit" class="btn-primary">
+                                    <button type="submit" class="w-full py-5 px-8 rounded-xl bg-gradient-to-r from-blue-600 to-blue-700 hover:from-blue-700 hover:to-blue-800 text-white font-bold text-lg uppercase tracking-wide transition-all duration-300 transform hover:-translate-y-1 shadow-lg hover:shadow-xl focus:outline-none focus:ring-2 focus:ring-blue-500 focus:ring-offset-2 focus:ring-offset-white dark:focus:ring-offset-gray-800">
                                     <span class="flex items-center justify-center">
                                         <span class="login-button-text">{{ __('auth.login.login_button') }}</span>
                                         <svg class="animate-spin -mr-1 ml-2 h-4 w-4 text-white hidden" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24">

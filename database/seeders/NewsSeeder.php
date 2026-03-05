@@ -30,7 +30,7 @@ class NewsSeeder extends Seeder
             [
                 'title' => [
                     'en' => 'Welcome to MK Driving School!',
-                    'rw' => 'Murakaza neza muri MK Driving'
+                    'rw' => 'Murakaza neza muri MK Driving School'
                 ],
                 'content' => [
                     'en' => "Welcome to MK Driving School. Your journey to safe driving starts here! You can practice any day, enter leaderboards, and be encouraged by others to learn and pass fast.",

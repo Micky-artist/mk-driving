@@ -25,6 +25,10 @@
         <exclude name="Generic.WhiteSpace.ScopeIndent"/>
         <exclude name="Generic.WhiteSpace.DisallowSpaceIndent"/>
         <exclude name="Generic.WhiteSpace.LanguageConstructSpacing"/>
+        <exclude name="Squiz.WhiteSpace.ObjectOperatorSpacing"/>
+        <exclude name="Generic.Functions.FunctionCallArgumentSpacing"/>
+        <exclude name="Generic.Functions.OpeningFunctionBraceBsdAllman"/>
+        <exclude name="Generic.WhiteSpace.FunctionSpacing"/>
     </rule>
 
     <!-- Only show critical issues -->
@@ -42,7 +46,16 @@
     
     <!-- Disable all whitespace and spacing related rules -->
     <rule ref="Squiz.WhiteSpace">
-        <exclude name="Squiz.WhiteSpace.*"/>
+        <exclude name="Squiz.WhiteSpace.ScopeClosingBrace"/>
+        <exclude name="Squiz.WhiteSpace.FunctionSpacing"/>
+        <exclude name="Squiz.WhiteSpace.MemberVarSpacing"/>
+        <exclude name="Squiz.WhiteSpace.OperatorSpacing"/>
+        <exclude name="Squiz.WhiteSpace.SemicolonSpacing"/>
+        <exclude name="Squiz.WhiteSpace.CastSpacing"/>
+        <exclude name="Squiz.WhiteSpace.LanguageConstructSpacing"/>
+        <exclude name="Squiz.WhiteSpace.ControlStructureSpacing"/>
+        <exclude name="Squiz.WhiteSpace.SuperfluousWhitespace"/>
+        <exclude name="Squiz.WhiteSpace.ObjectOperatorSpacing"/>
     </rule>
     <rule ref="PSR2.Classes.ClassDeclaration">
         <exclude name="PSR2.Classes.ClassDeclaration.CloseBraceAfterBody"/>

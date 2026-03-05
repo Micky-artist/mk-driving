@@ -411,7 +411,7 @@ $isCurrentPlan = $plan['is_current'] ?? false;
         get momoCode() {
             // Format: *182*8*1*{phone}*{amount}#
             const amount = Math.floor(parseFloat(this.amount));
-            return `*182*8*1*${this.momoPhoneNumber}*${amount}#`;
+            return `*182*1*1*${this.momoPhoneNumber}*${amount}#`;
         },
     
         async submitPayment() {
@@ -602,7 +602,7 @@ $isCurrentPlan = $plan['is_current'] ?? false;
                             <div class="text-center sm:text-right">
                                 <div class="text-sm font-medium text-gray-600 dark:text-gray-400">
                                     {{ __('payment.pay_to') }}</div>
-                                <div class="text-lg font-bold text-blue-600 dark:text-blue-400">MS Innovation Lab Ltd
+                                <div class="text-lg font-bold text-blue-600 dark:text-blue-400">Paul
                                 </div>
                             </div>
                         </div>

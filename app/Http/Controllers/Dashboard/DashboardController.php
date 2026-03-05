@@ -250,6 +250,9 @@ class DashboardController extends Controller
             'average_score' => $readinessAverageScore, // Use the same calculation as progress UI
         ];
         
+        // Calculate progress data for chart
+        $progressData = $this->calculateProgressData($completedQuizzes);
+        
         return view('dashboard.index', [
             'user' => $user,
             'currentSubscriptions' => $currentSubscriptions,
@@ -261,6 +264,7 @@ class DashboardController extends Controller
             'completedQuizzes' => $completedQuizzes,
             'stats' => $stats,
             'readinessData' => $readinessData,
+            'progressData' => $progressData,
             'activeRoute' => 'dashboard',
         ]);
     }
@@ -428,6 +432,46 @@ class DashboardController extends Controller
         return response()->json(['success' => true]);
     }
     
+    /**
+     * Calculate progress data for chart
+     */
+    private function calculateProgressData($completedQuizzes): array
+    {
+        $scores = [];
+        $labels = [];
+        $averages = [];
+        $quizTitles = [];
+        $cumulativeSum = 0;
+        $count = 0;
+
+        // Get recent completed quizzes (up to 10 for chart)
+        $recentQuizzes = $completedQuizzes
+            ->sortByDesc('completed_at')
+            ->take(10)
+            ->reverse(); // Reverse to show chronological order
+
+        foreach ($recentQuizzes as $quiz) {
+            $score = $quiz->score ?? $this->calculateScoreFromAnswers($quiz->answers);
+            
+            $scores[] = $score;
+            $labels[] = $quiz->completed_at?->format('M j') ?? 'Unknown';
+            $quizTitles[] = $quiz->quiz->title ?? 'Quiz';
+            
+            // Calculate cumulative average
+            $cumulativeSum += $score;
+            $count++;
+            $averages[] = round($cumulativeSum / $count, 1);
+        }
+
+        return [
+            'has_data' => count($scores) > 0,
+            'scores' => $scores,
+            'labels' => $labels,
+            'averages' => $averages,
+            'quiz_titles' => $quizTitles,
+        ];
+    }
+
     /**
      * Calculate score percentage from answers JSON
      */

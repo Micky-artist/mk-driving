@@ -1,6 +1,6 @@
 @props(['showUserStats' => false])
 
-<nav class="w-full bg-[#2563eb] dark:bg-blue-900 shadow-lg z-50 overflow-hidden md:overflow-visible md:fixed transition-colors duration-200"
+<nav class="w-full bg-blue-800 dark:bg-blue-900 shadow-lg z-50 px-2 overflow-hidden md:overflow-visible md:fixed transition-colors duration-200"
     x-data="navbarComponent()" <div class="w-full max-w-full md:max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 md:ml-1 md:mr-1">
     <div class="flex items-center justify-between h-16">
         <!-- Mobile menu button (left on mobile, hidden on desktop) -->
@@ -25,7 +25,7 @@
                     onerror="this.onerror=null; this.src='{{ asset('images/logo.png') }}'">
                 <div class="ml-1">
                     <span class="text-xl font-bold text-white leading-none">
-                        MK DRIVING
+                        MK Driving School
                     </span>
                 </div>
             </a>
@@ -134,22 +134,15 @@
             @php
                 $navLinks = [
                     [
-                        'route' => 'home',
-                        'text' => '<i class="fas fa-home mr-2"></i>' . __('navigation.home'),
-                        'routes' => ['home'],
-                        'fragment' => null,
-                        'is_home' => true,
-                    ],
-                    [
                         'route' => 'dashboard',
-                        'text' => '<i class="fas fa-clipboard-list mr-2"></i>' . __('navigation.quizzes'),
+                        'text' => __('navigation.quizzes'),
                         'routes' => ['dashboard', 'dashboard.progress', 'dashboard.quizzes.*', 'guest-quiz.*'],
                         'fragment' => null,
                         'is_home' => false,
                     ],
                     [
                         'route' => 'forum.index',
-                        'text' => '<i class="fas fa-comments mr-2"></i>' . __('forum.page_title'),
+                        'text' => __('forum.page_title'),
                         'routes' => ['forum.*'],
                         'fragment' => null,
                         'is_home' => false,
@@ -157,14 +150,14 @@
                     [
                         'route' => 'news.index',
                         'route_params' => ['locale' => app()->getLocale()],
-                        'text' => '<i class="fas fa-newspaper mr-2"></i>' . __('navigation.news'),
+                        'text' => __('navigation.news'),
                         'routes' => ['news.*'],
                         'fragment' => null,
                         'is_home' => false,
                     ],
                     [
                         'route' => 'plans',
-                        'text' => '<i class="fas fa-gem mr-2"></i>' . __('navigation.pricing_plans'),
+                        'text' => __('navigation.pricing_plans'),
                         'routes' => ['plans'],
                         'fragment' => null,
                         'is_home' => false,
@@ -192,8 +185,8 @@
                         }
                     }
                     $classes = $isActive
-                        ? 'text-white font-semibold border-white'
-                        : 'text-blue-200 hover:text-white hover:border-blue-200 border-transparent';
+                        ? 'text-white font-semibold bg-blue-600/30 rounded-lg'
+                        : 'text-white hover:text-white/90 hover:bg-white/10 hover:rounded-lg border-transparent';
                 @endphp
                 @php
                     $routeName = $link['route'];
@@ -206,7 +199,7 @@
                     }
                 @endphp
                 <a href="{{ $link['route'] === '#' ? '#' : route($routeName, $routeParams) }}{{ $link['fragment'] ? '#' . $link['fragment'] : '' }}"
-                    class="{{ $classes }} inline-flex items-center px-3 pt-1 border-b-2 text-base font-semibold transition-colors duration-200"
+                    class="{{ $classes }} inline-flex items-center px-3 py-2 text-base font-semibold transition-colors duration-200"
                     @if ($link['fragment']) x-data="{}" 
                             @click="$event.preventDefault(); 
                                    document.querySelector('#{{ $link['fragment'] }}').scrollIntoView({ behavior: 'smooth' });
@@ -373,6 +366,23 @@
                                     </a>
                                 @endcan
 
+                                <!-- Theme Switcher -->
+                                <div class="group flex items-center px-4 py-3 hover:bg-gray-50 dark:hover:bg-gray-700/50 transition-colors duration-150">
+                                    <div class="flex items-center justify-center w-8 h-8 rounded-full bg-purple-500/10 group-hover:bg-purple-500/20 transition-colors duration-200 mr-3 flex-shrink-0">
+                                        <i class="fas fa-moon text-purple-500 text-sm dark:hidden"></i>
+                                        <i class="fas fa-sun text-purple-500 text-sm hidden dark:block"></i>
+                                    </div>
+                                    <div class="flex items-center justify-between flex-1">
+                                        <span class="text-sm font-medium text-gray-900 dark:text-gray-100">
+                                            {{ __('navigation.theme') }}
+                                        </span>
+                                        <button @click.stop="window.navbarComponent.toggleTheme()" 
+                                                class="relative inline-flex h-6 w-11 items-center rounded-full bg-gray-200 dark:bg-purple-600 transition-colors duration-200 focus:outline-none focus:ring-2 focus:ring-purple-500 focus:ring-offset-2">
+                                            <span class="inline-block h-4 w-4 transform rounded-full bg-white transition-transform duration-200 translate-x-1 dark:translate-x-6"></span>
+                                        </button>
+                                    </div>
+                                </div>
+
                                 <!-- Logout -->
                                 <form method="POST" action="{{ route('logout', ['locale' => app()->getLocale()]) }}">
                                     @csrf
@@ -393,8 +403,8 @@
             @else
                 <div class="flex items-center space-x-3">
                     <a href="{{ route('login', app()->getLocale()) }}"
-                        class="text-blue-200 hover:text-white hover:border-blue-200 border-transparent border-b-2 px-3 pt-1 text-base font-semibold transition-colors duration-200">
-                        <i class="fas fa-sign-in-alt mr-2"></i>{{ __('navigation.login') }}
+                        class="text-white hover:text-white/90 hover:border-white/80 border-transparent border-b-2 px-3 pt-1 text-base font-semibold transition-colors duration-200">
+                        <i class="fas fa-sign-in-alt"></i>{{ __('navigation.login') }}
                     </a>
                 </div>
             @endauth
@@ -455,7 +465,7 @@
                         }
                         $activeClasses = $isActive
                             ? 'bg-blue-50 dark:bg-blue-900/30 border-blue-500 text-blue-700 dark:text-blue-300'
-                            : 'border-transparent text-gray-700 dark:text-gray-300 hover:bg-gray-100 dark:hover:bg-gray-700 hover:border-gray-300 dark:hover:border-gray-600';
+                            : 'border-transparent text-white hover:bg-gray-100 hover:text-gray-900 dark:hover:bg-gray-700 dark:hover:text-gray-100 hover:border-gray-300 dark:hover:border-gray-600';
                     @endphp
                     <a href="{{ $routeName !== '#' ? route($routeName, $routeParams) : '#' }}{{ $link['fragment'] ? '#' . $link['fragment'] : '' }}"
                         class="group flex items-center px-4 py-3 text-base font-semibold rounded-lg transition-colors duration-150 {{ $activeClasses }}"
@@ -485,12 +495,12 @@
                             $isAdminMobileActive = request()->routeIs('admin.*');
                             $adminMobileClasses = $isAdminMobileActive
                                 ? 'bg-orange-50 dark:bg-orange-900/30 border-orange-500 text-orange-700 dark:text-orange-300'
-                                : 'border-transparent text-gray-700 dark:text-gray-300 hover:bg-gray-100 dark:hover:bg-gray-700 hover:border-gray-300 dark:hover:border-gray-600';
+                                : 'border-transparent text-white hover:bg-gray-100 hover:text-gray-900 dark:hover:bg-gray-700 dark:hover:text-gray-100 hover:border-gray-300 dark:hover:border-gray-600';
                         @endphp
                         <a href="{{ route('admin.portal', ['locale' => app()->getLocale()]) }}"
                             class="group flex items-center px-4 py-3 text-base font-semibold rounded-lg transition-colors duration-150 {{ $adminMobileClasses }}"
                             @click="mobileMenuOpen = false">
-                            <span class="flex-1"><i class="fas fa-cog mr-2"></i>{{ __('navigation.admin') }}</span>
+                            <span class="flex-1">{{ __('navigation.admin') }}</span>
                             @if ($isAdminMobileActive)
                                 <svg class="h-4 w-4 text-orange-600" fill="currentColor" viewBox="0 0 20 20">
                                     <path fill-rule="evenodd"
@@ -514,7 +524,7 @@
                                 'px-3 py-2 text-sm rounded-md font-medium transition-all duration-200 flex items-center w-full text-left',
                                 $isCurrent
                                     ? 'bg-blue-100 text-blue-800 dark:bg-blue-900/50 dark:text-blue-100'
-                                    : 'bg-gray-100 text-gray-700 hover:bg-gray-200 dark:bg-gray-700 dark:text-gray-300 dark:hover:bg-gray-600',
+                                    : 'text-white hover:bg-gray-200 hover:text-gray-900 dark:bg-gray-700 dark:hover:bg-gray-600 dark:hover:text-gray-100',
                             ];
 
                             // Build URL to stay on current page with new locale
@@ -552,16 +562,31 @@
                             {{ strtoupper(substr(Auth::user()->name, 0, 1)) }}
                         </div>
                         <div class="ml-3 overflow-hidden">
-                            <p class="text-sm font-medium text-gray-900 dark:text-white truncate">
+                            <p class="text-sm font-medium text-white truncate">
                                 {{ Auth::user()->name }}
                             </p>
-                            <p class="text-xs text-gray-500 dark:text-gray-400 truncate">
+                            <p class="text-xs text-gray-300 truncate">
                                 {{ Auth::user()->email }}
                             </p>
                         </div>
                     </a>
 
                     <div class="space-y-2">
+                        <!-- Theme Switcher -->
+                        <button @click="window.navbarComponent.toggleTheme(); mobileMenuOpen = false"
+                                class="w-full flex items-center justify-between px-4 py-3 text-sm font-medium text-gray-900 dark:text-gray-100 hover:bg-gray-50 dark:hover:bg-gray-700 rounded-lg transition-colors duration-150">
+                            <div class="flex items-center">
+                                <div class="flex items-center justify-center w-8 h-8 rounded-full bg-purple-500/10 hover:bg-purple-500/20 transition-colors duration-200 mr-3 flex-shrink-0">
+                                    <i class="fas fa-moon text-purple-500 text-sm dark:hidden"></i>
+                                    <i class="fas fa-sun text-purple-500 text-sm hidden dark:block"></i>
+                                </div>
+                                <span>{{ __('navigation.theme') }}</span>
+                            </div>
+                            <div class="relative inline-flex h-6 w-11 items-center rounded-full bg-gray-200 dark:bg-purple-600 transition-colors duration-200">
+                                <span class="inline-block h-4 w-4 transform rounded-full bg-white transition-transform duration-200 translate-x-1 dark:translate-x-6"></span>
+                            </div>
+                        </button>
+                        
                         <!-- Logout -->
                         <form method="POST" action="{{ route('logout', ['locale' => app()->getLocale()]) }}"
                             id="mobile-logout-form" x-data="{ submitting: false }"
@@ -599,7 +624,7 @@
                             {{ __('navigation.login') }}
                         </a>
                         <a href="{{ route('register', ['locale' => app()->getLocale()]) }}"
-                            class="w-full flex items-center justify-center px-4 py-2 border border-gray-300 dark:border-gray-600 rounded-lg shadow-sm text-sm font-medium text-gray-700 dark:text-gray-300 bg-white dark:bg-gray-800 hover:bg-gray-50 dark:hover:bg-gray-700 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-blue-500 transition-colors duration-150">
+                            class="w-full flex items-center justify-center px-4 py-2 border border-white/30 rounded-lg shadow-sm text-sm font-medium text-white bg-white/10 hover:bg-white/20 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-blue-500 transition-colors duration-150">
                             {{ __('navigation.register') }}
                         </a>
                     </div>
@@ -652,10 +677,44 @@
                     console.error('Error fetching user stats:', error);
                 }
             },
+            toggleTheme() {
+                console.log('toggleTheme called');
+                // Toggle dark mode class on html element
+                document.documentElement.classList.toggle('dark');
+                
+                // Save preference to localStorage
+                const isDark = document.documentElement.classList.contains('dark');
+                localStorage.setItem('theme', isDark ? 'dark' : 'light');
+                
+                console.log('Theme toggled to:', isDark ? 'dark' : 'light');
+                
+                // Update meta theme-color for mobile browsers
+                const metaThemeColor = document.querySelector('meta[name="theme-color"]');
+                if (metaThemeColor) {
+                    metaThemeColor.content = isDark ? '#1e3a8a' : '#1e40af'; // blue-800 : blue-600
+                }
+            },
             navigateTo(url) {
                 window.location.href = url;
             },
             init() {
+                // Initialize theme from localStorage
+                const savedTheme = localStorage.getItem('theme');
+                const prefersDark = window.matchMedia('(prefers-color-scheme: dark)').matches;
+                
+                if (savedTheme === 'dark' || (!savedTheme && prefersDark)) {
+                    document.documentElement.classList.add('dark');
+                } else {
+                    document.documentElement.classList.remove('dark');
+                }
+                
+                // Set initial meta theme-color
+                const isDark = document.documentElement.classList.contains('dark');
+                const metaThemeColor = document.querySelector('meta[name="theme-color"]');
+                if (metaThemeColor) {
+                    metaThemeColor.content = isDark ? '#1e3a8a' : '#1e40af';
+                }
+
                 // Delay fetchUserStats to ensure Alpine is fully initialized
                 this.$nextTick(() => {
                     setTimeout(() => {
@@ -670,7 +729,15 @@
                         ...event.detail
                     };
                 });
+                
+                // Expose component to window for global access
+                window.navbarComponent = this;
             }
         }
     }
+    
+    // Also expose to window globally for immediate access
+    document.addEventListener('alpine:initialized', () => {
+        // Component will be available after Alpine initializes
+    });
 </script>

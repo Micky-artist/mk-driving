@@ -2,141 +2,18 @@
 
 @push('styles')
 <style>
-    :root {
-        --primary-color: #2563eb;
-        --primary-hover: #1d4ed8;
-        --text-primary: #1f2937;
-        --text-secondary: #4b5563;
-        --bg-primary: #ffffff;
-        --bg-secondary: #f9fafb;
-        --border-color: #e5e7eb;
-        --input-bg: #ffffff;
-        --input-border: #e5e7eb;
-        --card-bg: rgba(255, 255, 255, 0.98);
-        --card-border: rgba(255, 255, 255, 0.2);
-        --card-shadow: 0 10px 30px rgba(0, 0, 0, 0.15), 0 0 0 1px rgba(0, 0, 0, 0.05);
-        --card-hover-shadow: 0 20px 40px rgba(0, 0, 0, 0.2), 0 0 0 1px rgba(0, 0, 0, 0.1);
-    }
-    
-    @media (prefers-color-scheme: dark) {
-        :root {
-            --primary-color: #3b82f6;
-            --primary-hover: #2563eb;
-            --text-primary: #f3f4f6;
-            --text-secondary: #9ca3af;
-            --bg-primary: #0f172a;
-            --bg-secondary: #1e293b;
-            --border-color: #334155;
-            --input-bg: #1e293b;
-            --input-border: #334155;
-            --card-bg: rgba(30, 41, 59, 0.9);
-            --card-border: rgba(255, 255, 255, 0.1);
-            --card-shadow: 0 10px 30px rgba(0, 0, 0, 0.3), 0 0 0 1px rgba(255, 255, 255, 0.05);
-            --card-hover-shadow: 0 20px 40px rgba(0, 0, 0, 0.4), 0 0 0 1px rgba(255, 255, 255, 0.1);
-        }
-    }
-
-    .gradient-bg {
-        background: linear-gradient(135deg, var(--bg-primary) 0%, var(--bg-secondary) 100%);
-        min-height: 100vh;
-    }
-    
     .auth-card {
-        background: var(--card-bg);
-        border-radius: 16px;
-        box-shadow: var(--card-shadow);
-        border: 1px solid var(--card-border);
-        transform: translateZ(0);
-        transition: all 0.4s cubic-bezier(0.4, 0, 0.2, 1);
-    }
-
-    .auth-card:hover {
-        box-shadow: var(--card-hover-shadow);
-    }
-
-    .auth-logo {
-        display: inline-block;
-        transition: transform 0.3s ease;
-    }
-
-    .auth-logo:hover {
-        transform: translateY(-2px);
-    }
-
-    .input-field {
+        max-width: 28rem;
         width: 100%;
-        padding: 0.75rem 1rem 0.75rem 3rem;
-        border-radius: 0.5rem;
-        border: 1px solid var(--input-border);
-        background-color: var(--input-bg);
-        color: var(--text-primary);
-        font-size: 0.9375rem;
-        line-height: 1.25rem;
-        transition: all 0.2s ease-in-out;
-    }
-
-    .input-field:focus {
-        outline: none;
-        border-color: var(--primary-color);
-        box-shadow: 0 0 0 3px rgba(3, 105, 161, 0.2);
-    }
-
-    .input-icon {
-        color: var(--text-secondary);
-    }
-
-    .btn-primary {
-        display: inline-flex;
-        align-items: center;
-        justify-content: center;
-        width: 100%;
-        padding: 0.75rem 1.5rem;
-        border-radius: 0.5rem;
-        background: linear-gradient(135deg, var(--primary-color) 0%, var(--primary-hover) 100%);
-        color: white;
-        font-weight: 500;
-        font-size: 0.9375rem;
-        line-height: 1.25rem;
-        text-align: center;
-        transition: all 0.2s ease-in-out;
-        border: none;
-        cursor: pointer;
-    }
-
-    .btn-primary:hover {
-        transform: translateY(-1px);
-        box-shadow: 0 4px 12px rgba(3, 105, 161, 0.2);
-    }
-
-    .btn-primary:active {
-        transform: translateY(0);
-    }
-
-    .back-to-login {
-        display: inline-flex;
-        align-items: center;
-        color: var(--primary-color);
-        font-size: 0.875rem;
-        font-weight: 500;
-        text-decoration: none;
-        transition: color 0.2s ease-in-out;
-    }
-
-    .back-to-login:hover {
-        color: var(--primary-hover);
-    }
-
-    .back-to-login svg {
-        margin-right: 0.5rem;
     }
 </style>
 @endpush
 
 @section('content')
-<div class="w-full min-h-screen flex flex-col relative overflow-hidden gradient-bg">
+<div class="w-full min-h-screen flex flex-col relative overflow-hidden bg-gradient-to-br from-white to-gray-50 dark:from-gray-900 dark:to-gray-800">
     <div class="flex-grow flex items-center justify-center px-1 relative z-10 py-8">
         <div class="w-full max-w-md mx-4">
-            <div class="auth-card p-8 sm:p-10">
+            <div class="bg-white/95 dark:bg-gray-800/95 backdrop-blur-lg rounded-2xl p-8 sm:p-10 shadow-xl dark:shadow-2xl border border-white/20 dark:border-gray-700 hover:shadow-2xl dark:hover:shadow-3xl transition-all duration-300 hover:-translate-y-1 auth-card">
                 <div class="text-center pb-4">
                     <div class="flex justify-center mb-6">
                         <a href="{{ route('home', app()->getLocale()) }}" class="auth-logo">
@@ -182,7 +59,7 @@
                                 id="email" 
                                 name="email" 
                                 value="{{ old('email', $request->email) }}" 
-                                class="input-field" 
+                                class="w-full px-4 py-4 rounded-xl border-2 border-gray-300 dark:border-gray-600 bg-white dark:bg-gray-700 text-gray-900 dark:text-white font-medium text-base transition-all duration-200 focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-transparent hover:border-gray-400 dark:hover:border-gray-500" 
                                 placeholder="{{ __('auth.reset_password_page.email_placeholder') }}" 
                                 required 
                                 readonly
@@ -203,7 +80,7 @@
                                     type="password"
                                     id="password" 
                                     name="password" 
-                                    class="input-field pl-12 pr-12" 
+                                    class="w-full pl-12 pr-12 py-4 rounded-xl border-2 border-gray-300 dark:border-gray-600 bg-white dark:bg-gray-700 text-gray-900 dark:text-white font-medium text-base transition-all duration-200 focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-transparent hover:border-gray-400 dark:hover:border-gray-500" 
                                     placeholder="{{ __('auth.reset_password_page.new_password_placeholder') }}" 
                                     required 
                                     autofocus
@@ -262,7 +139,7 @@
                                 type="password" 
                                 id="password_confirmation" 
                                 name="password_confirmation" 
-                                class="input-field" 
+                                class="w-full px-4 py-4 rounded-xl border-2 border-gray-300 dark:border-gray-600 bg-white dark:bg-gray-700 text-gray-900 dark:text-white font-medium text-base transition-all duration-200 focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-transparent hover:border-gray-400 dark:hover:border-gray-500" 
                                 placeholder="{{ __('auth.reset_password_page.confirm_password_placeholder') }}" 
                                 required
                             >
@@ -270,7 +147,7 @@
                     </div>
 
                     <div class="pt-2">
-                        <button type="submit" class="btn-primary">
+                        <button type="submit" class="w-full py-5 px-8 rounded-xl bg-gradient-to-r from-blue-600 to-blue-700 hover:from-blue-700 hover:to-blue-800 text-white font-bold text-lg uppercase tracking-wide transition-all duration-300 transform hover:-translate-y-1 shadow-lg hover:shadow-xl focus:outline-none focus:ring-2 focus:ring-blue-500 focus:ring-offset-2 focus:ring-offset-white dark:focus:ring-offset-gray-800 disabled:opacity-60 disabled:cursor-not-allowed disabled:transform-none">
                             {{ __('auth.reset_password_page.submit_button') }}
                             <svg class="w-5 h-5 ml-2 -mr-1" fill="none" stroke="currentColor" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg">
                                 <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M17 8l4 4m0 0l-4 4m4-4H3"></path>

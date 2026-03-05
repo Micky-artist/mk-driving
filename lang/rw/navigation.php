@@ -35,5 +35,6 @@ return [
     'subscriptions' => 'Ibyiyandikisho',
     'manage_account' => 'Gucunga konti',
     'sign_in' => 'Injira',
-    'sign_out' => 'Sohoka'
+    'sign_out' => 'Sohoka',
+    'theme' => 'Theme',
 ];

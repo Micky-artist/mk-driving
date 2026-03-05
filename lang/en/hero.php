@@ -4,7 +4,7 @@ return [
     // Main heading and subheading
     'be_our_guest' => 'Be Our Guest',
     'title' => 'Pass on the first try! You practice exactly like you will be tested',
-    'trust_section_title' => 'Trust MK Driving',
+    'trust_section_title' => 'Trust MK Driving School',
     'driving_test' => 'Provisional test',
     'first_try' => 'on your first try. For real.',
     'subtitle_short' => 'Skip the stress. Practice with 650+ real state-specific, exam‑like questions and clear explanations. 97% pass rate or your money back.',

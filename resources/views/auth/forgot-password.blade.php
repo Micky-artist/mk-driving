@@ -2,211 +2,19 @@
 
 @push('styles')
 <style>
-    :root {
-        --primary-color: #2563eb;
-        --primary-hover: #1d4ed8;
-        --text-primary: #1f2937;
-        --text-secondary: #4b5563;
-        --bg-primary: #ffffff;
-        --bg-secondary: #f9fafb;
-        --border-color: #e5e7eb;
-        --input-bg: #ffffff;
-        --input-border: #e5e7eb;
-        --card-bg: rgba(255, 255, 255, 0.98);
-        --card-border: rgba(255, 255, 255, 0.2);
-        --card-shadow: 0 10px 30px rgba(0, 0, 0, 0.15), 0 0 0 1px rgba(0, 0, 0, 0.05);
-        --card-hover-shadow: 0 20px 40px rgba(0, 0, 0, 0.2), 0 0 0 1px rgba(0, 0, 0, 0.1);
-    }
-    
-    @media (prefers-color-scheme: dark) {
-        :root {
-            --primary-color: #3b82f6;
-            --primary-hover: #2563eb;
-            --text-primary: #f3f4f6;
-            --text-secondary: #9ca3af;
-            --bg-primary: #0f172a;
-            --bg-secondary: #1e293b;
-            --border-color: #334155;
-            --input-bg: #1e293b;
-            --input-border: #334155;
-            --card-bg: rgba(30, 41, 59, 0.9);
-            --card-border: rgba(255, 255, 255, 0.1);
-            --card-shadow: 0 10px 30px rgba(0, 0, 0, 0.3), 0 0 0 1px rgba(255, 255, 255, 0.05);
-            --card-hover-shadow: 0 20px 40px rgba(0, 0, 0, 0.4), 0 0 0 1px rgba(255, 255, 255, 0.1);
-        }
-    }
-
-    .gradient-bg {
-        background: linear-gradient(135deg, var(--bg-primary) 0%, var(--bg-secondary) 100%);
-        min-height: 100vh;
-    }
-    
     .auth-card {
-        background: var(--card-bg);
-        border-radius: 16px;
-        box-shadow: var(--card-shadow);
-        border: 1px solid var(--card-border);
-        transform: translateZ(0);
-        transition: all 0.4s cubic-bezier(0.4, 0, 0.2, 1);
-        overflow: hidden;
-        backdrop-filter: blur(10px);
-    }
-    
-    .auth-card:hover {
-        transform: translateY(-4px) translateZ(0);
-        box-shadow: var(--card-hover-shadow);
-    }
-    
-    .input-field {
-        width: 100%;
-        padding: 1.25rem 1rem 1.25rem 4rem;
-        border-radius: 1rem;
-        border: 2px solid var(--input-border);
-        background-color: var(--input-bg);
-        color: var(--text-primary);
-        font-weight: 500;
-        font-size: 1rem;
-        transition: all 0.2s ease-out;
-        height: 60px;
-    }
-    
-    .input-field:focus {
-        transform: translateY(-1px);
-        box-shadow: 0 0 0 3px rgba(14, 165, 233, 0.2);
-        border-color: var(--primary-color);
-        outline: none;
-    }
-    
-    .btn-primary {
-        width: 100%;
-        padding: 1.25rem 2rem;
-        border-radius: 0.75rem;
-        background: linear-gradient(135deg, var(--primary-color) 0%, var(--primary-hover) 100%);
-        color: white;
-        font-weight: 700;
-        font-size: 1.125rem;
-        letter-spacing: 0.5px;
-        transition: all 0.2s ease-out;
-        border: none;
-        cursor: pointer;
-        display: inline-flex;
-        align-items: center;
-        justify-content: center;
-        text-align: center;
-    }
-    
-    .btn-primary:hover {
-        transform: translateY(-2px);
-        box-shadow: 0 4px 15px rgba(14, 165, 233, 0.3);
-    }
-    
-    .btn-primary:active {
-        transform: translateY(0);
-    }
-    
-    .input-group {
-        position: relative;
-        margin-bottom: 1.5rem;
-    }
-    
-    .input-icon {
-        position: absolute;
-        left: 1rem;
-        top: 50%;
-        transform: translateY(-50%);
-        color: var(--text-secondary);
-        transition: all 0.2s ease-out;
-    }
-    
-    .input-field:focus ~ .input-icon,
-    .input-field:not(:placeholder-shown) ~ .input-icon {
-        color: var(--primary-color);
-    }
-    
-    .auth-logo {
-        transition: all 0.3s ease-out;
-    }
-    
-    .auth-logo:hover {
-        transform: scale(1.05) rotate(-2deg);
-    }
-    
-    .back-to-login {
-        display: inline-flex;
-        align-items: center;
-        color: var(--primary-color);
-        font-weight: 600;
-        transition: all 0.2s ease-out;
-    }
-    
-    .back-to-login:hover {
-        color: var(--primary-hover);
-        transform: translateX(-4px);
-    }
-    
-    .back-to-login svg {
-        margin-right: 8px;
-        transition: transform 0.2s ease-out;
-    }
-    
-    .back-to-login:hover svg {
-        transform: translateX(-4px);
-    }
-    
-    /* Confirmation Dialog Styles */
-    .confirmation-dialog {
-        display: none;
-        position: fixed;
-        top: 0;
-        left: 0;
-        right: 0;
-        bottom: 0;
-        background-color: rgba(0, 0, 0, 0.5);
-        z-index: 50;
-        justify-content: center;
-        align-items: center;
-    }
-    
-    .confirmation-dialog.active {
-        display: flex;
-    }
-    
-    .confirmation-content {
-        background: var(--card-bg);
-        border-radius: 1rem;
-        padding: 2rem;
         max-width: 28rem;
-        width: 90%;
-        box-shadow: var(--card-shadow);
-        border: 1px solid var(--card-border);
-        text-align: center;
-    }
-    
-    .confirmation-icon {
-        width: 4rem;
-        height: 4rem;
-        margin: 0 auto 1.5rem;
-        display: flex;
-        align-items: center;
-        justify-content: center;
-        border-radius: 50%;
-        background-color: rgba(16, 185, 129, 0.1);
-    }
-    
-    .confirmation-icon svg {
-        width: 2.5rem;
-        height: 2.5rem;
-        color: #10b981;
+        width: 100%;
     }
 </style>
 @endpush
 
 @section('content')
 <!-- Confirmation Dialog -->
-<div id="confirmationDialog" class="confirmation-dialog">
-    <div class="confirmation-content">
-        <div class="confirmation-icon">
-            <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+<div id="confirmationDialog" class="fixed inset-0 bg-black/50 z-50 hidden items-center justify-center">
+    <div class="bg-white dark:bg-gray-800 rounded-2xl p-8 max-w-md w-[90%] shadow-xl border border-gray-200 dark:border-gray-700 text-center">
+        <div class="w-16 h-16 mx-auto mb-6 flex items-center justify-center rounded-full bg-green-100 dark:bg-green-900/20">
+            <svg class="w-10 h-10 text-green-600 dark:text-green-400" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke="currentColor">
                 <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M5 13l4 4L19 7" />
             </svg>
         </div>
@@ -216,16 +24,16 @@
         <p class="text-gray-600 dark:text-gray-300 mb-6">
             {{ __('auth.forgot_password_page.dialog_message') }} <span id="sentEmail" class="font-medium text-primary-600 dark:text-primary-400"></span>
         </p>
-        <button onclick="closeConfirmationDialog()" class="btn-primary w-auto px-8">
+        <button onclick="closeConfirmationDialog()" class="w-auto px-8 py-3 rounded-xl bg-gradient-to-r from-blue-600 to-blue-700 hover:from-blue-700 hover:to-blue-800 text-white font-bold text-base transition-all duration-300 transform hover:-translate-y-1 shadow-lg hover:shadow-xl focus:outline-none focus:ring-2 focus:ring-blue-500 focus:ring-offset-2 focus:ring-offset-white dark:focus:ring-offset-gray-800">
             {{ __('auth.forgot_password_page.dialog_button') }}
         </button>
     </div>
 </div>
 
-<div class="w-full min-h-screen flex flex-col relative overflow-hidden gradient-bg">
+<div class="w-full min-h-screen flex flex-col relative overflow-hidden bg-gradient-to-br from-white to-gray-50 dark:from-gray-900 dark:to-gray-800">
     <div class="flex-grow flex items-center justify-center px-1 relative z-10 py-8">
         <div class="w-full max-w-md mx-auto">
-            <div class="auth-card rounded-2xl p-8">
+            <div class="bg-white/95 dark:bg-gray-800/95 backdrop-blur-lg rounded-2xl p-8 shadow-xl dark:shadow-2xl border border-white/20 dark:border-gray-700 hover:shadow-2xl dark:hover:shadow-3xl transition-all duration-300 hover:-translate-y-1 auth-card">
                 <div class="text-center pb-4">
                     <div class="flex justify-center mb-6">
                         <a href="{{ route('home', app()->getLocale()) }}" class="auth-logo">
@@ -277,7 +85,7 @@
                     </div>
 
                     <div class="pt-2">
-                        <button type="submit" class="btn-primary">
+                        <button type="submit" class="w-full py-5 px-8 rounded-xl bg-gradient-to-r from-blue-600 to-blue-700 hover:from-blue-700 hover:to-blue-800 text-white font-bold text-lg uppercase tracking-wide transition-all duration-300 transform hover:-translate-y-1 shadow-lg hover:shadow-xl focus:outline-none focus:ring-2 focus:ring-blue-500 focus:ring-offset-2 focus:ring-offset-white dark:focus:ring-offset-gray-800 disabled:opacity-60 disabled:cursor-not-allowed disabled:transform-none">
                             {{ __('auth.forgot_password_page.submit_button') }}
                             <svg class="w-5 h-5 ml-2 -mr-1" fill="none" stroke="currentColor" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg">
                                 <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M17 8l4 4m0 0l-4 4m4-4H3"></path>
