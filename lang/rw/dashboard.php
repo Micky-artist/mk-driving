@@ -163,7 +163,7 @@ return [
         'recent_quizzes' => 'Ibizamini byashize',
         'no_data' => 'Nta data y\'imyigire ihari',
         'start_quizzes' => 'Tangira imyitozo kugirango ubone urutonde rw\'imyigire yawe',
-    ], 
+    ],
     'available_quizzes' => 'Ibizamini Bihari',
     'questions' => 'ibibazo',
     'completed' => 'Ibyitojwe',
