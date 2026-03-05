@@ -277,7 +277,9 @@
                                         'border-gray-200/60 dark:border-gray-600/60 hover:bg-gradient-to-r hover:from-gray-50 hover:to-gray-100 dark:hover:from-gray-800 dark:hover:to-gray-700':
                                             !
                                             isAnswerSubmitted || (isAnswerSubmitted && !option.is_correct)
-                                    }">
+                                    }"
+                                    @click="handleOptionSelect(option)"
+                                    @touchend="handleOptionSelect(option)">
                                     <div class="flex items-center h-5">
                                         <div class="w-5 h-5 rounded-xl border-2 flex items-center justify-center transition-all duration-200"
                                             :class="{
@@ -418,24 +420,28 @@
                         </template>
 
                         <!-- Feedback section -->
-                        <div x-show="showFeedback" class="mt-4 p-4 rounded-xl transition-all duration-300"
+                        <div class="mt-4 p-4 rounded-xl transition-all duration-300"
                             :class="{
-                                'bg-gradient-to-r from-green-50 to-green-100 dark:from-green-900/20 dark:to-green-800/20 border border-green-200/60 dark:border-green-800/60': isAnswerCorrect,
-                                'bg-gradient-to-r from-red-50 to-red-100 dark:from-red-900/20 dark:to-red-800/20 border border-red-200/60 dark:border-red-800/60':
-                                    !
-                                    isAnswerCorrect &&
-                                    isAnswerSubmitted
+                                'hidden': !showFeedback,
+                                'bg-gradient-to-r from-green-50 to-green-100 dark:from-green-900/20 dark:to-green-800/20 border border-green-200/60 dark:border-green-800/60': isAnswerCorrect && showFeedback,
+                                'bg-gradient-to-r from-red-50 to-red-100 dark:from-red-900/20 dark:to-red-800/20 border border-red-200/60 dark:border-red-800/60': !isAnswerCorrect && isAnswerSubmitted && showFeedback
                             }">
-                            <div x-show="isAnswerCorrect"
-                                class="flex items-center text-green-700 dark:text-green-300">
+                            <div class="flex items-center text-green-700 dark:text-green-300"
+                                :class="{
+                                    'hidden': !isAnswerCorrect || !showFeedback,
+                                    'block': isAnswerCorrect && showFeedback
+                                }">
                                 <svg class="w-5 h-5 mr-2" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                                     <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
                                         d="M5 13l4 4L19 7" />
                                 </svg>
                                 <span x-text="feedbackMessage"></span>
                             </div>
-                            <div x-show="!isAnswerCorrect && isAnswerSubmitted"
-                                class="flex items-center text-red-700 dark:text-red-300">
+                            <div class="flex items-center text-red-700 dark:text-red-300"
+                                :class="{
+                                    'hidden': isAnswerCorrect || !isAnswerSubmitted || !showFeedback,
+                                    'block': !isAnswerCorrect && isAnswerSubmitted && showFeedback
+                                }">
                                 <svg class="w-5 h-5 mr-2" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                                     <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
                                         d="M6 18L18 6M6 6l12 12" />
