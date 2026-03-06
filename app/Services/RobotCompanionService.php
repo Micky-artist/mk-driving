@@ -257,7 +257,8 @@ class RobotCompanionService
             'type' => 'learner_answer',
             'message' => $response['message'],
             'learner_name' => $response['learner_name'],
-            'timestamp' => now()->diffForHumans()
+            'timestamp' => now()->timestamp,
+            'timestamp_human' => now()->diffForHumans()
         ], 300);
     }
 

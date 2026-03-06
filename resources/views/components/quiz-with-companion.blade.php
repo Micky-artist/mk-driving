@@ -11,7 +11,7 @@
 
 <div class="rounded-xl bg-gradient-to-br from-gray-50 to-gray-100 dark:from-gray-900 dark:to-gray-800 lg:p-6 p-0">
     <!-- Desktop Layout: Side-by-Side -->
-    <div class="hidden lg:grid grid-cols-3 lg:h-[calc(100vh-4rem)] w-full gap-4">
+    <div class="hidden lg:grid grid-cols-3 lg:h-[calc(100vh-6rem)] w-full gap-4">
         <!-- Main Quiz Area -->
         <div class="col-span-2 min-h-0">
             <x-unified-quiz-taker 

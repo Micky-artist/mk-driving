@@ -73,7 +73,7 @@
                                 id="email" 
                                 name="email" 
                                 value="{{ old('email') }}" 
-                                class="input-field pl-12" 
+                                class="w-full px-4 py-3 pl-12 rounded-full border border-gray-300 dark:border-gray-600 bg-white dark:bg-gray-700 text-gray-900 dark:text-white placeholder-gray-500 dark:placeholder-gray-400 focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-transparent transition-all duration-200" 
                                 placeholder="{{ __('auth.forgot_password_page.email_placeholder') }}" 
                                 required 
                                 autofocus
@@ -85,20 +85,14 @@
                     </div>
 
                     <div class="pt-2">
-                        <button type="submit" class="w-full py-5 px-8 rounded-xl bg-gradient-to-r from-blue-600 to-blue-700 hover:from-blue-700 hover:to-blue-800 text-white font-bold text-lg uppercase tracking-wide transition-all duration-300 transform hover:-translate-y-1 shadow-lg hover:shadow-xl focus:outline-none focus:ring-2 focus:ring-blue-500 focus:ring-offset-2 focus:ring-offset-white dark:focus:ring-offset-gray-800 disabled:opacity-60 disabled:cursor-not-allowed disabled:transform-none">
+                        <button type="submit" class="w-full py-5 px-6 rounded-xl bg-gradient-to-r from-blue-600 to-blue-700 hover:from-blue-700 hover:to-blue-800 text-white font-bold text-lg tracking-wide transition-all duration-300 transform hover:-translate-y-1 shadow-lg hover:shadow-xl focus:outline-none focus:ring-2 focus:ring-blue-500 focus:ring-offset-2 focus:ring-offset-white dark:focus:ring-offset-gray-800 disabled:opacity-60 disabled:cursor-not-allowed disabled:transform-none flex items-center justify-center">
                             {{ __('auth.forgot_password_page.submit_button') }}
-                            <svg class="w-5 h-5 ml-2 -mr-1" fill="none" stroke="currentColor" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg">
-                                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M17 8l4 4m0 0l-4 4m4-4H3"></path>
-                            </svg>
                         </button>
                     </div>
                 </form>
 
                 <div class="mt-6 text-center">
-                    <a href="{{ route('login', app()->getLocale()) }}" class="back-to-login">
-                        <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg">
-                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M10 19l-7-7m0 0l7-7m-7 7h18"></path>
-                        </svg>
+                    <a href="{{ route('login', app()->getLocale()) }}" class="inline-flex items-center px-6 py-3 border-2 border-gray-300 dark:border-gray-600 text-gray-700 dark:text-gray-300 font-medium rounded-xl hover:border-gray-400 dark:hover:border-gray-500 hover:text-gray-900 dark:hover:text-white transition-all duration-200">
                         {{ __('auth.forgot_password_page.back_to_login') }}
                     </a>
                 </div>
@@ -174,7 +168,7 @@
                     
                     const data = await response.json();
                     
-                    if (response.ok) {
+                    if (response.ok && data.status === 'passwords.sent') {
                         // Show success dialog with localized messages
                         showConfirmationDialog(formData.get('email'));
                     } else {

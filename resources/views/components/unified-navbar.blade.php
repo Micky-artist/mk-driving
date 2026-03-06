@@ -317,6 +317,13 @@
                     </div>
                 @endif
 
+                <!-- Leaderboard Icon for logged-in users -->
+                <a href="{{ route('leaderboard', ['locale' => app()->getLocale()]) }}"
+                    class="flex items-center justify-center w-8 h-8 rounded-full bg-yellow-500/20 hover:bg-yellow-500/30 text-white transition-all duration-200 group"
+                    title="{{ __('navigation.leaderboard') }}">
+                    <i class="fas fa-trophy text-sm"></i>
+                </a>
+
                 <div class="flex items-center space-x-3">
                     <!-- Profile Dropdown -->
                     <div class="relative" x-data="{ profileOpen: false }">
@@ -401,10 +408,20 @@
                     </div>
                 </div>
             @else
+                <!-- Leaderboard Icon for non-logged-in users -->
+                <a href="{{ route('leaderboard', ['locale' => app()->getLocale()]) }}"
+                    class="flex items-center justify-center w-8 h-8 rounded-full bg-yellow-500/20 hover:bg-yellow-500/30 text-white transition-all duration-200 group"
+                    title="{{ __('navigation.leaderboard') }}">
+                    <i class="fas fa-trophy text-sm"></i>
+                </a>
                 <div class="flex items-center space-x-3">
                     <a href="{{ route('login', app()->getLocale()) }}"
-                        class="text-white hover:text-white/90 hover:border-white/80 border-transparent border-b-2 px-3 pt-1 text-base font-semibold transition-colors duration-200">
-                        <i class="fas fa-sign-in-alt"></i>{{ __('navigation.login') }}
+                        class="px-4 py-2 text-base font-medium text-white bg-blue-600/20 hover:bg-blue-500/30 backdrop-blur-sm border border-blue-400/30 hover:border-blue-300/50 rounded-lg transition-all duration-200 shadow-sm hover:shadow-md flex items-center justify-center">
+                        <i class="fas fa-sign-in-alt mr-2"></i>{{ __('navigation.login') }}
+                    </a>
+                    <a href="{{ route('register', app()->getLocale()) }}"
+                        class="px-4 py-2 text-base font-medium text-blue-100 bg-blue-500/20 hover:bg-blue-400/30 backdrop-blur-sm border border-blue-300/30 hover:border-blue-200/50 rounded-lg transition-all duration-200 shadow-sm hover:shadow-md flex items-center justify-center">
+                        <i class="fas fa-user-plus mr-2"></i>{{ __('navigation.register') }}
                     </a>
                 </div>
             @endauth
@@ -441,6 +458,14 @@
 
             <!-- Main Navigation Links -->
             <nav class="px-4 py-6 space-y-2">
+                <!-- Leaderboard Link (Mobile) -->
+                <a href="{{ route('leaderboard', ['locale' => app()->getLocale()]) }}"
+                    class="group flex items-center px-4 py-3 text-base font-semibold rounded-lg transition-colors duration-150 border-transparent text-white hover:bg-gray-100 hover:text-gray-900 dark:hover:bg-gray-700 dark:hover:text-gray-100 hover:border-gray-300 dark:hover:border-gray-600"
+                    @click="mobileMenuOpen = false">
+                    <i class="fas fa-trophy w-5 h-5 mr-3 text-yellow-400"></i>
+                    <span class="flex-1">{{ __('navigation.leaderboard') }}</span>
+                </a>
+
                 @foreach ($navLinks as $link)
                     @php
                         $isActive = false;

@@ -294,6 +294,7 @@ return [
 
     // Robot Companion Messages
     'companion' => [
+        'title' => 'Others Practicing Here',
         'robot_correct' => ':name just got this right!',
         'robot_nailed' => ':name nailed this one!',
         'robot_aced' => ':name aced this question!',

@@ -295,6 +295,7 @@ return [
 
     // Robot Companion Messages
     'companion' => [
+        'title' => 'Abari Kwitoza Hano',
         'robot_correct' => ':name yagikoze!',
         'robot_nailed' => ':name akomeje neza!',
         'robot_aced' => ':name akomeje neza!',

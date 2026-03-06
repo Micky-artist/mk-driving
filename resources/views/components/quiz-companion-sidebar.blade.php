@@ -25,6 +25,11 @@
     <div
         class="w-full lg:h-full bg-white dark:bg-gray-800 border-l border-gray-200 dark:border-gray-700 flex flex-col rounded-xl">
 
+        <!-- Header -->
+        <div class="bg-gradient-to-r from-blue-500 to-purple-600 text-white p-4 rounded-t-xl">
+            <h3 class="font-semibold text-lg">{{ __('quiz.companion.title') }}</h3>
+        </div>
+
         <!-- Feed Content -->
         <div class="flex-1 overflow-y-auto p-4 space-y-3">
             <!-- Robot Activities -->

@@ -658,35 +658,64 @@
                     
                     // Ensure activities is always an array
                     const activitiesArray = Array.isArray(activities) ? activities : [];
-                    const previousCount = (this.liveActivities || []).length;
                     
-                    this.liveActivities = activitiesArray;
-                    
-                    // Extract all robot messages from the complete activity list
-                    const allRobotMessages = activitiesArray
-                        .filter(activity => activity.type === 'learner_answer')
-                        .map((activity, index) => ({
-                            id: `${activity.learner_id}_${activity.question_id}_${activity.timestamp}_${index}`,
-                            robot_name: activity.learner_name,
-                            message: activity.message,
-                            timestamp_human: activity.timestamp_human,
-                            is_correct: activity.is_correct
-                        }));
-                    
-                    // Replace robotMessages with the complete updated list
-                    this.robotMessages = allRobotMessages;
-                    
-                    console.log('Robot messages updated:', this.robotMessages.length, 'Total activities:', activitiesArray.length);
+                    if (activitiesArray.length > 0) {
+                        // Get existing activity timestamps to avoid duplicates
+                        const existingTimestamps = new Set(
+                            (this.liveActivities || []).map(activity => 
+                                activity.timestamp + '_' + (activity.learner_id || activity.user_id)
+                            )
+                        );
+                        
+                        // Filter only truly new activities
+                        const newActivities = activitiesArray.filter(activity => {
+                            const activityKey = activity.timestamp + '_' + (activity.learner_id || activity.user_id);
+                            return !existingTimestamps.has(activityKey);
+                        });
+                        
+                        console.log('Filtered new activities:', newActivities.length, 'items');
+                        
+                        if (newActivities.length > 0) {
+                            // Prepend new activities (newest first)
+                            this.liveActivities = [...newActivities, ...(this.liveActivities || [])];
+                            
+                            // Keep only the last 50 activities
+                            if (this.liveActivities.length > 50) {
+                                this.liveActivities = this.liveActivities.slice(-50);
+                            }
+                            
+                            // Extract new robot messages
+                            const newRobotMessages = newActivities
+                                .filter(activity => activity.type === 'learner_answer')
+                                .map((activity, index) => ({
+                                    id: `${activity.learner_id}_${activity.question_id}_${activity.timestamp}_${index}_${Date.now()}`,
+                                    robot_name: activity.learner_name,
+                                    message: activity.message,
+                                    timestamp_human: activity.timestamp_human,
+                                    is_correct: activity.is_correct
+                                }));
+                            
+                            // Prepend new robot messages (newest first)
+                            this.robotMessages = [...newRobotMessages, ...(this.robotMessages || [])];
+                            
+                            // Keep only the last 50 robot messages
+                            if (this.robotMessages.length > 50) {
+                                this.robotMessages = this.robotMessages.slice(-50);
+                            }
+                            
+                            console.log('Robot messages updated:', this.robotMessages.length, 'Total activities:', this.liveActivities.length);
+                        }
+                    }
                     
                     // Dispatch event for global toast
                     console.log('Dispatching robotCompanionUpdate event with:', {
-                        robotMessages: this.robotMessages,
-                        activitiesCount: activitiesArray.length
+                        robotMessages: this.robotMessages || [],
+                        activitiesCount: (this.liveActivities || []).length
                     });
                     window.dispatchEvent(new CustomEvent('robotCompanionUpdate', {
                         detail: {
-                            robotMessages: this.robotMessages,
-                            activitiesCount: activitiesArray.length
+                            robotMessages: this.robotMessages || [],
+                            activitiesCount: (this.liveActivities || []).length
                         }
                     }));
                     
