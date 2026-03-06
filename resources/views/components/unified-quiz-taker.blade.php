@@ -144,21 +144,25 @@
                         x-transition:leave-end="opacity-0 transform -translate-y-2"
                         class="hidden lg:block absolute top-full left-0 right-0 text-center py-2 text-sm z-10 rounded-b-xl border-t"
                         :class="{
-                            'bg-gradient-to-r from-green-500 to-green-600 text-white border-green-400/30': (liveNotification && liveNotification.type !== 'robot_companion'),
-                            'bg-gradient-to-r from-purple-500 to-purple-600 text-white border-purple-400/30': (liveNotification && liveNotification.type === 'robot_companion')
+                            'bg-gradient-to-r from-green-500 to-green-600 text-white border-green-400/30': (
+                                liveNotification && liveNotification.type !== 'robot_companion'),
+                            'bg-gradient-to-r from-purple-500 to-purple-600 text-white border-purple-400/30': (
+                                liveNotification && liveNotification.type === 'robot_companion')
                         }">
                         <div class="flex items-center justify-center gap-2">
-                            <span x-show="liveNotification && liveNotification.type === 'robot_companion'" class="text-lg">🤖</span>
-                            <span x-show="liveNotification && liveNotification.robot_name" class="font-semibold" x-text="(liveNotification && liveNotification.robot_name ? liveNotification.robot_name + ':' : '')"></span>
-                            <span x-text="liveNotification && liveNotification.message ? liveNotification.message : ''"></span>
-                            <span x-show="liveNotification && liveNotification.is_correct !== undefined" 
-                                  class="ml-2" 
-                                  :class="(liveNotification && liveNotification.is_correct) ? 'text-green-200' : 'text-yellow-200'"
-                                  x-text="(liveNotification && liveNotification.is_correct) ? '✓' : '✗'"></span>
+                            <span x-show="liveNotification && liveNotification.type === 'robot_companion'"
+                                class="text-lg">🤖</span>
+                            <span x-show="liveNotification && liveNotification.robot_name" class="font-semibold"
+                                x-text="(liveNotification && liveNotification.robot_name ? liveNotification.robot_name + ':' : '')"></span>
+                            <span
+                                x-text="liveNotification && liveNotification.message ? liveNotification.message : ''"></span>
+                            <span x-show="liveNotification && liveNotification.is_correct !== undefined" class="ml-2"
+                                :class="(liveNotification && liveNotification.is_correct) ? 'text-green-200' : 'text-yellow-200'"
+                                x-text="(liveNotification && liveNotification.is_correct) ? '✓' : '✗'"></span>
                         </div>
                     </div>
 
-                    
+
                     <div class="flex items-center justify-between text-sm">
                         <div class="flex items-center gap-3 sm:gap-4">
                             <h1
@@ -175,9 +179,11 @@
                             <!-- Replace 20Q with correct/incorrect count -->
                             <div class="flex items-center gap-1.5 text-gray-600 dark:text-gray-300">
                                 <span class="font-medium text-sm sm:text-base">
-                                    <span x-text="correctCount" class="text-green-600 dark:text-green-400 font-bold"></span>
+                                    <span x-text="correctCount"
+                                        class="text-green-600 dark:text-green-400 font-bold"></span>
                                     <span class="mx-1">/</span>
-                                    <span x-text="incorrectCount" class="text-red-600 dark:text-red-400 font-bold"></span>
+                                    <span x-text="incorrectCount"
+                                        class="text-red-600 dark:text-red-400 font-bold"></span>
                                 </span>
                                 <span class="text-xs text-gray-500 dark:text-gray-400 hidden sm:inline">answers</span>
                             </div>
@@ -278,8 +284,7 @@
                                             !
                                             isAnswerSubmitted || (isAnswerSubmitted && !option.is_correct)
                                     }"
-                                    @click="handleOptionSelect(option)"
-                                    @touchend="handleOptionSelect(option)">
+                                    @click="handleOptionSelect(option)" @touchend="handleOptionSelect(option)">
                                     <div class="flex items-center h-5">
                                         <div class="w-5 h-5 rounded-xl border-2 flex items-center justify-center transition-all duration-200"
                                             :class="{
@@ -422,8 +427,10 @@
                         <div class="mt-4 p-4 rounded-xl transition-all duration-300"
                             :class="{
                                 'hidden': !showFeedback,
-                                'bg-gradient-to-r from-green-50 to-green-100 dark:from-green-900/20 dark:to-green-800/20 border border-green-200/60 dark:border-green-800/60': isAnswerCorrect && showFeedback,
-                                'bg-gradient-to-r from-red-50 to-red-100 dark:from-red-900/20 dark:to-red-800/20 border border-red-200/60 dark:border-red-800/60': !isAnswerCorrect && isAnswerSubmitted && showFeedback
+                                'bg-gradient-to-r from-green-50 to-green-100 dark:from-green-900/20 dark:to-green-800/20 border border-green-200/60 dark:border-green-800/60': isAnswerCorrect &&
+                                    showFeedback,
+                                'bg-gradient-to-r from-red-50 to-red-100 dark:from-red-900/20 dark:to-red-800/20 border border-red-200/60 dark:border-red-800/60':
+                                    !isAnswerCorrect && isAnswerSubmitted && showFeedback
                             }">
                             <div class="flex items-center text-green-700 dark:text-green-300"
                                 :class="{
@@ -656,51 +663,21 @@
                                             Math.random() * 5)
                                     ]"
                                     :style="`
-                                                                                                                                                                                                                                         left: ${Math.random() * 100}%;
-                                                                                                                                                                                                                                         top: ${Math.random() * 100}%;
-                                                                                                                                                                                                                                         animation: confetti ${1 + Math.random() * 3}s linear infinite;
-                                                                                                                                                                                                                                         transform: scale(${0.5 + Math.random()});
-                                                                                                                                                                                                                                         opacity: ${0.2 + Math.random() * 0.8};
-                                                                                                                                                                                                                                         animation-delay: ${Math.random() * 2}s;
-                                                                                                                                                                                                                                     `">
-                                </div>
-                            </template>
-                        </div>
-                    </div>
-
-                    <!-- Recent Leaderboard Changes -->
-                    <div x-show="leaderboardChanges && leaderboardChanges.length > 0"
-                        class="mb-4 p-3 bg-blue-50 dark:bg-blue-900/20 rounded-lg border border-blue-200 dark:border-blue-700">
-                        <div class="flex items-center space-x-2 mb-2">
-                            <div class="text-lg">📊</div>
-                            <h4 class="text-sm font-semibold text-blue-800 dark:text-blue-200">
-                                {{ __('quiz.recentActivity') }}</h4>
-                        </div>
-                        <div class="space-y-2">
-                            <template x-for="change in leaderboardChanges" :key="change.id">
-                                <div
-                                    class="flex items-center justify-between text-sm p-2 bg-white dark:bg-gray-800 rounded">
-                                    <div class="flex items-center space-x-2">
-                                        <div
-                                            class="w-6 h-6 rounded-full bg-gradient-to-br from-blue-500 to-purple-500 flex items-center justify-center text-white text-xs font-bold">
-                                            <span x-text="change.user.first_name.charAt(0)"></span>
-                                        </div>
-                                        <div>
-                                            <p class="font-medium text-gray-900 dark:text-gray-100"
-                                                x-text="change.message"></p>
-                                            <p class="text-xs text-gray-500 dark:text-gray-400"
-                                                x-text="change.time_ago"></p>
-                                        </div>
-                                    </div>
-                                    <div class="text-xs font-medium text-blue-600 dark:text-blue-400"
-                                        x-text="change.points_change"></div>
+                                                                                                                                                                                                                                                                             left: ${Math.random() * 100}%;
+                                                                                                                                                                                                                                                                             top: ${Math.random() * 100}%;
+                                                                                                                                                                                                                                                                             animation: confetti ${1 + Math.random() * 3}s linear infinite;
+                                                                                                                                                                                                                                                                             transform: scale(${0.5 + Math.random()});
+                                                                                                                                                                                                                                                                             opacity: ${0.2 + Math.random() * 0.8};
+                                                                                                                                                                                                                                                                             animation-delay: ${Math.random() * 2}s;
+                                                                                                                                                                                                                                                                         `">
                                 </div>
                             </template>
                         </div>
                     </div>
 
                     <!-- Leaderboard Position -->
-                    <div x-show="updatedStats && updatedStats.leaderboardPosition !== null && updatedStats.leaderboardPosition !== undefined" class="mb-6">
+                    <div x-show="updatedStats && updatedStats.leaderboardPosition !== null && updatedStats.leaderboardPosition !== undefined"
+                        class="mb-6">
                         <div
                             class="bg-gradient-to-r from-yellow-50 to-orange-50 dark:from-yellow-900/20 dark:to-orange-900/20 p-3 sm:p-4 rounded-lg border-2 border-yellow-300 dark:border-yellow-700">
                             <div class="text-center">
@@ -1001,7 +978,7 @@
                     liveNotification: null,
                     leaderboardChanges: [],
                     notificationTimer: null,
-                    
+
                     // Robot companions
                     robotResponses: [],
                     robotSummary: [],
@@ -1102,15 +1079,15 @@
 
                         // Mark as initialized to hide loading state
                         this.initialized = true;
-                        
+
                         // Fetch historical activity immediately when quiz loads
                         this.fetchLiveActivities();
-                        
+
                         // Add page unload cleanup
                         window.addEventListener('beforeunload', () => {
                             this.destroy();
                         });
-                        
+
                         // Add visibility change cleanup (when user switches tabs)
                         document.addEventListener('visibilitychange', () => {
                             if (document.hidden) {
@@ -1125,13 +1102,13 @@
                     // Clean up when navigating away from quiz
                     destroy() {
                         // Cleaning up quiz state...
-                        
+
                         // Clear timer
                         if (this.timer) {
                             clearInterval(this.timer);
                             this.timer = null;
                         }
-                        
+
                         // Clear quiz state from memory
                         this.currentQuestionIndex = 0;
                         this.selectedOption = null;
@@ -1147,11 +1124,11 @@
                         this.startTime = null;
                         this.endTime = null;
                         this.initialized = false;
-                        
+
                         // Clear image states
                         this.imageLoaded = {};
                         this.imageError = {};
-                        
+
                         // Don't clear localStorage data as user might want to resume later
                         // But clear any in-memory progress
                         // Quiz state cleaned up
@@ -1737,19 +1714,21 @@
                             if (response.ok) {
                                 const data = await response.json();
                                 // Answer saved successfully
-                                
+
                                 // Fetch live activities after submitting answer
                                 // Fetch live activities after answer submission...
                                 this.fetchLiveActivities();
-                                
+
                                 // Handle robot companion responses
                                 if (data.robot_responses && data.robot_responses.length > 0) {
-                                    console.log('🤖 QuizTaker: robot_responses received:', data.robot_responses);
+                                    console.log('🤖 QuizTaker: robot_responses received:', data
+                                        .robot_responses);
                                     this.robotResponses = data.robot_responses;
                                     this.showRobotCompanionNotifications();
-                                    
+
                                     // Emit for companion sidebar
-                                    console.log('🤖 QuizTaker: dispatching robotResponses event with:', {
+                                    console.log(
+                                    '🤖 QuizTaker: dispatching robotResponses event with:', {
                                         robotResponses: data.robot_responses
                                     });
                                     window.dispatchEvent(new CustomEvent('robotResponses', {
@@ -1772,16 +1751,18 @@
                     async fetchLiveActivities() {
                         try {
                             // Making API call to /api/live-activities...
-                            const response = await fetch('/api/live-activities?quiz_id=' + this.quizId, {
+                            const response = await fetch('/api/live-activities?quiz_id=' + this
+                            .quizId, {
                                 headers: {
-                                    'X-CSRF-TOKEN': document.querySelector('meta[name="csrf-token"]')?.content,
+                                    'X-CSRF-TOKEN': document.querySelector(
+                                        'meta[name="csrf-token"]')?.content,
                                     'Accept': 'application/json'
                                 }
                             });
-                            
+
                             if (response.ok) {
                                 const data = await response.json();
-                                
+
                                 if (data.success) {
                                     // Emitting liveActivityUpdate event
                                     // Emit for companion sidebar
@@ -1789,7 +1770,8 @@
                                         detail: {
                                             activities: data.activities || [],
                                             notification: data.notification,
-                                            leaderboard_changes: data.leaderboard_changes || []
+                                            leaderboard_changes: data.leaderboard_changes ||
+                                                []
                                         }
                                     }));
                                 }
@@ -1819,7 +1801,9 @@
 
                         // Emit quiz completion event
                         window.dispatchEvent(new CustomEvent('quizCompleted', {
-                            detail: { quizId: this.quizId }
+                            detail: {
+                                quizId: this.quizId
+                            }
                         }));
 
                         // Save results
@@ -1929,7 +1913,7 @@
                                     updatedAnswers[answer.question_id] = {
                                         optionId: answer.option_id,
                                         isCorrect: Boolean(answer
-                                        .is_correct), // Ensure boolean conversion
+                                            .is_correct), // Ensure boolean conversion
                                         timestamp: answer.time_spent || Date.now()
                                     };
                                 }
@@ -2130,7 +2114,8 @@
                             const response = await fetch(`/api/robot/summary?quiz_id=${this.quizId}`, {
                                 credentials: 'same-origin',
                                 headers: {
-                                    'X-CSRF-TOKEN': document.querySelector('meta[name="csrf-token"]').content
+                                    'X-CSRF-TOKEN': document.querySelector(
+                                        'meta[name="csrf-token"]').content
                                 }
                             });
 
@@ -2146,8 +2131,8 @@
                     hideNotification() {
                         this.liveNotification = null;
                     },
-                    
-                                    }));
+
+                }));
             });
         </script>
     @endpush
