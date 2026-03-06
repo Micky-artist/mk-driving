@@ -323,7 +323,7 @@
 
                                         <!-- Modern Image Container with Loading States -->
                                         <div x-show="option.image_url" class="mb-2 group relative"
-                                            x-init="console.log('Option image data:', { optionId: option.id, image: option.image, imageUrl: option.image_url, text: option.text })">
+                                            x-init="">
                                             <!-- Loading Skeleton with Animated Road Sign -->
                                             <div x-show="option.image_url && !imageLoaded[option.id]"
                                                 x-transition:enter="transition ease-out duration-300"
@@ -362,8 +362,7 @@
 
                                                 <!-- CSS Background Image Container -->
                                                 <div :style="`background-image: url('${option.image_url || '/images/road-sign-placeholder.svg'}'); background-size: cover; background-position: center;`"
-                                                    class="w-32 h-24 rounded-xl" x-init="console.log('Image data at bg element:', { optionId: option.id, imageUrl: option.image_url });
-                                                    imageLoaded[option.id] = true;">
+                                                    class="w-32 h-24 rounded-xl" x-init="imageLoaded[option.id] = true;">
                                                     <!-- Hover Overlay -->
                                                     <div
                                                         class="absolute inset-0 bg-gradient-to-t from-black/20 to-transparent opacity-0 group-hover:opacity-100 transition-opacity duration-300 rounded-xl">
@@ -945,9 +944,6 @@
                         text: q.text || q.question_text || `Question ${index + 1}`,
                         image_url: q.image_url || null,
                         options: Array.isArray(q.options) ? q.options.map((opt, optIndex) => {
-                            // Debug: Log the raw image URL
-                            console.log('Raw option image_url:', opt.image_url, 'Type:',
-                                typeof opt.image_url);
 
                             const cleanedOption = {
                                 id: opt.id || `opt-${index}-${optIndex}`,
@@ -958,9 +954,6 @@
                                 explanation: opt.explanation || ''
                             };
 
-                            // Debug: Log the cleaned image URL
-                            console.log('Cleaned option image:', cleanedOption
-                                .image_url);
 
                             return cleanedOption;
                         }) : []
@@ -1034,7 +1027,7 @@
                         if (this.correctSound) {
                             this.correctSound.currentTime = 0;
                             this.correctSound.play().catch(error => {
-                                console.log('Correct sound play failed:', error);
+                                // Sound failed silently
                             });
                         }
                     },
@@ -1044,7 +1037,7 @@
                         if (this.incorrectSound) {
                             this.incorrectSound.currentTime = 0;
                             this.incorrectSound.play().catch(error => {
-                                console.log('Incorrect sound play failed:', error);
+                                // Sound failed silently
                             });
                         }
                     },
@@ -1060,7 +1053,7 @@
                                 this.playIncorrectSound();
                             }
                         } catch (error) {
-                            console.log('Sound system error:', error);
+                            // Sound system error handled silently
                         }
                     },
 
@@ -1131,7 +1124,7 @@
 
                     // Clean up when navigating away from quiz
                     destroy() {
-                        console.log('Cleaning up quiz state...');
+                        // Cleaning up quiz state...
                         
                         // Clear timer
                         if (this.timer) {
@@ -1161,7 +1154,7 @@
                         
                         // Don't clear localStorage data as user might want to resume later
                         // But clear any in-memory progress
-                        console.log('Quiz state cleaned up');
+                        // Quiz state cleaned up
                     },
 
                     // Initialize image loading states for all options
@@ -1427,7 +1420,7 @@
                                 });
 
                             if (response.ok) {
-                                console.log('Backend attempt reset successfully');
+                                // Backend attempt reset successfully
                             } else {
                                 console.warn('Failed to reset backend attempt');
                             }
@@ -1669,7 +1662,7 @@
                             if (response.ok) {
                                 const data = await response.json();
                                 this.currentAttempt = data.attempt;
-                                console.log('Using attempt:', this.currentAttempt.id);
+                                // Using attempt:
 
                                 // Load the attempt state if it has existing answers
                                 this.loadAttemptState();
@@ -1743,23 +1736,29 @@
 
                             if (response.ok) {
                                 const data = await response.json();
-                                console.log('Answer saved successfully');
+                                // Answer saved successfully
                                 
                                 // Fetch live activities after submitting answer
-                                console.log('Fetching live activities after answer submission...');
+                                // Fetch live activities after answer submission...
                                 this.fetchLiveActivities();
                                 
                                 // Handle robot companion responses
                                 if (data.robot_responses && data.robot_responses.length > 0) {
+                                    console.log('🤖 QuizTaker: robot_responses received:', data.robot_responses);
                                     this.robotResponses = data.robot_responses;
                                     this.showRobotCompanionNotifications();
                                     
                                     // Emit for companion sidebar
+                                    console.log('🤖 QuizTaker: dispatching robotResponses event with:', {
+                                        robotResponses: data.robot_responses
+                                    });
                                     window.dispatchEvent(new CustomEvent('robotResponses', {
                                         detail: {
                                             robotResponses: data.robot_responses
                                         }
                                     }));
+                                } else {
+                                    console.log('🤖 QuizTaker: no robot_responses in data');
                                 }
                             } else {
                                 console.warn('Failed to save answer:', response.status);
@@ -1772,7 +1771,7 @@
                     // Fetch live activities after submitting answer
                     async fetchLiveActivities() {
                         try {
-                            console.log('Making API call to /api/live-activities...');
+                            // Making API call to /api/live-activities...
                             const response = await fetch('/api/live-activities?quiz_id=' + this.quizId, {
                                 headers: {
                                     'X-CSRF-TOKEN': document.querySelector('meta[name="csrf-token"]')?.content,
@@ -1782,18 +1781,15 @@
                             
                             if (response.ok) {
                                 const data = await response.json();
-                                console.log('Live activities API response:', data);
                                 
                                 if (data.success) {
-                                    console.log('Emitting liveActivityUpdate event with:', {
-                                        activities: data.activities || [],
-                                        notification: data.notification
-                                    });
+                                    // Emitting liveActivityUpdate event
                                     // Emit for companion sidebar
                                     window.dispatchEvent(new CustomEvent('liveActivityUpdate', {
                                         detail: {
                                             activities: data.activities || [],
-                                            notification: data.notification
+                                            notification: data.notification,
+                                            leaderboard_changes: data.leaderboard_changes || []
                                         }
                                     }));
                                 }
@@ -1878,7 +1874,7 @@
                                 }
                             })
                             .then(data => {
-                                console.log('Results saved:', data);
+                                // Results saved:
                                 // Store current score for modal display
                                 this.currentScore = score;
                                 // Reset submitting state
@@ -1995,7 +1991,7 @@
 
                     clearProgress() {
                         // Progress is now managed by database, no localStorage to clear
-                        console.log('Progress cleared - database will handle reset');
+                        // Progress cleared - database will handle reset
                     },
 
                     // Additional features

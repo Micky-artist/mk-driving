@@ -599,6 +599,11 @@
 
         // Quiz Companion Live Competition System
         document.addEventListener('alpine:init', () => {
+            // Global debug listener for robotCompanionUpdate events
+            window.addEventListener('robotCompanionUpdate', (event) => {
+                console.log('🌐 Global: robotCompanionUpdate event received:', event.detail);
+            });
+            
             Alpine.data('quizCompanion', (config) => ({
                 quizId: config.quizId,
                 isGuest: config.isGuest,
@@ -622,14 +627,73 @@
                 submittingQuestion: false,
                 
                 init() {
+                    console.log('🚀 quizCompanion: initializing with config:', config);
                     this.isMobile = window.innerWidth < 1024;
                     this.checkUnreadMessages();
+                    this.fetchLeaderboard();
+                    
+                    console.log('🚀 quizCompanion: initialized, setting up event listeners');
                     
                     // Listen for live activity updates from other users
                     window.addEventListener('liveActivityUpdate', (event) => {
-                        console.log('Live activity update received:', event.detail);
+                        // Live activity update received
                         this.updateLiveActivities(event.detail.activities || []);
                         this.updateNotification(event.detail.notification);
+                        this.updateLeaderboardChanges(event.detail.leaderboard_changes || []);
+                    });
+                    
+                    // Listen for robot responses from quiz taker
+                    window.addEventListener('robotResponses', (event) => {
+                        console.log('🤖 quizCompanion: robotResponses event received:', event.detail);
+                        
+                        // Robot responses received
+                        const robotData = event.detail.robotResponses || [];
+                        console.log('🤖 quizCompanion: robotData length:', robotData.length, robotData);
+                        
+                        if (robotData.length > 0) {
+                            // Convert robot responses to robot messages format
+                            const newRobotMessages = robotData.map((robot, index) => {
+                                console.log('🤖 quizCompanion: processing robot:', robot);
+                                return {
+                                    id: `robot_${robot.learner_id || robot.id}_${Date.now()}_${index}_${Math.random()}`,
+                                    robot_name: robot.robot_name || robot.learner_name,
+                                    message: robot.message,
+                                    timestamp_human: robot.timestamp_human || 'Just now',
+                                    is_correct: robot.is_correct,
+                                    type: robot.type || 'learner_answer',
+                                    points_change: robot.points_change,
+                                    leaderboard_score: robot.leaderboard_score,
+                                    learner_id: robot.learner_id || robot.id,
+                                    original_timestamp: robot.timestamp || Date.now()
+                                };
+                            });
+                            
+                            console.log('🤖 quizCompanion: newRobotMessages:', newRobotMessages);
+                            
+                            // Prepend new robot messages (newest first)
+                            this.robotMessages = [...newRobotMessages, ...(this.robotMessages || [])];
+                            console.log('🤖 quizCompanion: updated robotMessages:', this.robotMessages);
+                            
+                            // Keep only the last 50 robot messages
+                            if (this.robotMessages.length > 50) {
+                                this.robotMessages = this.robotMessages.slice(-50);
+                            }
+                            
+                            // Dispatch update event for sidebar
+                            console.log('🤖 quizCompanion: dispatching robotCompanionUpdate with:', {
+                                robotMessages: this.robotMessages || [],
+                                activitiesCount: (this.liveActivities || []).length
+                            });
+                            
+                            window.dispatchEvent(new CustomEvent('robotCompanionUpdate', {
+                                detail: {
+                                    robotMessages: this.robotMessages || [],
+                                    activitiesCount: (this.liveActivities || []).length
+                                }
+                            }));
+                        } else {
+                            console.log('🤖 quizCompanion: no robot data to process');
+                        }
                     });
                     
                     // Listen for window resize
@@ -639,7 +703,7 @@
                 },
                 
                 destroy() {
-                    console.log('Cleaning up companion sidebar state...');
+                    // Cleaning up companion sidebar state...
                     // Clear robot messages and activities
                     this.robotMessages = [];
                     this.liveActivities = [];
@@ -650,14 +714,26 @@
                     this.unreadCount = 0;
                     this.newQuestion = '';
                     this.submittingQuestion = false;
-                    console.log('Companion sidebar state cleaned up');
+                    // Companion sidebar state cleaned up
+                },
+
+                async fetchLeaderboard() {
+                    try {
+                        const response = await fetch('/api/leaderboard/changes');
+                        if (response.ok) {
+                            const data = await response.json();
+                            this.leaderboard = data.changes || [];
+                        }
+                    } catch (error) {
+                        // Failed to fetch leaderboard
+                    }
                 },
 
                 updateLiveActivities(activities) {
-                    console.log('Updating live activities with:', activities);
-                    
-                    // Ensure activities is always an array
-                    const activitiesArray = Array.isArray(activities) ? activities : [];
+            
+            // Ensure activities is always an array
+            const activitiesArray = Array.isArray(activities) ? activities : [];
+            const previousCount = (this.robotMessages || []).length;
                     
                     if (activitiesArray.length > 0) {
                         // Get existing activity timestamps to avoid duplicates
@@ -673,7 +749,7 @@
                             return !existingTimestamps.has(activityKey);
                         });
                         
-                        console.log('Filtered new activities:', newActivities.length, 'items');
+                        // Filtered new activities:
                         
                         if (newActivities.length > 0) {
                             // Prepend new activities (newest first)
@@ -684,17 +760,20 @@
                                 this.liveActivities = this.liveActivities.slice(-50);
                             }
                             
-                            // Extract new robot messages
-                            const newRobotMessages = newActivities
-                                .filter(activity => activity.type === 'learner_answer')
-                                .map((activity, index) => ({
-                                    id: `${activity.learner_id}_${activity.question_id}_${activity.timestamp}_${index}_${Date.now()}`,
-                                    robot_name: activity.learner_name,
-                                    message: activity.message,
-                                    timestamp_human: activity.timestamp_human,
-                                    is_correct: activity.is_correct
-                                }));
-                            
+                            // Extract new robot messages (include both learner_answer and leaderboard_change)
+                const newRobotMessages = newActivities
+                    .filter(activity => activity.type === 'learner_answer' || activity.type === 'leaderboard_change')
+                    .map((activity, index) => ({
+                        id: `${activity.learner_id}_${activity.question_id}_${activity.timestamp}_${index}_${Date.now()}`,
+                        robot_name: activity.learner_name,
+                        message: activity.message,
+                        timestamp_human: activity.timestamp_human,
+                        is_correct: activity.is_correct,
+                        type: activity.type,
+                        points_change: activity.points_change,
+                        original_timestamp: activity.timestamp || Date.now()
+                    }));
+                
                             // Prepend new robot messages (newest first)
                             this.robotMessages = [...newRobotMessages, ...(this.robotMessages || [])];
                             
@@ -703,15 +782,12 @@
                                 this.robotMessages = this.robotMessages.slice(-50);
                             }
                             
-                            console.log('Robot messages updated:', this.robotMessages.length, 'Total activities:', this.liveActivities.length);
+                            // Robot messages updated:
                         }
                     }
                     
                     // Dispatch event for global toast
-                    console.log('Dispatching robotCompanionUpdate event with:', {
-                        robotMessages: this.robotMessages || [],
-                        activitiesCount: (this.liveActivities || []).length
-                    });
+                    // Dispatching robotCompanionUpdate event
                     window.dispatchEvent(new CustomEvent('robotCompanionUpdate', {
                         detail: {
                             robotMessages: this.robotMessages || [],
@@ -733,6 +809,45 @@
                             active_users: notification.active_users,
                             robot_responses: notification.robot_responses || []
                         };
+                    }
+                },
+                
+                updateLeaderboardChanges(changes) {
+                    // Format leaderboard changes to look like messages for the sidebar
+                    const leaderboardActivities = (changes || [])
+                        .filter(change => change && change.name && change.type !== 'no_activity')
+                        .map(change => {
+                            const formatted = {
+                                type: 'leaderboard_change',
+                                message: change.message,
+                                learner_name: change.name,
+                                robot_name: change.name,
+                                timestamp: change.timestamp, // Backend already provides milliseconds
+                                timestamp_human: change.time_ago || 'Recently',
+                                learner_id: change.id,
+                                quiz_id: null,
+                                question_id: null,
+                                is_correct: null,
+                                points_change: change.points_change,
+                                leaderboard_score: change.leaderboard_score,
+                                // Ensure unique ID to avoid Alpine.js duplicate key errors
+                                id: `leaderboard_${change.id}_${change.timestamp}_${Date.now()}_${Math.random()}`
+                            };
+                            return formatted;
+                        });
+                    
+                    // Merge leaderboard changes into existing message stream and sort chronologically
+                    if (leaderboardActivities.length > 0) {
+                        this.robotMessages = [...this.robotMessages, ...leaderboardActivities];
+                        // Sort all messages chronologically (newest first)
+                        this.robotMessages.sort((a, b) => {
+                            const timestampA = a.timestamp || a.original_timestamp || Date.now();
+                            const timestampB = b.timestamp || b.original_timestamp || Date.now();
+                            return timestampB - timestampA; // Newest first
+                        });
+                        if (this.robotMessages.length > 50) {
+                            this.robotMessages = this.robotMessages.slice(-50);
+                        }
                     }
                 },
                 

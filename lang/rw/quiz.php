@@ -367,4 +367,8 @@ return [
             ]
         ]
     ],
+    
+    // Additional companion keys
+    'points' => 'amanota',
+    'startQuizToSeeActivity' => 'Tangira ikizami kugira ngo ubone ibikorwa byo huriye',
 ];

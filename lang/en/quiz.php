@@ -396,4 +396,8 @@ return [
             ]
         ]
     ],
+    
+    // Additional companion keys
+    'points' => 'points',
+    'startQuizToSeeActivity' => 'Start a quiz to see live activity',
 ];

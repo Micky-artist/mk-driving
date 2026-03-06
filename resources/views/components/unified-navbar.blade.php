@@ -671,7 +671,7 @@
                 xp: {{ Auth::user()->points ?? 0 }}
             },
             async fetchUserStats() {
-                console.log('Fetching user stats...');
+                // Fetching user stats...
                 try {
                     const response = await fetch('/api/user/stats', {
                         method: 'GET',
@@ -683,18 +683,17 @@
                         credentials: 'same-origin'
                     });
 
-                    console.log('Response status:', response.status);
 
                     if (response.ok) {
                         const stats = await response.json();
-                        console.log('Received stats:', stats);
+                        // Stats received and processed
                         this.userStats = {
                             averageScore: stats.averageScore,
                             leaderboardPosition: stats.leaderboardPosition,
                             streak: stats.streak,
                             xp: stats.xp
                         };
-                        console.log('Updated userStats:', this.userStats);
+                        // UserStats updated
                     } else {
                         console.error('Failed to fetch stats:', response.statusText);
                     }
@@ -703,7 +702,7 @@
                 }
             },
             toggleTheme() {
-                console.log('toggleTheme called');
+                // toggleTheme called
                 // Toggle dark mode class on html element
                 document.documentElement.classList.toggle('dark');
                 
@@ -711,7 +710,7 @@
                 const isDark = document.documentElement.classList.contains('dark');
                 localStorage.setItem('theme', isDark ? 'dark' : 'light');
                 
-                console.log('Theme toggled to:', isDark ? 'dark' : 'light');
+                // Theme toggled to:
                 
                 // Update meta theme-color for mobile browsers
                 const metaThemeColor = document.querySelector('meta[name="theme-color"]');
