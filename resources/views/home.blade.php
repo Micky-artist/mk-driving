@@ -21,8 +21,8 @@
         @if ($guestQuiz && isset($guestQuiz['id']) && isset($guestQuiz['title']) && isset($guestQuiz['questions']))
             <div class="bg-gray-50 dark:bg-gray-800 py-8 relative" id="guest-quiz-section">
                 <div class="px-2 md:px-6">
-                    <div class="bg-white dark:bg-gray-900 rounded-xl shadow-sm border border-gray-200 dark:border-gray-700">
-                        <div class="p-6">
+                    <div class="bg-white dark:bg-gray-900 rounded-xl border border-gray-200 dark:border-gray-700">
+                        <div class="md:p-6">
                             <x-section-header :title="auth()->check()
                                 ? __('home.guestQuiz.continueLearning')
                                 : __('home.guestQuiz.trySampleQuiz')" :href="route('dashboard.quizzes.show', [
@@ -52,21 +52,21 @@
         <!-- Main Content Area -->
         <div class="flex-grow">
             <!-- Plan Tests Section -->
-            <div class="mx-6">
+            <div class="md:mx-6">
                 <div class="bg-white dark:bg-gray-900 rounded-xl shadow-sm border border-gray-200 dark:border-gray-700 p-6">
                     <x-home.plan-tests :quizzes="$otherQuizzes" />
                 </div>
             </div>
 
             <!-- Main Content -->
-            <div class="m-6">
+            <div class="md:m-6">
                 <div class="bg-white dark:bg-gray-900 rounded-xl shadow-sm border border-gray-200 dark:border-gray-700 p-6">
                     @include('components.home.subscription-plans')
                 </div>
             </div>
 
             <!-- Forum Section -->
-            <div class="my-6">
+            <div class="md:my-6">
                 <div class="bg-white dark:bg-gray-900 rounded-xl shadow-sm border border-gray-200 dark:border-gray-700 p-6">
                     @include('components.home.forum-intro', ['forumData' => $forumData])
                 </div>
