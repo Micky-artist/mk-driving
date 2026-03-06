@@ -69,8 +69,6 @@
         return {
             isHidden: false,
             lastScrollY: window.scrollY,
-            scrollThreshold: 100, // Minimum scroll distance before hiding/showing
-            scrollTimeout: null,
             
             initScrollListener() {
                 window.addEventListener('scroll', () => {
@@ -89,24 +87,13 @@
             handleScroll() {
                 const currentScrollY = window.scrollY;
                 const scrollDirection = currentScrollY > this.lastScrollY ? 'down' : 'up';
-                const scrollDistance = Math.abs(currentScrollY - this.lastScrollY);
                 
-                // Clear existing timeout
-                if (this.scrollTimeout) {
-                    clearTimeout(this.scrollTimeout);
+                // Immediate response - hide on any scroll down, show on any scroll up
+                if (scrollDirection === 'down') {
+                    this.isHidden = true;
+                } else if (scrollDirection === 'up') {
+                    this.isHidden = false;
                 }
-                
-                // Add delay to prevent jittery behavior
-                this.scrollTimeout = setTimeout(() => {
-                    // Hide when scrolling down, show when scrolling up
-                    if (scrollDistance > this.scrollThreshold) {
-                        if (scrollDirection === 'down' && currentScrollY > 100) {
-                            this.isHidden = true;
-                        } else if (scrollDirection === 'up') {
-                            this.isHidden = false;
-                        }
-                    }
-                }, 10);
                 
                 this.lastScrollY = currentScrollY;
             },
@@ -114,9 +101,9 @@
             updateBodyPadding() {
                 const isMobile = window.innerWidth < 768;
                 if (isMobile) {
-                    // Add padding when nav is visible, remove when hidden
+                    // Smooth padding transition
                     document.body.style.paddingBottom = this.isHidden ? '0' : '4rem';
-                    document.body.style.transition = 'padding-bottom 0.3s ease-in-out';
+                    document.body.style.transition = 'padding-bottom 0.2s ease-out';
                 } else {
                     document.body.style.paddingBottom = '0';
                 }
