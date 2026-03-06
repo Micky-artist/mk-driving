@@ -1,7 +1,7 @@
 @props(['showUserStats' => false])
 
 <nav class="w-full bg-blue-800 dark:bg-blue-900 shadow-lg z-50 px-2 overflow-hidden md:overflow-visible md:fixed transition-colors duration-200"
-    x-data="navbarComponent()" <div class="w-full max-w-full md:max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 md:ml-1 md:mr-1">
+    x-data="navbarComponent()"> <div class="w-full max-w-full md:max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 md:ml-1 md:mr-1">
     <div class="flex items-center justify-between h-16">
         <!-- Mobile menu button (left on mobile, hidden on desktop) -->
         <div class="flex-shrink-0 flex items-center md:hidden">
@@ -460,7 +460,7 @@
             <nav class="px-4 py-6 space-y-2">
                 <!-- Leaderboard Link (Mobile) -->
                 <a href="{{ route('leaderboard', ['locale' => app()->getLocale()]) }}"
-                    class="group flex items-center px-4 py-3 text-base font-semibold rounded-lg transition-colors duration-150 border-transparent text-white hover:bg-gray-100 hover:text-gray-900 dark:hover:bg-gray-700 dark:hover:text-gray-100 hover:border-gray-300 dark:hover:border-gray-600"
+                    class="group flex items-center px-4 py-3 text-base font-semibold rounded-lg transition-colors duration-150 border-transparent text-gray-900 hover:bg-gray-100 hover:text-gray-900 dark:text-white dark:hover:bg-gray-700 dark:hover:text-gray-100 hover:border-gray-300 dark:hover:border-gray-600"
                     @click="mobileMenuOpen = false">
                     <i class="fas fa-trophy w-5 h-5 mr-3 text-yellow-400"></i>
                     <span class="flex-1">{{ __('navigation.leaderboard') }}</span>
@@ -490,7 +490,7 @@
                         }
                         $activeClasses = $isActive
                             ? 'bg-blue-50 dark:bg-blue-900/30 border-blue-500 text-blue-700 dark:text-blue-300'
-                            : 'border-transparent text-white hover:bg-gray-100 hover:text-gray-900 dark:hover:bg-gray-700 dark:hover:text-gray-100 hover:border-gray-300 dark:hover:border-gray-600';
+                            : 'border-transparent text-gray-900 hover:bg-gray-100 hover:text-gray-900 dark:text-white dark:hover:bg-gray-700 dark:hover:text-gray-100 hover:border-gray-300 dark:hover:border-gray-600';
                     @endphp
                     <a href="{{ $routeName !== '#' ? route($routeName, $routeParams) : '#' }}{{ $link['fragment'] ? '#' . $link['fragment'] : '' }}"
                         class="group flex items-center px-4 py-3 text-base font-semibold rounded-lg transition-colors duration-150 {{ $activeClasses }}"
@@ -520,7 +520,7 @@
                             $isAdminMobileActive = request()->routeIs('admin.*');
                             $adminMobileClasses = $isAdminMobileActive
                                 ? 'bg-orange-50 dark:bg-orange-900/30 border-orange-500 text-orange-700 dark:text-orange-300'
-                                : 'border-transparent text-white hover:bg-gray-100 hover:text-gray-900 dark:hover:bg-gray-700 dark:hover:text-gray-100 hover:border-gray-300 dark:hover:border-gray-600';
+                                : 'border-transparent text-gray-900 hover:bg-gray-100 hover:text-gray-900 dark:text-white dark:hover:bg-gray-700 dark:hover:text-gray-100 hover:border-gray-300 dark:hover:border-gray-600';
                         @endphp
                         <a href="{{ route('admin.portal', ['locale' => app()->getLocale()]) }}"
                             class="group flex items-center px-4 py-3 text-base font-semibold rounded-lg transition-colors duration-150 {{ $adminMobileClasses }}"
@@ -549,7 +549,7 @@
                                 'px-3 py-2 text-sm rounded-md font-medium transition-all duration-200 flex items-center w-full text-left',
                                 $isCurrent
                                     ? 'bg-blue-100 text-blue-800 dark:bg-blue-900/50 dark:text-blue-100'
-                                    : 'text-white hover:bg-gray-200 hover:text-gray-900 dark:bg-gray-700 dark:hover:bg-gray-600 dark:hover:text-gray-100',
+                                    : 'text-gray-700 hover:bg-gray-200 hover:text-gray-900 dark:text-white dark:bg-gray-700 dark:hover:bg-gray-600 dark:hover:text-gray-100',
                             ];
 
                             // Build URL to stay on current page with new locale
@@ -587,10 +587,10 @@
                             {{ strtoupper(substr(Auth::user()->name, 0, 1)) }}
                         </div>
                         <div class="ml-3 overflow-hidden">
-                            <p class="text-sm font-medium text-white truncate">
+                            <p class="text-sm font-medium text-gray-900 dark:text-white truncate">
                                 {{ Auth::user()->name }}
                             </p>
-                            <p class="text-xs text-gray-300 truncate">
+                            <p class="text-xs text-gray-500 dark:text-gray-300 truncate">
                                 {{ Auth::user()->email }}
                             </p>
                         </div>

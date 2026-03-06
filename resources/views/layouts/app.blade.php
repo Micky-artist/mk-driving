@@ -384,10 +384,15 @@
 
     <!-- Page Content -->
     <main class="flex-grow">
-      <div class="md:pt-16">
+      <div class="pt-0 md:pt-16">
         @yield('content')
       </div>
     </main>
+
+    <!-- Bottom Navigation (Mobile Only) -->
+    @if (!request()->is('admin*'))
+        <x-bottom-navigation :showUserStats="true" />
+    @endif
 
     <!-- Footer -->
     @include('components.footer')
