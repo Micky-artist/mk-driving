@@ -313,6 +313,7 @@ return [
         'learner_mastered' => ':name ntajya agihusha!',
         'learner_figured' => ':name yagikoze!',
         'learner_got_right' => ':name yagikoze!',
+        'justEarnedPoints' => ':name yiyongeye amanota :points!',
         'learner_wrong' => ':name yakishe',
         'learner_struggled' => ':name gikunze kumugora',
         'learner_tricky' => ':name yakishe',

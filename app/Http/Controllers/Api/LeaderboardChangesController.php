@@ -26,9 +26,10 @@ class LeaderboardChangesController extends Controller
                     $changes[] = [
                         'id' => $entry['user']['id'],
                         'name' => $entry['user']['first_name'] . ' ' . $entry['user']['last_name'],
-                        'message' => $entry['user']['first_name'] . ' just earned ' . $entry['points'] . ' points!',
+                        'message' => __('quiz.companion.justEarnedPoints', ['name' => $entry['user']['first_name'], 'points' => $entry['points']]),
                         'points_change' => '+' . $entry['points'] . ' points',
-                        'time_ago' => $entry['last_activity'] ? $entry['last_activity']['time_ago'] : 'Recently',
+                        'time_ago' => $entry['last_activity'] ? timeDiffForHumans($entry['last_activity']) : 'Recently',
+                        'timestamp' => $entry['last_activity'] ? $entry['last_activity']->timestamp : now()->timestamp,
                         'type' => 'points_earned',
                         'points' => $entry['points'],
                         'leaderboard_score' => $entry['points']
@@ -45,6 +46,7 @@ class LeaderboardChangesController extends Controller
                         'message' => 'No recent activity',
                         'points_change' => null,
                         'time_ago' => null,
+                        'timestamp' => 0,
                         'type' => 'no_activity',
                         'points' => 0,
                         'leaderboard_score' => 0
@@ -52,9 +54,9 @@ class LeaderboardChangesController extends Controller
                 ];
             }
 
-            // Sort by most recent
+            // Sort by most recent (using timestamp)
             usort($changes, function ($a, $b) {
-                return strtotime($b['time_ago']) - strtotime($a['time_ago']);
+                return ($b['timestamp'] ?? 0) - ($a['timestamp'] ?? 0);
             });
 
             return response()->json([

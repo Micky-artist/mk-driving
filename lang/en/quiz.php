@@ -312,6 +312,7 @@ return [
         'learner_mastered' => ':name mastered this!',
         'learner_figured' => ':name figured it out!',
         'learner_got_right' => ':name got this one right!',
+        'justEarnedPoints' => ':name just earned :points points!',
         'learner_wrong' => ':name just got it wrong',
         'learner_struggled' => ':name struggled with this one',
         'learner_tricky' => ':name found this tricky',

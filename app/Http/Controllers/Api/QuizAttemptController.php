@@ -652,10 +652,32 @@ class QuizAttemptController extends Controller
             // Get any recent notification (optional)
             $notification = $this->robotCompanionService->getLatestLiveNotification();
 
+            // Get leaderboard changes
+            $leaderboardChanges = [];
+            try {
+                Log::info('Fetching leaderboard changes for live activities');
+                $pointsService = app(PointsService::class);
+                $leaderboardController = new \App\Http\Controllers\Api\LeaderboardChangesController($pointsService);
+                $leaderboardResponse = $leaderboardController->index();
+                if ($leaderboardResponse->isSuccessful()) {
+                    $leaderboardData = json_decode($leaderboardResponse->getContent(), true);
+                    $leaderboardChanges = $leaderboardData['changes'] ?? [];
+                    Log::info('Leaderboard changes fetched successfully', [
+                        'count' => count($leaderboardChanges),
+                        'changes' => $leaderboardChanges
+                    ]);
+                } else {
+                    Log::warning('Leaderboard changes API failed', ['status' => $leaderboardResponse->getStatusCode()]);
+                }
+            } catch (\Exception $e) {
+                Log::warning('Failed to fetch leaderboard changes', ['error' => $e->getMessage()]);
+            }
+
             Log::info('Returning live activities', [
                 'activities_count' => count($activities),
                 'historical_count' => count($historicalActivities),
                 'new_count' => count($latestActivities),
+                'leaderboard_changes_count' => count($leaderboardChanges),
                 'has_notification' => !is_null($notification)
             ]);
 
@@ -663,6 +685,7 @@ class QuizAttemptController extends Controller
                 'success' => true,
                 'activities' => $activities,
                 'notification' => $notification,
+                'leaderboard_changes' => $leaderboardChanges,
                 'active_users_count' => $this->getActiveUsersCount()
             ]);
 

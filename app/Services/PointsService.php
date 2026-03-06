@@ -131,7 +131,7 @@ class PointsService
             ];
         })->values()->toArray();
 
-        Log::info('Final leaderboard result', ['count' => count($result), 'result' => $result]);
+        Log::info('Leaderboard generated', ['count' => count($result), 'period' => $period]);
         
         return $result;
     }
