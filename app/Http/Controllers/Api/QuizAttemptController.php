@@ -637,23 +637,8 @@ class QuizAttemptController extends Controller
             // Get latest companion messages (new incremental activities)
             $latestActivities = $this->robotCompanionService->getLatestActivities();
             
-            // Combine historical + new activities
-            $allActivities = array_merge($historicalActivities, $latestActivities);
-            
-            // Sort by timestamp (newest first) and limit to 50
-            usort($allActivities, function($a, $b) {
-                $timestampA = $a['timestamp'] ?? (is_string($a['timestamp']) ? strtotime($a['timestamp']) : $a['timestamp']);
-                $timestampB = $b['timestamp'] ?? (is_string($b['timestamp']) ? strtotime($b['timestamp']) : $b['timestamp']);
-                return $timestampB - $timestampA;
-            });
-            
-            $activities = array_slice($allActivities, 0, 50);
-            
-            // Get any recent notification (optional)
-            $notification = $this->robotCompanionService->getLatestLiveNotification();
-
-            // Get leaderboard changes
-            $leaderboardChanges = [];
+            // Get leaderboard changes and convert to activity format
+            $leaderboardActivities = [];
             try {
                 Log::info('Fetching leaderboard changes for live activities');
                 $pointsService = app(PointsService::class);
@@ -662,9 +647,34 @@ class QuizAttemptController extends Controller
                 if ($leaderboardResponse->isSuccessful()) {
                     $leaderboardData = json_decode($leaderboardResponse->getContent(), true);
                     $leaderboardChanges = $leaderboardData['changes'] ?? [];
-                    Log::info('Leaderboard changes fetched successfully', [
-                        'count' => count($leaderboardChanges),
-                        'changes' => $leaderboardChanges
+                    
+                    // Convert leaderboard changes to activity format
+                    $leaderboardActivities = collect($leaderboardChanges)
+                        ->filter(function($change) {
+                            return $change && isset($change['name']) && $change['type'] !== 'no_activity';
+                        })
+                        ->map(function($change) {
+                            return [
+                                'id' => 'leaderboard_' . $change['id'] . '_' . $change['timestamp'] . '_' . rand(1000, 9999),
+                                'type' => 'leaderboard_change',
+                                'robot_name' => $change['name'],
+                                'learner_name' => $change['name'],
+                                'message' => $change['message'],
+                                'timestamp_human' => $change['time_ago'] ?? 'Recently',
+                                'timestamp' => $change['timestamp'],
+                                'learner_id' => $change['id'],
+                                'quiz_id' => null,
+                                'question_id' => null,
+                                'is_correct' => null,
+                                'points_change' => $change['points_change'],
+                                'leaderboard_score' => $change['leaderboard_score'],
+                                'original_timestamp' => $change['timestamp']
+                            ];
+                        })
+                        ->toArray();
+                    
+                    Log::info('Leaderboard changes converted to activities', [
+                        'count' => count($leaderboardActivities)
                     ]);
                 } else {
                     Log::warning('Leaderboard changes API failed', ['status' => $leaderboardResponse->getStatusCode()]);
@@ -673,11 +683,31 @@ class QuizAttemptController extends Controller
                 Log::warning('Failed to fetch leaderboard changes', ['error' => $e->getMessage()]);
             }
 
-            Log::info('Returning live activities', [
-                'activities_count' => count($activities),
+            // Combine all activity types
+            $allActivities = array_merge(
+                $historicalActivities,
+                $latestActivities,
+                $leaderboardActivities
+            );
+            
+            // Sort all activities by timestamp (newest first)
+            usort($allActivities, function($a, $b) {
+                $timestampA = $a['timestamp'] ?? $a['original_timestamp'] ?? time();
+                $timestampB = $b['timestamp'] ?? $b['original_timestamp'] ?? time();
+                return $timestampB - $timestampA;
+            });
+            
+            // Limit to 50 most recent activities
+            $activities = array_slice($allActivities, 0, 50);
+            
+            // Get any recent notification
+            $notification = $this->robotCompanionService->getLatestLiveNotification();
+
+            Log::info('Returning unified live activities', [
+                'total_activities' => count($activities),
                 'historical_count' => count($historicalActivities),
-                'new_count' => count($latestActivities),
-                'leaderboard_changes_count' => count($leaderboardChanges),
+                'latest_count' => count($latestActivities),
+                'leaderboard_count' => count($leaderboardActivities),
                 'has_notification' => !is_null($notification)
             ]);
 
@@ -685,7 +715,6 @@ class QuizAttemptController extends Controller
                 'success' => true,
                 'activities' => $activities,
                 'notification' => $notification,
-                'leaderboard_changes' => $leaderboardChanges,
                 'active_users_count' => $this->getActiveUsersCount()
             ]);
 

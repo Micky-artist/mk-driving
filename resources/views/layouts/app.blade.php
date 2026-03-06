@@ -636,10 +636,15 @@
                     
                     // Listen for live activity updates from other users
                     window.addEventListener('liveActivityUpdate', (event) => {
-                        // Live activity update received
-                        this.updateLiveActivities(event.detail.activities || []);
-                        this.updateNotification(event.detail.notification);
-                        this.updateLeaderboardChanges(event.detail.leaderboard_changes || []);
+                        // Live activity update received - now contains unified activities
+                        console.log('📊 quizCompanion: liveActivityUpdate received:', event.detail);
+                        
+                        const activities = event.detail.activities || [];
+                        const notification = event.detail.notification;
+                        
+                        // Process unified activities and convert to robot messages format for display
+                        this.processUnifiedActivities(activities);
+                        this.updateNotification(notification);
                     });
                     
                     // Listen for robot responses from quiz taker
@@ -729,75 +734,39 @@
                     }
                 },
 
-                updateLiveActivities(activities) {
-            
-            // Ensure activities is always an array
-            const activitiesArray = Array.isArray(activities) ? activities : [];
-            const previousCount = (this.robotMessages || []).length;
+                // Process unified activities from backend (already sorted)
+                processUnifiedActivities(activities) {
+                    console.log('🔄 quizCompanion: processing unified activities:', activities.length);
                     
-                    if (activitiesArray.length > 0) {
-                        // Get existing activity timestamps to avoid duplicates
-                        const existingTimestamps = new Set(
-                            (this.liveActivities || []).map(activity => 
-                                activity.timestamp + '_' + (activity.learner_id || activity.user_id)
-                            )
-                        );
+                    if (activities.length > 0) {
+                        // Convert all activities to robot message format for display
+                        const newRobotMessages = activities.map((activity, index) => ({
+                            id: activity.id || `activity_${index}_${Date.now()}`,
+                            robot_name: activity.robot_name || activity.learner_name || activity.user_name || 'Unknown',
+                            message: activity.message,
+                            timestamp_human: activity.timestamp_human || 'Just now',
+                            is_correct: activity.is_correct,
+                            type: activity.type || 'learner_answer',
+                            points_change: activity.points_change,
+                            leaderboard_score: activity.leaderboard_score,
+                            learner_id: activity.learner_id || activity.user_id,
+                            original_timestamp: activity.timestamp || activity.original_timestamp || Date.now()
+                        }));
                         
-                        // Filter only truly new activities
-                        const newActivities = activitiesArray.filter(activity => {
-                            const activityKey = activity.timestamp + '_' + (activity.learner_id || activity.user_id);
-                            return !existingTimestamps.has(activityKey);
-                        });
+                        console.log('🔄 quizCompanion: converted to robot messages:', newRobotMessages);
                         
-                        // Filtered new activities:
+                        // Replace all robot messages with the unified feed
+                        this.robotMessages = newRobotMessages;
                         
-                        if (newActivities.length > 0) {
-                            // Prepend new activities (newest first)
-                            this.liveActivities = [...newActivities, ...(this.liveActivities || [])];
-                            
-                            // Keep only the last 50 activities
-                            if (this.liveActivities.length > 50) {
-                                this.liveActivities = this.liveActivities.slice(-50);
+                        console.log('🔄 quizCompanion: updated robotMessages:', this.robotMessages);
+                        
+                        // Dispatch update event for sidebar
+                        window.dispatchEvent(new CustomEvent('robotCompanionUpdate', {
+                            detail: {
+                                robotMessages: this.robotMessages || [],
+                                activitiesCount: activities.length
                             }
-                            
-                            // Extract new robot messages (include both learner_answer and leaderboard_change)
-                const newRobotMessages = newActivities
-                    .filter(activity => activity.type === 'learner_answer' || activity.type === 'leaderboard_change')
-                    .map((activity, index) => ({
-                        id: `${activity.learner_id}_${activity.question_id}_${activity.timestamp}_${index}_${Date.now()}`,
-                        robot_name: activity.learner_name,
-                        message: activity.message,
-                        timestamp_human: activity.timestamp_human,
-                        is_correct: activity.is_correct,
-                        type: activity.type,
-                        points_change: activity.points_change,
-                        original_timestamp: activity.timestamp || Date.now()
-                    }));
-                
-                            // Prepend new robot messages (newest first)
-                            this.robotMessages = [...newRobotMessages, ...(this.robotMessages || [])];
-                            
-                            // Keep only the last 50 robot messages
-                            if (this.robotMessages.length > 50) {
-                                this.robotMessages = this.robotMessages.slice(-50);
-                            }
-                            
-                            // Robot messages updated:
-                        }
-                    }
-                    
-                    // Dispatch event for global toast
-                    // Dispatching robotCompanionUpdate event
-                    window.dispatchEvent(new CustomEvent('robotCompanionUpdate', {
-                        detail: {
-                            robotMessages: this.robotMessages || [],
-                            activitiesCount: (this.liveActivities || []).length
-                        }
-                    }));
-                    
-                    // Update unread count based on new activities
-                    if (activitiesArray.length > previousCount) {
-                        this.unreadCount = Math.min(activitiesArray.length - previousCount + this.unreadCount, 99);
+                        }));
                     }
                 },
                 
@@ -809,45 +778,6 @@
                             active_users: notification.active_users,
                             robot_responses: notification.robot_responses || []
                         };
-                    }
-                },
-                
-                updateLeaderboardChanges(changes) {
-                    // Format leaderboard changes to look like messages for the sidebar
-                    const leaderboardActivities = (changes || [])
-                        .filter(change => change && change.name && change.type !== 'no_activity')
-                        .map(change => {
-                            const formatted = {
-                                type: 'leaderboard_change',
-                                message: change.message,
-                                learner_name: change.name,
-                                robot_name: change.name,
-                                timestamp: change.timestamp, // Backend already provides milliseconds
-                                timestamp_human: change.time_ago || 'Recently',
-                                learner_id: change.id,
-                                quiz_id: null,
-                                question_id: null,
-                                is_correct: null,
-                                points_change: change.points_change,
-                                leaderboard_score: change.leaderboard_score,
-                                // Ensure unique ID to avoid Alpine.js duplicate key errors
-                                id: `leaderboard_${change.id}_${change.timestamp}_${Date.now()}_${Math.random()}`
-                            };
-                            return formatted;
-                        });
-                    
-                    // Merge leaderboard changes into existing message stream and sort chronologically
-                    if (leaderboardActivities.length > 0) {
-                        this.robotMessages = [...this.robotMessages, ...leaderboardActivities];
-                        // Sort all messages chronologically (newest first)
-                        this.robotMessages.sort((a, b) => {
-                            const timestampA = a.timestamp || a.original_timestamp || Date.now();
-                            const timestampB = b.timestamp || b.original_timestamp || Date.now();
-                            return timestampB - timestampA; // Newest first
-                        });
-                        if (this.robotMessages.length > 50) {
-                            this.robotMessages = this.robotMessages.slice(-50);
-                        }
                     }
                 },
                 

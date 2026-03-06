@@ -43,7 +43,7 @@
 
         <!-- Feed Content -->
         <div class="flex-1 overflow-y-auto p-4 space-y-3">
-            <!-- Robot Activities -->
+            <!-- Unified Activity Feed - All messages sorted by timestamp from backend -->
             <template x-for="message in (robotMessages || [])" :key="message.id">
                 <div
                     class="rounded-lg p-3 transition-all duration-200 hover:shadow-sm"
@@ -98,61 +98,12 @@
                                 <span x-text="activity.user_name.charAt(0).toUpperCase()"></span>
                             </div>
                         </div>
-                        <div class="flex-1 min-w-0">
-                            <div class="flex items-center gap-2 mb-1">
-                                <span class="font-medium text-green-700 dark:text-green-300"
-                                    x-text="activity.user_name"></span>
-                                <span class="text-xs text-gray-500 dark:text-gray-400"
-                                    x-text="formatTime(activity.timestamp)"></span>
-                            </div>
-                            <p class="text-sm text-gray-700 dark:text-gray-200">
-                                <!-- Activity message will be shown here without badges -->
-                            </p>
-                        </div>
-                    </div>
-                </div>
-            </template>
-
-            <!-- Leaderboard Changes -->
-            <template x-for="(user, index) in (leaderboard || [])" :key="user.id">
-                <div class="flex items-center gap-3 p-3 bg-gray-50 dark:bg-gray-700 rounded-lg">
-                    <div class="w-6 h-6 rounded-full flex items-center justify-center font-bold text-xs"
-                        :class="index === 0 ? 'bg-yellow-400 text-white' : index === 1 ? 'bg-gray-300 text-white' : index ===
-                            2 ? 'bg-orange-400 text-white' : 'bg-gray-200 text-gray-700'"
-                        x-text="index + 1"></div>
-                    <div class="flex-1">
-                        <div class="font-medium text-sm" x-text="user.name"></div>
-                        <div class="text-xs text-gray-500" x-text="user.points + ' points'"></div>
-                        </div>
-                    </div>
-                    <div class="text-right">
-                        <div class="font-bold text-sm text-blue-600" x-text="user.leaderboard_score || user.points">
-                        </div>
-                    </div>
-                </div>
-            </template>
-
-            <!-- Questions -->
-            <template x-for="question in (questions || [])" :key="question.id">
-                <div class="bg-gray-50 dark:bg-gray-700 rounded-lg p-3">
-                    <div class="flex items-start gap-3">
-                        <div
-                            class="w-8 h-8 bg-blue-500 rounded-full flex items-center justify-center text-white text-sm font-bold">
-                            <span x-text="question.user_name.charAt(0).toUpperCase()"></span>
-                        </div>
-                        <div class="flex-1">
-                            <div class="flex items-center gap-2 mb-1">
-                                <span class="font-medium text-sm" x-text="question.user_name"></span>
-                                <span class="text-xs text-gray-500" x-text="question.created_at"></span>
-                            </div>
-                            <p class="text-sm text-gray-600 dark:text-gray-200" x-text="question.question"></p>
-                        </div>
                     </div>
                 </div>
             </template>
 
             <!-- Empty State -->
-            <div x-show="(robotMessages || []).length === 0 && (liveActivities || []).filter(a => a.type === 'user_answer').length === 0 && (leaderboard || []).length === 0 && (questions || []).length === 0"
+            <div x-show="(robotMessages || []).length === 0"
                 class="text-center py-8">
                 <div class="text-3xl mb-2">🏁</div>
                 <p class="text-gray-500 dark:text-gray-400 text-sm">{{ __('quiz.companion.startQuizToSeeActivity') }}
