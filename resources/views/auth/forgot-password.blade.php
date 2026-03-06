@@ -134,6 +134,18 @@
         document.getElementById('confirmationDialog').classList.remove('active');
     }
     
+    // Check URL parameters for email already sent state
+    document.addEventListener('DOMContentLoaded', function() {
+        const urlParams = new URLSearchParams(window.location.search);
+        const emailSent = urlParams.get('email_sent');
+        const email = urlParams.get('email');
+        
+        if (emailSent && email) {
+            // Show email already sent confirmation
+            showConfirmationDialog(email);
+        }
+    });
+    
     document.addEventListener('DOMContentLoaded', function() {
         const form = document.getElementById('forgotPasswordForm');
         
@@ -169,8 +181,32 @@
                     const data = await response.json();
                     
                     if (response.ok && data.status === 'passwords.sent') {
-                        // Show success dialog with localized messages
-                        showConfirmationDialog(formData.get('email'));
+                        // Clear any previous success messages
+                        const previousSuccess = form.parentNode.querySelectorAll('.text-green-700');
+                        previousSuccess.forEach(el => el.remove());
+                        
+                        // Clear any previous error messages
+                        const previousErrors = form.parentNode.querySelectorAll('.error-message');
+                        previousErrors.forEach(el => el.remove());
+                        
+                        // Show immediate success feedback
+                        const successMessage = document.createElement('div');
+                        successMessage.className = 'mb-4 p-4 text-sm text-green-700 bg-green-100 rounded-lg dark:bg-green-900 dark:text-green-200';
+                        successMessage.setAttribute('role', 'alert');
+                        successMessage.innerHTML = `
+                            <div class="flex items-center">
+                                <svg class="w-5 h-5 mr-2" fill="currentColor" viewBox="0 0 20 20" xmlns="http://www.w3.org/2000/svg">
+                                    <path fill-rule="evenodd" d="M10 18a8 8 0 100-16 0 8 8 0 016 16zm3.707-8.293l-3.414 3.414-1.414 1.414-1.414-1.414L10 11.586l3.293 3.293a1 1 0 001.414 1.414L14.586 10z" clip-rule="evenodd"></path>
+                                </svg>
+                                {{ __('auth.forgot_password_page.success_message') }}
+                            </div>
+                        `;
+                        form.parentNode.insertBefore(successMessage, form);
+                        
+                        // Show success dialog after a short delay
+                        setTimeout(() => {
+                            showConfirmationDialog(formData.get('email'));
+                        }, 1000);
                     } else {
                         // Handle errors
                         if (data.errors) {

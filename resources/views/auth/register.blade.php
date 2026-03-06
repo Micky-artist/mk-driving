@@ -57,14 +57,14 @@
                         <div class="mb-4">
                             <!-- Full Name -->
                             <div class="form-group">
-                                <div class="relative">
+                                <div class="relative gap-2">
                                     <input 
                                         id="name" 
                                         name="name" 
                                         type="text" 
                                         value="{{ old('name') }}" 
                                         placeholder="{{ __('auth.register.name') }}"
-                                        class="w-full px-4 py-4 rounded-xl border-2 border-gray-300 dark:border-gray-600 bg-white dark:bg-gray-700 text-gray-900 dark:text-white font-medium text-base transition-all duration-200 focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-transparent hover:border-gray-400 dark:hover:border-gray-500"
+                                        class="w-full px-4 py-4 pl-12 rounded-xl border-2 border-gray-300 dark:border-gray-600 bg-white dark:bg-gray-700 text-gray-900 dark:text-white font-medium text-base transition-all duration-200 focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-transparent hover:border-gray-400 dark:hover:border-gray-500"
                                         required 
                                         autofocus
                                     />
@@ -472,16 +472,7 @@ function validatePassword() {
         confirmPasswordInput.addEventListener('input', validatePasswordMatch);
     }
     
-    // Initialize toggle password buttons
-    document.querySelectorAll('.toggle-password-btn').forEach(button => {
-        button.addEventListener('click', function(e) {
-            e.preventDefault();
-            const targetId = this.getAttribute('onclick')
-                .replace('togglePasswordVisibility(\'', '')
-                .replace('\')', '');
-            togglePasswordVisibility(targetId);
-        });
-    });
+    // Toggle password visibility buttons work via inline onclick
     
     // Form submission handler
     formToUse.addEventListener('submit', async function(e) {
