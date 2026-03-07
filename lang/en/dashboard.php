@@ -220,7 +220,7 @@ return [
         'renewal_date' => 'Renewal date: :date',
     ],
     'welcome' => [
-        'title' => 'Welcome to MK Driving School, :name!',
+        'title' => 'Welcome to MK Driving Academy, :name!',
         'subtitle' => 'Your journey to becoming a confident driver starts now',
         'points_earned' => 'You earned :points points for joining!',
         'points_message' => 'Points help you track your progress and climb the leaderboard',

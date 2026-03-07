@@ -29,11 +29,11 @@ class NewsSeeder extends Seeder
             // Timeless Announcement
             [
                 'title' => [
-                    'en' => 'Welcome to MK Driving School!',
-                    'rw' => 'Murakaza neza muri MK Driving School'
+                    'en' => 'Welcome to MK Driving Academy!',
+                    'rw' => 'Murakaza neza muri MK Driving Academy'
                 ],
                 'content' => [
-                    'en' => "Welcome to MK Driving School. Your journey to safe driving starts here! You can practice any day, enter leaderboards, and be encouraged by others to learn and pass fast.",
+                    'en' => "Welcome to MK Driving Academy. Your journey to safe driving starts here! You can practice any day, enter leaderboards, and be encouraged by others to learn and pass fast.",
                     'rw' => "Murakaza neza ku Ishuri Ryo Gutwara Imodoka muri MK - Urugendo rwawe rwo Gutwara Imodoka rutangirira hano. Igana n'abandi, ugire umarava wo gutsinda vuba."
                 ],
                 'excerpt' => [

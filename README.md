@@ -1,4 +1,4 @@
-# MK Driving School Management System
+# MK Driving Academy Management System
 
 <p align="center">
   <img src="https://raw.githubusercontent.com/laravel/art/master/logo-lockup/5%20SVG/2%20CMYK/1%20Full%20Color/laravel-logolockup-cmyk-red.svg" width="400" alt="Laravel Logo">
@@ -9,9 +9,9 @@
   <a href="https://packagist.org/packages/laravel/framework"><img src="https://img.shields.io/packagist/l/laravel/framework" alt="License"></a>
 </p>
 
-## About MK Driving School
+## About MK Driving Academy
 
-MK Driving School Management System is a comprehensive solution for managing driving school operations, including student management, lesson scheduling, instructor assignments, and progress tracking.
+MK Driving Academy Management System is a comprehensive solution for managing driving Academy operations, including student management, lesson scheduling, instructor assignments, and progress tracking.
 
 ## Features
 

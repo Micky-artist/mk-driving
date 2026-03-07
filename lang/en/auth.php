@@ -98,7 +98,7 @@ return [
 
     'register' => [
         'title' => 'Create Your Account',
-        'subtitle' => 'Join MK Scholars Driving School today!',
+        'subtitle' => 'Join MK Scholars Driving Academy today!',
         'name' => 'Your Name',
         'first_name' => 'First Name',
         'last_name' => 'Last Name',
@@ -161,11 +161,11 @@ return [
     
     // Welcome Email
     'welcome_email' => [
-        'subject' => 'Welcome to MK Driving School! Start Your Journey Today',
-        'title' => 'Welcome to MK Driving School!',
+        'subject' => 'Welcome to MK Driving Academy! Start Your Journey Today',
+        'title' => 'Welcome to MK Driving Academy!',
         'subtitle' => 'Your journey to becoming a confident driver starts now',
         'greeting' => 'Welcome, :name',
-        'marketing_intro' => 'Thank you for joining MK Driving School! We\'re excited to help you become a safe and confident driver. Get started with these three simple steps:',
+        'marketing_intro' => 'Thank you for joining MK Driving Academy! We\'re excited to help you become a safe and confident driver. Get started with these three simple steps:',
         'verify_button' => 'Verify Your Email',
         'verify_description' => 'Secure your account and unlock all features',
         'free_quiz_button' => 'Try a Free Quiz',
@@ -173,7 +173,7 @@ return [
         'pricing_button' => 'View Pricing Plans',
         'pricing_description' => 'Choose a plan that fits your learning needs',
         'alternative' => 'If the verify button doesn\'t work, you can copy and paste this link into your browser:',
-        'benefits_title' => 'Why Choose MK Driving School?',
+        'benefits_title' => 'Why Choose MK Driving Academy?',
         'benefits_description' => 'With verified email access, you\'ll get full access to our comprehensive driving lessons, practice tests, progress tracking, and expert guidance.',
         'contact_support' => 'Questions? Our support team is here to help at :email'
     ],

@@ -222,7 +222,7 @@ return [
         'renewal_date' => 'Itariki yo kuvugurura: :date',
     ],
     'welcome' => [
-        'title' => 'Murakaza neza kuri MK Driving School, :name!',
+        'title' => 'Murakaza neza kuri MK Driving Academy, :name!',
         'subtitle' => 'Urugendo rwo kuba umushoferi wizewe rutangirira aha',
         'points_earned' => 'Wakiriye :points amanota yo kwinjira!',
         'points_message' => 'Amanota afasha gukurikira uko wigana n\'abandi',

@@ -19,7 +19,7 @@
                 <div class="text-center pb-4">
                     <div class="flex justify-center mb-6">
                         <a href="{{ route('home', ['locale' => app()->getLocale()]) }}" class="flex items-center space-x-1">
-                            <img src="{{ asset('logo.png') }}" alt="MK Driving School Logo" class="h-16 w-16 rounded-lg shadow-md"
+                            <img src="{{ asset('logo.png') }}" alt="MK Driving Academy Logo" class="h-16 w-16 rounded-lg shadow-md"
                                 onerror="this.onerror=null; this.src='{{ asset('images/logo.png') }}'">
                         </a>
                     </div>

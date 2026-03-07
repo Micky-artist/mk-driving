@@ -1,6 +1,6 @@
-# MK Driving School - Hostinger Deployment Guide
+# MK Driving Academy - Hostinger Deployment Guide
 
-This guide will walk you through deploying the MK Driving School application to Hostinger Premium Web Hosting with the correct folder structure.
+This guide will walk you through deploying the MK Driving Academy application to Hostinger Premium Web Hosting with the correct folder structure.
 
 ## Prerequisites
 

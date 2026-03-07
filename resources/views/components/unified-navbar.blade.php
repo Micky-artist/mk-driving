@@ -21,11 +21,11 @@
         <!-- Logo and Language Selector (hidden on mobile, left on desktop) -->
         <div class="flex-shrink-0 hidden md:flex items-center space-x-4">
             <a href="{{ route('home', ['locale' => app()->getLocale()]) }}" class="flex items-center space-x-1">
-                <img src="{{ asset('logo.png') }}" alt="MK Driving School Logo" class="h-8 w-8 rounded-lg shadow-md"
+                <img src="{{ asset('logo.png') }}" alt="MK Driving Academy Logo" class="h-8 w-8 rounded-lg shadow-md"
                     onerror="this.onerror=null; this.src='{{ asset('images/logo.png') }}'">
                 <div class="ml-1">
                     <span class="text-xl font-bold text-white leading-none">
-                        MK Driving School
+                        MK Driving Academy
                     </span>
                 </div>
             </a>
@@ -445,12 +445,12 @@
             <!-- Logo Section -->
             <div class="px-6 py-6 border-b border-gray-200 dark:border-gray-700">
                 <a href="{{ route('home', ['locale' => app()->getLocale()]) }}" class="flex items-center space-x-3">
-                    <img src="{{ asset('logo.png') }}" alt="MK Driving School Logo"
+                    <img src="{{ asset('logo.png') }}" alt="MK Driving Academy Logo"
                         class="h-12 w-12 rounded-lg shadow-md"
                         onerror="this.onerror=null; this.src='{{ asset('images/logo.png') }}'">
                     <div>
                         <span class="text-xl font-bold text-gray-900 dark:text-white">
-                            MK DRIVING
+                            MK DRIVING ACADEMY
                         </span>
                     </div>
                 </a>

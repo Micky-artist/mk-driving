@@ -5,9 +5,9 @@
             <!-- About Section -->
             <div class="col-span-1 md:col-span-2">
                 <div class="flex items-center mb-4">
-                    <img class="h-10 w-auto" src="{{ asset('logo.png') }}" alt="MK DRIVING SCHOOL Logo">
+                    <img class="h-10 w-auto" src="{{ asset('logo.png') }}" alt="MK DRIVING ACADEMY Logo">
                     <span class="ml-3 text-xl font-bold bg-gradient-to-r from-orange-400 to-orange-300 bg-clip-text text-transparent">
-                        MK DRIVING SCHOOL
+                        MK DRIVING ACADEMY
                     </span>
                 </div>
                 <p class="text-blue-100 text-sm leading-relaxed">
@@ -62,7 +62,7 @@
         <div class="border-t border-blue-800 pt-8">
             <div class="flex flex-col md:flex-row justify-between items-center">
                 <p class="text-blue-300 text-sm">
-                    &copy; {{ date('Y') }} MK DRIVING SCHOOL. {{ __('home.footer.all_rights_reserved') }}
+                    &copy; {{ date('Y') }} MK DRIVING ACADEMY. {{ __('home.footer.all_rights_reserved') }}
                 </p>
                 <div class="mt-4 md:mt-0 flex space-x-6">
                     <a href="#" class="text-blue-300 hover:text-white text-sm">{{ __('home.footer.contact') }}</a>

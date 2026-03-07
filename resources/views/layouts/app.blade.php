@@ -28,43 +28,43 @@
 
 @php
     $isRwanda = request()->segment(1) === 'rw';
-    $description = $isRwanda ? 'Itegure ikizami cy\'amategeko y\'umuhanda hamwe na MK Driving School - Uburyo bwa mbere bwizewe naba jeune mu Rwanda' : 'Prepare for your driving test with MK Driving School - The best way to practice and pass your driving theory test in Rwanda';
+    $description = $isRwanda ? 'Itegure ikizami cy\'amategeko y\'umuhanda hamwe na MK Driving Academy - Uburyo bwa mbere bwizewe naba jeune mu Rwanda' : 'Prepare for your driving test with MK Driving Academy - The best way to practice and pass your driving theory test in Rwanda';
     $titleSuffix = $isRwanda ? 'Tsinda ikizami cyo gutwara mu Rwanda' : 'Pass Your Driving Test in Rwanda';
-    $ogDescription = $isRwanda ? 'Urubuga rwizewe rugufasha kubona ibibazo by\'kizamini cya provisoire n\'ibisubizo byabyo, bigufasha kwiga vuba, neza no gutsinda byoroshye - aho waba uri hose. 🚗' : '🚗✨ Prepare & pass your driving test with MK Driving School. Practice tests, expert tips, and everything you need to get your driver\'s license in Rwanda!';
+    $ogDescription = $isRwanda ? 'Urubuga rwizewe rugufasha kubona ibibazo by\'kizamini cya provisoire n\'ibisubizo byabyo, bigufasha kwiga vuba, neza no gutsinda byoroshye - aho waba uri hose. 🚗' : '🚗✨ Prepare & pass your driving test with MK Driving Academy. Practice tests, expert tips, and everything you need to get your driver\'s license in Rwanda!';
 @endphp
 
-    <title>{{ config('app.name', 'MK Driving School') }}</title>
+    <title>{{ config('app.name', 'MK Driving Academy') }}</title>
 
     <!-- General Meta Tags -->
     <meta name="description" content="{{ $description }}">
     
     <!-- Open Graph / Social Media Meta Tags (used by Facebook, Instagram, WhatsApp, etc.) -->
-    <meta property="og:title" content="{{ config('app.name', 'MK Driving School') }} - {{ $titleSuffix }}">
+    <meta property="og:title" content="{{ config('app.name', 'MK Driving Academy') }} - {{ $titleSuffix }}">
     <meta property="og:description" content="{{ $ogDescription }}">
     <meta property="og:image" content="{{ url('/og-image.png') }}">
     <meta property="og:image:width" content="1200">
     <meta property="og:image:height" content="630">
     <meta property="og:url" content="{{ url()->current() }}">
     <meta property="og:type" content="website">
-    <meta property="og:site_name" content="MK Driving School">
+    <meta property="og:site_name" content="MK Driving Academy">
     
     <!-- WhatsApp Specific -->
     <meta property="og:image:secure_url" content="{{ url('/og-image.png') }}">
-    <meta property="og:image:alt" content="MK Driving School - {{ $titleSuffix }}">
+    <meta property="og:image:alt" content="MK Driving Academy - {{ $titleSuffix }}">
     
     <!-- Twitter Card Meta Tags -->
     <meta name="twitter:card" content="summary_large_image">
-    <meta name="twitter:title" content="{{ config('app.name', 'MK Driving School') }} - {{ $titleSuffix }}">
+    <meta name="twitter:title" content="{{ config('app.name', 'MK Driving Academy') }} - {{ $titleSuffix }}">
     <meta name="twitter:description" content="{{ $ogDescription }}">
     <meta name="twitter:image" content="{{ url('/og-image.png') }}">
     
     <!-- Additional Meta Tags for Better Sharing -->
     <meta name="theme-color" content="#1a365d"> <!-- Dark blue from your color scheme -->
     <meta name="mobile-web-app-capable" content="yes">
-    <meta name="apple-mobile-web-app-title" content="MK Driving School">
+    <meta name="apple-mobile-web-app-title" content="MK Driving Academy">
     <meta name="apple-mobile-web-app-status-bar-style" content="default">
     <meta name="apple-mobile-web-app-capable" content="yes">
-    <meta name="application-name" content="MK Driving School">
+    <meta name="application-name" content="MK Driving Academy">
     <meta name="msapplication-TileColor" content="#1a365d">
     
     <!-- SEO Tags for Kinyarwanda Focus -->
@@ -352,7 +352,7 @@
         <div class="text-center max-w-sm mx-auto px-6">
             <!-- App Logo -->
             <div class="flex items-center justify-center mb-8">
-                <img src="{{ asset('logo.png') }}" alt="MK Driving School Logo" 
+                <img src="{{ asset('logo.png') }}" alt="MK Driving Academy Logo" 
                      class="h-16 w-16 md:h-20 md:w-20 rounded-lg shadow-lg"
                      onerror="this.onerror=null; this.src='{{ asset('images/logo.png') }}'">
             </div>
@@ -360,7 +360,7 @@
             <!-- Logo Text -->
             <div class="mb-8">
                 <h1 class="text-xl md:text-2xl font-bold text-gray-900 dark:text-white leading-tight">
-                    MK Driving School
+                    MK Driving Academy
                 </h1>
             </div>
             

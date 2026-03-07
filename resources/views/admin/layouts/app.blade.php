@@ -27,7 +27,7 @@
         })();
     </script>
     
-    <title>@yield('title', config('app.name', 'MK Driving School')) - Admin</title>
+    <title>@yield('title', config('app.name', 'MK Driving Academy')) - Admin</title>
 
     <!-- Favicon -->
     <link rel="icon" href="{{ asset('favicon.ico') }}">
@@ -467,7 +467,7 @@
                 <a href="{{ route('home', ['locale' => app()->getLocale()]) }}" class="block">
                     <div
                         class="flex items-center justify-between h-16 px-4 bg-gradient-to-r from-blue-600 to-blue-700 dark:from-gray-800 dark:to-gray-900 hover:from-blue-700 hover:to-blue-800 transition-all duration-200 shadow-lg">
-                        <span class="text-xl font-bold text-white">MK Driving School</span>
+                        <span class="text-xl font-bold text-white">MK Driving Academy</span>
                         
                         <!-- Notifications Bell -->
                         <div x-data="{ 
@@ -711,7 +711,7 @@
                         <div class="flex-1 h-0 pt-5 pb-4 overflow-y-auto">
                             <div class="flex-shrink-0 flex items-center px-4 mb-4">
                                 <a href="{{ route('home', ['locale' => app()->getLocale()]) }}" class="text-xl font-bold text-gray-900 dark:text-white">
-                                    MK Driving School
+                                    MK Driving Academy
                                 </a>
                             </div>
                             <nav class="px-2 space-y-1">
